@@ -56,6 +56,11 @@ public class LoanClosure {
 	private String financialConsultantId;
 	private String financialConsultantName;
 	private String loanStatus;
+	private String reasonForClosure;
+	private String waiver;
+	private String foreclosureFee;
+	private String accountNo;
+	private String paymentAmount;
 	
 	public long getId() {
 		return id;
@@ -297,13 +302,41 @@ public class LoanClosure {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	
-	
-	
-	
 
-	
+	public String getReasonForClosure() {
+		return reasonForClosure;
+	}
+	public void setReasonForClosure(String reasonForClosure) {
+		this.reasonForClosure = reasonForClosure;
+	}
 
+	public String getWaiver() {
+		return waiver;
+	}
+	public void setWaiver(String waiver) {
+		this.waiver = waiver;
+	}
+
+	public String getForeclosureFee() {
+		return foreclosureFee;
+	}
+	public void setForeclosureFee(String foreclosureFee) {
+		this.foreclosureFee = foreclosureFee;
+	}
+
+	public String getAccountNo() {
+		return accountNo;
+	}
+	public void setAccountNo(String accountNo) {
+		this.accountNo = accountNo;
+	}
+
+	public String getPaymentAmount() {
+		return paymentAmount;
+	}
+	public void setPaymentAmount(String paymentAmount) {
+		this.paymentAmount = paymentAmount;
+	}
 }
 
 

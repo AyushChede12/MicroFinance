@@ -19,5 +19,6 @@ public interface LoanMangmentSchemeRepo extends JpaRepository<LoanSchemCatalog, 
 
 	List<LoanSchemCatalog> findByLoanPlaneNameContainingIgnoreCase(String loanPlanName);
 
+	Optional<LoanSchemCatalog> findByLoanPlaneName(String loanPlaneName);
 
 }

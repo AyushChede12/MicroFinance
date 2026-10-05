@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Loan Sanction Letter</title>
+    <style type="text/css">
+        @page {
+            size: A4 portrait;
+            margin: 15mm 12mm 15mm 12mm;
+            @bottom-right {
+                content: "Page " counter(page) " of " counter(pages);
+                font-family: Arial, sans-serif;
+                font-size: 8pt;
+                color: #666;
+            }
+        }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 10pt;
+            line-height: 1.4;
+            color: #222;
+            margin: 0;
+            padding: 0;
+        }
+        .letterhead {
+            text-align: center;
+            border-bottom: 2px solid #1a365d;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+        }
+        .society-name {
+            font-size: 15pt;
+            font-weight: bold;
+            color: #1a365d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .society-sub {
+            font-size: 8.5pt;
+            color: #555;
+            margin-top: 2px;
+        }
+        .doc-title {
+            text-align: center;
+            font-size: 13pt;
+            font-weight: bold;
+            text-decoration: underline;
+            margin: 12px 0;
+            color: #1a365d;
+        }
+        .meta-table {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        .meta-table td {
+            font-size: 9.5pt;
+            vertical-align: top;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0 15px 0;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #777;
+            padding: 5px 8px;
+            font-size: 9pt;
+            text-align: left;
+        }
+        .data-table th {
+            background-color: #f0f4f8;
+            font-weight: bold;
+            color: #1a365d;
+        }
+        .section-title {
+            font-size: 10.5pt;
+            font-weight: bold;
+            color: #1a365d;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 3px;
+            margin-top: 10px;
+            margin-bottom: 6px;
+        }
+        ol {
+            margin: 4px 0 10px 20px;
+            padding: 0;
+            font-size: 8.5pt;
+            color: #333;
+        }
+        ol li {
+            margin-bottom: 4px;
+        }
+        .signature-table {
+            width: 100%;
+            margin-top: 25px;
+            page-break-inside: avoid;
+        }
+        .signature-table td {
+            width: 33.33%;
+            text-align: center;
+            font-size: 8.5pt;
+            vertical-align: bottom;
+            padding-top: 40px;
+        }
+        .sign-line {
+            border-top: 1px solid #333;
+            margin: 0 15px 4px 15px;
+        }
+        .acceptance-box {
+            border: 1px dashed #555;
+            padding: 8px;
+            margin-top: 15px;
+            font-size: 8.5pt;
+            background-color: #fafafa;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Letterhead -->
+    <div class="letterhead">
+        <div class="society-name" th:text="${society.name}">SAMITHA URBAN MULTI-STATE CREDIT CO-OPERATIVE SOCIETY LTD.</div>
+        <div class="society-sub" th:text="${society.regInfo}">Registered Under MSCS Act 2002, Govt. of India | Reg. No: MSCS/CR/2014</div>
+        <div class="society-sub">
+            <span th:text="${society.address}">Head Office: Administrative Complex, City Center</span> | 
+            Phone: <span th:text="${society.phone}">+91 1800-123-4567</span> | 
+            Email: <span th:text="${society.email}">contact@samithaurban.coop</span>
+        </div>
+    </div>
+
+    <!-- Document Header & Reference -->
+    <div class="doc-title">LOAN SANCTION LETTER</div>
+
+    <table class="meta-table">
+        <tr>
+            <td style="width: 60%;">
+                <strong>To:</strong><br />
+                <span style="font-weight: bold; font-size: 10.5pt;" th:text="${loan.memberName}">BORROWER NAME</span><br />
+                <span>Member ID: </span><strong th:text="${loan.memberId}">MEM001</strong><br />
+                <span>Address: </span><span th:text="${loan.address}">Address Line</span>, <span th:text="${loan.pinCode}">000000</span><br />
+                <span>Contact No: </span><span th:text="${loan.contactNo}">9876543210</span>
+            </td>
+            <td style="width: 40%; text-align: right;">
+                <strong>Sanction Ref No:</strong> <span th:text="${sanctionRefNo}">SL/2026/001</span><br />
+                <strong>Sanction Date:</strong> <span th:text="${loan.approvalDate != null ? loan.approvalDate : todayDate}">2026-09-17</span><br />
+                <strong>Loan ID:</strong> <strong th:text="${loan.loanId}">LP00001</strong><br />
+                <strong>Branch:</strong> <span th:text="${loan.branchName}">Main Branch</span>
+            </td>
+        </tr>
+    </table>
+
+    <p style="font-size: 9.5pt; margin: 6px 0;">
+        Dear Member,<br />
+        With reference to your loan application, we are pleased to inform you that the Competent Authority of 
+        <strong th:text="${society.name}">the Society</strong> has in-principle sanctioned your credit facility under the following terms and conditions:
+    </p>
+
+    <!-- Key Terms Table -->
+    <table class="data-table">
+        <tr>
+            <th style="width: 25%;">Loan ID</th>
+            <td style="width: 25%; font-weight: bold;" th:text="${loan.loanId}">LP00001</td>
+            <th style="width: 25%;">Loan Scheme / Type</th>
+            <td style="width: 25%;" th:text="${loan.loanPlanName + ' (' + loan.typeOfLoan + ')'}">Personal Loan</td>
+        </tr>
+        <tr>
+            <th>Sanctioned Amount</th>
+            <td style="font-weight: bold; color: #1a365d;" th:text="${'INR ' + loan.loanAmount}">INR 2,30,000</td>
+            <th>Rate of Interest</th>
+            <td th:text="${loan.rateOfInterest + '% p.a. (' + loan.interestType + ')'}">18.0% p.a.</td>
+        </tr>
+        <tr>
+            <th>Loan Tenure</th>
+            <td th:text="${loan.loanTerm + ' Months (' + loan.loanMode + ')'}">60 Months</td>
+            <th>Equated Monthly Installment (EMI)</th>
+            <td style="font-weight: bold;" th:text="${'INR ' + loan.emiPayment}">INR 5,840.49</td>
+        </tr>
+        <tr>
+            <th>Purpose of Loan</th>
+            <td th:text="${loan.purposeOfLoan != null ? loan.purposeOfLoan : 'General / Business Purpose'}">General Purpose</td>
+            <th>First Repayment Date</th>
+            <td th:text="${firstRepaymentDate}">2026-10-11</td>
+        </tr>
+        <tr>
+            <th>Processing Fee</th>
+            <td th:text="${'INR ' + (loan.processingFee != null ? loan.processingFee : '0.00')}">INR 2,000</td>
+            <th>Sanction Validity</th>
+            <td>30 Days from date of issuance</td>
+        </tr>
+    </table>
+
+    <!-- Terms and Conditions -->
+    <div class="section-title">TERMS AND CONDITIONS</div>
+    <ol>
+        <li><strong>Security &amp; Collateral:</strong> The borrower agrees to furnish required security/guarantee as stipulated by the Society prior to disbursement.</li>
+        <li><strong>Processing &amp; Statutory Charges:</strong> All statutory levies, GST, documentation fees, and processing charges will be deducted from the gross disbursement amount.</li>
+        <li><strong>Default &amp; Penal Charges:</strong> Overdue installments shall attract penal interest at the rate of 2% per month or Society's prevailing schedule for the period of delay.</li>
+        <li><strong>Prepayment &amp; Foreclosure:</strong> Prepayment/Foreclosure shall be permitted as per the Society's regulatory guidelines with zero penalty after completion of 6 active installments.</li>
+        <li><strong>Cancellation:</strong> The Society reserves the right to cancel or recall the sanction if any submitted information is discovered to be inaccurate or misrepresented.</li>
+    </ol>
+
+    <!-- Acceptance by Borrower -->
+    <div class="acceptance-box">
+        <strong>BORROWER ACCEPTANCE:</strong><br />
+        I/We hereby unconditionally accept the terms and conditions mentioned in this Sanction Letter and agree to abide by all Society bylaws.
+        <div style="margin-top: 15px;">
+            Borrower Signature: _______________________ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date: ___________________
+        </div>
+    </div>
+
+    <!-- Signatures -->
+    <table class="signature-table">
+        <tr>
+            <td>
+                <div class="sign-line"></div>
+                <strong>Prepared / Verified By</strong><br />
+                <span>Loan Officer</span>
+            </td>
+            <td>
+                <div class="sign-line"></div>
+                <strong>Branch Manager</strong><br />
+                <span>Branch Credit Committee</span>
+            </td>
+            <td>
+                <div class="sign-line"></div>
+                <strong>Authorized Signatory</strong><br />
+                <span th:text="${society.name}">Samitha Urban Society</span>
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>

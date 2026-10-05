@@ -1,16 +1,31 @@
 package com.microfinance.model;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
+@Table(name = "apply_for_gold", indexes = {
+	@Index(name = "idx_afg_goldid", columnList = "goldID"),
+	@Index(name = "idx_afg_status", columnList = "goldLoanStatus"),
+	@Index(name = "idx_afg_approval", columnList = "approvalStatus"),
+	@Index(name = "idx_afg_member", columnList = "memberCode")
+})
 public class ApplyForGold {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	private String loanNo;
 	private String goldID;
 	private String loanDate;
 	private String memberCode;
@@ -31,8 +46,19 @@ public class ApplyForGold {
 	private String emiPayment;
 	private String purposeOfLoan;
 	private String smsSend;
+
+	@Column(columnDefinition = "LONGTEXT")
 	private String photo;
+
+	@Column(columnDefinition = "LONGTEXT")
 	private String signature;
+
+	@Column(columnDefinition = "LONGTEXT")
+	private String ornamentPhoto;
+
+	@Column(columnDefinition = "LONGTEXT")
+	private String ornamentPhoto2;
+
 	private boolean approvalStatus;
 	private String approvalDate;
 
@@ -83,7 +109,15 @@ public class ApplyForGold {
 	private String collectionCharge;
 	private String financialConsultantName;
 	private String sanctionedAmount;
+	private String netDisbursement;
+	private String totalInterest;
+	private String totalPayableAmount;
+	private String paymentStatus;
 	private String goldLoanStatus;
+
+	@OneToMany(mappedBy = "applyForGold", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference
+	private List<ApplyForGoldItem> items = new ArrayList<>();
 
 	public Long getId() {
 		return id;
@@ -613,4 +647,80 @@ public class ApplyForGold {
 		this.goldLoanStatus = goldLoanStatus;
 	}
 
+	public String getLoanNo() {
+		return loanNo != null ? loanNo : goldID;
+	}
+
+	public void setLoanNo(String loanNo) {
+		this.loanNo = loanNo;
+	}
+
+	public String getNetDisbursement() {
+		return netDisbursement;
+	}
+
+	public void setNetDisbursement(String netDisbursement) {
+		this.netDisbursement = netDisbursement;
+	}
+
+	public String getPaymentStatus() {
+		return paymentStatus != null ? paymentStatus : "UNPAID";
+	}
+
+	public void setPaymentStatus(String paymentStatus) {
+		this.paymentStatus = paymentStatus;
+	}
+
+	public List<ApplyForGoldItem> getItems() {
+		return items;
+	}
+
+	public void setItems(List<ApplyForGoldItem> items) {
+		this.items = items;
+		if (items != null) {
+			for (ApplyForGoldItem item : items) {
+				item.setApplyForGold(this);
+			}
+		}
+	}
+
+	public String getOrnamentPhoto() {
+		return ornamentPhoto;
+	}
+
+	public void setOrnamentPhoto(String ornamentPhoto) {
+		this.ornamentPhoto = ornamentPhoto;
+	}
+
+	public String getOrnamentPhoto2() {
+		return ornamentPhoto2;
+	}
+
+	public void setOrnamentPhoto2(String ornamentPhoto2) {
+		this.ornamentPhoto2 = ornamentPhoto2;
+	}
+
+	public void addItem(ApplyForGoldItem item) {
+		if (items == null) {
+			items = new ArrayList<>();
+		}
+		items.add(item);
+		item.setApplyForGold(this);
+	}
+
+	public String getTotalInterest() {
+		return totalInterest;
+	}
+
+	public void setTotalInterest(String totalInterest) {
+		this.totalInterest = totalInterest;
+	}
+
+	public String getTotalPayableAmount() {
+		return totalPayableAmount;
+	}
+
+	public void setTotalPayableAmount(String totalPayableAmount) {
+		this.totalPayableAmount = totalPayableAmount;
+	}
 }

@@ -61,7 +61,7 @@ $(document).ready(function() {
 					 if (docType === "sanctionLetter") {
 						content = `
 		<div style="padding:20px; font-family:Arial; border:2px solid #000; background:#f9f9f9;">
-			<h2 style="text-align:center; margin:0;">Microfinance Cooperative Bank Ltd.</h2>
+			<h2 style="text-align:center; margin:0;">Samitha Urban Nidhi Ltd.</h2>
 			<h4 style="text-align:center; margin:0;">Branch: ${loanData.branchName || "-"}</h4>
 			<h3 style="text-align:center; margin:15px 0; text-decoration:underline;">Loan Sanction Letter</h3>
 
@@ -82,7 +82,7 @@ $(document).ready(function() {
 		   <p style="font-size:15px; text-align:justify;">
    We are pleased to inform you that your loan application has been carefully reviewed and successfully approved. 
    This sanction has been granted after considering your eligibility, repayment capacity, and the rules and policies 
-   of the Microfinance Cooperative Bank Ltd. The sanctioned loan will help you meet your financial requirements, 
+   of the Samitha Urban Nidhi Ltd. The sanctioned loan will help you meet your financial requirements, 
    and it will be governed by the terms and conditions as mentioned below. Please find the key details of your 
    sanctioned loan for your reference:
 </p>
@@ -196,7 +196,7 @@ $(document).ready(function() {
 					if (docType === "nocCertificate") {
 						content = `
 						<div style="padding:20px; font-family:Arial; border:2px solid #000; background:#f9f9f9;">
-							<h2 style="text-align:center; margin:0;">Microfinance Cooperative Bank Ltd.</h2>
+							<h2 style="text-align:center; margin:0;">Samitha Urban Nidhi Ltd.</h2>
 							<h4 style="text-align:center; margin:0;">Branch: ${loanData.branchName || "-"}</h4>
 							<h3 style="text-align:center; margin:15px 0; text-decoration:underline;">No Objection Certificate (NOC)</h3>
 
@@ -214,7 +214,7 @@ $(document).ready(function() {
 							<br><br>
 							<p style="text-align:right; margin-top:50px;">
 								Authorized Signatory<br>
-								Microfinance Cooperative Bank Ltd.
+								Samitha Urban Nidhi Ltd.
 							</p>
 						</div>`;
 					}
@@ -251,9 +251,9 @@ $(document).ready(function() {
 			success: function(result) {
 				if (result && result.data && result.data.length > 0) {
 					const loanData = result.data[0]; // if data is an array
-	let content = `
+					let content = `
     <div style="padding:30px; font-family:'Times New Roman', serif; border:2px solid #000; background:#fff; line-height:1.6;">
-        <h2 style="text-align:center; margin:0; color:#FFA500;">Microfinance Cooperative Bank Ltd.</h2>
+        <h2 style="text-align:center; margin:0; color:#FFA500;">Samitha Urban Nidhi Ltd.</h2>
         <h4 style="text-align:center; margin:0;">Branch: ${loanData.branchName || "-"}</h4>
         <h3 style="text-align:center; margin:15px 0; text-decoration:underline;">No Objection Certificate (NOC)</h3>
 
@@ -269,7 +269,7 @@ $(document).ready(function() {
 
         <p>Dear <b>${loanData.memberName || "-"}</b>,</p>
 
-        <p>This is to certify that you had availed a loan from <b>Microfinance Cooperative Bank Ltd.</b> For the Loan Plan <b>${loanData.loanPlanName}</b>, 
+        <p>This is to certify that you had availed a loan from <b>Samitha Urban Nidhi Ltd.</b> For the Loan Plan <b>${loanData.loanPlanName}</b>, 
         under Loan Reference Number <b>${loanData.loanId}</b>, sanctioned on <b>${loanData.loanDate || "-"}</b> 
         for an amount of <b>${loanData.loanAmount || "-"}</b>.</p>
 
@@ -282,12 +282,12 @@ $(document).ready(function() {
         to the above-mentioned loan account. The bank has no objection if you choose to avail financial 
         facilities from any other institution in the future.</p>
 
-        <p style="margin-bottom:40px;">We thank you for your association with <b>Microfinance Cooperative Bank Ltd.</b> and look forward 
+        <p style="margin-bottom:40px;">We thank you for your association with <b>Samitha Urban Nidhi Ltd.</b> and look forward 
         to serving you again.</p>
 
         <p style="text-align:right; margin-top:20px;">
             Authorized Signatory<br>
-            <b>Microfinance Cooperative Bank Ltd.</b>
+            <b>Samitha Urban Nidhi Ltd.</b>
         </p>
     </div>
 `;

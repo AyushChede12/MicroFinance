@@ -32,6 +32,7 @@ public class LoanPayment {
 	private String insuranceFee;
 	private String valuationFees;
 	private String stationaryFee;
+	private String netDisbursementAmount;
 
 	// Loan Payment
 	private String paymentDate;
@@ -45,6 +46,14 @@ public class LoanPayment {
 	private String chequeNo;
 	private String noOfInst;
 	private String amountDue;
+
+	// Penalty fields
+	private String dueDate; // ISO date when this EMI was due
+	private String penaltyAmount; // Calculated penalty in ₹
+	private String daysLate; // Days past grace period (0 = on time)
+	private String penaltyMode; // Flat / Percentage / PerDay
+	private String totalInterest;
+	private String totalPayableAmount;
 
 	public String getMemberName() {
 		return memberName;
@@ -292,6 +301,64 @@ public class LoanPayment {
 
 	public void setTypeOfLoan(String typeOfLoan) {
 		this.typeOfLoan = typeOfLoan;
+	}
+
+	public String getNetDisbursementAmount() {
+		return netDisbursementAmount;
+	}
+
+	public void setNetDisbursementAmount(String netDisbursementAmount) {
+		this.netDisbursementAmount = netDisbursementAmount;
+	}
+
+	// ── Penalty Getters & Setters ─────────────────────────────────────────────
+
+	public String getDueDate() {
+		return dueDate;
+	}
+
+	public void setDueDate(String dueDate) {
+		this.dueDate = dueDate;
+	}
+
+	public String getPenaltyAmount() {
+		return penaltyAmount;
+	}
+
+	public void setPenaltyAmount(String penaltyAmount) {
+		this.penaltyAmount = penaltyAmount;
+	}
+
+	public String getDaysLate() {
+		return daysLate;
+	}
+
+	public void setDaysLate(String daysLate) {
+		this.daysLate = daysLate;
+	}
+
+	public String getPenaltyMode() {
+		return penaltyMode;
+	}
+
+	public void setPenaltyMode(String penaltyMode) {
+		this.penaltyMode = penaltyMode;
+	}
+
+	public String getTotalInterest() {
+		return totalInterest;
+	}
+
+	public void setTotalInterest(String totalInterest) {
+		this.totalInterest = totalInterest;
+	}
+
+	public String getTotalPayableAmount() {
+		return totalPayableAmount;
+	}
+
+	public void setTotalPayableAmount(String totalPayableAmount) {
+		this.totalPayableAmount = totalPayableAmount;
 	}
 
 }

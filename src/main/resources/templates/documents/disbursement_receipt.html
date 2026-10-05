@@ -1,0 +1,228 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Loan Disbursement Receipt</title>
+    <style type="text/css">
+        @page {
+            size: A4 portrait;
+            margin: 15mm 12mm 15mm 12mm;
+            @bottom-right {
+                content: "Page " counter(page) " of " counter(pages);
+                font-family: Arial, sans-serif;
+                font-size: 8pt;
+                color: #666;
+            }
+        }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 9.5pt;
+            line-height: 1.4;
+            color: #222;
+            margin: 0;
+            padding: 0;
+        }
+        .letterhead {
+            text-align: center;
+            border-bottom: 2px solid #1a365d;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+        .society-name {
+            font-size: 14pt;
+            font-weight: bold;
+            color: #1a365d;
+            text-transform: uppercase;
+        }
+        .society-sub {
+            font-size: 8pt;
+            color: #555;
+            margin-top: 2px;
+        }
+        .doc-title {
+            text-align: center;
+            font-size: 12.5pt;
+            font-weight: bold;
+            text-decoration: underline;
+            margin: 10px 0;
+            color: #1a365d;
+        }
+        .receipt-meta {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .receipt-meta td {
+            font-size: 9pt;
+            padding: 3px 0;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        .table th, .table td {
+            border: 1px solid #777;
+            padding: 5px 8px;
+            font-size: 9pt;
+        }
+        .table th {
+            background-color: #f1f5f9;
+            font-weight: bold;
+            color: #1a365d;
+        }
+        .highlight-box {
+            background-color: #eff6ff;
+            border: 1px solid #3b82f6;
+            padding: 10px;
+            margin: 12px 0;
+            border-radius: 4px;
+        }
+        .net-amt {
+            font-size: 13pt;
+            font-weight: bold;
+            color: #1e3a8a;
+        }
+        .acknowledgment {
+            border: 1px dashed #64748b;
+            padding: 10px;
+            margin-top: 15px;
+            font-size: 8.5pt;
+            background-color: #fafafa;
+        }
+        .sign-table {
+            width: 100%;
+            margin-top: 30px;
+            page-break-inside: avoid;
+        }
+        .sign-table td {
+            width: 33.33%;
+            text-align: center;
+            font-size: 8.5pt;
+            padding-top: 45px;
+            vertical-align: bottom;
+        }
+        .sign-line {
+            border-top: 1px solid #333;
+            margin: 0 15px 4px 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Letterhead -->
+    <div class="letterhead">
+        <div class="society-name" th:text="${society.name}">SAMITHA URBAN MULTI-STATE CREDIT CO-OPERATIVE SOCIETY LTD.</div>
+        <div class="society-sub" th:text="${society.regInfo}">Registered Under MSCS Act 2002, Govt. of India | Reg. No: MSCS/CR/2014</div>
+        <div class="society-sub">
+            <span th:text="${society.address}">Head Office: Administrative Complex, City Center</span>
+        </div>
+    </div>
+
+    <div class="doc-title">OFFICIAL LOAN DISBURSEMENT RECEIPT &amp; VOUCHER</div>
+
+    <table class="receipt-meta">
+        <tr>
+            <td style="width: 60%;">
+                <strong>Voucher / Receipt No:</strong> <span th:text="${receiptVoucherNo}">DISB/2026/001</span><br />
+                <strong>Disbursement Date:</strong> <span th:text="${loan.paymentDate != null ? loan.paymentDate : loan.loanDate}">2026-09-11</span><br />
+                <strong>Branch:</strong> <span th:text="${loan.branchName}">Main Branch</span>
+            </td>
+            <td style="width: 40%; text-align: right;">
+                <strong>Loan Account ID:</strong> <strong th:text="${loan.loanId}">LP00001</strong><br />
+                <strong>Member ID:</strong> <strong th:text="${loan.memberId}">MEM001</strong><br />
+                <strong>Borrower:</strong> <strong th:text="${loan.memberName}">Borrower Full Name</strong>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Disbursement Breakdown Table -->
+    <table class="table">
+        <thead>
+            <tr>
+                <th style="width: 70%;">Particulars / Item Description</th>
+                <th style="width: 30%; text-align: right;">Amount (INR)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Gross Sanctioned Loan Amount</strong></td>
+                <td style="text-align: right; font-weight: bold;" th:text="${'₹ ' + loan.loanAmount}">₹ 2,30,000.00</td>
+            </tr>
+            <tr>
+                <td colspan="2" style="background-color: #f8fafc; font-weight: bold; color: #475569;">Less Deductions / Statutory Charges:</td>
+            </tr>
+            <tr>
+                <td style="padding-left: 20px;">Processing Fee</td>
+                <td style="text-align: right;" th:text="${'₹ ' + (loan.processingFee != null ? loan.processingFee : '0.00')}">₹ 2,000.00</td>
+            </tr>
+            <tr>
+                <td style="padding-left: 20px;">Legal / Verification Charges</td>
+                <td style="text-align: right;" th:text="${'₹ ' + (loan.legalCharges != null ? loan.legalCharges : '0.00')}">₹ 500.00</td>
+            </tr>
+            <tr>
+                <td style="padding-left: 20px;">GST on Fees</td>
+                <td style="text-align: right;" th:text="${'₹ ' + (loan.gst != null ? loan.gst : '0.00')}">₹ 450.00</td>
+            </tr>
+            <tr>
+                <td style="padding-left: 20px;">Credit Insurance Premium</td>
+                <td style="text-align: right;" th:text="${'₹ ' + (loan.insuranceFee != null ? loan.insuranceFee : '0.00')}">₹ 1,200.00</td>
+            </tr>
+            <tr>
+                <td style="padding-left: 20px;">Stationary &amp; Documentation Charges</td>
+                <td style="text-align: right;" th:text="${'₹ ' + (loan.stationaryFee != null ? loan.stationaryFee : '0.00')}">₹ 350.00</td>
+            </tr>
+            <tr style="background-color: #fef2f2;">
+                <td><strong>Total Deductions</strong></td>
+                <td style="text-align: right; font-weight: bold; color: #b91c1c;" th:text="${'₹ ' + totalDeductionsFormatted}">₹ 4,500.00</td>
+            </tr>
+            <tr style="background-color: #ecfdf5;">
+                <td style="font-size: 10.5pt;"><strong>NET DISBURSED AMOUNT (CREDITED TO BORROWER)</strong></td>
+                <td style="text-align: right; font-size: 11pt; font-weight: bold; color: #047857;" th:text="${'₹ ' + netDisbursedFormatted}">₹ 2,25,500.00</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Net Amount Box & Mode -->
+    <div class="highlight-box">
+        <div><strong>Disbursement Mode:</strong> <span th:text="${loan.paymentMode != null ? loan.paymentMode : 'Cash / Savings Transfer'}">Bank Transfer / Savings</span></div>
+        <div th:if="${loan.accountNo != null and !loan.accountNo.isEmpty()}"><strong>Credit Account No:</strong> <span th:text="${loan.accountNo}">SB1000234</span></div>
+        <div th:if="${loan.ref_UpiId != null and !loan.ref_UpiId.isEmpty()}"><strong>UTR / Reference ID:</strong> <span th:text="${loan.ref_UpiId}">UTR123456789</span></div>
+        <div th:if="${loan.chequeNo != null and !loan.chequeNo.isEmpty()}"><strong>Cheque No &amp; Date:</strong> <span th:text="${loan.chequeNo + ' (' + loan.chequeDate + ')'}">CHQ001</span></div>
+        <div style="margin-top: 6px;">
+            <strong>Amount in Words:</strong> <em th:text="${netDisbursedInWords}">Rupees Two Lakh Twenty Five Thousand Five Hundred Only</em>
+        </div>
+    </div>
+
+    <!-- Borrower Acknowledgment -->
+    <div class="acknowledgment">
+        <strong>BORROWER ACKNOWLEDGMENT:</strong><br />
+        Received with thanks the sum of <strong th:text="${'₹ ' + netDisbursedFormatted}">₹ 2,25,500.00</strong> as full and final disbursement 
+        under Loan ID <strong th:text="${loan.loanId}">LP00001</strong>. I confirm that all deductions listed above have been explained to and agreed by me.
+        <div style="margin-top: 15px;">
+            Borrower Signature: ___________________________________ &nbsp;&nbsp;&nbsp;&nbsp; Date: <span th:text="${todayDate}">2026-09-17</span>
+        </div>
+    </div>
+
+    <!-- Signatures -->
+    <table class="sign-table">
+        <tr>
+            <td>
+                <div class="sign-line"></div>
+                <strong>Cashier / Accountant</strong><br />
+                <span>Accounts Dept.</span>
+            </td>
+            <td>
+                <div class="sign-line"></div>
+                <strong>Branch Manager</strong><br />
+                <span>Authorized Signatory</span>
+            </td>
+            <td>
+                <div class="sign-line"></div>
+                <strong>Borrower Signature</strong><br />
+                <span th:text="${loan.memberName}">Borrower Name</span>
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>

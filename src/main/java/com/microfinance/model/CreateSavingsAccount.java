@@ -7,12 +7,19 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 @Entity
 public class CreateSavingsAccount {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@Transient
+	private String interestPercent;
+	@Transient
+	private String lastInterestTransferDate;
+	@Transient
+	private String nextInterestDueDate;
 	private String typeofaccount;
 	private String openingDate;
 	private String selectByCustomer;
@@ -496,6 +503,30 @@ public class CreateSavingsAccount {
 
 	public void setBranchName(BranchModule branchName) {
 		this.branchName = branchName;
+	}
+
+	public String getInterestPercent() {
+		return interestPercent;
+	}
+
+	public void setInterestPercent(String interestPercent) {
+		this.interestPercent = interestPercent;
+	}
+
+	public String getLastInterestTransferDate() {
+		return lastInterestTransferDate;
+	}
+
+	public void setLastInterestTransferDate(String lastInterestTransferDate) {
+		this.lastInterestTransferDate = lastInterestTransferDate;
+	}
+
+	public String getNextInterestDueDate() {
+		return nextInterestDueDate;
+	}
+
+	public void setNextInterestDueDate(String nextInterestDueDate) {
+		this.nextInterestDueDate = nextInterestDueDate;
 	}
 
 }

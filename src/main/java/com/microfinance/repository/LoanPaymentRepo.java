@@ -26,4 +26,6 @@ public interface LoanPaymentRepo extends JpaRepository<LoanPayment, Long> {
 	@Query("SELECT l FROM LoanPayment l WHERE l.paymentMode='CHEQUE' AND l.paymentStatus='PENDING'")
 	List<LoanPayment> findAllPendingCheques();
 
+	List<LoanPayment> findByAccountNo(String accountNo);
+
 }

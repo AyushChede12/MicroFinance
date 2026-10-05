@@ -1,0 +1,212 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Guarantor &amp; Co-Applicant Declaration</title>
+    <style type="text/css">
+        @page {
+            size: A4 portrait;
+            margin: 15mm 12mm 15mm 12mm;
+            @bottom-right {
+                content: "Page " counter(page) " of " counter(pages);
+                font-family: Arial, sans-serif;
+                font-size: 8pt;
+                color: #666;
+            }
+        }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 9.5pt;
+            line-height: 1.5;
+            color: #222;
+            margin: 0;
+            padding: 0;
+        }
+        .letterhead {
+            text-align: center;
+            border-bottom: 2px solid #1a365d;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+        }
+        .society-name {
+            font-size: 14pt;
+            font-weight: bold;
+            color: #1a365d;
+            text-transform: uppercase;
+        }
+        .society-sub {
+            font-size: 8pt;
+            color: #555;
+            margin-top: 2px;
+        }
+        .doc-title {
+            text-align: center;
+            font-size: 12pt;
+            font-weight: bold;
+            text-decoration: underline;
+            margin: 12px 0;
+            color: #1a365d;
+        }
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0 15px 0;
+        }
+        .info-table th, .info-table td {
+            border: 1px solid #777;
+            padding: 5px 8px;
+            font-size: 9pt;
+        }
+        .info-table th {
+            background-color: #f1f5f9;
+            width: 25%;
+            font-weight: bold;
+            color: #1a365d;
+            text-align: left;
+        }
+        .section-title {
+            font-size: 10pt;
+            font-weight: bold;
+            color: #1a365d;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 2px;
+            margin-top: 14px;
+            margin-bottom: 6px;
+        }
+        p {
+            text-align: justify;
+            margin: 6px 0;
+        }
+        .sign-table {
+            width: 100%;
+            margin-top: 30px;
+            page-break-inside: avoid;
+        }
+        .sign-table td {
+            width: 50%;
+            font-size: 8.5pt;
+            padding: 10px;
+            vertical-align: top;
+        }
+        .sign-box {
+            border: 1px solid #cbd5e1;
+            padding: 12px;
+            min-height: 80px;
+        }
+        .sign-line {
+            border-top: 1px dashed #444;
+            margin-top: 40px;
+            text-align: center;
+            padding-top: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Letterhead -->
+    <div class="letterhead">
+        <div class="society-name" th:text="${society.name}">SAMITHA URBAN MULTI-STATE CREDIT CO-OPERATIVE SOCIETY LTD.</div>
+        <div class="society-sub" th:text="${society.regInfo}">Registered Under MSCS Act 2002, Govt. of India | Reg. No: MSCS/CR/2014</div>
+        <div class="society-sub">
+            <span th:text="${society.address}">Head Office: Administrative Complex, City Center</span>
+        </div>
+    </div>
+
+    <div class="doc-title">GUARANTOR &amp; CO-APPLICANT DEED OF GUARANTEE &amp; DECLARATION</div>
+
+    <div class="section-title">1. PARTICULARS OF THE GUARANTOR</div>
+    <table class="info-table">
+        <tr>
+            <th>Guarantor Full Name</th>
+            <td style="font-weight: bold;" th:text="${loan.guarantorIdentity != null ? loan.guarantorIdentity : 'N/A'}">Shri. Guarantor Name</td>
+            <th>Member Code / ID</th>
+            <td th:text="${loan.guarantorMemberId != null ? loan.guarantorMemberId : 'N/A'}">G001</td>
+        </tr>
+        <tr>
+            <th>Aadhar / Identification No.</th>
+            <td th:text="${loan.guarantorAadharNo != null ? loan.guarantorAadharNo : loan.guarantorIdentityNo}">1234-5678-9012</td>
+            <th>PAN No.</th>
+            <td th:text="${loan.guarantorPanNo != null ? loan.guarantorPanNo : 'NOT PROVIDED'}">ABCDE1234F</td>
+        </tr>
+        <tr>
+            <th>Residential Address</th>
+            <td colspan="3">
+                <span th:text="${loan.guarantorAddress}">Guarantor Full Address Line</span>, 
+                PIN: <span th:text="${loan.guarantorPinCode}">000000</span>
+            </td>
+        </tr>
+        <tr>
+            <th>Contact Number</th>
+            <td th:text="${loan.guarantorContactNo}">9876543210</td>
+            <th>Relationship to Borrower</th>
+            <td th:text="${loan.relativeDetails != null ? loan.relativeDetails : 'Relative / Associate'}">Brother / Associate</td>
+        </tr>
+    </table>
+
+    <div class="section-title">2. PARTICULARS OF THE GUARANTEED CREDIT FACILITY</div>
+    <table class="info-table">
+        <tr>
+            <th>Loan Account ID</th>
+            <td style="font-weight: bold;" th:text="${loan.loanId}">LP00001</td>
+            <th>Borrower Name</th>
+            <td style="font-weight: bold;" th:text="${loan.memberName}">Borrower Full Name</td>
+        </tr>
+        <tr>
+            <th>Sanctioned Amount</th>
+            <td style="color: #1a365d; font-weight: bold;" th:text="${'INR ' + loan.loanAmount}">INR 2,30,000</td>
+            <th>Loan Tenure / Rate</th>
+            <td th:text="${loan.loanTerm + ' Months @ ' + loan.rateOfInterest + '% p.a.'}">60 Months @ 18.0%</td>
+        </tr>
+    </table>
+
+    <div class="section-title">3. JOINT LIABILITY &amp; ASSET/INCOME DECLARATION</div>
+    <p>
+        I, the undersigned Guarantor, do hereby solemnly declare, affirm, and agree as follows:
+    </p>
+    <p>
+        1. That I have verified the credit requirements of the Borrower and voluntarily agreed to stand as surety and unconditional guarantor for the prompt repayment of the aforesaid loan along with interest, charges, and incidental expenses.
+    </p>
+    <p>
+        2. That my liability under this deed is <strong>joint, several, and co-extensive</strong> with that of the Borrower. In the event of default or non-payment by the Borrower, the Society shall be at absolute liberty to demand and enforce immediate payment of all outstanding sums directly from me, without having to first exhaust remedies against the Borrower.
+    </p>
+    <p>
+        3. That I possess sufficient unencumbered movable and immovable assets and steady monthly income to adequately meet the obligations assumed herein, and I undertake not to alienate or dispose of my principal assets during the subsistence of this guarantee.
+    </p>
+
+    <!-- Signatures -->
+    <table class="sign-table">
+        <tr>
+            <td>
+                <div class="sign-box">
+                    <strong>SIGNED &amp; AFFIRMED BY GUARANTOR:</strong>
+                    <div class="sign-line">
+                        Signature of Guarantor<br />
+                        Date: <span th:text="${todayDate}">2026-09-17</span>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="sign-box">
+                    <strong>IN THE PRESENCE OF WITNESS:</strong>
+                    <div class="sign-line">
+                        Signature &amp; Full Name of Witness<br />
+                        Address: __________________________
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div class="sign-box" style="margin-top: 5px;">
+                    <strong>FOR SOCIETY USE ONLY:</strong><br />
+                    <span>Verified Guarantor Identity &amp; Kyc documents. Guarantee accepted on behalf of Society.</span>
+                    <div class="sign-line" style="margin-top: 30px;">
+                        Branch Manager / Authorized Officer Signature &amp; Stamp
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>
