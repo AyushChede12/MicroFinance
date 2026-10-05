@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MicroFinance Enterprise Banking & Lending ERP - Complete Software Specification</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #5c1d68;
+            --primary-light: #7b278b;
+            --primary-dark: #3f1147;
+            --primary-subtle: #f8eff9;
+            --secondary: #0d9488;
+            --secondary-light: #14b8a6;
+            --secondary-subtle: #f0fdfa;
+            --accent: #f59e0b;
+            --accent-subtle: #fffbeb;
+            --dark: #0f172a;
+            --text: #334155;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --border-light: #f1f5f9;
+            --bg-light: #f8fafc;
+            --white: #ffffff;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        @page {
+            size: A4;
+            margin: 14mm 12mm 14mm 12mm;
+            @bottom-right {
+                content: counter(page);
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                font-size: 9pt;
+                color: #94a3b8;
+            }
+            @bottom-left {
+                content: "MicroFinance Enterprise ERP System - Confidential & Proprietary";
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                font-size: 8pt;
+                color: #94a3b8;
+            }
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--text);
+            background-color: var(--white);
+            line-height: 1.55;
+            font-size: 11pt;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        /* Page Layout & Breaks */
+        .page {
+            page-break-after: always;
+            position: relative;
+            padding: 10px 0;
+        }
+        .page:last-child {
+            page-break-after: avoid;
+        }
+        .no-break {
+            page-break-inside: avoid;
+        }
+
+        /* Cover Page */
+        .cover-page {
+            min-height: 98vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background: linear-gradient(145deg, #2d0b33 0%, #4a1555 40%, #1e1b4b 100%);
+            color: var(--white);
+            padding: 50px 45px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            page-break-after: always;
+        }
+        .cover-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 10.5pt;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #f1f5f9;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: fit-content;
+        }
+        .cover-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 34pt;
+            font-weight: 700;
+            line-height: 1.15;
+            margin: 25px 0 15px 0;
+            background: linear-gradient(120deg, #ffffff 40%, #f3c2f9 80%, #a7f3d0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .cover-subtitle {
+            font-size: 14pt;
+            font-weight: 400;
+            color: #e2e8f0;
+            line-height: 1.5;
+            max-width: 90%;
+            margin-bottom: 35px;
+        }
+        .cover-highlights {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin: 30px 0;
+        }
+        .cover-card {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 16px 20px;
+            border-radius: 14px;
+        }
+        .cover-card h4 {
+            font-size: 11.5pt;
+            font-weight: 700;
+            color: #fde047;
+            margin-bottom: 6px;
+        }
+        .cover-card p {
+            font-size: 9.5pt;
+            color: #cbd5e1;
+            line-height: 1.4;
+        }
+        .cover-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 25px;
+            margin-top: 20px;
+        }
+        .cover-meta h5 {
+            font-size: 9pt;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #94a3b8;
+            margin-bottom: 4px;
+        }
+        .cover-meta p {
+            font-size: 11pt;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        /* Typography & Common Sections */
+        h1, h2, h3, h4, h5 {
+            color: var(--dark);
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2.5px solid var(--primary);
+            padding-bottom: 8px;
+            margin-top: 24px;
+            margin-bottom: 18px;
+        }
+        .section-title {
+            font-size: 17pt;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-num {
+            background: var(--primary);
+            color: var(--white);
+            font-size: 10pt;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 6px;
+        }
+        .lead-text {
+            font-size: 11pt;
+            color: #475569;
+            margin-bottom: 18px;
+            line-height: 1.6;
+        }
+
+        /* Module Box Styling */
+        .module-box {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--primary);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            page-break-inside: avoid;
+        }
+        .module-box.teal {
+            border-left-color: var(--secondary);
+        }
+        .module-box.amber {
+            border-left-color: var(--accent);
+        }
+        .module-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .module-title {
+            font-size: 13pt;
+            font-weight: 700;
+            color: var(--dark);
+        }
+        .module-badge {
+            font-size: 8.5pt;
+            font-weight: 600;
+            padding: 3px 9px;
+            border-radius: 20px;
+            background: var(--primary-subtle);
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .module-badge.teal {
+            background: var(--secondary-subtle);
+            color: var(--secondary);
+        }
+        .module-badge.amber {
+            background: var(--accent-subtle);
+            color: #b45309;
+        }
+        .module-desc {
+            font-size: 10pt;
+            color: #475569;
+            margin-bottom: 12px;
+        }
+
+        /* Feature List Grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px 18px;
+        }
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 9.5pt;
+            color: #334155;
+        }
+        .feature-bullet {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 11pt;
+            line-height: 1;
+        }
+        .feature-item strong {
+            color: #0f172a;
+            font-weight: 600;
+        }
+
+        /* Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9pt;
+            margin: 14px 0 20px 0;
+        }
+        .data-table th {
+            background-color: var(--primary-dark);
+            color: var(--white);
+            font-weight: 600;
+            text-align: left;
+            padding: 9px 12px;
+            font-size: 9pt;
+            letter-spacing: 0.3px;
+        }
+        .data-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border);
+            color: #334155;
+            vertical-align: middle;
+        }
+        .data-table tr:nth-child(even) {
+            background-color: var(--bg-light);
+        }
+
+        /* Summary Cards / KPI */
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .kpi-card {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            text-align: center;
+        }
+        .kpi-value {
+            font-size: 16pt;
+            font-weight: 800;
+            color: var(--primary);
+            font-family: 'Space Grotesk', sans-serif;
+            margin-bottom: 2px;
+        }
+        .kpi-label {
+            font-size: 8pt;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-light);
+            letter-spacing: 0.5px;
+        }
+
+        /* Callout Box */
+        .callout {
+            background: #fdf4ff;
+            border: 1px solid #f0abfc;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin: 16px 0;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        .callout-icon {
+            font-size: 16pt;
+            line-height: 1;
+            color: var(--primary);
+        }
+        .callout-text h4 {
+            font-size: 10.5pt;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 4px;
+        }
+        .callout-text p {
+            font-size: 9.5pt;
+            color: #6b21a8;
+            line-height: 1.45;
+        }
+
+        /* Workflow diagram pills */
+        .flow-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin: 15px 0 20px 0;
+        }
+        .flow-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            flex: 1;
+        }
+        .flow-step-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 10pt;
+            margin-bottom: 6px;
+        }
+        .flow-step-label {
+            font-size: 8.5pt;
+            font-weight: 600;
+            color: var(--dark);
+            line-height: 1.2;
+        }
+        .flow-arrow {
+            color: #94a3b8;
+            font-weight: bold;
+            font-size: 14pt;
+            padding: 0 4px;
+        }
+
+        /* Tags */
+        .tag {
+            display: inline-block;
+            font-size: 7.5pt;
+            font-weight: 600;
+            padding: 2px 7px;
+            border-radius: 4px;
+            background: #e2e8f0;
+            color: #334155;
+            margin-right: 4px;
+        }
+        .tag-green { background: #dcfce7; color: #166534; }
+        .tag-blue { background: #e0f2fe; color: #0369a1; }
+        .tag-purple { background: #f3e8ff; color: #6b21a8; }
+        .tag-amber { background: #fef3c7; color: #92400e; }
+
+        .footer-note {
+            text-align: center;
+            font-size: 8.5pt;
+            color: #94a3b8;
+            margin-top: 30px;
+            border-top: 1px solid var(--border);
+            padding-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PAGE 1: COVER PAGE -->
+    <div class="page">
+        <div class="cover-page">
+            <div>
+                <div class="cover-badge">Enterprise Edition &bull; Core Banking ERP</div>
+                <h1 class="cover-title">MicroFinance Core Banking &amp; Lending Management System</h1>
+                <p class="cover-subtitle">A Comprehensive, End-to-End Enterprise Solution for Multi-Branch Microfinance Institutions, NBFCs, Mutual Benefit Trusts &amp; Credit Cooperatives.</p>
+                
+                <div class="cover-highlights">
+                    <div class="cover-card">
+                        <h4>🏛️ Multi-Branch Core Banking</h4>
+                        <p>Real-time Savings &amp; Current accounts, inter-branch fund settlements, automated interest calculation, and digital passbooks.</p>
+                    </div>
+                    <div class="cover-card">
+                        <h4>💰 360° Lending Lifecycle</h4>
+                        <p>Complete workflows for Personal Loans, Business Loans, Secured Gold Loans, and Joint Liability Groups (JLG).</p>
+                    </div>
+                    <div class="cover-card">
+                        <h4>📈 Term Deposit &amp; Policy Portfolio</h4>
+                        <p>Automated FD, RD, Daily Doorstep Deposits (DDS), MIS, and Flexible Recurring Investment management.</p>
+                    </div>
+                    <div class="cover-card">
+                        <h4>🛡️ Dual-Control Maker-Checker</h4>
+                        <p>Fraud-proof multi-tier approval pipeline for KYC, loans, investments, vouchers, and cash transfers.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="cover-footer">
+                    <div class="cover-meta">
+                        <h5>Software Specification &amp; Deliverables Document</h5>
+                        <p>Complete Operational &amp; Technical Capabilities Guide</p>
+                    </div>
+                    <div class="cover-meta" style="text-align: right;">
+                        <h5>Document Status</h5>
+                        <p>Client Presentation Version 2026</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 2: EXECUTIVE SUMMARY & ARCHITECTURE -->
+    <div class="page">
+        <div class="section-header">
+            <div class="section-title">
+                <span class="section-num">01</span>
+                Executive Summary &amp; Platform Architecture
+            </div>
+            <span class="module-badge">Enterprise Overview</span>
+        </div>
+
+        <p class="lead-text">
+            The <strong>MicroFinance ERP System</strong> is an industrial-strength financial operating platform engineered to automate every aspect of banking, micro-credit lending, member equity, and field agency operations. Built on proven Spring Boot enterprise technologies, it guarantees zero calculation discrepancies, complete double-entry ledger integrity, strict maker-checker governance, and real-time regulatory compliance reporting.
+        </p>
+
+        <div class="kpi-row">
+            <div class="kpi-card">
+                <div class="kpi-value">15+</div>
+                <div class="kpi-label">Core Modules</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">100%</div>
+                <div class="kpi-label">Maker-Checker Audit</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">Multi</div>
+                <div class="kpi-label">Branch Hierarchy</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">Real-Time</div>
+                <div class="kpi-label">Balance Sheet &amp; P&amp;L</div>
+            </div>
+        </div>
+
+        <div class="module-box teal">
+            <div class="module-header">
+                <div class="module-title">Technology &amp; Security Architecture</div>
+                <span class="module-badge teal">Robust &amp; Scalable</span>
+            </div>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <span class="feature-bullet">&#x2714;</span>
+                    <div><strong>Backend Engine:</strong> Java Spring Boot 2.7.x with enterprise JPA / Hibernate ORM.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&#x2714;</span>
+                    <div><strong>Database &amp; Data Integrity:</strong> Relational ACID compliance with foreign key cascades and automated transaction rollbacks.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&#x2714;</span>
+                    <div><strong>Security &amp; RBAC:</strong> Granular Role-Based Access Control, session timeouts, and isolated module-menu access permissions.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&#x2714;</span>
+                    <div><strong>Report Automation:</strong> Apache POI dynamic Excel exports and print-ready thermal/A4 vouchers and legal bonds.</div>
+                </div>
+            </div>
+        </div>
+
+        <h3 style="font-size: 12pt; margin: 18px 0 10px 0; color: var(--dark);">End-to-End Operational Lifecycle Workflow</h3>
+        <div class="flow-container">
+            <div class="flow-step">
+                <div class="flow-step-circle">1</div>
+                <div class="flow-step-label">Member KYC &amp;<br>Shareholding</div>
+            </div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-step">
+                <div class="flow-step-circle">2</div>
+                <div class="flow-step-label">Savings / Term<br>Deposits (FD/RD)</div>
+            </div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-step">
+                <div class="flow-step-circle">3</div>
+                <div class="flow-step-label">Loan Origination<br>&amp; Appraisal</div>
+            </div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-step">
+                <div class="flow-step-circle">4</div>
+                <div class="flow-step-label">Dual-Control<br>Approval</div>
+            </div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-step">
+                <div class="flow-step-circle">5</div>
+                <div class="flow-step-label">Disbursement &amp;<br>EMI Collection</div>
+            </div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-step">
+                <div class="flow-step-circle">6</div>
+                <div class="flow-step-label">Maturity / Closure<br>&amp; Audit Reports</div>
+            </div>
+        </div>
+
+        <div class="callout">
+            <div class="callout-icon">&#9881;</div>
+            <div class="callout-text">
+                <h4>Maker-Checker Dual Governance Framework</h4>
+                <p>No high-value transaction, member onboarding, loan sanction, or maturity disbursement takes effect immediately upon entry. Field operators create requests that are routed to branch managers/auditors in real-time approval queues, preventing internal leakage.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 3: MODULES 1 TO 3 (PREFERENCES, KYC & SHAREHOLDING) -->
+    <div class="page">
+        <div class="section-header">
+            <div class="section-title">
+                <span class="section-num">02</span>
+                Core Administration, Member KYC &amp; Equity
+            </div>
+            <span class="module-badge">Modules 1 - 3</span>
+        </div>
+
+        <!-- MODULE 1 -->
+        <div class="module-box">
+            <div class="module-header">
+                <div class="module-title">1. Preferences &amp; Multi-Branch System Setup</div>
+                <span class="module-badge">System Foundation</span>
+            </div>
+            <p class="module-desc">Centralized configuration suite governing institution identity, organizational hierarchy, banking partners, and security policies across all branches.</p>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Company Administration:</strong> Set institution legal name, registration numbers, CIN/TAN, logo, and letterhead credentials.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Financial Year Control:</strong> Open, lock, and transition fiscal periods with ledger balances carried forward safely.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Multi-Branch Hierarchy:</strong> Create unlimited physical branches, sub-offices, and regional hubs with unique prefix codes.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Bank &amp; Account Masters:</strong> Configure commercial bank accounts, clearing account numbers, and IFSC/branch tags.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Dynamic Numbering (Codes):</strong> Auto-generate customized serial numbers for Members, Accounts, Policies, and Loans.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Granular User &amp; Menu RBAC:</strong> Assign fine-grained view/edit/delete access rights per menu per user role.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODULE 2 -->
+        <div class="module-box teal">
+            <div class="module-header">
+                <div class="module-title">2. Customer 360 &amp; KYC Management</div>
+                <span class="module-badge teal">Member Lifecycle</span>
+            </div>
+            <p class="module-desc">Complete digitization of customer relationship onboarding, document verification, biometric/photo archives, and unified financial history.</p>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Digital Member Onboarding:</strong> Capture full demographic details, guardian links, occupation, category, and nominee records.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Integrated KYC Vault:</strong> Upload and verify Aadhaar Card, PAN Card, Voter ID, Ration Card, and Member Signature/Photo.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Customer 360° Summary:</strong> Single-window dashboard displaying all active savings, FD/RD policies, and loans under one member ID.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Advanced Member Search:</strong> Instant lookup by Customer No, Mobile Number, Aadhaar Number, Name, or Branch.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODULE 3 -->
+        <div class="module-box amber">
+            <div class="module-header">
+                <div class="module-title">3. Customer Shareholding &amp; Equity Management</div>
+                <span class="module-badge amber">Statutory Compliance</span>
+            </div>
+            <p class="module-desc">Mandatory statutory module for Mutual Benefit &amp; Credit Societies to manage member equity capital, distinctive numbers, and certificates.</p>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Share Allotment Engine:</strong> Issue equity shares upon membership enrollment with face value and share quantity tracking.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Share Transfer System:</strong> Regulated transfer of shares between existing members with board resolution approval flags.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Share Certificate Generation:</strong> Print professional, tamper-proof legal Share Certificates with seal and signature placeholders.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>DNO Tracking &amp; Unallotted Shares:</strong> Distinctive Number series tracking with live unallotted equity inventory reports.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 4: MODULES 4 & 5 (SAVINGS & TERM DEPOSIT MANAGEMENT) -->
+    <div class="page">
+        <div class="section-header">
+            <div class="section-title">
+                <span class="section-num">03</span>
+                Core Banking: Savings &amp; Investment Portfolios
+            </div>
+            <span class="module-badge">Modules 4 - 5</span>
+        </div>
+
+        <!-- MODULE 4 -->
+        <div class="module-box">
+            <div class="module-header">
+                <div class="module-title">4. Savings &amp; Current Account (Core Banking)</div>
+                <span class="module-badge">Core Banking Engine</span>
+            </div>
+            <p class="module-desc">Full-featured deposit operations supporting cash counters, passbook printing, fund transfers, and automated interest posting.</p>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Account Opening &amp; Scheme Catalog:</strong> Configure minimum balance, interest rates, nomination, and joint operating rules.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Deposit &amp; Withdrawal Counter:</strong> Multi-channel deposit and withdrawal processing with cash verification and receipt printing.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Internal Fund Transfers:</strong> Instant real-time fund transfers between internal savings accounts with auto-contra entries.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Automated Interest Engine:</strong> Calculate and post interest on daily product or quarterly average balances with TDS rules.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Savings Passbook &amp; Statements:</strong> Print chronological passbook updates and export statement sheets to PDF/Excel.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Account Closure &amp; Maintenance:</strong> Formal account closing workflow, unfreeze options, and annual SMS service charge deductions.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODULE 5 -->
+        <div class="module-box teal">
+            <div class="module-header">
+                <div class="module-title">5. Policy &amp; Term Deposit Management (FD, RD, MIS, DDS)</div>
+                <span class="module-badge teal">Investment Engine</span>
+            </div>
+            <p class="module-desc">Industrial deposit plan catalog enabling micro-savings schemes, daily doorstep collections, and high-yield fixed investments.</p>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th style="width: 25%;">Deposit Scheme</th>
+                        <th style="width: 35%;">Operational Mechanism</th>
+                        <th style="width: 40%;">Key Features &amp; Controls</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Fixed Deposit (FD)</strong></td>
+                        <td>One-time lumpsum deposit with compounding tenure interest.</td>
+                        <td>Auto-calculated maturity value, bond generation, premature withdrawal penalties.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Recurring Deposit (RD)</strong></td>
+                        <td>Monthly fixed installment savings over predetermined months.</td>
+                        <td>Late payment penalty calculation, installment passbooks, payment receipts.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Daily Deposit (DDS / Pigmy)</strong></td>
+                        <td>Doorstep daily small savings collected via field agents.</td>
+                        <td>Batch daily premium entries, agent collection tracking, flexible tenures.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Monthly Income Scheme (MIS)</strong></td>
+                        <td>Lumpsum deposit with monthly interest payouts to savings account.</td>
+                        <td>Automated monthly interest disbursement register, reinvestment options.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Flexible Premium Plan</strong></td>
+                        <td>Variable investment amounts with flexible renewal schedules.</td>
+                        <td>Customized interest compounding, transaction slips, and partial liquidation.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Bond / Certificate Generation:</strong> Print official Investment Bonds and Bond Re-issuance logs.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Installment Record Book:</strong> Micro-level ledger tracking every renewal installment and penalty waiver.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 5: MODULES 6, 7 & 8 (LOANS, GOLD LOANS & JLG) -->
+    <div class="page">
+        <div class="section-header">
+            <div class="section-title">
+                <span class="section-num">04</span>
+                Comprehensive Lending Suite (Retail, Gold &amp; JLG)
+            </div>
+            <span class="module-badge">Modules 6 - 8</span>
+        </div>
+
+        <!-- MODULE 6 -->
+        <div class="module-box">
+            <div class="module-header">
+                <div class="module-title">6. Standard &amp; Retail Loan Management</div>
+                <span class="module-badge">Personal &amp; Business Credit</span>
+            </div>
+            <p class="module-desc">End-to-end loan origination, risk appraisal, amortization scheduling, disbursement, collection, and recovery management.</p>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Scheme Catalog &amp; EMI Calculator:</strong> Configurable Flat and Reducing balance interest schemes with interactive repayment simulators.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Application &amp; Co-Signer Appraisal:</strong> Capture loan purpose, guarantor details, asset collateral, and credit sanction terms.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Multi-Stage Loan Sanction:</strong> Committee review, document checklist verification, and formal disbursement via cash or bank.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Regular &amp; Irregular EMI Collection:</strong> Accept scheduled EMIs, advance installments, or irregular partial payments with fine tracking.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Sanction Letters &amp; Loan Ledger:</strong> Auto-generate formal loan agreements, repayment passbooks, and real-time principal balance ledgers.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Foreclosure, Settlement &amp; NOC:</strong> Early closure interest rebate calculation, loan settlement, and automated No Objection Certificates.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODULE 7 -->
+        <div class="module-box amber">
+            <div class="module-header">
+                <div class="module-title">7. Secured Gold Loan Management</div>
+                <span class="module-badge amber">Collateral Backed</span>
+            </div>
+            <p class="module-desc">Specialized asset-backed lending module with precision karat valuation, locker safekeeping, and pledge custody tracking.</p>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Gold Directory &amp; Valuation:</strong> Record ornament types, gross weight, stone deduction, net weight, purity karats, and market rate LTV.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Safe Vault &amp; Locker Assignment:</strong> Assign secure locker packet numbers, appraiser certification, and tamper-proof bag seals.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Gold Loan Sanction &amp; Agreements:</strong> Generate gold pawn tickets, customer pledge agreements, and disbursement vouchers.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Pledge Release &amp; Gold NOC:</strong> Complete redemption protocol upon full settlement with collateral handover sign-off and Gold NOC.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODULE 8 -->
+        <div class="module-box teal">
+            <div class="module-header">
+                <div class="module-title">8. Joint Liability Group (JLG) &amp; Micro-Credit</div>
+                <span class="module-badge teal">Group Lending Model</span>
+            </div>
+            <p class="module-desc">Micro-credit group lending engine based on Grameen / SHG models with mutual peer guarantees and center meeting collections.</p>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Lending Group &amp; Center Formation:</strong> Create Self-Help / JLG groups (5-20 members), assign Group Leader, and link to collection centers.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Group Loan Application:</strong> Mutual guarantee agreement, cross-liability tracking, and unified group loan approval.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Center Meeting Repayment Portal:</strong> Bulk collection sheet processing for weekly/bi-weekly center meetings with one-click posting.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Group Performance &amp; Settlement:</strong> Group statement of accounts, default resolution, and completed group loan archival.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 6: MODULES 9, 10 & 11 (MAKER-CHECKER, AUDIT & MATURITY) -->
+    <div class="page">
+        <div class="section-header">
+            <div class="section-title">
+                <span class="section-num">05</span>
+                Governance, Audit Safety &amp; Maturity Settlements
+            </div>
+            <span class="module-badge">Modules 9 - 11</span>
+        </div>
+
+        <!-- MODULE 9 -->
+        <div class="module-box">
+            <div class="module-header">
+                <div class="module-title">9. Dual-Control Maker-Checker Approval System</div>
+                <span class="module-badge">Zero Fraud Security</span>
+            </div>
+            <p class="module-desc">Industry-standard four-eye principle ensuring all financial operations and master modifications undergo independent verification.</p>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Approval Queue</th>
+                        <th>Workflow Scope</th>
+                        <th>Risk Prevention Goal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Customer &amp; KYC Approvals</strong></td>
+                        <td>Verifies identity proofs and member eligibility.</td>
+                        <td>Prevents ghost accounts and duplicate registrations.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Share &amp; Equity Transactions</strong></td>
+                        <td>Validates share transfers and certificate allocations.</td>
+                        <td>Ensures strict equity ledger balancing.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Investment Schemes (FD/RD/DD)</strong></td>
+                        <td>Authorizes new term deposit booking &amp; rate locks.</td>
+                        <td>Avoids unauthorized interest rate offerings.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Savings &amp; Account Transfers</strong></td>
+                        <td>Validates high-value deposits, cashouts &amp; fund transfers.</td>
+                        <td>Eliminates teller counter discrepancies.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Loan Sanctions &amp; EMI Payments</strong></td>
+                        <td>Supervises credit approvals and manual waiver postings.</td>
+                        <td>Stops unauthorized disbursement &amp; fine waivers.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Maturity &amp; Inter-Branch Cash</strong></td>
+                        <td>Clears final claim payouts and physical cash movements.</td>
+                        <td>Guarantees cash vault and fund security.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- MODULE 10 -->
+        <div class="module-box amber">
+            <div class="module-header">
+                <div class="module-title">10. Regulated Data Correction &amp; Rectification Engine</div>
+                <span class="module-badge amber">Super-Admin Audit</span>
+            </div>
+            <p class="module-desc">Supervised administrative correction portal with tamper-proof logging to rectify legitimate operator errors without breaking ledger chains.</p>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Member &amp; Policy Correction:</strong> Correct name typos, addresses, and renewal date misentries with change-history logs.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Financial Entry Adjustment:</strong> Reverse and rectify accidental journal debits/credits without corrupting historical balance sheets.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Transaction Removal with Audit:</strong> Super-admin controlled deletion of erroneous flexible/savings records with reason logging.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODULE 11 -->
+        <div class="module-box teal">
+            <div class="module-header">
+                <div class="module-title">11. Maturity Management &amp; Payout Processing</div>
+                <span class="module-badge teal">Claim Settlements</span>
+            </div>
+            <p class="module-desc">Comprehensive policy maturity engine managing claim lodgments, interest compounding calculations, and payout execution.</p>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Maturity Scheme Rules:</strong> Pre-program tenure, maturity bonus, loyalty interest additions, and lock-in periods.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Claim Lodgment &amp; Tracking:</strong> Submit maturity applications upon policy term completion with live status monitoring.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Full &amp; Partial Maturity Settlements:</strong> Automated deduction of premature penalties or payout of full principal + interest via Bank/Cheque.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 7: MODULES 12, 13 & 14 (AGENCY MLM, HR & ACCOUNTING) -->
+    <div class="page">
+        <div class="section-header">
+            <div class="section-title">
+                <span class="section-num">06</span>
+                Agency MLM, Team Management &amp; Accounting
+            </div>
+            <span class="module-badge">Modules 12 - 14</span>
+        </div>
+
+        <!-- MODULE 12 -->
+        <div class="module-box">
+            <div class="module-header">
+                <div class="module-title">12. Financial Consultant &amp; Agency Hierarchy (MLM Commission Engine)</div>
+                <span class="module-badge">Field Sales Growth</span>
+            </div>
+            <p class="module-desc">Multi-tier agency relationship and commission engine to motivate field advisors, manage downlines, and auto-calculate incentives.</p>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Advisor Onboarding &amp; Hierarchy:</strong> Register financial advisors, assign senior introducers, and maintain unlimited downline trees.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Downline Tree Visualization:</strong> Visual hierarchical tree mapping showing active advisors, rank cadences, and sales volume.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Dynamic Incentive Scheme Master:</strong> Define tiered commission percentages for FD, RD, Daily deposits, and loan originations.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Commission Billing &amp; ID Cards:</strong> One-click generation of monthly advisor payout slips, summary reports, and printable Photo ID cards.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODULE 13 -->
+        <div class="module-box teal">
+            <div class="module-header">
+                <div class="module-title">13. Human Resources &amp; Team Management</div>
+                <span class="module-badge teal">Workforce Control</span>
+            </div>
+            <p class="module-desc">Internal staff governance suite for defining departmental hierarchies, designation privileges, and automated ID issuance.</p>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Department &amp; Designation Masters:</strong> Structure administrative departments (Operations, Audit, Credit, Cash) and ranks.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Team Member Onboarding:</strong> Maintain staff bio-data, branch assignment, joining dates, and emergency contacts.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Employee ID Card Generator:</strong> Automated generation of professional employee identification cards with company credentials.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODULE 14 -->
+        <div class="module-box amber">
+            <div class="module-header">
+                <div class="module-title">14. Complete Financial Accounting &amp; Banking Operations</div>
+                <span class="module-badge amber">Statutory Double-Entry</span>
+            </div>
+            <p class="module-desc">Full-scale financial accounting suite delivering flawless double-entry ledgers, automated bank reconciliation, and real-time statements.</p>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Chart of Accounts (Ledger Master):</strong> Hierarchical grouping of Assets, Liabilities, Incomes, and Expenses with opening balances.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Vouchers (Receipt, Payment &amp; Journal):</strong> Outgoing expense vouchers, incoming revenue receipts, and double-entry manual journals.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Cheque Clearance &amp; Contra Transfers:</strong> Cheque deposit registers, clearance/bouncing workflows, and Cash-Bank contra entries.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Inter-Branch Cash Transfers:</strong> Regulated physical cash transit between branch vaults with transit ledger validation.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Cash Book &amp; Day Book:</strong> Multi-column real-time Cash Book and Daily Transaction Daybook with opening/closing vault reconciliation.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&bull;</span>
+                    <div><strong>Trial Balance, P&amp;L &amp; Balance Sheet:</strong> Real-time automated generation of Trial Balance, Profit &amp; Loss, and Balance Sheet.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 8: MODULE 15 (REPORTS & ANALYTICS) & DELIVERABLES -->
+    <div class="page">
+        <div class="section-header">
+            <div class="section-title">
+                <span class="section-num">07</span>
+                Reports, Analytics &amp; Client Handover Deliverables
+            </div>
+            <span class="module-badge">Module 15 &amp; Delivery</span>
+        </div>
+
+        <!-- MODULE 15 -->
+        <div class="module-box">
+            <div class="module-header">
+                <div class="module-title">15. Reports &amp; Business Intelligence Suite</div>
+                <span class="module-badge">20+ Real-Time Reports</span>
+            </div>
+            <p class="module-desc">Comprehensive reporting engine offering instant operational insight, loan recovery analytics, and audit readiness.</p>
+            
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <span class="feature-bullet">&#x1F4CA;</span>
+                    <div><strong>Investment Transaction Reports:</strong> Date-wise, branch-wise, and scheme-wise investment collection summaries.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&#x1F4CA;</span>
+                    <div><strong>Advisor Performance Reports:</strong> Individual and team collection summaries for monthly incentive disbursements.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&#x1F4CA;</span>
+                    <div><strong>Recurring Installment Due Report:</strong> Proactive identification of unpaid RD and deposit installments for field agents.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&#x1F4CA;</span>
+                    <div><strong>Loan Disbursement &amp; Payment Reports:</strong> Detailed breakdown of sanctioned capital, recovery amounts, and interest yields.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&#x1F4CA;</span>
+                    <div><strong>Upcoming EMI Due &amp; Default Analysis:</strong> Real-time monitoring of upcoming installments and overdue NPA default aging.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&#x1F4CA;</span>
+                    <div><strong>Legal &amp; Confirmation Documents:</strong> Instant generation of Loan Sanction Letters, Gold Pawn Slips, JLG Agreements, and NOCs.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&#x1F4CA;</span>
+                    <div><strong>Maturity Obligation Forecasting:</strong> Project future liability obligations across upcoming months for liquidity planning.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">&#x1F4CA;</span>
+                    <div><strong>Cheque Clearance Tracking:</strong> Audit log of pending, cleared, and dishonored cheques across all bank accounts.</div>
+                </div>
+            </div>
+        </div>
+
+        <h3 style="font-size: 12pt; margin: 18px 0 10px 0; color: var(--dark);">Client Package &amp; System Deliverables Summary</h3>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Deliverable Item</th>
+                    <th>Specification &amp; Format</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Core ERP Software Source &amp; Binary</strong></td>
+                    <td>Java Spring Boot Enterprise Application (WAR / Executable)</td>
+                    <td><span class="tag tag-green">Fully Functional</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Database Schema &amp; Seed Data</strong></td>
+                    <td>Relational MySQL / MariaDB schema with automated tables</td>
+                    <td><span class="tag tag-green">Included</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Document &amp; Bond Generators</strong></td>
+                    <td>Built-in PDF/HTML engines for Certificates, Passbooks &amp; ID Cards</td>
+                    <td><span class="tag tag-blue">Integrated</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Maker-Checker Multi-Tier Security</strong></td>
+                    <td>14+ Real-time approval queues with Role-Based Access Control</td>
+                    <td><span class="tag tag-purple">Active</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Statutory Accounting Engine</strong></td>
+                    <td>Double-Entry General Ledger, Daybook, P&amp;L, Trial Balance &amp; Balance Sheet</td>
+                    <td><span class="tag tag-green">Standard</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="footer-note">
+            <strong>MicroFinance Enterprise Banking &amp; Lending Management System</strong><br>
+            Engineered for High Performance, Multi-Branch Security &amp; Complete Regulatory Compliance.<br>
+            &copy; All Rights Reserved. Confidential &amp; Proprietary Documentation for Client Review.
+        </div>
+    </div>
+
+</body>
+</html>

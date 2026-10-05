@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Software Development & Service-Level Agreement</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+    
+    @page {
+      size: A4;
+      margin: 0;
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #000000;
+      background-color: #ffffff;
+      -webkit-print-color-adjust: exact;
+    }
+    
+    .page {
+      width: 210mm;
+      height: 297mm;
+      box-sizing: border-box;
+      padding: 20mm 20mm 20mm 20mm;
+      position: relative;
+      page-break-after: always;
+      background-color: #ffffff;
+    }
+    
+    /* Double-border effect to match the original document exactly */
+    .page-border {
+      position: absolute;
+      top: 10mm;
+      bottom: 10mm;
+      left: 10mm;
+      right: 10mm;
+      border: 3px double #000000;
+      pointer-events: none;
+      box-sizing: border-box;
+    }
+    
+    .page-content {
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      padding: 5mm;
+      font-size: 13.5px;
+      line-height: 1.55;
+    }
+    
+    .title-container {
+      text-align: center;
+      margin-top: 10mm;
+      margin-bottom: 8mm;
+    }
+    
+    .title-icon {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      background-color: #000000;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+    
+    .document-title {
+      font-size: 17px;
+      font-weight: 700;
+      display: inline-block;
+      vertical-align: middle;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    p {
+      margin-top: 0;
+      margin-bottom: 12px;
+      text-align: justify;
+    }
+    
+    .party-title {
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-top: 10px;
+      margin-bottom: 2px;
+    }
+    
+    .party-details {
+      margin-bottom: 12px;
+    }
+    
+    .section-title {
+      font-size: 14.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #000000;
+      padding-bottom: 3px;
+    }
+    
+    ul {
+      margin-top: 0;
+      margin-bottom: 12px;
+      padding-left: 20px;
+    }
+    
+    li {
+      margin-bottom: 8px;
+      text-align: justify;
+    }
+    
+    .bullet-bold {
+      font-weight: 700;
+    }
+    
+    .page-footer {
+      position: absolute;
+      bottom: 15mm;
+      left: 15mm;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    
+    /* Signatures layout */
+    .execution-header {
+      font-size: 15px;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-top: 10mm;
+      margin-bottom: 8mm;
+      display: flex;
+      align-items: center;
+    }
+    
+    .execution-box {
+      border: 1px dashed #000000;
+      width: 12px;
+      height: 12px;
+      margin-right: 8px;
+    }
+    
+    .sig-section {
+      margin-top: 12mm;
+    }
+    
+    .sig-block {
+      margin-bottom: 12mm;
+    }
+    
+    .sig-entity {
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    
+    .sig-line-label {
+      margin-top: 12mm;
+      border-top: 1px solid #000000;
+      width: 70%;
+      padding-top: 4px;
+      font-size: 13px;
+    }
+    
+    .sig-detail {
+      margin-top: 2px;
+      font-size: 13px;
+    }
+    
+    .witness-section {
+      margin-top: 10mm;
+      border-top: 1px dotted #000000;
+      padding-top: 6mm;
+    }
+    
+    .witness-line {
+      margin-bottom: 6mm;
+    }
+    
+    @media print {
+      .page {
+        page-break-after: always;
+      }
+      .page:last-child {
+        page-break-after: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PAGE 1 -->
+  <div class="page">
+    <div class="page-border"></div>
+    <div class="page-content">
+      <div class="title-container">
+        <div class="title-icon"></div>
+        <div class="document-title">Software Development & Service-Level Agreement</div>
+      </div>
+      
+      <p>This Agreement is made and executed on this _____ day of ____________, 2026 at Nagpur, Maharashtra, by and between:</p>
+      
+      <div class="party-title">First Party (The Client):</div>
+      <div class="party-details">
+        <strong>SAMITH MAHILA URBAN CREDIT CO-OPERATIVE SOCIETY LTD., NAGPUR</strong><br>
+        Registration No: NGP/RSR/CR/1697/2024<br>
+        Registered Address: Plot No. 24, Shripoorna Gruhnirman Society, Near Avil Convent School, Dabha, Nagpur - 440023<br>
+        (Hereinafter referred to as the "Society", which expression shall unless repugnant to the context include its successors and assigns)
+      </div>
+      
+      <div class="party-title" style="margin-top: 15px;">AND</div>
+      
+      <div class="party-title" style="margin-top: 15px;">Second Party (The Developer):</div>
+      <div class="party-details">
+        <strong>AS ENTERPRISES, NAGPUR</strong><br>
+        Registered Address: Nagpur, Maharashtra<br>
+        (Hereinafter referred to as the "Company", which expression shall unless repugnant to the context include its administrators, successors, and permitted assigns)
+      </div>
+      
+      <p style="margin-top: 15px; margin-bottom: 20px;">Both parties hereby mutually agree to the following terms and conditions:</p>
+      
+      <div class="section-title">1. Scope of Work & Time Timeline</div>
+      
+      <ul>
+        <li>
+          <span class="bullet-bold">1.1 Delivery & Training Timeline:</span> The Company strictly binds itself to fully develop, configure, test, migrate old data, and deliver the Credit Co-Operative Society Software without any bugs or technical errors (Error-free). The complete deployment along with comprehensive operational training to the staff of the Society must be completed within 15 to 30 days from the date of receiving the booking advance.
+        </li>
+        <li>
+          <span class="bullet-bold">1.2 Core Product Modules:</span> The software package delivered by the Company must inherently include the following functional components:
+          <ul>
+            <li style="margin-top: 5px;"><span class="bullet-bold">Member Onboarding Panel:</span> Member joining management, KYC document uploads (Aadhaar, PAN, Voter ID, Images), Nominee registration, and member fee indexing.</li>
+            <li style="margin-top: 5px;"><span class="bullet-bold">Deposit Accounts Engine:</span> Savings accounts, Current accounts, Fixed Deposits (FD), Recurring Deposits (RD), Monthly Income Schemes (MIS), and Daily Deposit / Pigmy Collection modules (including agent assignment and commission automation tools).</li>
+          </ul>
+        </li>
+      </ul>
+      
+      <div class="page-footer">1</div>
+    </div>
+  </div>
+
+  <!-- PAGE 2 -->
+  <div class="page">
+    <div class="page-border"></div>
+    <div class="page-content">
+      <ul>
+        <li style="list-style-type: none; margin-left: -20px;">
+          <ul>
+            <li><span class="bullet-bold">Loan Management Engine:</span> Personal Loans (PL), Business Loans (BL), Gold Loans (including gold evaluation templates and interest logs), Vehicle Loans (VL), Home Loans (HL), and automated Microfinance/Joint Liability Group (JLG) loan models. And Others As per Required.</li>
+            <li><span class="bullet-bold">Demo-Based Modifications:</span> Any specific design customizations or functional modifications discussed, evaluated, and mutually finalized during the initial product demonstration shall be executed by the Company completely free of cost to align the software with the operational workflows of the Society.</li>
+          </ul>
+        </li>
+        <li style="margin-top: 15px;">
+          <span class="bullet-bold">1.3 Technology Stack:</span> The backend architecture must be built on Java 8, Spring Boot 2.7.x, Spring Data JPA, and Hibernate ORM. The frontend layout must utilize HTML5, CSS3, Bootstrap 5, Javascript, jQuery, and AJAX. The system database must run on MySQL 8+ deployed within a Tomcat 9 Web Server wrapper framework.
+        </li>
+      </ul>
+      
+      <div class="section-title">2. System Reports & Transaction Logs</div>
+      
+      <ul>
+        <li>
+          <span class="bullet-bold">2.1 Standard Financial Reports:</span> The software must generate error-free financial statements and reports including Cash Book, General Ledger, Trial Balance, Profit & Loss Statement, Balance Sheet, and TDS Summary optimized for audits and management returns.
+        </li>
+        <li>
+          <span class="bullet-bold">2.2 Operational & Loan Reports:</span> The reporting engine must generate:
+          <ul>
+            <li style="margin-top: 4px;">Approved and Unapproved Loan Application Reports</li>
+            <li style="margin-top: 4px;">EMI Collection Summaries and Upcoming EMI Due Reports</li>
+            <li style="margin-top: 4px;">Overdue Repayment Analysis and EMI Irregularity Statements</li>
+            <li style="margin-top: 4px;">Investment Summary Statements and Projection Reports</li>
+            <li style="margin-top: 4px;">Cheque Transaction Reports for bank accounts</li>
+          </ul>
+        </li>
+        <li>
+          <span class="bullet-bold">2.3 Agent & Consultant Reports:</span> The system shall generate Financial Advisor reports and Financial Consultant Team Collection Reports.
+        </li>
+        <li>
+          <span class="bullet-bold">2.4 Customer Receipts & Statements:</span> All customer statements, savings/current passbooks, policy transaction slips (FD/RD/Savings/Loans), print NOC/NOC Certificates, and receipt slips must print cleanly in English.
+        </li>
+        <li>
+          <span class="bullet-bold">2.5 Audit Trails & Safety Locks:</span> Standard system-wide transaction logs and request approval workflows (e.g., approve FD/RD, approve new client, approve transactions) to ensure secure bookkeeping.
+        </li>
+      </ul>
+      
+      <div class="page-footer">2</div>
+    </div>
+  </div>
+
+  <!-- PAGE 3 -->
+  <div class="page">
+    <div class="page-border"></div>
+    <div class="page-content">
+      <div class="section-title" style="margin-top: 5mm;">3. Data Migration & SMS Pack Integration</div>
+      
+      <ul>
+        <li>
+          <span class="bullet-bold">3.1 Free Historical Data Migration:</span> The Company shall extract, map, and upload all existing legacy records of the Society (member datasets, live account transactions, outstanding loan balances via Excel sheets) into the new system platform completely free of cost.
+        </li>
+        <li>
+          <span class="bullet-bold">3.2 Transactional SMS Pack:</span> The absolute total software commercial package price includes a baseline allocation of 10,000 SMS credits featuring Lifetime Validity. The Company ensures that all transaction-triggered and operational SMS alerts route to customers smoothly without dropouts or delivery delays.
+        </li>
+      </ul>
+      
+      <div class="section-title" style="margin-top: 25px;">4. Commercial Considerations & Payment Milestones</div>
+      
+      <p>The final agreed baseline cost for the perpetual software setup is <strong>₹ 40,000/- (Rupees Forty Thousand Only)</strong>. There shall be no hidden costs for multiple branches, account creations, or multi-user profiles. The disbursement schedule is strictly bounded as follows:</p>
+      
+      <ul>
+        <li>
+          <span class="bullet-bold">4.1 First Milestone Payment (40% - ₹ 16,000/-):</span> Payable as a Commencement Advance immediately upon the mutual signing of this service agreement.
+        </li>
+        <li>
+          <span class="bullet-bold">4.2 Second Milestone Payment (30% - ₹ 12,000/-):</span> Payable only after the software is fully developed, all modules are cleanly demonstrated to work error-free over 'Any Desk', and the operational system Training cycle for the Society's staff is successfully completed.
+        </li>
+        <li>
+          <span class="bullet-bold">4.3 Third & Final Milestone Payment (30% - ₹ 12,000/-):</span> Payable within 30 days post the successful Go-Live deployment on the Society's local or cloud servers. This 30-day monitoring buffer shall serve to evaluate and confirm the everyday operational stability of the application.
+        </li>
+      </ul>
+      
+      <div class="page-footer">3</div>
+    </div>
+  </div>
+
+  <!-- PAGE 4 -->
+  <div class="page">
+    <div class="page-border"></div>
+    <div class="page-content">
+      <div class="section-title" style="margin-top: 5mm;">5. System Ownership, Privacy & Legal Provisions</div>
+      
+      <ul>
+        <li>
+          <span class="bullet-bold">5.1 Business Continuity Code Handovers:</span> To ensure operating survival, the Company shall hand over an updated copy of the source code framework or an emergency technical framework on a quarterly basis. If the Company ceases business operations or fails to provide critical technical assistance for a continuous stretch of 7 calendar days, the source code database must be instantly released to the Society.
+        </li>
+        <li>
+          <span class="bullet-bold">5.2 Data Protection, Confidentiality & Indemnity:</span> Since this application processes sensitive financial data, the Company shall maintain absolute system confidentiality and never distribute or share member metrics with external networks. In the event of a security data breach or leak stemming from server vulnerabilities or Company negligence, the Company shall fully indemnify the Society against all resultant legal, regulatory, or financial liabilities.
+        </li>
+        <li>
+          <span class="bullet-bold">5.3 Delivery Delay Penalty:</span> Any unjust delay in product execution beyond the mutually agreed 15–30 days delivery line will attract a strict penalty deduction of <strong>₹ 500 per day</strong> directly from the final milestone payment invoice.
+        </li>
+        <li>
+          <span class="bullet-bold">5.4 Police Intimation Rights:</span> The Company explicitly acknowledges that the Client is a licensed financial organization under the Maharashtra state सहकार guidelines. To preserve data safety and cyber-hygiene, the Society reserves the uninhibited right to file a reference copy of this contract and the corporate identity credentials of the Company with the Local Police Authorities, Cyber Crime Investigation Cells, or state regulatory bodies, to which the Company expresses no objection.
+        </li>
+        <li>
+          <span class="bullet-bold">5.5 Legal Jurisdiction:</span> In the occurrence of an unresolved dispute, the arbitration or legal recourses shall fall strictly under the exclusive territorial jurisdiction of the <strong>Nagpur local courts</strong>.
+        </li>
+      </ul>
+      
+      <div class="page-footer">4</div>
+    </div>
+  </div>
+
+  <!-- PAGE 5 -->
+  <div class="page">
+    <div class="page-border"></div>
+    <div class="page-content">
+      <div class="section-title" style="margin-top: 5mm;">6. Warranty, Technical Support & Annual Maintenance (AMC)</div>
+      
+      <ul>
+        <li>
+          <span class="bullet-bold">6.1 First-Year Bug-Fixing Warranty:</span> The baseline software cost covers <strong>3 months of free post-launch warranty support</strong>. During this period, the Company shall isolate and resolve all bugs, errors, or operational glitches completely free of cost.
+        </li>
+        <li>
+          <span class="bullet-bold">6.2 SLA Support Ticket Response:</span> Regular technical assistance shall be active from Monday to Friday (10:00 A.M. to 6:00 P.M.) via telephone and remote desk utilities. Resolution response brackets must maintain: 0–1 hour for High-priority bugs, 8 hours for Medium-priority issues, and 24 hours for minor glitches.
+        </li>
+        <li>
+          <span class="bullet-bold">6.3 Post-Warranty Annual Maintenance Contract (AMC):</span> Following the successful exhaustion of the initial 3-month warranty, the optional Annual Maintenance Contract (AMC) rate is locked at 15% of the primary layout cost, translating to <strong>₹ 6,000/- per year</strong>, to guarantee long-term version stability.
+        </li>
+      </ul>
+      
+      <div class="page-footer">5</div>
+    </div>
+  </div>
+
+  <!-- PAGE 6 -->
+  <div class="page">
+    <div class="page-border"></div>
+    <div class="page-content">
+      <div class="execution-header">
+        <div class="execution-box"></div>
+        <div>Execution & Acceptance</div>
+      </div>
+      
+      <p>By signing below, both parties officially accept and bind themselves to the provisions outlined across this Service-Level Agreement.</p>
+      
+      <div class="sig-section">
+        <div class="sig-block">
+          <div class="sig-entity">For and on behalf of the Client:</div>
+          <div style="font-weight: 700;">Samith Mahila Urban Credit Co-operative Society Ltd., Nagpur</div>
+          <div class="sig-line-label">(Authorized Signatory Signature)</div>
+          <div class="sig-detail">Name: Mithun Dhawale</div>
+          <div class="sig-detail">Designation: Chief Executive Officer (C.E.O.)</div>
+          <div class="sig-detail">Date: ____ / ____ / 2026</div>
+          <div class="sig-detail">Office Seal/Stamp:</div>
+        </div>
+        
+        <div class="sig-block" style="margin-top: 15mm;">
+          <div class="sig-entity">For and on behalf of the Service Provider:</div>
+          <div style="font-weight: 700;">AS Enterprises, Nagpur</div>
+          <div class="sig-line-label">(Authorized Signatory Signature)</div>
+          <div class="sig-detail">Name: _______________________________</div>
+          <div class="sig-detail">Designation: __________________________</div>
+          <div class="sig-detail">Date: ____ / ____ / 2026</div>
+          <div class="sig-detail">Corporate Seal/Stamp:</div>
+        </div>
+      </div>
+      
+      <div class="witness-section">
+        <div style="font-weight: 700; margin-bottom: 4mm;">In the Presence of Witness Parties:</div>
+        <div class="witness-line">Witness 1 (Name & Sign): ___________________________</div>
+        <div class="witness-line">Witness 2 (Name & Sign): ___________________________</div>
+      </div>
+      
+      <div class="page-footer">6</div>
+    </div>
+  </div>
+
+</body>
+</html>

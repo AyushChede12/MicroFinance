@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Project Quotation - MicroFinance Management System</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #333333;
+            line-height: 1.6;
+            margin: 40px;
+            font-size: 14px;
+        }
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .header-table td {
+            border: none;
+            padding: 0;
+            vertical-align: top;
+        }
+        .title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #8a3b8f;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 0;
+        }
+        .subtitle {
+            font-size: 13px;
+            color: #666666;
+            margin-top: 4px;
+            font-weight: 600;
+        }
+        .info-block {
+            text-align: right;
+            font-size: 13px;
+            color: #555555;
+        }
+        .info-block strong {
+            color: #333333;
+        }
+        .divider {
+            border-top: 3px solid #8a3b8f;
+            margin: 15px 0;
+        }
+        h2 {
+            font-size: 16px;
+            color: #8a3b8f;
+            border-bottom: 2px solid #f3e5f5;
+            padding-bottom: 6px;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        p, li {
+            font-size: 13px;
+            color: #555555;
+        }
+        ul {
+            padding-left: 20px;
+            margin-top: 5px;
+        }
+        li {
+            margin-bottom: 6px;
+        }
+        table.pricing-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table.pricing-table th {
+            background-color: #8a3b8f;
+            color: #ffffff;
+            font-weight: 600;
+            text-align: left;
+            padding: 10px 12px;
+            font-size: 13px;
+        }
+        table.pricing-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #eeeeee;
+            font-size: 13px;
+        }
+        table.pricing-table tr:nth-child(even) {
+            background-color: #faf8fb;
+        }
+        .total-row {
+            font-weight: 700;
+            background-color: #f3e5f5 !important;
+        }
+        .total-row td {
+            border-top: 2px solid #8a3b8f;
+            border-bottom: 2px solid #8a3b8f;
+            color: #8a3b8f;
+        }
+        .signature-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 50px;
+        }
+        .signature-table td {
+            border: none;
+            width: 50%;
+            padding: 0;
+            vertical-align: top;
+        }
+        .sig-line {
+            border-top: 1px solid #999999;
+            width: 75%;
+            margin-top: 60px;
+            padding-top: 8px;
+            font-size: 12px;
+            color: #666666;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <table class="header-table">
+        <tr>
+            <td>
+                <div class="title">Project Quotation</div>
+                <div class="subtitle">MicroFinance Management System (MFMS)</div>
+            </td>
+            <td class="info-block">
+                <strong>Client:</strong> Samith Mahila urban Credit Co-OPerative Society ltd. Nagpur Dst<br>
+                <strong>Company:</strong> AS Enterprises<br>
+                <strong>Ref No:</strong> QTN-2026-MFMS-001<br>
+                <strong>Date:</strong> July 18, 2026<br>
+                <strong>Validity:</strong> 30 Days (Until Aug 17, 2026)
+            </td>
+        </tr>
+    </table>
+
+    <div class="divider"></div>
+
+    <h2>1. Executive Summary</h2>
+    <p>
+        The proposed <strong>MicroFinance Management System (MFMS)</strong> is an all-in-one, secure, enterprise-grade banking and credit operations application. Designed specifically for co-operative societies, microfinance institutions (MFIs), and local credit unions, this system automates end-to-end customer onboarding, savings accounts, credit distribution (including Joint Liability Groups and Gold Loans), shareholdings, and commission settlements for agents.
+    </p>
+
+    <h2>2. Key Modules & Scope</h2>
+    <ul>
+        <li><strong>Customer Onboarding & KYC Management:</strong> Secure customer registration panel, Nominee mapping, smart document uploads (Aadhar, PAN, Voter ID, driving license) and dynamic multiple image uploads.</li>
+        <li><strong>Savings & Current Accounts:</strong> Deposit, withdrawal ledger operations, transactional logs, SMS alert toggles, and account status controls.</li>
+        <li><strong>Customer Shareholding Panel:</strong> Share capital allocation database, digital certificates log, and share transfer registry.</li>
+        <li><strong>Loan Management Engine (LMS):</strong> Dynamic interest rate and payment schemes setup, Loan applications, Gold collateral evaluations (Secured Gold Loan module), and JLG group lending schemes.</li>
+        <li><strong>Financial Consultants & Agents:</strong> Agent profiles onboarding, level designations, and automated commission calculations based on collection metrics.</li>
+        <li><strong>System Configurations & Reports:</strong> Multi-branch configurations, bank details, company branding configurations, and real-time dashboard ledger reporting.</li>
+    </ul>
+
+    <h2>3. Technology Stack</h2>
+    <p>
+        <strong>Backend Framework:</strong> Java 17, Spring Boot, Spring Data JPA, Hibernate ORM.<br>
+        <strong>Frontend:</strong> HTML5, CSS3, Bootstrap 5, Javascript, jQuery, AJAX.<br>
+        <strong>Database & Server:</strong> MySQL 8+ Database, Tomcat 9 Web Server wrapper.
+    </p>
+
+    <h2>4. Commercial Estimate</h2>
+    <table class="pricing-table">
+        <thead>
+            <tr>
+                <th>Phase Description</th>
+                <th>Estimated Duration</th>
+                <th>Cost (INR)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Phase 1: Core System & DB Setup (Branch configs, database)</td>
+                <td>2 Weeks</td>
+                <td>₹ 6,000</td>
+            </tr>
+            <tr>
+                <td>Phase 2: Customer Registry & KYC (Dynamic Document & multiple image uploads)</td>
+                <td>3 Weeks</td>
+                <td>₹ 8,000</td>
+            </tr>
+            <tr>
+                <td>Phase 3: Shareholding & Accounts (Savings ledger, certificate issuance)</td>
+                <td>2 Weeks</td>
+                <td>₹ 7,000</td>
+            </tr>
+            <tr>
+                <td>Phase 4: Loan Engine (Gold Collaterals & Joint Liability Group loans)</td>
+                <td>4 Weeks</td>
+                <td>₹ 12,000</td>
+            </tr>
+            <tr>
+                <td>Phase 5: Agent Networks & Auditing (Commission calculators, statements)</td>
+                <td>2 Weeks</td>
+                <td>₹ 5,000</td>
+            </tr>
+            <tr>
+                <td>Phase 6: UAT & Production Launch (Handover, deployment, training)</td>
+                <td>1 Week</td>
+                <td>₹ 2,000</td>
+            </tr>
+            <tr class="total-row">
+                <td>Total Cost Estimate</td>
+                <td>14 Weeks</td>
+                <td>₹ 40,000</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>5. Payment Terms & Milestones</h2>
+    <ul>
+        <li><strong>First Installment (Commencement Advance):</strong> 40% (₹ 16,000) on project signing.</li>
+        <li><strong>Second Installment:</strong> 30% (₹ 12,000) on completion of Phase 2 (Customer & KYC).</li>
+        <li><strong>Third Installment (Final Delivery):</strong> 30% (₹ 12,000) on successful UAT and deployment.</li>
+    </ul>
+
+    <h2>6. Support & Maintenance</h2>
+    <p>
+        The package includes <strong>3 months of free post-launch support</strong> for bug fixing. Post-warranty, the annual maintenance contract (AMC) is estimated at 15% of the initial development cost.
+    </p>
+
+    <table class="signature-table">
+        <tr>
+            <td>
+                <div class="sig-line">For AS Enterprises</div>
+            </td>
+            <td>
+                <div class="sig-line">For Samith Mahila urban Credit Co-OPerative Society ltd. Nagpur Dst</div>
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>
