@@ -1,0 +1,275 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Gold Loan Sanction Letter</title>
+    <style type="text/css">
+        @page {
+            size: A4 portrait;
+            margin: 14mm 12mm 14mm 12mm;
+            @bottom-right {
+                content: "Page " counter(page) " of " counter(pages);
+                font-family: Arial, sans-serif;
+                font-size: 8pt;
+                color: #64748b;
+            }
+        }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 9.5pt;
+            line-height: 1.42;
+            color: #1e293b;
+            margin: 0;
+            padding: 0;
+        }
+        .letterhead {
+            text-align: center;
+            border-bottom: 2px solid #0f766e;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+        .society-name {
+            font-size: 14pt;
+            font-weight: bold;
+            color: #0f766e;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .society-sub {
+            font-size: 8pt;
+            color: #475569;
+            margin-top: 2px;
+        }
+        .doc-title {
+            text-align: center;
+            font-size: 12.5pt;
+            font-weight: bold;
+            text-decoration: underline;
+            margin: 10px 0;
+            color: #0f766e;
+        }
+        .meta-table {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .meta-table td {
+            font-size: 9pt;
+            vertical-align: top;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 8px 0 12px 0;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #94a3b8;
+            padding: 5px 7px;
+            font-size: 8.5pt;
+            text-align: left;
+        }
+        .data-table th {
+            background-color: #f0fdfa;
+            font-weight: bold;
+            color: #0f766e;
+        }
+        .section-title {
+            font-size: 10pt;
+            font-weight: bold;
+            color: #0f766e;
+            border-bottom: 1px solid #cbd5e1;
+            padding-bottom: 2px;
+            margin-top: 10px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+        ol {
+            margin: 4px 0 8px 18px;
+            padding: 0;
+            font-size: 8.5pt;
+            color: #334155;
+        }
+        ol li {
+            margin-bottom: 3px;
+        }
+        .signature-table {
+            width: 100%;
+            margin-top: 20px;
+            page-break-inside: avoid;
+        }
+        .signature-table td {
+            width: 33.33%;
+            text-align: center;
+            vertical-align: bottom;
+            font-size: 8.5pt;
+        }
+        .badge {
+            display: inline-block;
+            padding: 2px 6px;
+            font-size: 8pt;
+            font-weight: bold;
+            border-radius: 4px;
+            background: #dcfce7;
+            color: #166534;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="letterhead">
+        <div class="society-name" th:text="${society.name}">SAMITHA URBAN MULTI-STATE CREDIT CO-OPERATIVE SOCIETY LTD.</div>
+        <div class="society-sub" th:text="${society.regInfo}">Registered Under MSCS Act 2002, Govt. of India | Reg. No: MSCS/CR/2014</div>
+        <div class="society-sub" th:text="${society.address}">Administrative Office, City Center</div>
+        <div class="society-sub">Phone: <span th:text="${society.phone}">+91 1800-123-4567</span> | Email: <span th:text="${society.email}">contact@samithaurban.coop</span></div>
+    </div>
+
+    <div class="doc-title">GOLD LOAN SANCTION &amp; INVENTORY LETTER</div>
+
+    <table class="meta-table">
+        <tr>
+            <td style="width: 60%;">
+                <b>To,</b><br />
+                <b>Mr./Ms./Mrs.:</b> <span th:text="${loan.customerName}">CUSTOMER NAME</span><br />
+                <b>Member Code:</b> <span th:text="${loan.memberCode}">MEM-001</span><br />
+                <b>Address:</b> <span th:text="${loan.address}">Address Line</span>, PIN: <span th:text="${loan.pinCode}">000000</span><br />
+                <b>Contact No:</b> <span th:text="${loan.contactNo}">9876543210</span>
+            </td>
+            <td style="width: 40%; text-align: right;">
+                <b>Ref No:</b> <span th:text="${sanctionRefNo}">GL/SL/2026</span><br />
+                <b>Date of Sanction:</b> <span th:text="${todayDate}">2026-09-28</span><br />
+                <b>Gold Loan ID:</b> <span style="font-weight:bold; color:#0f766e;" th:text="${loan.goldId}">GL-1001</span><br />
+                <b>Branch:</b> <span th:text="${loan.branchName}">Main Branch</span><br />
+                <b>Status:</b> <span class="badge" th:text="${loan.loanStatus}">SANCTIONED</span>
+            </td>
+        </tr>
+    </table>
+
+    <p style="margin: 6px 0; font-size: 9pt;">
+        Dear Member,<br />
+        We have the pleasure to inform you that your application for a <b>Secured Gold Loan</b> has been sanctioned against the pledge of gold ornaments detailed below, subject to the agreed terms and conditions.
+    </p>
+
+    <div class="section-title">1. SANCTIONED LOAN DETAILS &amp; REPAYMENT TERMS</div>
+    <table class="data-table">
+        <tr>
+            <th style="width: 25%;">Loan Scheme Name</th>
+            <td style="width: 25%;" th:text="${loan.loanPlanName}">Standard Gold Loan</td>
+            <th style="width: 25%;">Type of Loan</th>
+            <td style="width: 25%;" th:text="${loan.typeOfLoan}">Secured Gold Loan</td>
+        </tr>
+        <tr>
+            <th>Sanctioned Loan Amount</th>
+            <td style="font-weight:bold; color:#0f766e;">&#8377; <span th:text="${loan.loanAmount}">1,00,000.00</span></td>
+            <th>Rate of Interest</th>
+            <td><span th:text="${loan.rateOfInterest}">12.0</span>% p.a. (<span th:text="${loan.interestType}">Flat</span>)</td>
+        </tr>
+        <tr>
+            <th>Loan Term / Tenure</th>
+            <td><span th:text="${loan.loanTerm}">12</span> Months</td>
+            <th>Repayment Mode</th>
+            <td th:text="${loan.loanMode}">Monthly</td>
+        </tr>
+        <tr>
+            <th>Total Deductions (Charges)</th>
+            <td style="color: #b91c1c;">&#8377; <span th:text="${loan.totalDeductions}">0.00</span></td>
+            <th>Net Disbursement Amount</th>
+            <td style="font-weight:bold; color:#166534;">&#8377; <span th:text="${loan.netDisbursementAmount}">0.00</span></td>
+        </tr>
+        <tr>
+            <th>Total Interest Payable</th>
+            <td style="font-weight:bold; color:#b45309;">&#8377; <span th:text="${loan.totalInterest}">0.00</span></td>
+            <th>Total Amount to Pay</th>
+            <td style="font-weight:bold; color:#1d4ed8;">&#8377; <span th:text="${loan.totalPayableAmount}">0.00</span></td>
+        </tr>
+        <tr>
+            <th>Monthly EMI / Installment</th>
+            <td style="font-weight:bold;">&#8377; <span th:text="${loan.emiPayment}">0.00</span></td>
+            <th>First Repayment Due</th>
+            <td th:text="${firstRepaymentDate}">2026-10-28</td>
+        </tr>
+        <tr>
+            <th>Processing Fee</th>
+            <td>&#8377; <span th:text="${loan.processingFee}">0.00</span></td>
+            <th>Valuation &amp; Legal Charges</th>
+            <td>&#8377; <span th:text="${loan.valuationFees}">0.00</span></td>
+        </tr>
+    </table>
+    <div style="font-size: 8pt; color: #475569; margin: -4px 0 8px 0; font-style: italic;">
+        * Note: Interest (&#8377; <span th:text="${loan.totalInterest}">0.00</span>) and Monthly EMI (&#8377; <span th:text="${loan.emiPayment}">0.00</span>) are strictly calculated on the full Sanctioned Principal Amount (&#8377; <span th:text="${loan.loanAmount}">0.00</span>), not on net disbursement.
+    </div>
+
+    <div class="section-title">2. PLEDGED GOLD ORNAMENTS &amp; VALUATION INVENTORY</div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th style="width: 5%; text-align: center;">#</th>
+                <th style="width: 25%;">Item Description</th>
+                <th style="width: 12%;">Type / Karat</th>
+                <th style="width: 12%; text-align: right;">Gross Wt (g)</th>
+                <th style="width: 12%; text-align: right;">Net Wt (g)</th>
+                <th style="width: 14%; text-align: right;">Rate / g (&#8377;)</th>
+                <th style="width: 20%; text-align: right;">Market Valuation (&#8377;)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="item, stat : ${loan.items}">
+                <td style="text-align: center;" th:text="${stat.count}">1</td>
+                <td th:text="${item.itemName}">Gold Necklace</td>
+                <td><span th:text="${item.karat}">22</span>K (<span th:text="${item.itemType}">Ornament</span>)</td>
+                <td style="text-align: right;" th:text="${item.grossWt}">25.500</td>
+                <td style="text-align: right; font-weight: bold;" th:text="${item.netWt}">24.200</td>
+                <td style="text-align: right;" th:text="${item.custgoldRate}">6,500.00</td>
+                <td style="text-align: right; font-weight: bold;" th:text="${item.marketValuation}">1,57,300.00</td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(loan.items)}">
+                <td style="text-align: center;">1</td>
+                <td th:text="${loan.itemName}">Gold Ornaments</td>
+                <td><span th:text="${loan.karat}">22</span>K (<span th:text="${loan.itemType}">Ornament</span>)</td>
+                <td style="text-align: right;" th:text="${loan.grossWt}">0.000</td>
+                <td style="text-align: right; font-weight: bold;" th:text="${loan.netWt}">0.000</td>
+                <td style="text-align: right;" th:text="${loan.custgoldRate}">0.00</td>
+                <td style="text-align: right; font-weight: bold;" th:text="${loan.marketValuation}">0.00</td>
+            </tr>
+            <tr style="background-color: #f8fafc; font-weight: bold;">
+                <td colspan="3" style="text-align: right;">TOTALS:</td>
+                <td style="text-align: right;"><span th:text="${loan.totalGrossWt}">0.000</span> g</td>
+                <td style="text-align: right; color:#0f766e;"><span th:text="${loan.totalNetWt}">0.000</span> g</td>
+                <td></td>
+                <td style="text-align: right; color:#0f766e;">&#8377; <span th:text="${loan.totalMarketValuation}">0.00</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="section-title">3. IMPORTANT TERMS &amp; CONDITIONS</div>
+    <ol>
+        <li>The pledged gold ornaments are placed in safe custody in Bank Locker Branch: <b><span th:text="${loan.lockerBranch}">Main Branch Locker</span></b>.</li>
+        <li>The borrower is required to pay interest/EMI promptly on or before the due date. A grace period of 5 days is allowed.</li>
+        <li>In case of default beyond 90 days, the Society reserves the statutory right to auction the pledged gold to recover all outstanding principal, interest, penalty, and auction expenses after due legal notice.</li>
+        <li>Prepayment / early closure is permitted in accordance with Society rules.</li>
+        <li>The ornaments will be released only to the borrower in person after full settlement of all dues and surrender of the original token and pledge receipt.</li>
+    </ol>
+
+    <table class="signature-table">
+        <tr>
+            <td>
+                <br /><br />
+                ________________________________<br />
+                <b>Borrower Signature</b><br />
+                <span th:text="${loan.customerName}">Customer Name</span>
+            </td>
+            <td>
+                <br /><br />
+                ________________________________<br />
+                <b>Appraiser / Valuer</b><br />
+                Authorized Gold Valuer
+            </td>
+            <td>
+                <br /><br />
+                ________________________________<br />
+                <b>Authorized Signatory</b><br />
+                Branch Manager / Secretary
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>

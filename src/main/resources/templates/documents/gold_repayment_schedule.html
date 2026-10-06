@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Gold Loan EMI Repayment Schedule</title>
+    <style type="text/css">
+        @page {
+            size: A4 portrait;
+            margin: 14mm 12mm 14mm 12mm;
+            @bottom-right {
+                content: "Page " counter(page) " of " counter(pages);
+                font-family: Arial, sans-serif;
+                font-size: 8pt;
+                color: #64748b;
+            }
+        }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 9pt;
+            line-height: 1.4;
+            color: #1e293b;
+            margin: 0;
+            padding: 0;
+        }
+        .letterhead {
+            text-align: center;
+            border-bottom: 2px solid #0f766e;
+            padding-bottom: 6px;
+            margin-bottom: 10px;
+        }
+        .society-name {
+            font-size: 13.5pt;
+            font-weight: bold;
+            color: #0f766e;
+            text-transform: uppercase;
+        }
+        .society-sub {
+            font-size: 8pt;
+            color: #475569;
+        }
+        .doc-title {
+            text-align: center;
+            font-size: 12pt;
+            font-weight: bold;
+            text-decoration: underline;
+            margin: 8px 0;
+            color: #0f766e;
+        }
+        .meta-table {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .meta-table td {
+            font-size: 8.5pt;
+            vertical-align: top;
+        }
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 8px 0 12px 0;
+        }
+        .schedule-table th, .schedule-table td {
+            border: 1px solid #94a3b8;
+            padding: 4px 6px;
+            font-size: 8pt;
+        }
+        .schedule-table th {
+            background-color: #f0fdfa;
+            color: #0f766e;
+            font-weight: bold;
+            text-align: center;
+        }
+        .text-right {
+            text-align: right;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .totals-row td {
+            background-color: #f8fafc;
+            font-weight: bold;
+            border-top: 2px solid #0f766e;
+        }
+        .signature-table {
+            width: 100%;
+            margin-top: 20px;
+            page-break-inside: avoid;
+        }
+        .signature-table td {
+            width: 50%;
+            text-align: center;
+            font-size: 8.5pt;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="letterhead">
+        <div class="society-name" th:text="${society.name}">SAMITHA URBAN MULTI-STATE CREDIT CO-OPERATIVE SOCIETY LTD.</div>
+        <div class="society-sub" th:text="${society.regInfo}">Registered Under MSCS Act 2002, Govt. of India | Reg. No: MSCS/CR/2014</div>
+        <div class="society-sub" th:text="${society.address}">Administrative Complex, City Center</div>
+    </div>
+
+    <div class="doc-title">GOLD LOAN EMI REPAYMENT SCHEDULE</div>
+
+    <table class="meta-table">
+        <tr>
+            <td style="width: 50%;">
+                <b>Borrower:</b> <span th:text="${loan.customerName}">CUSTOMER NAME</span><br />
+                <b>Member Code:</b> <span th:text="${loan.memberCode}">MEM-001</span><br />
+                <b>Contact No:</b> <span th:text="${loan.contactNo}">9876543210</span><br />
+                <b>Pledged Net Weight:</b> <span th:text="${loan.totalNetWt}">0.000</span> g (<span th:text="${loan.totalItemsCount}">1</span> items)<br />
+                <b>Total Deductions:</b> &#8377; <span th:text="${loan.totalDeductions}">0.00</span> | <b>Net Disbursed:</b> &#8377; <span style="color:#166534; font-weight:bold;" th:text="${loan.netDisbursementAmount}">0.00</span>
+            </td>
+            <td style="width: 50%; text-align: right;">
+                <b>Gold Loan ID:</b> <span style="font-weight: bold; color: #0f766e;" th:text="${loan.goldId}">GL-1001</span><br />
+                <b>Applied Principal:</b> &#8377; <span th:text="${loan.loanAmount}">1,00,000.00</span><br />
+                <b>Interest Rate:</b> <span th:text="${loan.rateOfInterest}">12.0</span>% p.a. (<span th:text="${loan.interestType}">Flat</span>) | <b>Tenure:</b> <span th:text="${loan.loanTerm}">12</span> M<br />
+                <b>Total Interest:</b> &#8377; <span style="color:#b45309; font-weight:bold;" th:text="${loan.totalInterest}">0.00</span> | <b>Total Payable:</b> &#8377; <span style="color:#1d4ed8; font-weight:bold;" th:text="${loan.totalPayableAmount}">0.00</span><br />
+                <b>Monthly EMI:</b> &#8377; <span style="font-weight:bold;" th:text="${loan.emiPayment}">0.00</span> (<span th:text="${loan.loanMode}">Monthly</span>)
+            </td>
+        </tr>
+    </table>
+
+    <table class="schedule-table">
+        <thead>
+            <tr>
+                <th style="width: 8%;">Inst #</th>
+                <th style="width: 14%;">Due Date</th>
+                <th style="width: 15%; text-align: right;">Opening Balance (&#8377;)</th>
+                <th style="width: 15%; text-align: right;">EMI Amount (&#8377;)</th>
+                <th style="width: 16%; text-align: right;">Principal (&#8377;)</th>
+                <th style="width: 16%; text-align: right;">Interest (&#8377;)</th>
+                <th style="width: 16%; text-align: right;">Closing Balance (&#8377;)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="row : ${scheduleRows}">
+                <td class="text-center" th:text="${row.installmentNumber}">1</td>
+                <td class="text-center" th:text="${row.dueDate}">2026-10-28</td>
+                <td class="text-right" th:text="${#numbers.formatDecimal(row.openingBalance, 1, 'COMMA', 2, 'POINT')}">100,000.00</td>
+                <td class="text-right" style="font-weight: bold;" th:text="${#numbers.formatDecimal(row.emiAmount, 1, 'COMMA', 2, 'POINT')}">8,884.00</td>
+                <td class="text-right" th:text="${#numbers.formatDecimal(row.principalComponent, 1, 'COMMA', 2, 'POINT')}">7,884.00</td>
+                <td class="text-right" th:text="${#numbers.formatDecimal(row.interestComponent, 1, 'COMMA', 2, 'POINT')}">1,000.00</td>
+                <td class="text-right" th:text="${#numbers.formatDecimal(row.closingBalance, 1, 'COMMA', 2, 'POINT')}">92,116.00</td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(scheduleRows)}">
+                <td colspan="7" class="text-center py-3">Schedule will be generated upon loan approval / disbursement.</td>
+            </tr>
+            <tr class="totals-row">
+                <td colspan="3" class="text-right">TOTAL REPAYMENT:</td>
+                <td class="text-right" style="color:#0f766e;">&#8377; <span th:text="${totalRepayment}">0.00</span></td>
+                <td class="text-right">&#8377; <span th:text="${#numbers.formatDecimal(totalPrincipalSum, 1, 'COMMA', 2, 'POINT')}">0.00</span></td>
+                <td class="text-right">&#8377; <span th:text="${#numbers.formatDecimal(totalInterestSum, 1, 'COMMA', 2, 'POINT')}">0.00</span></td>
+                <td class="text-right">-</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p style="font-size: 8pt; color: #64748b; margin-top: 10px;">
+        * Note: Interest is calculated as per the sanctioned scheme terms. Timely EMI payments protect your pledged gold ornaments and maintain an excellent credit score.
+    </p>
+
+    <table class="signature-table">
+        <tr>
+            <td>
+                <br /><br />
+                ___________________________________<br />
+                <b>Borrower Signature</b><br />
+                <span th:text="${loan.customerName}">Borrower Name</span>
+            </td>
+            <td>
+                <br /><br />
+                ___________________________________<br />
+                <b>Authorized Bank Signatory</b><br />
+                Branch Officer
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>

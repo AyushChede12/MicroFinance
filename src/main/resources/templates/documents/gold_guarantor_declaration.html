@@ -1,0 +1,214 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Gold Loan Guarantor &amp; Co-Applicant Declaration</title>
+    <style type="text/css">
+        @page {
+            size: A4 portrait;
+            margin: 15mm 12mm 15mm 12mm;
+            @bottom-right {
+                content: "Page " counter(page) " of " counter(pages);
+                font-family: Arial, sans-serif;
+                font-size: 8pt;
+                color: #666;
+            }
+        }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 9.5pt;
+            line-height: 1.45;
+            color: #1e293b;
+            margin: 0;
+            padding: 0;
+        }
+        .letterhead {
+            text-align: center;
+            border-bottom: 2px solid #0f766e;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+        .society-name {
+            font-size: 14pt;
+            font-weight: bold;
+            color: #0f766e;
+            text-transform: uppercase;
+        }
+        .society-sub {
+            font-size: 8pt;
+            color: #475569;
+        }
+        .doc-title {
+            text-align: center;
+            font-size: 12pt;
+            font-weight: bold;
+            text-decoration: underline;
+            margin: 10px 0;
+            color: #0f766e;
+        }
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 8px 0 12px 0;
+        }
+        .info-table th, .info-table td {
+            border: 1px solid #94a3b8;
+            padding: 5px 8px;
+            font-size: 9pt;
+        }
+        .info-table th {
+            background-color: #f0fdfa;
+            color: #0f766e;
+            font-weight: bold;
+            text-align: left;
+            width: 25%;
+        }
+        .info-table td {
+            width: 25%;
+        }
+        .section-header {
+            font-size: 10pt;
+            font-weight: bold;
+            color: #0f766e;
+            border-bottom: 1px solid #cbd5e1;
+            padding-bottom: 2px;
+            margin-top: 10px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+        ol {
+            margin: 4px 0 10px 20px;
+            padding: 0;
+            font-size: 8.5pt;
+            color: #334155;
+        }
+        ol li {
+            margin-bottom: 4px;
+        }
+        .signature-table {
+            width: 100%;
+            margin-top: 25px;
+            page-break-inside: avoid;
+        }
+        .signature-table td {
+            width: 33.33%;
+            text-align: center;
+            vertical-align: bottom;
+            font-size: 8.5pt;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="letterhead">
+        <div class="society-name" th:text="${society.name}">SAMITHA URBAN MULTI-STATE CREDIT CO-OPERATIVE SOCIETY LTD.</div>
+        <div class="society-sub" th:text="${society.regInfo}">Registered Under MSCS Act 2002, Govt. of India | Reg. No: MSCS/CR/2014</div>
+        <div class="society-sub" th:text="${society.address}">Administrative Complex, City Center</div>
+    </div>
+
+    <div class="doc-title">GOLD LOAN GUARANTOR &amp; CO-APPLICANT DECLARATION</div>
+
+    <div class="section-header">1. LOAN &amp; BORROWER REFERENCE</div>
+    <table class="info-table">
+        <tr>
+            <th>Gold Loan ID</th>
+            <td style="font-weight: bold; color: #0f766e;" th:text="${loan.goldId}">GL-1001</td>
+            <th>Date of Loan</th>
+            <td th:text="${loan.loanDate}">2026-09-28</td>
+        </tr>
+        <tr>
+            <th>Borrower Name</th>
+            <td style="font-weight: bold;" th:text="${loan.customerName}">Borrower Name</td>
+            <th>Member Code</th>
+            <td th:text="${loan.memberCode}">MEM-001</td>
+        </tr>
+        <tr>
+            <th>Sanctioned Principal</th>
+            <td style="font-weight: bold;">&#8377; <span th:text="${loan.loanAmount}">1,00,000.00</span></td>
+            <th>Deductions / Net Received</th>
+            <td>-&#8377; <span th:text="${loan.totalDeductions}">0.00</span> / &#8377; <span th:text="${loan.netDisbursementAmount}">0.00</span></td>
+        </tr>
+        <tr>
+            <th>Total Interest (on Principal)</th>
+            <td style="font-weight: bold; color: #b45309;">&#8377; <span th:text="${loan.totalInterest}">0.00</span></td>
+            <th>Total Guarantee Liability (To Pay)</th>
+            <td style="font-weight: bold; color: #1d4ed8;">&#8377; <span th:text="${loan.totalPayableAmount}">0.00</span></td>
+        </tr>
+        <tr>
+            <th>Rate &amp; Tenure</th>
+            <td><span th:text="${loan.rateOfInterest}">12.0</span>% p.a. (<span th:text="${loan.loanTerm}">12</span> M)</td>
+            <th>Pledged Net Weight</th>
+            <td><span th:text="${loan.totalNetWt}">0.000</span> g</td>
+        </tr>
+    </table>
+
+    <div class="section-header">2. GUARANTOR PARTICULARS</div>
+    <table class="info-table">
+        <tr>
+            <th>Guarantor Name</th>
+            <td style="font-weight: bold;" th:text="${loan.guarantorIdentity != null and !#strings.isEmpty(loan.guarantorIdentity) ? loan.guarantorIdentity : 'N/A'}">Guarantor Name</td>
+            <th>Member Code</th>
+            <td th:text="${loan.guarantorCustomerCode != null and !#strings.isEmpty(loan.guarantorCustomerCode) ? loan.guarantorCustomerCode : 'N/A'}">G-001</td>
+        </tr>
+        <tr>
+            <th>Residential Address</th>
+            <td th:text="${loan.guarantorAddress != null and !#strings.isEmpty(loan.guarantorAddress) ? loan.guarantorAddress : 'N/A'}">Address</td>
+            <th>Contact Number</th>
+            <td th:text="${loan.guarantorContactNo != null and !#strings.isEmpty(loan.guarantorContactNo) ? loan.guarantorContactNo : 'N/A'}">Contact No</td>
+        </tr>
+        <tr>
+            <th>Security / Guarantee Type</th>
+            <td colspan="3" th:text="${loan.guarantorSecurityType != null and !#strings.isEmpty(loan.guarantorSecurityType) ? loan.guarantorSecurityType : 'Personal Guarantee'}">Personal Guarantee</td>
+        </tr>
+    </table>
+
+    <div class="section-header" th:if="${loan.coApplicantIdentity != null and !#strings.isEmpty(loan.coApplicantIdentity)}">3. CO-APPLICANT PARTICULARS</div>
+    <table class="info-table" th:if="${loan.coApplicantIdentity != null and !#strings.isEmpty(loan.coApplicantIdentity)}">
+        <tr>
+            <th>Co-Applicant Name</th>
+            <td style="font-weight: bold;" th:text="${loan.coApplicantIdentity}">Co-Applicant Name</td>
+            <th>Member ID</th>
+            <td th:text="${loan.coApplicantMemberId != null ? loan.coApplicantMemberId : 'N/A'}">CO-001</td>
+        </tr>
+        <tr>
+            <th>Address</th>
+            <td th:text="${loan.coApplicantAddress != null ? loan.coApplicantAddress : 'N/A'}">Address</td>
+            <th>Contact Number</th>
+            <td th:text="${loan.coApplicantContactNo != null ? loan.coApplicantContactNo : 'N/A'}">Contact No</td>
+        </tr>
+    </table>
+
+    <div class="section-header">4. GUARANTEE DECLARATION &amp; UNDERTAKING</div>
+    <ol>
+        <li>I/We hereby irrevocably, unconditionally, and jointly and severally guarantee to the Society the due repayment of all amounts due and payable by the Borrower under Gold Loan ID: <b><span th:text="${loan.goldId}">GL-1001</span></b>, including principal, interest, overdue penalty, and expenses.</li>
+        <li>I/We acknowledge that gold ornaments weighing <b><span th:text="${loan.totalNetWt}">0.000</span> g</b> have been pledged by the Borrower to the Society as primary security.</li>
+        <li>My/Our liability as Guarantor/Co-applicant shall be joint and several with the Borrower and shall not be impaired or discharged by any time or indulgence granted by the Society to the Borrower.</li>
+        <li>In case of default by the Borrower in payment of any installment, the Society shall be entitled to proceed against me/us without having to first exhaust remedies against the pledged ornaments or the Borrower.</li>
+        <li>I/We confirm that I/we have read and understood all the terms and conditions of this guarantee deed freely and voluntarily.</li>
+    </ol>
+
+    <table class="signature-table">
+        <tr>
+            <td>
+                <br /><br />
+                ________________________________<br />
+                <b>Guarantor Signature</b><br />
+                <span th:text="${loan.guarantorIdentity}">Guarantor Name</span>
+            </td>
+            <td>
+                <br /><br />
+                ________________________________<br />
+                <b>Borrower Signature</b><br />
+                <span th:text="${loan.customerName}">Borrower Name</span>
+            </td>
+            <td>
+                <br /><br />
+                ________________________________<br />
+                <b>Authorized Officer</b><br />
+                For Society
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>

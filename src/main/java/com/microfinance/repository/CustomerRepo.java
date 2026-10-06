@@ -11,18 +11,18 @@ import org.springframework.stereotype.Repository;
 import com.microfinance.model.addCustomer;
 
 @Repository
-public interface CustomerRepo extends JpaRepository<addCustomer, Long>{
+public interface CustomerRepo extends JpaRepository<addCustomer, Long> {
 	@Query("select coalesce(max(id), 0) from addCustomer")
 	long getMaxId();
 
 	List<addCustomer> findBymemberCode(String memberCode);
 
-	
-
 	Optional<addCustomer> findByMemberCode(String customerCode);
 
-		List<addCustomer> findByIsApprovedTrue();
+	List<addCustomer> findByIsApprovedTrue();
 
+	List<addCustomer> findByMemberCodeIn(List<String> memberCodes);
 
+	List<addCustomer> findByInterestPercent(String interestPercent);
 
 }

@@ -1,436 +1,363 @@
-// ✅ Js for populating the loanid in the dropdown (Vaibhav)
+// Loan Document Print Management Script (Full End-to-End Implementation)
+
 $(document).ready(function() {
-	populateapprovedLoanIdDropdown();
+	initLoanIdDropdown();
+	initEventHandlers();
 });
 
-function populateapprovedLoanIdDropdown() {
-
+function initLoanIdDropdown() {
 	$.ajax({
-		url: "api/loanmanegment/getApprovedLoanIds",
+		url: "api/loans/printable-loan-ids",
 		type: "GET",
 		dataType: "json",
 		success: function(response) {
-			console.log("Loan ID response:", response); // for debugging
-
-			if (response.status === "OK" && Array.isArray(response.data)) {
-				const $dropdown = $("#loanId"); // Make sure this matches your HTML ID exactly
-				$dropdown.empty(); // Clear existing options
-
-				// ✅ Wrap your <option> in quotes!
+			if (response && response.data && Array.isArray(response.data)) {
+				const $dropdown = $("#loanId");
+				$dropdown.empty();
 				$dropdown.append('<option value="" disabled selected>SELECT LOAN ID</option>');
 
 				response.data.forEach(function(id) {
 					$dropdown.append(`<option value="${id}">${id}</option>`);
 				});
 			} else {
-				console.warn("No Loan IDs found in response.");
+				fallbackLoadLoanIds();
 			}
 		},
-		error: function(xhr, status, error) {
-			console.error("Error fetching Loan IDs:", error);
+		error: function(xhr) {
+			console.warn("Could not load printable loan IDs, trying fallback...", xhr);
+			fallbackLoadLoanIds();
 		}
 	});
 }
 
+function fallbackLoadLoanIds() {
+	$.ajax({
+		url: "api/loanmanegment/getStatementLoanId",
+		type: "GET",
+		dataType: "json",
+		success: function(response) {
+			if (response && response.data && Array.isArray(response.data)) {
+				const $dropdown = $("#loanId");
+				$dropdown.empty();
+				$dropdown.append('<option value="" disabled selected>SELECT LOAN ID</option>');
+				response.data.forEach(function(id) {
+					$dropdown.append(`<option value="${id}">${id}</option>`);
+				});
+			}
+		}
+	});
+}
 
-// Js for binding data in textfields (Vaibhav)
-$(document).ready(function() {
+function initEventHandlers() {
+	// 1. On Loan ID Selection
 	$("#loanId").on("change", function() {
 		const selectedLoanId = $(this).val();
+		if (!selectedLoanId) return;
+
+		$("#previewDocBtn").prop("disabled", true);
+		$("#generateDocBtn").prop("disabled", true);
+		$("#loanDocument").prop("disabled", true).html('<option value="" disabled selected>Loading available documents...</option>');
+
+		loadLoanDetails(selectedLoanId);
+		loadAvailableDocuments(selectedLoanId);
+		loadDocumentLogs(selectedLoanId);
+	});
+
+	// 2. On Document Type Selection
+	$("#loanDocument").on("change", function() {
+		const docType = $(this).val();
+		if (docType) {
+			// Enable both Preview and Generate Doc buttons immediately!
+			$("#previewDocBtn").prop("disabled", false);
+			$("#generateDocBtn").prop("disabled", false);
+		} else {
+			$("#previewDocBtn").prop("disabled", true);
+			$("#generateDocBtn").prop("disabled", true);
+		}
+	});
+
+	// 3. On Preview Button Click
+	$("#previewDocBtn").on("click", function(e) {
+		e.preventDefault();
+		const loanId = $("#loanId").val();
 		const docType = $("#loanDocument").val();
 
-		if (docType != "applicantForm" || docType != "sanctionLetter" || docType != "loanAgreement") {
-			alert("!!Plese Select The Document Type To Print !!")
-		} 
-
-
-
-		if (selectedLoanId) {
-			$.ajax({
-				url: "api/loanmanegment/getLoanById", // your GET API
-				type: "GET",
-				data: { loanId: selectedLoanId }, // sending as query param
-				dataType: "json",
-				success: function(response) {
-					if (response.status === "OK" && response.data) {
-						const data = response.data;
-
-						// Now populate the form fields with received data
-						$("#memberId").val(data.memberId);
-						$("#relativeDetails").val(data.relativeDetails);
-						$("#contactNo").val(data.contactNo);
-						$("#loanPlanName").val(data.loanPlanName);
-						$("#loanMode").val(data.loanMode);
-						$("#loanTerm").val(data.loanTerm);
-						$("#rateOfInterest").val(data.rateOfInterest);
-						$("#loanAmount").val(data.loanAmount);
-						$("#interestType").val(data.interestType);
-						$("#emiPayment").val(data.emiPayment);
-
-					} else {
-						alert("Loan data not found.");
-					}
-				},
-				error: function(xhr) {
-					alert("Error fetching data: " + xhr.responseText);
-				}
-			});
-		}
-
-
-	});
-});
-
-
-//js for generating the laon documents(Vaibhav)
-$(document).ready(function() {
-	$("#generateDoc").click(function(e) {
-		e.preventDefault();
-		const loanId = $("#loanId").val();       // get from input field
-		const docType = $("#loanDocument").val(); // get from dropdown
-
-		//alert(docType);
-
 		if (!loanId) {
-			alert("Please select a Loan ID");
+			alert("Please select a Loan ID first.");
+			return;
+		}
+		if (!docType) {
+			alert("Please select a Document Type to preview.");
 			return;
 		}
 
-		$.ajax({
-			url: "api/loanmanegment/getLoanById",
-			method: "GET",
-			data: { loanId: loanId }, // request param
-			success: function(result) {
-				if (result && result.data) {
-					const loanData = result.data;
-					let content = "";
-
-					if (docType === "applicantForm") {
-
-						content = `
-        <div style="padding:20px; font-family:Arial; border:2px solid #000;">
-            <h2 style="text-align:center; margin:0;">Microfinance Cooperative Bank Ltd.</h2>
-            <h4 style="text-align:center; margin:0;">Branch: ${loanData.branchName || "-"}</h4>
-            <h3 style="text-align:center; margin:15px 0; text-decoration:underline;">Loan Application Form</h3>
-
-            <h4>1. PERSONAL DETAILS</h4>
-            <table style="width:100%; border-collapse:collapse ; table-layout: fixed;" border="1" cellpadding="8">
-                <tr>
-                    <td><b>Name</b></td><td>${loanData.memberName || "-"}</td>
-                    <td><b>Member Id</b></td><td>${loanData.memberId || "-"}</td>
-                </tr>
-                <tr>
-                    <td><b>Date of Birth</b></td><td>${loanData.dateOfBirth || "-"}</td>
-                    <td><b>Age</b></td><td>${loanData.age || "-"}</td>
-                </tr>
-                <tr>
-                    <td><b>Relative Details</b></td><td>${loanData.relativeDetails || "-"}</td>
-                    <td><b>House No.</b></td><td>${loanData.houseNo || "-"}</td>
-                </tr>
-                <tr>
-                    <td><b>Address</b></td><td>${loanData.address || "-"}</td>
-                    <td><b>Pin Code</b></td><td>${loanData.pinCode || "-"}</td>
-                </tr>
-               
-                <tr>
-                    <td><b>Mobile No.</b></td><td>${loanData.contactNo || "-"}</td>
-                    <td><b>Account No.</b></td><td>${loanData.accountNo || "-"}</td>
-                </tr>
-            </table>
-
-            <br>
-           
-            <h4>2. LOAN DETAILS</h4>
-            <table style="width:100%; border-collapse:collapse;table-layout: fixed;" border="1" cellpadding="8">
-                <tr>
-                    <td><b>Loan Plan Name</b></td><td>${loanData.loanPlanName || "-"}</td>
-                    <td><b>Date of Loan</b></td><td>${loanData.loanDate || "-"}</td>
-                </tr>
-                <tr>
-                    <td><b>Loan Mode</b></td><td>${loanData.loanMode || "-"}</td>
-                    <td><b>Loan Term</b></td><td>${loanData.loanTerm || "-"}</td>
-                    
-                </tr>
-               
-                <tr>
-                    <td><b>Loan Amount</b></td><td style="color:red; font-weight:bold;">${loanData.loanAmount || "-"}</td>
-                    
-
-                    <td><b>Rate of Interest</b></td><td>${loanData.rateOfInterest || "-"}</td>
-                </tr>
-                <tr>
-                    <td><b>Interest Type</b></td><td>${loanData.interestType || "-"}</td>
-                    <td><b>Loan EMI</b></td><td style="color:red; font-weight:bold;">${loanData.emiPayment || "-"}</td>
-                </tr>
-                <tr>
-                
-                <td><b>Type of Loan</b></td><td>${loanData.typeOfLoan || "-"}</td>
-                    <td><b>Purpose of Loan</b></td><td>${loanData.purposeOfLoan || "-"}</td>
-                    
-                </tr>
-             </table>
-             <br>
-                
-            <h4>3. GUARANTOR DETAILS</h4>
-            <table style="width:100%; border-collapse:collapse;table-layout: fixed;" border="1" cellpadding="8">
-                <tr>
-                    <td><b>Member Id</b></td><td>${loanData.guarantorMemberId || "-"}</td>
-                    <td><b>Identity Proof</b></td><td>${loanData.guarantorIdentity || "-"}</td>
-                </tr>
-                <tr>
-                    <td><b>Address</b></td><td>${loanData.guarantorAddress || "-"}</td>
-                    <td><b>Pin Code</b></td><td>${loanData.guarantorPinCode || "-"}</td>
-                    
-                </tr>
-               
-                <tr>
-                    <td><b>Contact No.</b></td><td>${loanData.guarantorContactNo || "-"}</td>
-                    
-
-                    <td><b>Guaranter Security</b></td><td>${loanData.guarantorSecurityType || "-"}</td>
-                </tr>
-                
-            </table>
-            
-            <br>
-                
-            <h4>4. CO-APPLICANT DETAILS</h4>
-            <table style="width:100%; border-collapse:collapse;table-layout: fixed;" border="1" cellpadding="8">
-                <tr>
-                    <td><b>Member Id</b></td><td>${loanData.coApplicantMemberId || "-"}</td>
-                    <td><b>Identity Proof</b></td><td>${loanData.coApplicantIdentity || "-"}</td>
-                </tr>
-                <tr>
-                    <td><b>Address</b></td><td>${loanData.coApplicantAddress || "-"}</td>
-                    <td><b>Pin Code</b></td><td>${loanData.coApplicantPinCode || "-"}</td>
-                    
-                </tr>
-               
-                <tr>
-                    <td><b>Contact No.</b></td><td>${loanData.coApplicantContactNo || "-"}</td>
-                    
-
-                    <td><b>Guaranter Security</b></td><td>${loanData.coApplicantSecurityType || "-"}</td>
-                </tr>
-                
-            </table>
-            
-             <br>
-                
-            <h4>5.APPROVAL DETAILS</h4>
-            <table style="width:100%; border-collapse:collapse;table-layout: fixed;" border="1" cellpadding="8">
-            
-                <tr>
-                    <td><b>Financial Consultant Id</b></td><td>${loanData.financialConsultantId || "-"}</td>
-                    <td><b>Financial Consultant Name</b></td><td>${loanData.financialConsultantName || "-"}</td>
-                    
-                </tr>
-               
-                <tr>
-                    <td><b>Approval Date</b></td><td>${loanData.approvalDate || "-"}</td>
-                    <td><b>Approval Status</b></td><td style="color:red; font-weight:bold;">
-  ${loanData.approvalStatus == 1 ? "Approved" : "Not Approved"}
-</td>
-                </tr>
-                
-               
-                
-            </table>
-
-            <br><br>
-            <div style="display:flex; justify-content:space-between; margin-top:40px;">
-                <div>
-                    <p>________________________</p>
-                    <p>Applicant Signature</p>
-                </div>
-                <div>
-                    <p>________________________</p>
-                    <p>Bank Officer Signature</p>
-                </div>
-            </div>
-        </div>
-    `;
-					}
-					else if (docType === "sanctionLetter") {
-						content = `
-        <div style="padding:20px; font-family:Arial; border:2px solid #000; background:#f9f9f9;">
-            <h2 style="text-align:center; margin:0;">Microfinance Cooperative Bank Ltd.</h2>
-            <h4 style="text-align:center; margin:0;">Branch: ${loanData.branchName || "-"}</h4>
-            <h3 style="text-align:center; margin:15px 0; text-decoration:underline;">Loan Sanction Letter</h3>
-
-            <p><b>Loan Approval Date:</b> ${loanData.approvalDate || "-"}</p>
-            <p><b>Loan Reference No:</b> ${loanData.loanId}</p>
-
-            <p><b>To,</b><br>
-               ${loanData.applicantName || "-"}<br>
-               ${loanData.address || "-"}<br>
-               Contact: ${loanData.contactNo || "-"}
-            </p>
-
-           <p style="font-size:18px; font-weight:bold; text-decoration:underline; margin-top:20px;">
-   Subject: Sanction of Loan
-</p>
-
-            <p>Dear ${loanData.memberName || "Applicant"},</p>
-           <p style="font-size:15px; text-align:justify;">
-   We are pleased to inform you that your loan application has been carefully reviewed and successfully approved. 
-   This sanction has been granted after considering your eligibility, repayment capacity, and the rules and policies 
-   of the Microfinance Cooperative Bank Ltd. The sanctioned loan will help you meet your financial requirements, 
-   and it will be governed by the terms and conditions as mentioned below. Please find the key details of your 
-   sanctioned loan for your reference:
-</p>
-
-            <table style="width:100%; border-collapse:collapse;" border="1">
-                <tr>
-                    <td><b>Loan Amount</b></td>
-                    <td style="color:red; font-weight:bold;">${loanData.loanAmount || "-"}</td>
-                </tr>
-                <tr>
-                    <td><b>Loan Term</b></td>
-                    <td>${loanData.loanTerm || "-"}</td>
-                </tr>
-                <tr>
-                    <td><b>Interest Type</b></td>
-                    <td>${loanData.interestType || "-"}</td>
-                </tr>
-                <tr>
-                    <td><b>Rate of Interest</b></td>
-                    <td>${loanData.rateOfInterest || "-"}</td>
-                </tr>
-                <tr>
-                    <td><b>EMI Amount</b></td>
-                    <td>${loanData.emiPayment || "-"}</td>
-                </tr>
-                <tr>
-                    <td><b>Processing Fee</b></td>
-                    <td>${loanData.processingFee || "-"}</td>
-                </tr>
-                <tr>
-                    <td><b>Legal Fee</b></td>
-                    <td>${loanData.legalCharges || "-"}</td>
-                </tr>
-                
-                <tr>
-                    <td><b>GST</b></td>
-                    <td>${loanData.gst || "-"}</td>
-                </tr>
-                
-                 <tr>
-                    <td><b>Sanctioned Loan Amount</b></td>
-                    <td style="color:red; font-weight:bold;">${loanData.sanctionedAmount || "-"}</td>
-                </tr>
-            </table>
-
-            <p style="margin-top:20px;">
-                Kindly acknowledge and sign a copy of this letter as your acceptance of the terms. 
-            </p>
-
-			<p style="margin-top:20px;">
-   <b>Date:</b> ${new Date().toLocaleDateString('en-GB')}
-</p>
-            <br><br>
-            <div style="display:flex; justify-content:space-between; margin-top:40px;">
-                <div>
-                    <p>________________________</p>
-                    <p>Applicant Signature</p>
-                </div>
-                <div>
-                    <p>________________________</p>
-                    <p>Manager/Officer Signature</p>
-                </div>
-            </div>
-        </div>
-    `;
-					} else if (docType === "loanAgreement") {
-						content = `
-        <div style="padding:20px; font-family:Arial; border:2px solid #000; background:#fdfdfd;">
-            <h2 style="text-align:center; margin:0;">Microfinance Cooperative Bank Ltd.</h2>
-            <h4 style="text-align:center; margin:0;">Branch: ${loanData.branchName || "-"}</h4>
-            <h3 style="text-align:center; margin:15px 0; text-decoration:underline;">Loan Agreement</h3>
-
-            <p><b>Date:</b> ${new Date().toLocaleDateString('en-GB')}</p>
-            <p><b>Loan Reference No:</b> ${loanData.loanId}</p>
-
-            <p><b>This Loan Agreement is executed on the date mentioned above, between the Microfinance Cooperative Bank Ltd. 
-             and Mr./Ms. ${loanData.memberName || "________"}.</b></p>
-
-            <p>
-                <b>Lender:</b> Microfinance Cooperative Bank Ltd., having its registered office at ${loanData.branchName || "-"}.<br>
-                <b>Borrower:</b> ${loanData.memberName || "-"}, residing at ${loanData.address || "-"}.
-            </p>
-
-            <h4 style="margin-top:20px; text-decoration:underline;">Terms & Conditions</h4>
-            <ol style="padding-left:20px; margin-left:20px;">
-                <li>The Borrower agrees to repay the loan amount of <b style="color:red">${loanData.loanAmount || "-"} Rs.</b> 
-                    sanctioned on <b>${loanData.approvalDate || "-"}</b> within a tenure of 
-                    <b>${loanData.loanTerm || "-"} months</b>.
-                </li>
-                <li>The loan shall carry an interest rate of <b>${loanData.rateOfInterest || "-"}%</b> per annum, 
-                    calculated as per ${loanData.interestType || "the agreed"} method.
-                </li>
-                <li>The Borrower agrees to pay an EMI of <b style="color:red">${loanData.emiPayment || "-"} Rs.</b> on or before the due date every month.</li>
-                <li>The Borrower agrees to pay applicable charges including Processing Fee: 
-                    <b>${loanData.processingFee || "-"} Rs.</b> and Legal Fee: 
-                    <b>${loanData.legalCharges || "-"} Rs.</b> and GST:
-                    <b>${loanData.gst || "-"} Rs.</b>
-                </li>
-                <li>In case of default, the Bank shall have the right to take legal action and recover the dues.</li>
-                <li>The Borrower declares that all information provided in the loan application is true and correct.</li>
-            </ol>
-
-            <p style="margin-top:20px;">
-                Both parties hereby agree to abide by the terms and conditions mentioned above. This Agreement 
-                is executed in duplicate, with one copy each for the Borrower and the Bank.
-            </p>
-
-            <br><br>
-            <div style="display:flex; justify-content:space-between; margin-top:40px;">
-                <div>
-                    <p>________________________</p>
-                    <p>Borrower Signature</p>
-                </div>
-                <div>
-                    <p>________________________</p>
-                    <p>Authorized Signatory (Bank)</p>
-                </div>
-            </div>
-        </div>
-    `;
-					}
-
-
-					// Inject into receipt area
-					$("#receiptArea").html(content);
-
-					// Show the print button after generating document
-					document.getElementById("printBtn").style.display = "inline-block";
-
-				} else {
-					alert("Loan not found");
-					$("#receiptArea").html("");
-				}
-			},
-			error: function(xhr, status, error) {
-				console.error("Error fetching loan data:", error);
-				$("#receiptArea").html("<p style='color:red;'>Error fetching data</p>");
-			}
-
-
-		});
+		openDocumentPreview(loanId, docType);
 	});
-});
 
-//Js for printing the loan document(Vaibhav)
-function printDocument() {
+	// 4. On Generate Doc Button Click (Main or inside Modal)
+	$("#generateDocBtn, #modalGenerateBtn").on("click", function(e) {
+		e.preventDefault();
+		const loanId = $("#loanId").val();
+		const docType = $("#loanDocument").val();
 
-	var content = document.getElementById("receiptArea").innerHTML;
+		if (!loanId) {
+			alert("Please select a Loan ID first.");
+			return;
+		}
+		if (!docType) {
+			alert("Please select a Document Type to generate.");
+			return;
+		}
 
-	var printWindow = window.open("", "", "height=700,width=900");
-	printWindow.document.write("<html><head><title>Print Document</title>");
-	printWindow.document.write("</head><body >");
-	printWindow.document.write(content);
-	printWindow.document.write("</body></html>");
-	printWindow.document.close();
+		generateAndDownloadPdf(loanId, docType);
+	});
 
-	printWindow.print();
+	// 5. Reset Button
+	$("#resetBtn").on("click", function(e) {
+		e.preventDefault();
+		$("#loanDocForm")[0].reset();
+		$("#loanDocument").prop("disabled", true).html('<option value="" disabled selected>-- Select Loan ID First --</option>');
+		$("#previewDocBtn").prop("disabled", true);
+		$("#generateDocBtn").prop("disabled", true);
+		$("#docLogsBody").html('<tr><td colspan="6" class="text-center py-4 text-muted">Please select a Loan ID to view generated document history.</td></tr>');
+		$("#auditCountBadge").text("0 Documents");
+	});
+}
+
+function loadLoanDetails(loanId) {
+	$.ajax({
+		url: "api/loans/" + encodeURIComponent(loanId) + "/details",
+		type: "GET",
+		dataType: "json",
+		success: function(response) {
+			if (response && response.data) {
+				const d = response.data;
+				$("#loanDate").val(d.loanDate || "--");
+				$("#loanPlanName").val(d.loanPlanName || "--");
+				$("#typeOfLoan").val(d.typeOfLoan || "--");
+				$("#memberIdAndName").val((d.memberId ? d.memberId + " - " : "") + (d.memberName || "--"));
+				$("#relativeDetails").val(d.relativeDetails || "--");
+				$("#contactNo").val(d.contactNo || "--");
+				$("#loanAmount").val(d.loanAmount ? formatCurrency(d.loanAmount) : "--");
+				$("#rateOfInterest").val(d.rateOfInterest ? d.rateOfInterest + "% p.a." : "--");
+				$("#loanTerm").val(d.loanTerm ? d.loanTerm + " Months" : "--");
+				$("#interestType").val(d.interestType || "--");
+				$("#loanMode").val(d.loanMode || "--");
+				$("#emiPayment").val(d.emiPayment ? formatCurrency(d.emiPayment) : "--");
+				$("#loanStatus").val(d.loanStatus || "--");
+				$("#approvalDate").val(d.approvalDate || "--");
+				$("#netDisbursementAmount").val(d.netDisbursementAmount ? formatCurrency(d.netDisbursementAmount) : "--");
+
+				var gInfo = "--";
+				if (d.guarantorIdentity) {
+					gInfo = d.guarantorIdentity + (d.guarantorMemberId ? " (" + d.guarantorMemberId + ")" : "");
+				} else if (d.coApplicantIdentity) {
+					gInfo = "Co-App: " + d.coApplicantIdentity;
+				}
+				$("#guarantorName").val(gInfo);
+			}
+		},
+		error: function(xhr) {
+			console.error("Error fetching loan details:", xhr);
+			alert("Error loading loan details: " + (xhr.responseJSON?.message || xhr.statusText));
+		}
+	});
+}
+
+function loadAvailableDocuments(loanId) {
+	$.ajax({
+		url: "api/loans/" + encodeURIComponent(loanId) + "/available-documents",
+		type: "GET",
+		dataType: "json",
+		success: function(response) {
+			const $dropdown = $("#loanDocument");
+			$dropdown.empty();
+			$dropdown.append('<option value="" disabled selected>SELECT DOCUMENT TO PRINT</option>');
+
+			if (response && response.data && Array.isArray(response.data)) {
+				response.data.forEach(function(doc) {
+					if (doc.available) {
+						$dropdown.append(`<option value="${doc.docType}">✓ ${doc.name}</option>`);
+					} else {
+						$dropdown.append(`<option value="${doc.docType}" disabled style="color:#888;">✕ ${doc.name} (Gated: ${doc.reason})</option>`);
+					}
+				});
+				$dropdown.prop("disabled", false);
+			}
+		},
+		error: function(xhr) {
+			console.error("Error loading available documents:", xhr);
+			$("#loanDocument").html('<option value="" disabled selected>Error loading documents</option>');
+		}
+	});
+}
+
+function loadDocumentLogs(loanId) {
+	$.ajax({
+		url: "api/loans/" + encodeURIComponent(loanId) + "/document-logs",
+		type: "GET",
+		dataType: "json",
+		success: function(response) {
+			const $tbody = $("#docLogsBody");
+			$tbody.empty();
+
+			if (response && response.data && response.data.length > 0) {
+				$("#auditCountBadge").text(response.data.length + " Documents");
+				response.data.forEach(function(log, idx) {
+					const row = `
+                        <tr>
+                            <td class="ps-3 font-weight-bold text-muted">${idx + 1}</td>
+                            <td><i class="bi bi-calendar3 mr-1 text-muted"></i> ${log.generatedAt || '--'}</td>
+                            <td><span class="badge badge-light border text-primary">${log.documentName || log.documentType}</span></td>
+                            <td><i class="bi bi-person mr-1 text-muted"></i> ${log.generatedByUserId || 'ADMIN'}</td>
+                            <td><code>${log.fileReference || '--'}</code></td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-sm btn-outline-primary py-0 px-2" 
+                                    onclick="generateAndDownloadPdf('${log.loanId}', '${log.documentType}')" title="Re-download PDF">
+                                    <i class="bi bi-download mr-1"></i> Download
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+					$tbody.append(row);
+				});
+			} else {
+				$("#auditCountBadge").text("0 Documents");
+				$tbody.html('<tr><td colspan="6" class="text-center py-4 text-muted">No documents have been generated yet for this loan.</td></tr>');
+			}
+		},
+		error: function(xhr) {
+			console.error("Error fetching document logs:", xhr);
+		}
+	});
+}
+
+function showModalCompat() {
+	if (typeof $ !== 'undefined' && $('#docPreviewModal').modal) {
+		$('#docPreviewModal').modal('show');
+	} else if (window.bootstrap && bootstrap.Modal) {
+		var m = bootstrap.Modal.getOrCreateInstance(document.getElementById('docPreviewModal'));
+		m.show();
+	} else {
+		$('#docPreviewModal').show().addClass('show').css('display', 'block');
+	}
+}
+
+function hideModalCompat() {
+	if (typeof $ !== 'undefined' && $('#docPreviewModal').modal) {
+		$('#docPreviewModal').modal('hide');
+	} else if (window.bootstrap && bootstrap.Modal) {
+		var m = bootstrap.Modal.getInstance(document.getElementById('docPreviewModal'));
+		if (m) m.hide();
+	} else {
+		$('#docPreviewModal').hide().removeClass('show').css('display', 'none');
+	}
+}
+
+function openDocumentPreview(loanId, docType) {
+	const previewUrl = "api/loans/" + encodeURIComponent(loanId) + "/documents/" + encodeURIComponent(docType) + "/preview";
+	const $container = $("#previewContainer");
+
+	$container.html(`
+        <div class="text-center p-5">
+            <div class="spinner-border text-primary" role="status" style="width: 2.5rem; height: 2.5rem;"></div>
+            <p class="mt-3 text-muted">Rendering document preview...</p>
+        </div>
+    `);
+
+	// Show modal safely for Bootstrap 4 and Bootstrap 5
+	showModalCompat();
+
+	$.ajax({
+		url: previewUrl,
+		type: "GET",
+		dataType: "html",
+		success: function(htmlContent) {
+			$container.html(htmlContent);
+			$("#generateDocBtn").prop("disabled", false);
+		},
+		error: function(xhr) {
+			$container.html(`
+                <div class="alert alert-danger m-4">
+                    <h5 class="font-weight-bold"><i class="bi bi-exclamation-triangle-fill mr-2"></i> Preview Error</h5>
+                    <p>${xhr.responseText || "Unable to render document preview."}</p>
+                </div>
+            `);
+		}
+	});
+}
+
+function generateAndDownloadPdf(loanId, docType) {
+	const $btn = $("#generateDocBtn");
+	const $spinner = $("#generateSpinner");
+	const $icon = $("#generateIcon");
+
+	$btn.prop("disabled", true);
+	$spinner.removeClass("d-none");
+	$icon.addClass("d-none");
+
+	const generateUrl = "api/loans/" + encodeURIComponent(loanId) + "/documents/" + encodeURIComponent(docType) + "/generate";
+
+	fetch(generateUrl, {
+		method: "POST"
+	})
+		.then(function(response) {
+			if (!response.ok) {
+				return response.text().then(function(text) {
+					throw new Error(text || "Failed to generate document");
+				});
+			}
+			return response.blob();
+		})
+		.then(function(blob) {
+			// Create download link
+			const url = window.URL.createObjectURL(blob);
+			const a = document.createElement("a");
+			a.style.display = "none";
+			a.href = url;
+			a.download = docType + "_" + loanId + ".pdf";
+			document.body.appendChild(a);
+			a.click();
+			window.URL.revokeObjectURL(url);
+			a.remove();
+
+			// Close modal if open
+			hideModalCompat();
+
+			// Refresh generation logs
+			loadDocumentLogs(loanId);
+
+			// Feedback alert
+			showToastAlert("PDF document generated and downloaded successfully!", "success");
+		})
+		.catch(function(err) {
+			console.error("PDF generation failed:", err);
+			alert("Error generating document: " + err.message);
+		})
+		.finally(function() {
+			$spinner.addClass("d-none");
+			$icon.removeClass("d-none");
+			$btn.prop("disabled", false);
+		});
+}
+
+function formatCurrency(val) {
+	const num = Number(val) || 0;
+	return '₹ ' + num.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function showToastAlert(msg, type) {
+	const alertDiv = $(`
+        <div class="alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show shadow position-fixed" 
+             style="top: 20px; right: 20px; z-index: 99999; min-width: 300px;" role="alert">
+            <i class="bi bi-check-circle-fill mr-2"></i> ${msg}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    `);
+	$("body").append(alertDiv);
+	setTimeout(function() {
+		alertDiv.alert('close');
+	}, 4000);
 }

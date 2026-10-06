@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Gold Loan No Objection Certificate (NOC)</title>
+    <style type="text/css">
+        @page {
+            size: A4 portrait;
+            margin: 16mm 14mm 16mm 14mm;
+            @bottom-right {
+                content: "Page " counter(page) " of " counter(pages);
+                font-family: Arial, sans-serif;
+                font-size: 8pt;
+                color: #64748b;
+            }
+        }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 10pt;
+            line-height: 1.5;
+            color: #1e293b;
+            margin: 0;
+            padding: 0;
+        }
+        .letterhead {
+            text-align: center;
+            border-bottom: 2px solid #0f766e;
+            padding-bottom: 8px;
+            margin-bottom: 14px;
+        }
+        .society-name {
+            font-size: 14pt;
+            font-weight: bold;
+            color: #0f766e;
+            text-transform: uppercase;
+        }
+        .society-sub {
+            font-size: 8pt;
+            color: #475569;
+        }
+        .doc-title {
+            text-align: center;
+            font-size: 13pt;
+            font-weight: bold;
+            text-decoration: underline;
+            margin: 14px 0 10px 0;
+            color: #0f766e;
+            letter-spacing: 0.5px;
+        }
+        .cert-meta {
+            width: 100%;
+            margin-bottom: 14px;
+        }
+        .cert-meta td {
+            font-size: 9.5pt;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0 14px 0;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #94a3b8;
+            padding: 6px 8px;
+            font-size: 9pt;
+        }
+        .data-table th {
+            background-color: #f0fdfa;
+            color: #0f766e;
+            font-weight: bold;
+            text-align: left;
+        }
+        .cert-body {
+            text-align: justify;
+            margin: 12px 0;
+            font-size: 9.5pt;
+            line-height: 1.6;
+        }
+        .handover-box {
+            background-color: #f8fafc;
+            border: 1.5px dashed #0f766e;
+            border-radius: 6px;
+            padding: 10px 14px;
+            margin: 14px 0;
+            font-size: 9pt;
+        }
+        .signature-table {
+            width: 100%;
+            margin-top: 30px;
+            page-break-inside: avoid;
+        }
+        .signature-table td {
+            width: 50%;
+            text-align: center;
+            vertical-align: bottom;
+            font-size: 9pt;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="letterhead">
+        <div class="society-name" th:text="${society.name}">SAMITHA URBAN MULTI-STATE CREDIT CO-OPERATIVE SOCIETY LTD.</div>
+        <div class="society-sub" th:text="${society.regInfo}">Registered Under MSCS Act 2002, Govt. of India | Reg. No: MSCS/CR/2014</div>
+        <div class="society-sub" th:text="${society.address}">Administrative Complex, City Center</div>
+    </div>
+
+    <div class="doc-title">NO OBJECTION &amp; PLEDGE RELEASE CERTIFICATE (NOC)</div>
+
+    <table class="cert-meta">
+        <tr>
+            <td style="width: 60%;">
+                <b>Ref No:</b> <span th:text="${nocRefNo}">GL-NOC/2026/001</span><br />
+                <b>Date of Issue:</b> <span th:text="${todayDate}">2026-09-28</span>
+            </td>
+            <td style="width: 40%; text-align: right;">
+                <b>Gold Loan ID:</b> <span style="font-weight: bold; color: #0f766e;" th:text="${loan.goldId}">GL-1001</span><br />
+                <b>Closure Date:</b> <span th:text="${loan.closureDate != null ? loan.closureDate : todayDate}">2026-09-28</span>
+            </td>
+        </tr>
+    </table>
+
+    <div class="cert-body">
+        <b>TO WHOMSOEVER IT MAY CONCERN</b><br /><br />
+        This is to certify that <b>Mr./Ms./Mrs. <span th:text="${loan.customerName}">CUSTOMER NAME</span></b>, 
+        holding Member Code <b><span th:text="${loan.memberCode}">MEM-001</span></b>, residing at 
+        <span th:text="${loan.address}">Customer Address</span>, had availed a <b>Secured Gold Loan</b> 
+        bearing Loan ID <b><span th:text="${loan.goldId}">GL-1001</span></b> for the sanctioned principal amount of 
+        <b>&#8377; <span th:text="${loan.loanAmount}">1,00,000.00</span></b> from our <b><span th:text="${loan.branchName}">Main Branch</span></b> on <b><span th:text="${loan.loanDate}">2026-01-01</span></b>.
+        <br /><br />
+        We hereby confirm and place on record that the said Gold Loan account has been <b>FULLY AND FINALLY CLOSED</b>. All outstanding dues including principal, interest, overdue charges, and incidental expenses have been paid in full to the complete satisfaction of the Society.
+        <br /><br />
+        There are <b>NO DUES OR LIABILITIES</b> outstanding against the borrower under the aforesaid Gold Loan account, and the Society has <b>NO OBJECTION</b> whatsoever.
+    </div>
+
+    <table class="data-table">
+        <tr>
+            <th colspan="4" style="background-color: #0f766e; color: #ffffff;">RETURNED PLEDGED GOLD ORNAMENTS SPECIFICATION</th>
+        </tr>
+        <tr>
+            <th style="width: 25%;">Item Description</th>
+            <td style="width: 25%; font-weight: bold;" th:text="${loan.itemName}">Gold Ornaments</td>
+            <th style="width: 25%;">Total Items</th>
+            <td style="width: 25%;"><span th:text="${loan.totalItemsCount}">1</span> Item(s)</td>
+        </tr>
+        <tr>
+            <th>Gross Weight</th>
+            <td><span th:text="${loan.totalGrossWt}">0.000</span> g</td>
+            <th>Net Weight</th>
+            <td style="font-weight: bold; color: #0f766e;"><span th:text="${loan.totalNetWt}">0.000</span> g</td>
+        </tr>
+        <tr>
+            <th>Purity / Karat</th>
+            <td><span th:text="${loan.karat}">22</span>K (<span th:text="${loan.purity}">916</span>)</td>
+            <th>Closure Receipt No</th>
+            <td th:text="${loan.closureReceiptNo != null ? loan.closureReceiptNo : 'N/A'}">REC-001</td>
+        </tr>
+    </table>
+
+    <div class="handover-box">
+        <b>Borrower Gold Receipt &amp; Discharge Confirmation:</b><br />
+        I, <b th:text="${loan.customerName}">Customer Name</b>, hereby confirm that I have physically received back the pledged gold ornaments described above in their original, undamaged, sealed condition. I have verified the weight and purity, and have no further claims against the Society in respect thereof.
+    </div>
+
+    <table class="signature-table">
+        <tr>
+            <td>
+                <br /><br />
+                ________________________________<br />
+                <b>Borrower Signature (Upon Receiving Gold)</b><br />
+                <span th:text="${loan.customerName}">Borrower Name</span>
+            </td>
+            <td>
+                <br /><br />
+                ________________________________<br />
+                <b>Authorized Signatory &amp; Seal</b><br />
+                Branch Manager, Samitha Urban
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>

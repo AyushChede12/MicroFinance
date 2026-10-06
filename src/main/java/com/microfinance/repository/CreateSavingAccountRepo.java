@@ -27,6 +27,8 @@ public interface CreateSavingAccountRepo extends JpaRepository<CreateSavingsAcco
 
 	List<CreateSavingsAccount> findByTypeofaccountContainingIgnoreCaseAndIsApproved(String keyword, boolean isApproved);
 
+//	List<CreateSavingsAccount> findByTypeofaccountContainingIgnoreCase(String keyword, boolean isApproved);
+
 	List<CreateSavingsAccount> findAllByAccountNumberAndIsApprovedTrue(String accountNumber);
 
 	List<CreateSavingsAccount> findByIsApprovedTrue();
@@ -62,5 +64,5 @@ public interface CreateSavingAccountRepo extends JpaRepository<CreateSavingsAcco
 
 	@Query("SELECT COALESCE(SUM(s.openingFees),0) FROM CreateSavingsAccount s WHERE s.branchName = :branchName AND s.openingDate BETWEEN :startDate AND :endDate")
 	Double getTotalSavingOpeningIncome(String branchName, LocalDate startDate, LocalDate endDate);
-	
+
 }

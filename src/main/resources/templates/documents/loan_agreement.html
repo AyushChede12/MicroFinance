@@ -1,0 +1,238 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Loan Agreement</title>
+    <style type="text/css">
+        @page {
+            size: A4 portrait;
+            margin: 15mm 12mm 15mm 12mm;
+            @bottom-right {
+                content: "Page " counter(page) " of " counter(pages);
+                font-family: Arial, sans-serif;
+                font-size: 8pt;
+                color: #666;
+            }
+        }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 9.5pt;
+            line-height: 1.45;
+            color: #222;
+            margin: 0;
+            padding: 0;
+        }
+        .letterhead {
+            text-align: center;
+            border-bottom: 2px solid #1a365d;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+        .society-name {
+            font-size: 14pt;
+            font-weight: bold;
+            color: #1a365d;
+            text-transform: uppercase;
+        }
+        .society-sub {
+            font-size: 8pt;
+            color: #555;
+            margin-top: 2px;
+        }
+        .doc-title {
+            text-align: center;
+            font-size: 12pt;
+            font-weight: bold;
+            text-decoration: underline;
+            margin: 10px 0;
+            color: #1a365d;
+        }
+        .section-heading {
+            font-size: 10pt;
+            font-weight: bold;
+            color: #1a365d;
+            margin-top: 10px;
+            margin-bottom: 4px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 2px;
+        }
+        p {
+            margin: 5px 0;
+            text-align: justify;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 8px 0;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #777;
+            padding: 4px 7px;
+            font-size: 8.5pt;
+        }
+        .data-table th {
+            background-color: #f0f4f8;
+            font-weight: bold;
+            color: #1a365d;
+            width: 25%;
+        }
+        .signature-table {
+            width: 100%;
+            margin-top: 25px;
+            page-break-inside: avoid;
+        }
+        .signature-table td {
+            width: 50%;
+            font-size: 8.5pt;
+            vertical-align: top;
+            padding: 10px;
+        }
+        .sign-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            min-height: 85px;
+        }
+        .sign-line {
+            border-top: 1px dashed #444;
+            margin-top: 45px;
+            padding-top: 3px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Letterhead -->
+    <div class="letterhead">
+        <div class="society-name" th:text="${society.name}">SAMITHA URBAN MULTI-STATE CREDIT CO-OPERATIVE SOCIETY LTD.</div>
+        <div class="society-sub" th:text="${society.regInfo}">Registered Under MSCS Act 2002, Govt. of India | Reg. No: MSCS/CR/2014</div>
+        <div class="society-sub">
+            <span th:text="${society.address}">Head Office: Administrative Complex, City Center</span> | 
+            Email: <span th:text="${society.email}">contact@samithaurban.coop</span>
+        </div>
+    </div>
+
+    <div class="doc-title">CREDIT FACILITY &amp; LOAN AGREEMENT</div>
+
+    <p>
+        This Loan Agreement ("Agreement") is executed on this 
+        <strong th:text="${loan.approvalDate != null ? loan.approvalDate : todayDate}">2026-09-17</strong> at 
+        <span th:text="${loan.branchName}">Main Branch</span>, by and between:
+    </p>
+
+    <p>
+        <strong>1. THE LENDER:</strong> <strong th:text="${society.name}">SAMITHA URBAN MULTI-STATE CREDIT CO-OPERATIVE SOCIETY LTD.</strong>, 
+        having its registered office at <span th:text="${society.address}">Administrative Complex, City Center</span> 
+        (hereinafter referred to as the "Society/Lender", which expression shall include its successors and assigns).
+    </p>
+
+    <p>
+        <strong>2. THE BORROWER:</strong> 
+        <strong th:text="${loan.memberName}">[Borrower Name]</strong>, holding Member ID: 
+        <strong th:text="${loan.memberId}">[MEM001]</strong>, residing at 
+        <span th:text="${loan.address}">[Address]</span>, PIN: <span th:text="${loan.pinCode}">[000000]</span>, 
+        Contact: <span th:text="${loan.contactNo}">[9876543210]</span> 
+        (hereinafter referred to as the "Borrower").
+    </p>
+
+    <div th:if="${loan.guarantorMemberId != null and !loan.guarantorMemberId.isEmpty()}">
+        <p>
+            <strong>3. THE GUARANTOR:</strong> 
+            <strong th:text="${loan.guarantorIdentity}">[Guarantor Name]</strong>, Member ID: 
+            <strong th:text="${loan.guarantorMemberId}">[G001]</strong>, residing at 
+            <span th:text="${loan.guarantorAddress}">[Guarantor Address]</span>, Contact: 
+            <span th:text="${loan.guarantorContactNo}">[Contact]</span>, ID/Aadhar: 
+            <span th:text="${loan.guarantorAadharNo != null ? loan.guarantorAadharNo : loan.guarantorIdentityNo}">[ID]</span>
+            (hereinafter referred to as the "Guarantor").
+        </p>
+    </div>
+
+    <div class="section-heading">ARTICLE I: SCHEDULE OF LOAN TERMS</div>
+    <table class="data-table">
+        <tr>
+            <th>Loan Account No.</th>
+            <td style="font-weight: bold;" th:text="${loan.loanId}">LP00001</td>
+            <th>Sanctioned Amount</th>
+            <td style="font-weight: bold; color: #1a365d;" th:text="${'INR ' + loan.loanAmount}">INR 2,30,000</td>
+        </tr>
+        <tr>
+            <th>Interest Rate</th>
+            <td th:text="${loan.rateOfInterest + '% p.a. (' + loan.interestType + ')'}">18.0% p.a.</td>
+            <th>Tenure &amp; Mode</th>
+            <td th:text="${loan.loanTerm + ' Months (' + loan.loanMode + ')'}">60 Months</td>
+        </tr>
+        <tr>
+            <th>EMI Amount</th>
+            <td style="font-weight: bold;" th:text="${'INR ' + loan.emiPayment}">INR 5,840.49</td>
+            <th>Collateral / Security</th>
+            <td th:text="${loan.guarantorSecurityType != null ? loan.guarantorSecurityType : 'Personal Guarantee &amp; Promissory Note'}">Hypothecation / Personal Guarantee</td>
+        </tr>
+    </table>
+
+    <div class="section-heading">ARTICLE II: REPAYMENT &amp; GUARANTOR OBLIGATIONS</div>
+    <p>
+        The Borrower unconditionally promises to repay the total loan facility together with accrued interest in accordance with the 
+        stipulated repayment schedule without delay, deduction, or abatement. The Guarantor agrees that their liability is joint, several, 
+        and co-extensive with that of the Borrower, and shall not be discharged by any waiver or indulgence granted by the Society.
+    </p>
+
+    <div class="section-heading">ARTICLE III: EVENTS OF DEFAULT &amp; RECOVERY</div>
+    <p>
+        Default in the payment of any installment on the due date shall attract penal interest at 24% p.a. on the overdue amount. In the event 
+        of default persisting for two consecutive installments, the entire outstanding balance shall become immediately due and payable. 
+        The Society shall be entitled to initiate recovery proceedings under the Multi-State Co-operative Societies Act 2002, attach accounts, 
+        or invoke arbitration under the jurisdiction of the registered office court.
+    </p>
+
+    <div class="section-heading">ARTICLE IV: PREPAYMENT &amp; FORECLOSURE</div>
+    <p>
+        The Borrower may prepay the principal balance either in partial lumpsum or full foreclosure subject to Society bylaws. 
+        Upon full and final settlement of all dues, the Society shall issue a No Objection Certificate (NOC) and release any pledged security.
+    </p>
+
+    <!-- Signatures -->
+    <table class="signature-table">
+        <tr>
+            <td>
+                <div class="sign-box">
+                    <strong>SIGNED &amp; DELIVERED BY BORROWER:</strong>
+                    <div class="sign-line">
+                        Signature of Borrower (<span th:text="${loan.memberName}">Borrower</span>)<br />
+                        Date: <span th:text="${todayDate}">2026-09-17</span>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="sign-box">
+                    <strong>SIGNED &amp; DELIVERED BY GUARANTOR:</strong>
+                    <div class="sign-line">
+                        Signature of Guarantor (<span th:text="${loan.guarantorIdentity != null ? loan.guarantorIdentity : 'Guarantor'}">Guarantor</span>)<br />
+                        Date: <span th:text="${todayDate}">2026-09-17</span>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="sign-box">
+                    <strong>FOR &amp; ON BEHALF OF LENDER:</strong>
+                    <div class="sign-line">
+                        Authorized Signatory / Branch Manager<br />
+                        <span th:text="${society.name}">Samitha Urban Society</span>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="sign-box">
+                    <strong>WITNESSES:</strong>
+                    <div style="margin-top: 15px; font-size: 8pt;">
+                        1. Name &amp; Sign: ___________________________________<br /><br />
+                        2. Name &amp; Sign: ___________________________________
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>

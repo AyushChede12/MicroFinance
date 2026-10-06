@@ -61,7 +61,6 @@ $(document).ready(function() {
 
 						// Now populate the form fields with received data
 						$("#memberId").val(`${data.memberId} - ${data.memberName || "-"}`);
-						$("#relativeDetails").val(data.relativeDetails);
 						$("#dateOfBirth").val(data.dateOfBirth);
 						$("#age").val(data.age);
 						$("#contactNo").val(data.contactNo);
@@ -76,6 +75,18 @@ $(document).ready(function() {
 						$("#loanTerm").val(data.loanTerm);
 						$("#rateOfInterest").val(data.rateOfInterest);
 						$("#loanAmount").val(data.loanAmount);
+						let netDisbursed = data.netDisbursementAmount || data.sanctionedAmount;
+						if (!netDisbursed || parseFloat(netDisbursed) <= 0) {
+							let gross = parseFloat(data.loanAmount) || 0;
+							let proc = parseFloat(data.processingFee) || 0;
+							let legal = parseFloat(data.legalCharges) || 0;
+							let ins = parseFloat(data.insuranceFee) || 0;
+							let gst = parseFloat(data.gst) || 0;
+							let totalDed = proc + legal + ins + gst;
+							netDisbursed = (gross > 0 && totalDed > 0) ? (gross - totalDed).toFixed(2) : (gross > 0 ? gross.toFixed(2) : "0.00");
+						}
+						$("#netDisbursementAmount").val(netDisbursed);
+						$("#netDisbursementAmountDeduction").val(netDisbursed);
 						$("#interestType").val(data.interestType);
 						$("#emiPayment").val(data.emiPayment);
 						$("#purposeOfLoan").val(data.purposeOfLoan);
@@ -86,7 +97,6 @@ $(document).ready(function() {
 						$("#guarantorAddress").val(data.guarantorAddress);
 						$("#guarantorPinCode").val(data.guarantorPinCode);
 						$("#guarantorContactNo").val(data.guarantorContactNo);
-						$("#guarantorSecurityType").val(data.guarantorSecurityType);
 
 						// Co-Applicant Details
 						$("#coApplicantMemberId").val(data.coApplicantMemberId);
@@ -94,7 +104,6 @@ $(document).ready(function() {
 						$("#coApplicantAddress").val(data.coApplicantAddress);
 						$("#coApplicantPinCode").val(data.coApplicantPinCode);
 						$("#coApplicantContactNo").val(data.coApplicantContactNo);
-						$("#coApplicantSecurityType").val(data.coApplicantSecurityType);
 
 						// Deductions
 						$("#processingFee").val(data.processingFee);
@@ -112,30 +121,30 @@ $(document).ready(function() {
 						// PHOTO
 						if (data.photo) {
 
-						    const photoPath = "/" + data.photo;
+							const photoPath = "/" + data.photo;
 
-						    console.log("Photo Path =>", photoPath);
+							console.log("Photo Path =>", photoPath);
 
-						    $("#photoPreview").attr("src", photoPath);
-						    $("#photoHidden").val(data.photo);
+							$("#photoPreview").attr("src", photoPath);
+							$("#photoHidden").val(data.photo);
 
 						} else {
-						    $("#photoPreview").attr("src", "/Uploads/default-placeholder.jpg");
+							$("#photoPreview").attr("src", "/Uploads/default-placeholder.jpg");
 						}
 
 
 						// SIGNATURE
 						if (data.signature) {
 
-						    const signPath = "/" + data.signature;
+							const signPath = "/" + data.signature;
 
-						    console.log("Signature Path =>", signPath);
+							console.log("Signature Path =>", signPath);
 
-						    $("#signaturePreview").attr("src", signPath);
-						    $("#signatureHidden").val(data.signature);
+							$("#signaturePreview").attr("src", signPath);
+							$("#signatureHidden").val(data.signature);
 
 						} else {
-						    $("#signaturePreview").attr("src", "/Uploads/default-placeholder.jpg");
+							$("#signaturePreview").attr("src", "/Uploads/default-placeholder.jpg");
 						}
 
 

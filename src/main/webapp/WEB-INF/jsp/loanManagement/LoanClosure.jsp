@@ -258,8 +258,8 @@
 				<label for="">DEDUCT FINE</label> <select id="deductfine"
 					name="deductfine" required="required"
 					class="form-control selectField" style="height: 30px;">
-					<option value="">NO</option>
-					<option value="Blue">YES</option>
+					<option value="NO">NO</option>
+					<option value="YES">YES</option>
 				</select>
 			</div>
 		</div>
@@ -382,4 +382,4 @@
 </div>
 
 <script
-	src="${pageContext.request.contextPath}/js/LoanManagment/LoanClosure.js"></script>
+	src="${pageContext.request.contextPath}/js/LoanManagment/LoanClosure.js?v=<%= System.currentTimeMillis() %>"></script>

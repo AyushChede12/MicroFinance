@@ -1,0 +1,204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>No Objection Certificate (NOC)</title>
+    <style type="text/css">
+        @page {
+            size: A4 portrait;
+            margin: 18mm 15mm 18mm 15mm;
+            @bottom-right {
+                content: "Page " counter(page) " of " counter(pages);
+                font-family: Arial, sans-serif;
+                font-size: 8pt;
+                color: #666;
+            }
+        }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 10pt;
+            line-height: 1.55;
+            color: #222;
+            margin: 0;
+            padding: 0;
+        }
+        .letterhead {
+            text-align: center;
+            border-bottom: 2px solid #1a365d;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .society-name {
+            font-size: 15pt;
+            font-weight: bold;
+            color: #1a365d;
+            text-transform: uppercase;
+        }
+        .society-sub {
+            font-size: 8.5pt;
+            color: #555;
+            margin-top: 3px;
+        }
+        .doc-title {
+            text-align: center;
+            font-size: 14pt;
+            font-weight: bold;
+            text-decoration: underline;
+            margin: 20px 0 15px 0;
+            color: #1a365d;
+            letter-spacing: 0.5px;
+        }
+        .cert-meta {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .cert-meta td {
+            font-size: 9.5pt;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0 20px 0;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #777;
+            padding: 6px 10px;
+            font-size: 9.5pt;
+        }
+        .data-table th {
+            background-color: #f1f5f9;
+            width: 30%;
+            font-weight: bold;
+            color: #1a365d;
+            text-align: left;
+        }
+        p {
+            text-align: justify;
+            margin: 10px 0;
+        }
+        .clearance-box {
+            border: 2px solid #059669;
+            background-color: #ecfdf5;
+            padding: 12px;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 11pt;
+            font-weight: bold;
+            color: #065f46;
+            border-radius: 4px;
+        }
+        .sign-area {
+            width: 100%;
+            margin-top: 50px;
+            page-break-inside: avoid;
+        }
+        .sign-area td {
+            width: 50%;
+            vertical-align: bottom;
+            font-size: 9pt;
+        }
+        .seal-box {
+            width: 110px;
+            height: 80px;
+            border: 1px dashed #777;
+            text-align: center;
+            line-height: 80px;
+            color: #999;
+            font-size: 8pt;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Letterhead -->
+    <div class="letterhead">
+        <div class="society-name" th:text="${society.name}">SAMITHA URBAN MULTI-STATE CREDIT CO-OPERATIVE SOCIETY LTD.</div>
+        <div class="society-sub" th:text="${society.regInfo}">Registered Under MSCS Act 2002, Govt. of India | Reg. No: MSCS/CR/2014</div>
+        <div class="society-sub">
+            <span th:text="${society.address}">Head Office: Administrative Complex, City Center</span> | 
+            Email: <span th:text="${society.email}">contact@samithaurban.coop</span>
+        </div>
+    </div>
+
+    <div class="doc-title">NO OBJECTION CERTIFICATE (N.O.C.) &amp; LOAN CLEARANCE</div>
+
+    <table class="cert-meta">
+        <tr>
+            <td style="width: 60%;">
+                <strong>Certificate Ref:</strong> <span th:text="${nocRefNo}">NOC/2026/001</span><br />
+                <strong>Issuance Date:</strong> <span th:text="${todayDate}">2026-09-17</span>
+            </td>
+            <td style="width: 40%; text-align: right;">
+                <strong>Branch:</strong> <span th:text="${loan.branchName}">Main Branch</span><br />
+                <strong>Loan Status:</strong> <span style="color: #059669; font-weight: bold;">CLOSED / REPAID</span>
+            </td>
+        </tr>
+    </table>
+
+    <div style="font-size: 11pt; font-weight: bold; margin-bottom: 10px;">TO WHOMSOEVER IT MAY CONCERN</div>
+
+    <p>
+        This is to officially certify that member-borrower <strong><span th:text="${loan.memberName}">Borrower Name</span></strong>, 
+        bearing Member ID <strong><span th:text="${loan.memberId}">MEM001</span></strong>, who had availed credit facility from 
+        <span th:text="${society.name}">Samitha Urban Multi-State Credit Co-Operative Society Ltd.</span>, has fully settled and liquidated the said loan account.
+    </p>
+
+    <table class="data-table">
+        <tr>
+            <th>Loan Account ID</th>
+            <td style="font-weight: bold;" th:text="${loan.loanId}">LP00001</td>
+        </tr>
+        <tr>
+            <th>Loan Scheme &amp; Type</th>
+            <td th:text="${loan.loanPlanName + ' (' + loan.typeOfLoan + ')'}">Personal Loan</td>
+        </tr>
+        <tr>
+            <th>Sanctioned Principal Amount</th>
+            <td th:text="${'INR ' + loan.loanAmount}">INR 2,30,000.00</td>
+        </tr>
+        <tr>
+            <th>Date of Disbursal</th>
+            <td th:text="${loan.loanDate}">2026-09-11</td>
+        </tr>
+        <tr>
+            <th>Loan Closure Date</th>
+            <td style="font-weight: bold;" th:text="${loan.closureDate != null ? loan.closureDate : todayDate}">2026-09-17</td>
+        </tr>
+        <tr>
+            <th>Final Payment / Receipt Reference</th>
+            <td th:text="${loan.closureReceiptNo != null ? loan.closureReceiptNo : (loan.ref_UpiId != null ? loan.ref_UpiId : 'SETTLEMENT-VOUCHER-01')}">REC-SETTLE-001</td>
+        </tr>
+        <tr>
+            <th>Outstanding Dues as on Date</th>
+            <td style="color: #059669; font-weight: bold;">NIL (INR 0.00)</td>
+        </tr>
+    </table>
+
+    <div class="clearance-box">
+        NO OUTSTANDING BALANCE &bull; FULL AND FINAL SETTLEMENT CONFIRMED
+    </div>
+
+    <p>
+        The Society has <strong>NO OBJECTION</strong> whatsoever to the borrower, and hereby releases all hypothecation, lien, charge, or security 
+        created over any collateral, vehicle, property, or deposits held against the above loan account. The original documents, securities, and guarantees 
+        stood discharged herewith.
+    </p>
+
+    <table class="sign-area">
+        <tr>
+            <td style="text-align: center;">
+                <div class="seal-box">[ SOCIETY SEAL ]</div>
+                <div style="margin-top: 5px;">Society Official Stamp</div>
+            </td>
+            <td style="text-align: center;">
+                <div style="border-top: 1px solid #333; margin: 50px 20px 4px 20px;"></div>
+                <strong>Authorized Signatory</strong><br />
+                <span>Competent Authority / Branch Manager</span><br />
+                <span th:text="${society.name}">Samitha Urban Multi-State Co-op Society Ltd.</span>
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>

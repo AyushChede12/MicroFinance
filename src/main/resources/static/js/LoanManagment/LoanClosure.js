@@ -82,89 +82,116 @@ function fetchLoanDetails(loanId, installmentCount) {
 			if (response.status === "OK" && response.data) {
 				const data = response.data;
 
-				// ✅ Populate fields
+				// ✅ Populate basic loan fields
 				$("#dateofLoan").val(data.loanDate);
 				$("#memberId").val(`${data.memberId} - ${data.memberName || "-"}`);
-				$("#relativeDetails").val(data.relativeDetails);
-				$("#branchName").val(data.branchName);
-				$("#contactNo").val(data.contactNo);
-				$("#loanPlanName").val(data.loanPlanName);
-				$("#typeOfLoan").val(data.typeOfLoan);
-				$("#emiPayment").val(data.emiPayment);
-				$("#totalprincipalloan").val(data.sanctionedAmount);
-				$("#loanAmount").val(data.loanAmount);
-				$("#rateOfInterest").val(data.rateOfInterest);
-				$("#loanTerm").val(data.loanTerm);
-				$("#loanMode").val(data.loanMode);
-				$("#interestType").val(data.interestType);
-				$("#sanctionedAmount").val(data.sanctionedAmount);
+				$("#relativeDetails").val(data.relativeDetails || "");
+				$("#branchName").val(data.branchName || "");
+				$("#contactNo").val(data.contactNo || "");
+				$("#loanPlanName").val(data.loanPlanName || data.typeOfLoan || "");
+				$("#typeOfLoan").val(data.typeOfLoan || "");
+				$("#totalprincipalloan").val(data.sanctionedAmount || data.loanAmount || "0");
+				$("#loanAmount").val(data.loanAmount || "0");
+				$("#rateOfInterest").val(data.rateOfInterest || "0");
+				$("#loanTerm").val(data.loanTerm || "0");
+				$("#loanMode").val(data.loanMode || "Monthly");
+				$("#interestType").val(data.interestType || "Reducing Interest");
+				$("#sanctionedAmount").val(data.sanctionedAmount || data.loanAmount || "0");
 				$("#noOfInst").val(installmentCount + " INSTALLMENTS");
-				$("#financialConsultantId").val(data.financialConsultantId);
-				$("#financialConsultantName").val(data.financialConsultantName);
+				$("#financialConsultantId").val(data.financialConsultantId || "");
+				$("#financialConsultantName").val(data.financialConsultantName || "");
 
-				// ✅ Variables
+				// ✅ Numerical variables
 				let loanAmount = parseFloat(data.loanAmount) || 0;
 				let rateOfInterest = parseFloat(data.rateOfInterest) || 0;
 				let loanTerm = parseFloat(data.loanTerm) || 0;
-				let loanMode = (data.loanMode || "").toLowerCase();
-				let interestType = (data.interestType || "").toLowerCase();
+				let loanMode = (data.loanMode || "").trim().toLowerCase();
+				let interestType = (data.interestType || "").trim().toLowerCase();
 				let emiPayment = parseFloat(data.emiPayment) || 0;
 
 				// ✅ Determine payments per year
-				let paymentsPerYear = 1;
+				let paymentsPerYear = 12;
 				if (loanMode === "daily") paymentsPerYear = 365;
 				else if (loanMode === "weekly") paymentsPerYear = 52;
+				else if (loanMode === "fortnightly") paymentsPerYear = 26;
 				else if (loanMode === "monthly") paymentsPerYear = 12;
 				else if (loanMode === "quarterly") paymentsPerYear = 4;
 				else if (loanMode === "yearly") paymentsPerYear = 1;
 
-				// ✅ Convert term to years
-				let termInYears = loanTerm;
-				if (loanMode === "daily") termInYears = loanTerm / 365;
-				else if (loanMode === "weekly") termInYears = loanTerm / 52;
-				else if (loanMode === "monthly") termInYears = loanTerm / 12;
-				else if (loanMode === "quarterly") termInYears = loanTerm / 4;
+				// ✅ Total installments count is loanTerm (e.g. 60 months = 60 installments)
+				let totalPayments = loanTerm > 0 ? loanTerm : 1;
+				let termInYears = totalPayments / paymentsPerYear;
 
-				// ✅ Total installments
-				let totalPayments = loanTerm;
-
-				// ✅ Calculate total interest
 				let totalinterestofLoan = 0;
 				let emi = 0;
 
-				if (interestType === "flat interest") {
+				if (interestType.includes("flat")) {
+					// Flat Interest: Total Interest = (P * R * T_years) / 100
 					totalinterestofLoan = (loanAmount * rateOfInterest * termInYears) / 100;
-				} else if (interestType === "reducing interest") {
-					totalPayments = loanTerm * paymentsPerYear;
-					let periodicRate = rateOfInterest / paymentsPerYear / 100;
-					emi = (loanAmount * periodicRate * Math.pow(1 + periodicRate, totalPayments)) /
-						(Math.pow(1 + periodicRate, totalPayments) - 1);
-					totalinterestofLoan = emi * totalPayments - loanAmount;
+					emi = totalPayments > 0 ? ((loanAmount + totalinterestofLoan) / totalPayments) : 0;
+				} else {
+					// Reducing Balance: Standard Amortization formula
+					let periodicRate = (rateOfInterest / paymentsPerYear) / 100;
+					if (periodicRate > 0) {
+						let compound = Math.pow(1 + periodicRate, totalPayments);
+						emi = (loanAmount * periodicRate * compound) / (compound - 1);
+					} else {
+						emi = totalPayments > 0 ? (loanAmount / totalPayments) : 0;
+					}
+
+					// If the loan application already stored an EMI (e.g. 1365.18), use it to reconcile exact cents
+					if (emiPayment > 0 && Math.abs(emiPayment - emi) < 1.0) {
+						emi = emiPayment;
+					}
+					totalinterestofLoan = (emi * totalPayments) - loanAmount;
 				}
 
+				if (emiPayment > 0 && Math.abs(emiPayment - emi) < 1.0) {
+					emi = emiPayment;
+				}
+
+				let totalPayableofLoan = loanAmount + totalinterestofLoan;
+
+				$("#emiPayment").val(emi.toFixed(2));
 				$("#totalinterestofLoan").val(totalinterestofLoan.toFixed(2));
+				$("#totalPayableofLoan").val(totalPayableofLoan.toFixed(2));
 
-				let totalPayableofLoan = (loanAmount + totalinterestofLoan).toFixed(2);
-				$("#totalPayableofLoan").val(totalPayableofLoan);
+				// 🔹 Installments Paid so far
+				let paidCount = parseInt(installmentCount) || 0;
+				let amountPaid = emi * paidCount;
 
-				// 🔹 Calculate Interest Due
-				let interestDue = 0;
-				if (interestType === "flat interest") {
-					let interestPerInstallment = totalinterestofLoan / totalPayments;
-					interestDue = totalinterestofLoan - (interestPerInstallment * installmentCount);
-				} else if (interestType === "reducing interest") {
-					let interestPerInstallment = totalinterestofLoan / totalPayments;
-					interestDue = totalinterestofLoan - (interestPerInstallment * installmentCount);
+				// 🔹 Calculate Interest Due & Principal Due
+				let principaldue = loanAmount;
+				let interestDue = totalinterestofLoan;
+
+				if (interestType.includes("flat")) {
+					let principalPerInst = totalPayments > 0 ? (loanAmount / totalPayments) : 0;
+					let interestPerInst = totalPayments > 0 ? (totalinterestofLoan / totalPayments) : 0;
+					principaldue = Math.max(0, loanAmount - (principalPerInst * paidCount));
+					interestDue = Math.max(0, totalinterestofLoan - (interestPerInst * paidCount));
+				} else {
+					// Reducing balance amortization schedule up to paidCount
+					let periodicRate = (rateOfInterest / paymentsPerYear) / 100;
+					let runningPrincipal = loanAmount;
+					let totalInterestAccrued = 0;
+					for (let i = 1; i <= paidCount; i++) {
+						let intPart = runningPrincipal * periodicRate;
+						let prinPart = emi - intPart;
+						if (prinPart > runningPrincipal) prinPart = runningPrincipal;
+						if (prinPart < 0) prinPart = 0;
+						runningPrincipal -= prinPart;
+						totalInterestAccrued += intPart;
+						if (runningPrincipal <= 0) {
+							runningPrincipal = 0;
+							break;
+						}
+					}
+					principaldue = runningPrincipal;
+					interestDue = Math.max(0, totalinterestofLoan - totalInterestAccrued);
 				}
 
-				// 🔹 Calculate Principal Due
-				let principalPerInstallment = loanAmount / totalPayments;
-				let principalPaid = principalPerInstallment * installmentCount;
-				let principaldue = loanAmount - principalPaid;
-
-				// 🔹 Calculate Total Amount Due
-				let amountPaid = emiPayment * installmentCount;
-				let balanceLoanAmount = totalPayableofLoan - amountPaid;
+				// 🔹 Balance Loan Amount
+				let balanceLoanAmount = Math.max(0, totalPayableofLoan - amountPaid);
 
 				// ✅ Bind values
 				$("#interestDue").val(interestDue.toFixed(2));
@@ -172,10 +199,19 @@ function fetchLoanDetails(loanId, installmentCount) {
 				$("#amountPaid").val(amountPaid.toFixed(2));
 				$("#balanceLoanAmount").val(balanceLoanAmount.toFixed(2));
 
-				console.log("Installments Paid:", installmentCount);
+				// Auto-fill payment amount & net amount
+				let fineAmt = parseFloat($("#deeductfienamount").val()) || 0;
+				let netToPay = balanceLoanAmount + fineAmt;
+				$("#paymentamount").val(balanceLoanAmount.toFixed(2));
+				$("#netamount").val(netToPay.toFixed(2));
+
+				console.log("Installments Paid:", paidCount);
+				console.log("Total Interest:", totalinterestofLoan);
+				console.log("Total Payable:", totalPayableofLoan);
 				console.log("Interest Due:", interestDue);
 				console.log("Principal Due:", principaldue);
-				console.log("Total Amount Due:", amountPaid);
+				console.log("Amount Paid:", amountPaid);
+				console.log("Balance Loan Amount:", balanceLoanAmount);
 
 			} else {
 				alert("Loan data not found.");
@@ -188,13 +224,43 @@ function fetchLoanDetails(loanId, installmentCount) {
 }
 
 $(document).ready(function() {
+	// Initialize Payment Date to today
+	const today = new Date().toISOString().split('T')[0];
+	if (!$("#paymentDate").val()) {
+		$("#paymentDate").val(today);
+	}
+
+	// Recalculate Net Amount on Payment Amount or Fine change
+	$("#paymentamount, #deeductfienamount").on("input change", function() {
+		let pay = parseFloat($("#paymentamount").val()) || 0;
+		let fine = parseFloat($("#deeductfienamount").val()) || 0;
+		$("#netamount").val((pay + fine).toFixed(2));
+	});
+
+	// Toggle Deduct Fine
+	$("#deductfine").on("change", function() {
+		if ($(this).val() !== "YES" && $(this).val() !== "Blue") {
+			$("#deeductfienamount").val("0");
+		}
+		let pay = parseFloat($("#paymentamount").val()) || 0;
+		let fine = parseFloat($("#deeductfienamount").val()) || 0;
+		$("#netamount").val((pay + fine).toFixed(2));
+	});
+
+	// Submit Loan Closure
 	$("#closeLoanBtn").on("click", function(e) {
 		e.preventDefault();
 
-		// Collect data
+		const loanId = $("#earlyLoanclosureId").val();
+		if (!loanId) {
+			alert("Please select a Loan ID first.");
+			return;
+		}
+
+		// Collect data with fallback IDs to match both JSP naming conventions
 		const loanClosureData = {
-			loanId: $("#earlyLoanclosureId").val(),
-			loanDate: $("#loanDate").val(),
+			loanId: loanId,
+			loanDate: $("#dateofLoan").val() || $("#loanDate").val(),
 			memberId: $("#memberId").val(),
 			memberName: $("#memberName").val(),
 			relativeDetails: $("#relativeDetails").val(),
@@ -219,14 +285,15 @@ $(document).ready(function() {
 			balanceLoanAmount: $("#balanceLoanAmount").val(),
 			dueDate: $("#dueDate").val(),
 			paymentBranch: $("#paymentBranch").val(),
-			fine: $("#fine").val(),
-			netAmount: $("#netAmount").val(),
+			fine: $("#deeductfienamount").val() || $("#fine").val() || "0",
+			paymentAmount: $("#paymentamount").val() || $("#paymentAmount").val(),
+			netAmount: $("#netamount").val() || $("#netAmount").val(),
 
 			paymentDate: $("#paymentDate").val(),
-			paymentMode: $("#paymentMode").val(),
-			ref_UpiId: $("#ref_UpiId").val(),
-			charges: $("#charges").val(),
-			remarks: $("#remarks").val(),
+			paymentMode: $("#paymentMode").val() || $("#modeofPayment").val(),
+			ref_UpiId: $("#refNo").val() || $("#ref_UpiId").val(),
+			charges: $("#charges").val() || "0.00",
+			remarks: $("#remark").val() || $("#remarks").val(),
 			chequeDate: $("#chequeDate").val(),
 			chequeNo: $("#chequeNo").val(),
 
@@ -249,35 +316,31 @@ $(document).ready(function() {
 			},
 			error: function(xhr) {
 				console.error("Error:", xhr.responseText);
-				alert(xhr.responseText || "Something went wrong while closing the loan!");
+				let errMsg = "Something went wrong while closing the loan!";
+				try {
+					const res = JSON.parse(xhr.responseText);
+					if (res && res.message) errMsg = res.message;
+				} catch (e) {
+					if (xhr.statusText) errMsg = xhr.statusText;
+				}
+				alert(errMsg);
 			}
 		});
 	});
-});
 
+	// ✅ Payment Mode Display Toggle (support #paymentMode and #modeofPayment)
+	$('#displayCheque, #displaycheqdate, #displaydeposit, #displayRef').hide();
 
-// ✅ Payment Mode Display
-$('#displayCheque').hide();
-$('#displaycheqdate').hide();
-$('#displaydeposit').hide();
-$('#displayRef').hide();
-
-$('#modeofPayment').change(function() {
-	const paymentMode = $(this).val();
-	if (paymentMode === 'Cash') {
-		$('#displayCheque').hide();
-		$('#displaycheqdate').hide();
-		$('#displaydeposit').hide();
-		$('#displayRef').hide();
-	} else if (paymentMode === 'Cheque') {
-		$('#displayCheque').show();
-		$('#displaycheqdate').show();
-		$('#displaydeposit').show();
-		$('#displayRef').hide();
-	} else if (paymentMode === 'Online' || paymentMode === 'NEFT') {
-		$('#displayCheque').hide();
-		$('#displaycheqdate').hide();
-		$('#displaydeposit').show();
-		$('#displayRef').show();
-	}
+	$('#paymentMode, #modeofPayment').on('change', function() {
+		const paymentMode = $(this).val();
+		if (paymentMode === 'Cash') {
+			$('#displayCheque, #displaycheqdate, #displaydeposit, #displayRef').hide();
+		} else if (paymentMode === 'Cheque') {
+			$('#displayCheque, #displaycheqdate, #displaydeposit').show();
+			$('#displayRef').hide();
+		} else if (paymentMode === 'Online' || paymentMode === 'NEFT') {
+			$('#displayCheque, #displaycheqdate').hide();
+			$('#displaydeposit, #displayRef').show();
+		}
+	});
 });

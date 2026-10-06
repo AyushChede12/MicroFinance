@@ -113,6 +113,9 @@ public class addCustomer {
 	@Column(name = "tax_bill", length = 100)
 	private String taxBill;
 
+	@Column(name = "interest_percent", length = 20)
+	private String interestPercent;
+
 	@Column(name = "academic_background", length = 100)
 	private String academicBackground;
 
@@ -855,6 +858,14 @@ public class addCustomer {
 
 	public void setApproved(Boolean isApproved) {
 		this.isApproved = isApproved;
+	}
+
+	public String getInterestPercent() {
+		return interestPercent;
+	}
+
+	public void setInterestPercent(String interestPercent) {
+		this.interestPercent = interestPercent;
 	}
 
 	// Getters and Setters (Omitted for brevity, add all your previous ones here)

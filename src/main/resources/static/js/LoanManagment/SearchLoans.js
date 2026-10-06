@@ -131,4 +131,3 @@ $("#searchButton").click(function(e) {
 	e.preventDefault();
 	fetchLoanDetails();
 });
-

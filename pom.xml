@@ -110,15 +110,31 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Tomcat for WAR Deployment -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.github.librepdf</groupId>
+			<artifactId>openpdf</artifactId>
+			<version>1.3.30</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.xhtmlrenderer</groupId>
+			<artifactId>flying-saucer-pdf-openpdf</artifactId>
+			<version>9.1.22</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
+		<finalName>MicrofinanceDemo</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
