@@ -5,7 +5,7 @@ $(document).ready(function() {
 		success: function(response) {
 			// Check data
 			if (!(response && response.data && Array.isArray(response.data))) {
-				alert("No Gold Data found.");
+				alert("NO GOLD DATA FOUND.");
 				return;
 			}
 
@@ -31,7 +31,7 @@ $(document).ready(function() {
 
 			// 👉 Step 3: Select2 Initialize (distinct data)
 			$('#findByGoldLoanId').select2({
-				placeholder: '-- Search Gold ID or Name --',
+				placeholder: '-- SEARCH GOLD ID OR NAME --',
 				data: customerOptions,
 				matcher: function(params, data) {
 					if ($.trim(params.term) === '') return data;
@@ -45,7 +45,7 @@ $(document).ready(function() {
 		},
 		error: function(xhr, status, error) {
 			console.error("Error fetching Gold Data:", error);
-			alert("Failed to load Gold ID.");
+			alert("FAILED TO LOAD GOLD ID.");
 		}
 	});
 
@@ -122,17 +122,17 @@ $(document).ready(function() {
 						$("#financialConsultantName").val(data.financialConsultantName);
 
 						if (data.approvalStatus === true || data.approvalStatus === 1 || data.approvalStatus === "1") {
-							$('#approvalStatus').val("Approved").css('color', 'green');
+							$('#approvalStatus').val("APPROVED").css('color', 'green');
 						} else {
-							$('#approvalStatus').val("Not Approved").css('color', 'red');
+							$('#approvalStatus').val("NOT APPROVED").css('color', 'red');
 						}
 
 					} else {
-						alert("No customer found for this member code.");
+						alert("NO CUSTOMER FOUND FOR THIS MEMBER CODE.");
 					}
 				},
 				error: function() {
-					alert("Member not found or server error.");
+					alert("MEMBER NOT FOUND OR SERVER ERROR.");
 				}
 			});
 		}
@@ -145,7 +145,7 @@ $(document).ready(function() {
 		const docType = $("#loanDocument").val();
 
 		if (!goldId) {
-			alert("Please select a Gold Loan ID");
+			alert("PLEASE SELECT A GOLD LOAN ID");
 			return;
 		}
 
@@ -166,208 +166,208 @@ $(document).ready(function() {
 					// --------------------- APPLICANT FORM (GOLD LOAN) ---------------------
 					if (docType === "applicantForm") {
 						content = `
-	                    <div style="padding:20px; font-family:Arial; border:2px solid #000;">
-	                        <h2 style="text-align:center;">Microfinance Cooperative Bank Ltd.</h2>
-	                        <h4 style="text-align:center;">Branch: ${goldData.branchName || "-"}</h4>
-	                        <h3 style="text-align:center; text-decoration:underline;">Gold Loan Application Form</h3>
+                    <div style="padding:20px; font-family:Arial; border:2px solid #000;">
+                        <h2 style="text-align:center;">MICROFINANCE COOPERATIVE BANK LTD.</h2>
+                        <h4 style="text-align:center;">BRANCH: ${goldData.branchName || "-"}</h4>
+                        <h3 style="text-align:center; text-decoration:underline;">GOLD LOAN APPLICATION FORM</h3>
 
-	                        <h4>1. CUSTOMER DETAILS</h4>
-	                        <table style="width:100%;" border="1" cellpadding="8">
-	                            <tr>
-	                                <td><b>Name</b></td><td>${goldData.customerName || "-"}</td>
-	                                <td><b>Member ID</b></td><td>${goldData.memberCode || "-"}</td>
-	                            </tr>
-	                            <tr>
-	                                <td><b>Address</b></td><td>${goldData.address || "-"}</td>
-	                                <td><b>Mobile No.</b></td><td>${goldData.contactNo || "-"}</td>
-	                            </tr>
-	                        </table>
+                        <h4>1. CUSTOMER DETAILS</h4>
+                        <table style="width:100%;" border="1" cellpadding="8">
+                            <tr>
+                                <td><b>NAME</b></td><td>${goldData.customerName || "-"}</td>
+                                <td><b>MEMBER ID</b></td><td>${goldData.memberCode || "-"}</td>
+                            </tr>
+                            <tr>
+                                <td><b>ADDRESS</b></td><td>${goldData.address || "-"}</td>
+                                <td><b>MOBILE NO.</b></td><td>${goldData.contactNo || "-"}</td>
+                            </tr>
+                        </table>
 
-	                        <br>
-	                        <h4>2. GOLD DETAILS</h4>
-	                        <table style="width:100%;" border="1" cellpadding="8">
-	                            <tr>
-	                                <td><b>Gold ID</b></td><td>${goldData.goldID || "-"}</td>
-	                                <td><b>Item Name</b></td><td>${goldData.itemName || "-"}</td>
-	                            </tr>
-	                            <tr>
-	                                <td><b>Gross Weight</b></td><td>${goldData.grossWt || "-"}</td>
-	                                <td><b>Net Weight</b></td><td>${goldData.netWt || "-"}</td>
-	                            </tr>
-	                            <tr>
-	                                <td><b>Purity</b></td><td>${goldData.purity || "-"}</td>
-	                                <td><b>Gold Rate</b></td><td>${goldData.custgoldRate || "-"}</td>
-	                            </tr>
-	                            <tr>
-	                                <td><b>Valuation Amount</b></td>
-	                                <td style="color:red;"><b>${goldData.marketValuation || "-"}</b></td>
-	                                <td><b>Eligible Loan Amount</b></td>
-	                                <td style="color:red;"><b>${goldData.loanAmount || "-"}</b></td>
-	                            </tr>
-	                        </table>
+                        <br>
+                        <h4>2. GOLD DETAILS</h4>
+                        <table style="width:100%;" border="1" cellpadding="8">
+                            <tr>
+                                <td><b>GOLD ID</b></td><td>${goldData.goldID || "-"}</td>
+                                <td><b>ITEM NAME</b></td><td>${goldData.itemName || "-"}</td>
+                            </tr>
+                            <tr>
+                                <td><b>GROSS WEIGHT</b></td><td>${goldData.grossWt || "-"}</td>
+                                <td><b>NET WEIGHT</b></td><td>${goldData.netWt || "-"}</td>
+                            </tr>
+                            <tr>
+                                <td><b>PURITY</b></td><td>${goldData.purity || "-"}</td>
+                                <td><b>GOLD RATE</b></td><td>${goldData.custgoldRate || "-"}</td>
+                            </tr>
+                            <tr>
+                                <td><b>VALUATION AMOUNT</b></td>
+                                <td style="color:red;"><b>${goldData.marketValuation || "-"}</b></td>
+                                <td><b>ELIGIBLE LOAN AMOUNT</b></td>
+                                <td style="color:red;"><b>${goldData.loanAmount || "-"}</b></td>
+                            </tr>
+                        </table>
 
-	                        <br>
-	                        <h4>3. APPROVAL DETAILS</h4>
-	                        <table style="width:100%;" border="1" cellpadding="8">
-	                            <tr>
-	                                <td><b>Approval Date</b></td><td>${goldData.approvalDate || "-"}</td>
-	                                <td><b>Approval Status</b></td>
-	                                <td style="color:red;font-weight:bold;">
-	                                    ${goldData.approvalStatus == 1 ? "Approved" : "Not Approved"}
-	                                </td>
-	                            </tr>
-	                        </table>
+                        <br>
+                        <h4>3. APPROVAL DETAILS</h4>
+                        <table style="width:100%;" border="1" cellpadding="8">
+                            <tr>
+                                <td><b>APPROVAL DATE</b></td><td>${goldData.approvalDate || "-"}</td>
+                                <td><b>APPROVAL STATUS</b></td>
+                                <td style="color:red;font-weight:bold;">
+                                    ${goldData.approvalStatus == 1 ? "APPROVED" : "NOT APPROVED"}
+                                </td>
+                            </tr>
+                        </table>
 
-	                        <br><br>
-	                        <div style="display:flex; justify-content:space-between;">
-	                            <div>
-	                                <p>________________________</p>
-	                                <p>Applicant Signature</p>
-	                            </div>
-	                            <div>
-	                                <p>________________________</p>
-	                                <p>Bank Officer Signature</p>
-	                            </div>
-	                        </div>
-	                    </div>`;
+                        <br><br>
+                        <div style="display:flex; justify-content:space-between;">
+                            <div>
+                                <p>________________________</p>
+                                <p>APPLICANT SIGNATURE</p>
+                            </div>
+                            <div>
+                                <p>________________________</p>
+                                <p>BANK OFFICER SIGNATURE</p>
+                            </div>
+                        </div>
+                    </div>`;
 					}
 
 					// --------------------- SANCTION LETTER (GOLD LOAN) ---------------------
 					else if (docType === "sanctionLetter") {
 						content = `
-	                    <div style="padding:20px; font-family:Arial; border:2px solid #000;">
-	                        <h2 style="text-align:center;">Microfinance Cooperative Bank Ltd.</h2>
-	                        <h4 style="text-align:center;">Branch: ${goldData.branchName || "-"}</h4>
-	                        <h3 style="text-align:center; text-decoration:underline;">Gold Loan Sanction Letter</h3>
+                    <div style="padding:20px; font-family:Arial; border:2px solid #000;">
+                        <h2 style="text-align:center;">MICROFINANCE COOPERATIVE BANK LTD.</h2>
+                        <h4 style="text-align:center;">BRANCH: ${goldData.branchName || "-"}</h4>
+                        <h3 style="text-align:center; text-decoration:underline;">GOLD LOAN SANCTION LETTER</h3>
 
-	                        <p><b>Gold Loan ID:</b> ${goldData.goldID}</p>
-	                        <p><b>Approval Date:</b> ${goldData.approvalDate}</p>
+                        <p><b>GOLD LOAN ID:</b> ${goldData.goldID}</p>
+                        <p><b>APPROVAL DATE:</b> ${goldData.approvalDate}</p>
 
-	                        <p><b>Dear ${goldData.customerName},</b><br>
-	                        Your Gold Loan has been sanctioned with the following details:</p>
+                        <p><b>DEAR ${goldData.customerName},</b><br>
+                        YOUR GOLD LOAN HAS BEEN SANCTIONED WITH THE FOLLOWING DETAILS:</p>
 
-	                        <table style="width:100%;" border="1" cellpadding="8">
-	                            <tr><td><b>Item Name</b></td><td>${goldData.itemName}</td></tr>
-	                            <tr><td><b>Net Weight</b></td><td>${goldData.netWt}</td></tr>
-	                            <tr><td><b>Purity</b></td><td>${goldData.purity}</td></tr>
-	                            <tr><td><b>Valuation Amount</b></td><td>${goldData.marketValuation}</td></tr>
-	                            <tr><td><b>Sanctioned Amount</b></td><td style="color:red;"><b>${goldData.loanAmount}</b></td></tr>
-	                            <tr><td><b>Loan Term</b></td><td>${goldData.loanTerm}</td></tr>
-	                            <tr><td><b>Rate of Interest</b></td><td>${goldData.rateOfInterest}</td></tr>
-	                            <tr><td><b>EMI Amount</b></td><td>${goldData.emiPayment}</td></tr>
-	                        </table>
+                        <table style="width:100%;" border="1" cellpadding="8">
+                            <tr><td><b>ITEM NAME</b></td><td>${goldData.itemName}</td></tr>
+                            <tr><td><b>NET WEIGHT</b></td><td>${goldData.netWt}</td></tr>
+                            <tr><td><b>PURITY</b></td><td>${goldData.purity}</td></tr>
+                            <tr><td><b>VALUATION AMOUNT</b></td><td>${goldData.marketValuation}</td></tr>
+                            <tr><td><b>SANCTIONED AMOUNT</b></td><td style="color:red;"><b>${goldData.loanAmount}</b></td></tr>
+                            <tr><td><b>LOAN TERM</b></td><td>${goldData.loanTerm}</td></tr>
+                            <tr><td><b>RATE OF INTEREST</b></td><td>${goldData.rateOfInterest}</td></tr>
+                            <tr><td><b>EMI AMOUNT</b></td><td>${goldData.emiPayment}</td></tr>
+                        </table>
 
-	                        <br><br>
-	                        <div style="display:flex; justify-content:space-between;">
-	                            <div>
-	                                <p>________________________</p>
-	                                <p>Applicant Signature</p>
-	                            </div>
-	                            <div>
-	                                <p>________________________</p>
-	                                <p>Manager/Officer Signature</p>
-	                            </div>
-	                        </div>
-	                    </div>`;
+                        <br><br>
+                        <div style="display:flex; justify-content:space-between;">
+                            <div>
+                                <p>________________________</p>
+                                <p>APPLICANT SIGNATURE</p>
+                            </div>
+                            <div>
+                                <p>________________________</p>
+                                <p>MANAGER/OFFICER SIGNATURE</p>
+                            </div>
+                        </div>
+                    </div>`;
 					}
 
 					// --------------------- LOAN AGREEMENT (GOLD LOAN) ---------------------
 					else if (docType === "loanAgreement") {
 						content = `
-					        <div style="padding:20px; font-family:Arial; border:2px solid #000; background:#fdfdfd;">
-					            <h2 style="text-align:center; margin:0;">Microfinance Cooperative Bank Ltd.</h2>
-					            <h4 style="text-align:center; margin:0;">Branch: ${goldData.branchName || "-"}</h4>
-					            <h3 style="text-align:center; margin:15px 0; text-decoration:underline;">Gold Loan Agreement</h3>
+				        <div style="padding:20px; font-family:Arial; border:2px solid #000; background:#fdfdfd;">
+				            <h2 style="text-align:center; margin:0;">MICROFINANCE COOPERATIVE BANK LTD.</h2>
+				            <h4 style="text-align:center; margin:0;">BRANCH: ${goldData.branchName || "-"}</h4>
+				            <h3 style="text-align:center; margin:15px 0; text-decoration:underline;">GOLD LOAN AGREEMENT</h3>
 
-					            <p><b>Date:</b> ${new Date().toLocaleDateString('en-GB')}</p>
-					            <p><b>Gold Loan Reference No:</b> ${goldData.goldID || "-"}</p>
+				            <p><b>DATE:</b> ${new Date().toLocaleDateString('en-GB')}</p>
+				            <p><b>GOLD LOAN REFERENCE NO:</b> ${goldData.goldID || "-"}</p>
 
-					            <p><b>This Gold Loan Agreement is executed on the date mentioned above, between Microfinance Cooperative Bank Ltd.
-					             and Mr./Ms. ${goldData.customerName || "________"}.</b></p>
+				            <p><b>THIS GOLD LOAN AGREEMENT IS EXECUTED ON THE DATE MENTIONED ABOVE, BETWEEN MICROFINANCE COOPERATIVE BANK LTD.
+				             AND MR./MS. ${goldData.customerName || "________"}.</b></p>
 
-					            <p>
-					                <b>Lender:</b> Microfinance Cooperative Bank Ltd., ${goldData.branchName || "-"}.<br>
-					                <b>Borrower:</b> ${goldData.customerName || "-"}, residing at ${goldData.address || "-"}.
-					            </p>
+				            <p>
+				                <b>LENDER:</b> MICROFINANCE COOPERATIVE BANK LTD., ${goldData.branchName || "-"}.<br>
+				                <b>BORROWER:</b> ${goldData.customerName || "-"}, RESIDING AT ${goldData.address || "-"}.
+				            </p>
 
-					            <h4 style="margin-top:20px; text-decoration:underline;">Gold Details</h4>
-					            <table style="width:100%; border-collapse:collapse;" border="1">
-					                <tr>
-					                    <td><b>Item Name</b></td>
-					                    <td>${goldData.itemName || "-"}</td>
-					                </tr>
-					                <tr>
-					                    <td><b>Gold Purity</b></td>
-					                    <td>${goldData.purity || "-"}</td>
-					                </tr>
-					                <tr>
-					                    <td><b>Gold Weight</b></td>
-					                    <td>${goldData.itemWt || "-"}</td>
-					                </tr>
-					                <tr>
-					                    <td><b>Gold Rate (per gram)</b></td>
-					                    <td>${goldData.custgoldRate || "-"}</td>
-					                </tr>
-					                <tr>
-					                    <td><b>Net Worth (75%)</b></td>
-					                    <td style="color:red; font-weight:bold;">${goldData.netWt || "-"}</td>
-					                </tr>
-					                <tr>
-					                    <td><b>Item Type</b></td>
-					                    <td>${goldData.itemType || "-"}</td>
-					                </tr>
-					            </table>
+				            <h4 style="margin-top:20px; text-decoration:underline;">GOLD DETAILS</h4>
+				            <table style="width:100%; border-collapse:collapse;" border="1">
+				                <tr>
+				                    <td><b>ITEM NAME</b></td>
+				                    <td>${goldData.itemName || "-"}</td>
+				                </tr>
+				                <tr>
+				                    <td><b>GOLD PURITY</b></td>
+				                    <td>${goldData.purity || "-"}</td>
+				                </tr>
+				                <tr>
+				                    <td><b>GOLD WEIGHT</b></td>
+				                    <td>${goldData.itemWt || "-"}</td>
+				                </tr>
+				                <tr>
+				                    <td><b>GOLD RATE (PER GRAM)</b></td>
+				                    <td>${goldData.custgoldRate || "-"}</td>
+				                </tr>
+				                <tr>
+				                    <td><b>NET WORTH (75%)</b></td>
+				                    <td style="color:red; font-weight:bold;">${goldData.netWt || "-"}</td>
+				                </tr>
+				                <tr>
+				                    <td><b>ITEM TYPE</b></td>
+				                    <td>${goldData.itemType || "-"}</td>
+				                </tr>
+				            </table>
 
-					            <h4 style="margin-top:20px; text-decoration:underline;">Loan Terms & Conditions</h4>
-					            <ol style="padding-left:20px; margin-left:20px;">
-					                <li>The Borrower agrees to repay the Gold Loan amount of 
-					                    <b style="color:red">${goldData.loanAmount || "-"} Rs.</b> sanctioned on 
-					                    <b>${goldData.dateOfLoan || "-"}</b> within a tenure of 
-					                    <b>${goldData.loanTerm || "-"} months</b>.
-					                </li>
+				            <h4 style="margin-top:20px; text-decoration:underline;">LOAN TERMS & CONDITIONS</h4>
+				            <ol style="padding-left:20px; margin-left:20px;">
+				                <li>THE BORROWER AGREES TO REPAY THE GOLD LOAN AMOUNT OF&#x20;
+				                    <b style="color:red">${goldData.loanAmount || "-"} RS.</b> SANCTIONED ON&#x20;
+				                    <b>${goldData.dateOfLoan || "-"}</b> WITHIN A TENURE OF&#x20;
+				                    <b>${goldData.loanTerm || "-"} MONTHS</b>.
+				                </li>
 
-					                <li>The Gold Loan carries an interest rate of 
-					                    <b>${goldData.rateOfInterest || "-"}%</b> per annum, calculated as per 
-					                    ${goldData.interestType || "the agreed"} method.
-					                </li>
+				                <li>THE GOLD LOAN CARRIES AN INTEREST RATE OF&#x20;
+				                    <b>${goldData.rateOfInterest || "-"}%</b> PER ANNUM, CALCULATED AS PER&#x20;
+				                    ${goldData.interestType || "THE AGREED"} METHOD.
+				                </li>
 
-					                <li>The Borrower agrees to pay monthly EMI of 
-					                    <b style="color:red">${goldData.emi || "-"} Rs.</b> or follow bullet repayment method (if applicable).
-					                </li>
+				                <li>THE BORROWER AGREES TO PAY MONTHLY EMI OF&#x20;
+				                    <b style="color:red">${goldData.emi || "-"} RS.</b> OR FOLLOW BULLET REPAYMENT METHOD (IF APPLICABLE).
+				                </li>
 
-					                <li>The Borrower agrees to pay applicable charges including:
-					                    <ul>
-					                        <li>Processing Fee: <b>${goldData.processingFee || "-"} Rs.</b></li>
-					                        <li>Valuation Charge: <b>${goldData.marketValuation || "-"} Rs.</b></li>
-					                        <li>GST: <b>${goldData.gst || "-"} Rs.</b></li>
-					                    </ul>
-					                </li>
+				                <li>THE BORROWER AGREES TO PAY APPLICABLE CHARGES INCLUDING:
+				                    <ul>
+				                        <li>PROCESSING FEE: <b>${goldData.processingFee || "-"} RS.</b></li>
+				                        <li>VALUATION CHARGE: <b>${goldData.marketValuation || "-"} RS.</b></li>
+				                        <li>GST: <b>${goldData.gst || "-"} RS.</b></li>
+				                    </ul>
+				                </li>
 
-					                <li>The pledged gold ornaments will remain in the custody of the Bank until full loan repayment.</li>
+				                <li>THE PLEDGED GOLD ORNAMENTS WILL REMAIN IN THE CUSTODY OF THE BANK UNTIL FULL LOAN REPAYMENT.</li>
 
-					                <li>In case of default, the Bank reserves the right to sell the pledged gold to recover dues.</li>
+				                <li>IN CASE OF DEFAULT, THE BANK RESERVES THE RIGHT TO SELL THE PLEDGED GOLD TO RECOVER DUES.</li>
 
-					                <li>The Borrower declares that the gold pledged is self-owned and not stolen or disputed property.</li>
-					            </ol>
+				                <li>THE BORROWER DECLARES THAT THE GOLD PLEDGED IS SELF-OWNED AND NOT STOLEN OR DISPUTED PROPERTY.</li>
+				            </ol>
 
-					            <p style="margin-top:20px;">
-					                Both parties hereby agree to abide by the terms and conditions mentioned above. 
-					                This Agreement is executed in duplicate, with one copy each for the Borrower and the Bank.
-					            </p>
+				            <p style="margin-top:20px;">
+				                BOTH PARTIES HEREBY AGREE TO ABIDE BY THE TERMS AND CONDITIONS MENTIONED ABOVE.&#x20;
+				                THIS AGREEMENT IS EXECUTED IN DUPLICATE, WITH ONE COPY EACH FOR THE BORROWER AND THE BANK.
+				            </p>
 
-					            <br><br>
-					            <div style="display:flex; justify-content:space-between; margin-top:40px;">
-					                <div>
-					                    <p>________________________</p>
-					                    <p>Borrower Signature</p>
-					                </div>
-					                <div>
-					                    <p>________________________</p>
-					                    <p>Authorized Signatory (Bank)</p>
-					                </div>
-					            </div>
-					        </div>
-					    `;
+				            <br><br>
+				            <div style="display:flex; justify-content:space-between; margin-top:40px;">
+				                <div>
+				                    <p>________________________</p>
+				                    <p>BORROWER SIGNATURE</p>
+				                </div>
+				                <div>
+				                    <p>________________________</p>
+				                    <p>AUTHORIZED SIGNATORY (BANK)</p>
+				                </div>
+				            </div>
+				        </div>
+				    `;
 					}
 
 
@@ -377,13 +377,13 @@ $(document).ready(function() {
 				}
 
 				else {
-					alert("No Gold Loan found");
+					alert("NO GOLD LOAN FOUND");
 					$("#receiptArea").html("");
 				}
 			},
 
 			error: function() {
-				alert("Error fetching gold loan data");
+				alert("ERROR FETCHING GOLD LOAN DATA");
 			}
 		});
 	});
@@ -395,7 +395,7 @@ function printDocument() {
 	var content = document.getElementById("receiptArea").innerHTML;
 
 	var printWindow = window.open("", "", "height=700,width=900");
-	printWindow.document.write("<html><head><title>Print Document</title>");
+	printWindow.document.write("<html><head><title>PRINT DOCUMENT</title>");
 	printWindow.document.write("</head><body >");
 	printWindow.document.write(content);
 	printWindow.document.write("</body></html>");

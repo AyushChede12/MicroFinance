@@ -67,10 +67,10 @@ public class PreferenceController {
 		ApiResponse<BranchModule> response;
 
 		if (isCreate) {
-			response = new ApiResponse<>(HttpStatus.CREATED, "Branch created successfully", savedEntity);
+			response = new ApiResponse<>(HttpStatus.CREATED, "BRANCH CREATED SUCCESSFULLY", savedEntity);
 			return new ResponseEntity<>(response, HttpStatus.CREATED);
 		} else {
-			response = new ApiResponse<>(HttpStatus.OK, "Branch updated successfully", savedEntity);
+			response = new ApiResponse<>(HttpStatus.OK, "BRANCH UPDATED SUCCESSFULLY", savedEntity);
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 	}
@@ -83,12 +83,12 @@ public class PreferenceController {
 		if (optionalList.isPresent()) {
 
 			ApiResponse<List<BranchModule>> response = new ApiResponse<>(HttpStatus.OK,
-					"Branch modules fetched successfully", optionalList.get());
+					"BRANCH MODULES FETCHED SUCCESSFULLY", optionalList.get());
 
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<List<BranchModule>> response = new ApiResponse<>(HttpStatus.NOT_FOUND,
-					"No branch modules found", null);
+					"NO BRANCH MODULES FOUND", null);
 
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
@@ -99,11 +99,11 @@ public class PreferenceController {
 		Optional<BranchModule> branch = preferenceService.findBranchDataById(id);
 		if (branch.isPresent()) {
 			ApiResponse<BranchModule> response = new ApiResponse<>(HttpStatus.FOUND,
-					"BranchModule fetched successfully", branch.get());
+					"BRANCH MODULE FETCHED SUCCESSFULLY", branch.get());
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<BranchModule> response = new ApiResponse<>(HttpStatus.NOT_FOUND,
-					"BranchModule not found for ID: " + id, null);
+					"BRANCH MODULE NOT FOUND FOR ID: " + id, null);
 			return ResponseEntity.status(404).body(response);
 		}
 	}
@@ -112,11 +112,11 @@ public class PreferenceController {
 	public ResponseEntity<ApiResponse<String>> deleteBranchModule(@RequestParam("id") Long id) {
 		boolean isDeleted = preferenceService.deleteBranchModule(id);
 		if (isDeleted) {
-			ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK, "Branch module deleted successfully",
+			ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK, "BRANCH MODULE DELETED SUCCESSFULLY",
 					"success");
 			return ResponseEntity.ok(response);
 		} else {
-			ApiResponse<String> response = new ApiResponse<>(HttpStatus.BAD_REQUEST, "Branch module deletion failed",
+			ApiResponse<String> response = new ApiResponse<>(HttpStatus.BAD_REQUEST, "BRANCH MODULE DELETION FAILED",
 					"failure");
 			return ResponseEntity.badRequest().body(response);
 		}
@@ -148,7 +148,7 @@ public class PreferenceController {
 		ApiResponse<BankModule> response = preferenceService.saveBankModule(bankModuleDto, cancelledCheque);
 		// return new ResponseEntity<>(response, response.getStatus());
 		return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK,
-				bankModuleDto.getId() != null ? "Bank updated successfully" : "Bank saved successfully",
+				bankModuleDto.getId() != null ? "BANK UPDATED SUCCESSFULLY" : "BANK SAVED SUCCESSFULLY",
 				response.getData()));
 	}
 
@@ -156,7 +156,7 @@ public class PreferenceController {
 	public ResponseEntity<ApiResponse<List<BankModule>>> fetchAllBankModule() {
 		List<BankModule> list = preferenceService.fetchAllBankModule();
 		ApiResponse<List<BankModule>> response = new ApiResponse<>(HttpStatus.FOUND,
-				"Bank modules fetched successfully", list);
+				"BANK MODULES FETCHED SUCCESSFULLY", list);
 		return ResponseEntity.ok(response);
 	}
 
@@ -164,12 +164,12 @@ public class PreferenceController {
 	public ResponseEntity<ApiResponse<BankModule>> findBankModuleById(@RequestParam("id") Long id) {
 		Optional<BankModule> bank = preferenceService.findBankDataById(id);
 		if (bank.isPresent()) {
-			ApiResponse<BankModule> response = new ApiResponse<>(HttpStatus.FOUND, "Bank Module fetched successfully",
+			ApiResponse<BankModule> response = new ApiResponse<>(HttpStatus.FOUND, "BANK MODULE FETCHED SUCCESSFULLY",
 					bank.get());
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<BankModule> response = new ApiResponse<>(HttpStatus.NOT_FOUND,
-					"Bank Module not found for ID: " + id, null);
+					"BANK MODULE NOT FOUND FOR ID: " + id, null);
 			return ResponseEntity.status(404).body(response);
 		}
 	}
@@ -178,11 +178,11 @@ public class PreferenceController {
 	public ResponseEntity<ApiResponse<String>> deleteBankModule(@RequestParam("id") Long id) {
 		boolean isDeleted = preferenceService.deleteBankModule(id);
 		if (isDeleted) {
-			ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK, "Bank module deleted successfully",
+			ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK, "BANK MODULE DELETED SUCCESSFULLY",
 					"success");
 			return ResponseEntity.ok(response);
 		} else {
-			ApiResponse<String> response = new ApiResponse<>(HttpStatus.NOT_FOUND, "Bank module deletion failed",
+			ApiResponse<String> response = new ApiResponse<>(HttpStatus.NOT_FOUND, "BANK MODULE DELETION FAILED",
 					"failure");
 			return ResponseEntity.badRequest().body(response);
 		}
@@ -195,10 +195,10 @@ public class PreferenceController {
 		RelativeModule savedEntity = preferenceService.saveRelativeModule(relativeModule);
 		ApiResponse<RelativeModule> response;
 		if (isCreate) {
-			response = new ApiResponse<>(HttpStatus.CREATED, "Relative created successfully", savedEntity);
+			response = new ApiResponse<>(HttpStatus.CREATED, "RELATIVE CREATED SUCCESSFULLY", savedEntity);
 			return new ResponseEntity<>(response, HttpStatus.CREATED);
 		} else {
-			response = new ApiResponse<>(HttpStatus.OK, "Relative updated successfully", savedEntity);
+			response = new ApiResponse<>(HttpStatus.OK, "RELATIVE UPDATED SUCCESSFULLY", savedEntity);
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 	}
@@ -207,7 +207,7 @@ public class PreferenceController {
 	public ResponseEntity<ApiResponse<List<RelativeModule>>> fetchAllRelativeModule() {
 		List<RelativeModule> list = preferenceService.fetchAllRelativeModule();
 		ApiResponse<List<RelativeModule>> response = new ApiResponse<>(HttpStatus.FOUND,
-				"Relative modules fetched successfully", list);
+				"RELATIVE MODULES FETCHED SUCCESSFULLY", list);
 		return ResponseEntity.ok(response);
 	}
 
@@ -216,11 +216,11 @@ public class PreferenceController {
 		Optional<RelativeModule> branch = preferenceService.fetchRelativeModuleById(id);
 		if (branch.isPresent()) {
 			ApiResponse<RelativeModule> response = new ApiResponse<>(HttpStatus.FOUND,
-					"Relative Module fetched successfully", branch.get());
+					"RELATIVE MODULE FETCHED SUCCESSFULLY", branch.get());
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<RelativeModule> response = new ApiResponse<>(HttpStatus.NOT_FOUND,
-					"Relative Module not found for ID: " + id, null);
+					"RELATIVE MODULE NOT FOUND FOR ID: " + id, null);
 			return ResponseEntity.status(404).body(response);
 		}
 	}
@@ -229,11 +229,11 @@ public class PreferenceController {
 	public ResponseEntity<ApiResponse<String>> deleteRelativeModule(@RequestParam("id") Long id) {
 		boolean isDeleted = preferenceService.deleteRelativeModule(id);
 		if (isDeleted) {
-			ApiResponse<String> response = new ApiResponse<>(HttpStatus.FOUND, "Relative module deleted successfully",
+			ApiResponse<String> response = new ApiResponse<>(HttpStatus.FOUND, "RELATIVE MODULE DELETED SUCCESSFULLY",
 					"success");
 			return ResponseEntity.ok(response);
 		} else {
-			ApiResponse<String> response = new ApiResponse<>(HttpStatus.NOT_FOUND, "Relative module deletion failed",
+			ApiResponse<String> response = new ApiResponse<>(HttpStatus.NOT_FOUND, "RELATIVE MODULE DELETION FAILED",
 					"failure");
 			return ResponseEntity.badRequest().body(response);
 		}
@@ -246,10 +246,10 @@ public class PreferenceController {
 		ApiResponse<List<states>> response;
 
 		if (list.isEmpty()) {
-			response = new ApiResponse<>(HttpStatus.NOT_FOUND, "No states found", null);
+			response = new ApiResponse<>(HttpStatus.NOT_FOUND, "NO STATES FOUND", null);
 			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 		} else {
-			response = new ApiResponse<>(HttpStatus.FOUND, "States fetched successfully", list);
+			response = new ApiResponse<>(HttpStatus.FOUND, "STATES FETCHED SUCCESSFULLY", list);
 			return ResponseEntity.ok(response); // or new ResponseEntity<>(response, HttpStatus.FOUND)
 		}
 	}
@@ -268,10 +268,10 @@ public class PreferenceController {
 		List<CategoryModule> casteList = preferenceService.findCasteByCategory(category);
 		ApiResponse<List<CategoryModule>> response;
 		if (casteList.isEmpty()) {
-			response = new ApiResponse<>(HttpStatus.NOT_FOUND, "No Caste found in this category", null);
+			response = new ApiResponse<>(HttpStatus.NOT_FOUND, "NO CASTE FOUND IN THIS CATEGORY", null);
 			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 		} else {
-			response = new ApiResponse<>(HttpStatus.FOUND, "Caste fetched successfully", casteList);
+			response = new ApiResponse<>(HttpStatus.FOUND, "CASTE FETCHED SUCCESSFULLY", casteList);
 			return ResponseEntity.ok(response); // or new ResponseEntity<>(response, HttpStatus.FOUND)
 		}
 	}
@@ -283,10 +283,10 @@ public class PreferenceController {
 		CategoryModule savedEntity = preferenceService.saveCategoryModule(categoryModule);
 		ApiResponse<CategoryModule> response;
 		if (isCreate) {
-			response = new ApiResponse<>(HttpStatus.CREATED, "Category and Caste created successfully", savedEntity);
+			response = new ApiResponse<>(HttpStatus.CREATED, "CATEGORY AND CASTE CREATED SUCCESSFULLY", savedEntity);
 			return new ResponseEntity<>(response, HttpStatus.CREATED);
 		} else {
-			response = new ApiResponse<>(HttpStatus.OK, "Category and Caste updated successfully", savedEntity);
+			response = new ApiResponse<>(HttpStatus.OK, "CATEGORY AND CASTE UPDATED SUCCESSFULLY", savedEntity);
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 	}
@@ -295,7 +295,7 @@ public class PreferenceController {
 	public ResponseEntity<ApiResponse<List<CategoryModule>>> fetchAllCategoryModule() {
 		List<CategoryModule> list = preferenceService.fetchAllCategoryModule();
 		ApiResponse<List<CategoryModule>> response = new ApiResponse<>(HttpStatus.FOUND,
-				"Category modules fetched successfully", list);
+				"CATEGORY MODULES FETCHED SUCCESSFULLY", list);
 		return ResponseEntity.ok(response);
 	}
 
@@ -304,11 +304,11 @@ public class PreferenceController {
 		Optional<CategoryModule> category = preferenceService.findCategoryModuleById(id);
 		if (category.isPresent()) {
 			ApiResponse<CategoryModule> response = new ApiResponse<>(HttpStatus.FOUND,
-					"Category Module fetched successfully", category.get());
+					"CATEGORY MODULE FETCHED SUCCESSFULLY", category.get());
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<CategoryModule> response = new ApiResponse<>(HttpStatus.NOT_FOUND,
-					"Category Module not found for ID: " + id, null);
+					"CATEGORY MODULE NOT FOUND FOR ID: " + id, null);
 			return ResponseEntity.status(404).body(response);
 		}
 	}
@@ -317,11 +317,11 @@ public class PreferenceController {
 	public ResponseEntity<ApiResponse<String>> deleteCategoryModule(@RequestParam("id") Long id) {
 		boolean isDeleted = preferenceService.deleteCategoryModule(id);
 		if (isDeleted) {
-			ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK, "Category module deleted successfully",
+			ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK, "CATEGORY MODULE DELETED SUCCESSFULLY",
 					"success");
 			return ResponseEntity.ok(response);
 		} else {
-			ApiResponse<String> response = new ApiResponse<>(HttpStatus.NOT_FOUND, "Category module deletion failed",
+			ApiResponse<String> response = new ApiResponse<>(HttpStatus.NOT_FOUND, "CATEGORY MODULE DELETION FAILED",
 					"failure");
 			return ResponseEntity.badRequest().body(response);
 		}
@@ -334,10 +334,10 @@ public class PreferenceController {
 		FinancialYear savedEntity = preferenceService.saveFinancialYear(financialYear);
 		ApiResponse<FinancialYear> response;
 		if (isCreate) {
-			response = new ApiResponse<>(HttpStatus.CREATED, "Financial Year created successfully", savedEntity);
+			response = new ApiResponse<>(HttpStatus.CREATED, "FINANCIAL YEAR CREATED SUCCESSFULLY", savedEntity);
 			return new ResponseEntity<>(response, HttpStatus.CREATED);
 		} else {
-			response = new ApiResponse<>(HttpStatus.OK, "Financial Year updated successfully", savedEntity);
+			response = new ApiResponse<>(HttpStatus.OK, "FINANCIAL YEAR UPDATED SUCCESSFULLY", savedEntity);
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 	}
@@ -346,7 +346,7 @@ public class PreferenceController {
 	public ResponseEntity<ApiResponse<List<FinancialYear>>> fetchAllFinancialYear() {
 		List<FinancialYear> list = preferenceService.fetchAllFinancialYear();
 		ApiResponse<List<FinancialYear>> response = new ApiResponse<>(HttpStatus.FOUND,
-				"Financial Year fetched successfully", list);
+				"FINANCIAL YEAR FETCH SUCCESSFULLY", list);
 		return ResponseEntity.ok(response);
 	}
 
@@ -355,11 +355,11 @@ public class PreferenceController {
 		Optional<FinancialYear> fyear = preferenceService.findFinancialYearById(id);
 		if (fyear.isPresent()) {
 			ApiResponse<FinancialYear> response = new ApiResponse<>(HttpStatus.FOUND,
-					"Financial Year fetched successfully", fyear.get());
+					"FINANCIAL YEAR FETCHED SUCCESSFULLY", fyear.get());
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<FinancialYear> response = new ApiResponse<>(HttpStatus.NOT_FOUND,
-					"Financial Year not found for ID: " + id, null);
+					"FINANCIAL YEAR NOT FOUND FOR ID: " + id, null);
 			return ResponseEntity.status(404).body(response);
 		}
 	}
@@ -368,11 +368,11 @@ public class PreferenceController {
 	public ResponseEntity<ApiResponse<String>> deleteFinancialYear(@RequestParam("id") Long id) {
 		boolean isDeleted = preferenceService.deleteFinancialYear(id);
 		if (isDeleted) {
-			ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK, "Financial Year deleted successfully",
+			ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK, "FINANCIAL YEAR DELETED SUCCESSFULLY",
 					"success");
 			return ResponseEntity.ok(response);
 		} else {
-			ApiResponse<String> response = new ApiResponse<>(HttpStatus.NOT_FOUND, "Financial Year deletion failed",
+			ApiResponse<String> response = new ApiResponse<>(HttpStatus.NOT_FOUND, "FINANCIAL YEAR DELETION FAILED",
 					"failure");
 			return ResponseEntity.badRequest().body(response);
 		}
@@ -409,7 +409,7 @@ public class PreferenceController {
 
 		// return new ResponseEntity<>(response, response.getStatus());
 		return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK,
-				executiveFounderDto.getId() != null ? "Data updated successfully" : "Data saved successfully",
+				executiveFounderDto.getId() != null ? "DATA UPDATED SUCCESSFULLY" : "DATA SAVED SUCCESSFULLY",
 				response.getData()));
 	}
 
@@ -417,7 +417,7 @@ public class PreferenceController {
 	public ResponseEntity<ApiResponse<List<ExecutiveFounder>>> fetchAllExecutiveFounder() {
 		List<ExecutiveFounder> list = preferenceService.fetchAllExecutiveFounder();
 		ApiResponse<List<ExecutiveFounder>> response = new ApiResponse<>(HttpStatus.FOUND,
-				"Executive Founder fetched successfully", list);
+				"EXECUTIVE FOUNDER FETCHED SUCCESSFULLY", list);
 		return ResponseEntity.ok(response);
 	}
 
@@ -425,11 +425,11 @@ public class PreferenceController {
 	public ResponseEntity<ApiResponse<String>> deleteExecutiveFounder(@RequestParam("id") Long id) {
 		boolean isDeleted = preferenceService.deleteExecutiveFounder(id);
 		if (isDeleted) {
-			ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK, "Executive Founder deleted successfully",
+			ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK, "EXECUTIVE FOUNDER DELETED SUCCESSFULLY",
 					"success");
 			return ResponseEntity.ok(response);
 		} else {
-			ApiResponse<String> response = new ApiResponse<>(HttpStatus.NOT_FOUND, "Executive Founder deletion failed",
+			ApiResponse<String> response = new ApiResponse<>(HttpStatus.NOT_FOUND, "EXECUTION FOUNDER DELETED FAILED",
 					"failure");
 			return ResponseEntity.badRequest().body(response);
 		}
@@ -442,11 +442,11 @@ public class PreferenceController {
 		model.addAttribute("executive", executive);
 		if (executive.isPresent()) {
 			ApiResponse<ExecutiveFounder> response = new ApiResponse<>(HttpStatus.FOUND,
-					"Executive Founder fetched successfully", executive.get());
+					"EXECUTIVE FOUNDER FETCHED SUCCESSFULLY", executive.get());
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<ExecutiveFounder> response = new ApiResponse<>(HttpStatus.NOT_FOUND,
-					"Executive Founder not found for ID: " + id, null);
+					"EXECUTIVE FOUNDER NOT FOUND FOR ID: " + id, null);
 			return ResponseEntity.status(404).body(response);
 		}
 	}
@@ -456,7 +456,7 @@ public class PreferenceController {
 	public ResponseEntity<ApiResponse<List<CompanyAdministration>>> fetchAllCompanyAdministration() {
 		List<CompanyAdministration> list = preferenceService.fetchAllCompanyAdministration();
 		ApiResponse<List<CompanyAdministration>> response = new ApiResponse<>(HttpStatus.FOUND,
-				"Company Administration fetched successfully", list);
+				"COMPANY ADMINISTRATION FETCHED SUCCESSFULLY", list);
 		return ResponseEntity.ok(response);
 	}
 
@@ -482,10 +482,10 @@ public class PreferenceController {
 	public ResponseEntity<ApiResponse> saveOrUpdateCodeModule(@RequestBody CodeModule module) {
 		try {
 			CodeModule code = preferenceService.saveOrUpdateCodeModule(module);
-			return ResponseEntity.ok(new ApiResponse(HttpStatus.OK, "Code Module saved successfully", code));
+			return ResponseEntity.ok(new ApiResponse(HttpStatus.OK, "CODE MODULE SAVED SUCCESSFULLY", code));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(new ApiResponse("error", "Failed to save Code Module", null));
+					.body(new ApiResponse("error", "FAILED TO SAVE CODE MODULE", null));
 		}
 	}
 
@@ -493,7 +493,7 @@ public class PreferenceController {
 	public ResponseEntity<ApiResponse<List<CodeModule>>> fetchAllCodeModule() {
 		List<CodeModule> list = preferenceService.fetchAllCodeModule();
 		ApiResponse<List<CodeModule>> response = new ApiResponse<>(HttpStatus.FOUND,
-				"Code modules fetched successfully", list);
+				"CODE MODULES FETCHED SUCCESSFULLY", list);
 		return ResponseEntity.ok(response);
 	}
 
@@ -501,11 +501,11 @@ public class PreferenceController {
 	public ResponseEntity<ApiResponse<String>> deleteCodeModule(@RequestParam("id") Long id) {
 		boolean isDeleted = preferenceService.deleteCodeModule(id);
 		if (isDeleted) {
-			ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK, "Code Module deleted successfully",
+			ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK, "CODE MODULE DELETED SUCCESSFULLY",
 					"success");
 			return ResponseEntity.ok(response);
 		} else {
-			ApiResponse<String> response = new ApiResponse<>(HttpStatus.NOT_FOUND, "Code Module deletion failed",
+			ApiResponse<String> response = new ApiResponse<>(HttpStatus.NOT_FOUND, "CODE MODULE DELETION FAILED",
 					"failure");
 			return ResponseEntity.badRequest().body(response);
 		}
@@ -523,7 +523,7 @@ public class PreferenceController {
 		}
 
 		ApiResponse<List<Transactions>> response = new ApiResponse<>(HttpStatus.FOUND,
-				"Transactions fetched successfully", list);
+				"TRANSACTIONS FETCHED SUCCESSFULLY", list);
 
 		return ResponseEntity.ok(response);
 	}
@@ -532,7 +532,7 @@ public class PreferenceController {
 	public ResponseEntity<?> getCompany(@PathVariable Long id) {
 		CompanyAdministration c = preferenceService.fetchCompanyById(id);
 		if (c == null)
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Company not found");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("COMPANY NOT FOUND");
 		return ResponseEntity.ok(c);
 	}
 
@@ -549,7 +549,7 @@ public class PreferenceController {
 		try {
 			return ResponseEntity.ok(preferenceService.saveOrUpdateCompanyImage(companyId, fieldName, file));
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Upload failed: " + e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("UPLOAD FAILED: " + e.getMessage());
 		}
 	}
 
@@ -565,10 +565,10 @@ public class PreferenceController {
 		boolean deleted = preferenceService.deleteCompanyImage(id);
 
 		if (!deleted) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Image not found");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("IMAGE NOT FOUND");
 		}
 
-		return ResponseEntity.ok("Image deleted successfully");
+		return ResponseEntity.ok("IMAGE DELETED SUCCESSFULLY");
 	}
 
 	@GetMapping("/getCompanyDetails")
@@ -590,7 +590,7 @@ public class PreferenceController {
 
 			e.printStackTrace();
 
-			return ResponseEntity.internalServerError().body("Error while fetching company details");
+			return ResponseEntity.internalServerError().body("ERROR WHILE FETCHING COMPANY DETAILS");
 
 		}
 

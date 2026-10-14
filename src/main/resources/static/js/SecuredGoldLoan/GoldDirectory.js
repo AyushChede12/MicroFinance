@@ -50,7 +50,7 @@ $(document).ready(function() {
 						$("#customerName").val(fullName || "");
 
 					} else {
-						alert("No details found for this member");
+						alert("NO DETAILS FOUND FOR THIS MEMBER");
 					}
 				},
 				error: function(err) {
@@ -70,7 +70,7 @@ $(document).ready(function() {
 		success: function(response) {
 			var select = $("#lockerBranch");
 			select.empty();
-			select.append('<option value="">Select Branch</option>');
+			select.append('<option value="">SELECT BRANCH</option>');
 
 			if (response && response.data) {
 				// Store distinct branch names in a Set
@@ -89,7 +89,7 @@ $(document).ready(function() {
 			}
 		},
 		error: function() {
-			alert("Failed to fetch branches.");
+			alert("FAILED TO FETCH BRANCHES.");
 		}
 	});
 
@@ -104,7 +104,7 @@ $(document).ready(function() {
 		var emiPayment = $('#emiPayment').val().trim();
 
 		if (emiPayment === "") {
-			$('#vemipayment').text('*This Fild Is Requird');
+			$('#vemipayment').text('*THIS FILD IS REQUIRD');
 			$('#emiPayment').focus();
 			isValid = false;
 		}
@@ -149,16 +149,16 @@ $(document).ready(function() {
 			data: JSON.stringify(formData),
 			success: function(response) {
 				alert(
-					`All the data are saved successfully!\n\n` +
-					`Locker Number      : ${formData.lockerNumber}\n` +
-					`Total Loan Amount  : \u20B9${formatNumber(formData.loanAmount)}\n` +
-					`EMI per Month      : \u20B9${formatNumber(formData.emiPayment)}`
+					`ALL THE DATA ARE SAVED SUCCESSFULLY!\n\n` +
+					`LOCKER NUMBER      : ${formData.lockerNumber}\n` +
+					`TOTAL LOAN AMOUNT  : ₹${formatNumber(formData.loanAmount)}\n` +
+					`EMI PER MONTH      : ₹${formatNumber(formData.emiPayment)}`
 				);
 				location.reload();
 				$("#goldDirectoryId").val(""); // hidden id clear
 			},
 			error: function(xhr) {
-				alert("Error: " + (xhr.responseJSON?.message || "Something went wrong"));
+				alert("ERROR: " + (xhr.responseJSON?.message || "SOMETHING WENT WRONG"));
 			}
 		});
 	});

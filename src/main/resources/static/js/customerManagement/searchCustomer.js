@@ -1,8 +1,8 @@
-var allCustomers = []; // store full data
+var allCustomers = []; // STORE FULL DATA
 
 $(document).ready(function() {
 
-	// 1️⃣ Load all customers once
+	// 1️⃣ LOAD ALL CUSTOMERS ONCE
 	$.ajax({
 		url: "api/customermanagement/getAllCustomer",
 		type: "GET",
@@ -11,60 +11,60 @@ $(document).ready(function() {
 			renderTable(allCustomers);
 		},
 		error: function() {
-			alert("Failed to fetch customer data.");
+			alert("FAILED TO FETCH CUSTOMER DATA.");
 		}
 	});
 
-	// 2️⃣ Filter on branch change
+	// 2️⃣ FILTER ON BRANCH CHANGE
 	$('#branchName').on('change', function() {
 		filterCustomers();
 	});
 
-	// 3️⃣ Filter on customer name typing
+	// 3️⃣ FILTER ON CUSTOMER NAME TYPING
 	$('#customerName').on('keyup', function() {
 		filterCustomers();
 	});
 
 });
 
-// 🔍 Filtering Logic
+// 🔍 FILTERING LOGIC
 function filterCustomers() {
 
-    var selectedBranch = $('#branchName').val().toLowerCase();
-    var searchName = $('#customerName').val().toLowerCase();
+	var selectedBranch = $('#branchName').val().toLowerCase();
+	var searchName = $('#customerName').val().toLowerCase();
 
-    var filteredData = allCustomers.filter(function(customer) {
+	var filteredData = allCustomers.filter(function(customer) {
 
-        // Branch match
-        var branchMatch = !selectedBranch ||
-            (customer.branchName &&
-             customer.branchName.toLowerCase().includes(selectedBranch));
+		// BRANCH MATCH
+		var branchMatch = !selectedBranch ||
+			(customer.branchName &&
+				customer.branchName.toLowerCase().includes(selectedBranch));
 
-        // 🔑 Full name build
-        var fullName = [
-            customer.firstName,
-            customer.middleName,
-            customer.lastName
-        ].filter(Boolean).join(" ").toLowerCase();
+		// 🔑 FULL NAME BUILD
+		var fullName = [
+			customer.firstName,
+			customer.middleName,
+			customer.lastName
+		].filter(Boolean).join(" ").toLowerCase();
 
-        // Name match
-        var nameMatch = !searchName || fullName.includes(searchName);
+		// NAME MATCH
+		var nameMatch = !searchName || fullName.includes(searchName);
 
-        return branchMatch && nameMatch;
-    });
+		return branchMatch && nameMatch;
+	});
 
-    renderTable(filteredData);
+	renderTable(filteredData);
 }
 
 
-// 📋 Table Rendering
+// 📋 TABLE RENDERING
 function renderTable(data) {
 
 	var tbody = $("table tbody");
 	tbody.empty();
 
 	if (data.length === 0) {
-		tbody.append("<tr><td colspan='9' class='text-center'>No Records Found</td></tr>");
+		tbody.append("<tr><td colspan='9' class='text-center'>NO RECORDS FOUND</td></tr>");
 		return;
 	}
 
@@ -80,9 +80,9 @@ function renderTable(data) {
 			"<td>" + (customer.memberCode || '').toUpperCase() + "</td>" +
 			"<td>" + (fullName || '').toUpperCase() + "</td>" +
 			"<td>" + (customer.customerGender || '').toUpperCase() + "</td>" +
-			"<td>" + (customer.dob || '') + "</td>" +
+			"<td>" + (customer.dob || '').toUpperCase() + "</td>" +
 			"<td>" + (customer.branchName || '').toUpperCase() + "</td>" +
-			"<td>" + (customer.contactNo || '') + "</td>" +
+			"<td>" + (customer.contactNo || '').toUpperCase() + "</td>" +
 			"<td>" + (customer.nomineeName || '').toUpperCase() + "</td>" +
 			"<td>" + (customer.customerAddress || '').toUpperCase() + "</td>" +
 			"</tr>";

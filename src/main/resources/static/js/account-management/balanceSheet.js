@@ -127,7 +127,7 @@ $(document).ready(function() {
 
 				console.log(xhr);
 
-				let errorMessage = "Something went wrong";
+				let errorMessage = "SOMETHING WENT WRONG";
 
 				if (xhr.responseJSON &&
 					xhr.responseJSON.message) {

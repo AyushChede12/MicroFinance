@@ -50,11 +50,11 @@ public class JointLiabilityLoanController {
 
 		if (isSaved) {
 			ApiResponse<CreateLendingGroup> response = ApiResponse.success(HttpStatus.CREATED,
-					"Lending Group saved successfully", createLendingGroup);
+					"LENDING GROUP SAVED SUCCESSFULLY", createLendingGroup);
 			return ResponseEntity.status(HttpStatus.CREATED).body(response);
 		} else {
 			ApiResponse<CreateLendingGroup> response = ApiResponse.error(HttpStatus.BAD_REQUEST,
-					"Failed to save Lending Group.");
+					"FAILED TO SAVE LENDING GROUP.");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 		}
 	}
@@ -66,11 +66,11 @@ public class JointLiabilityLoanController {
 
 		if (plans != null && !plans.isEmpty()) {
 			ApiResponse<List<CreateLendingGroup>> response = ApiResponse.success(HttpStatus.OK,
-					"Lending Group fetched successfully.", plans);
+					"LENDING GROUP FETCHED SUCCESSFULLY.", plans);
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<List<CreateLendingGroup>> response = ApiResponse.error(HttpStatus.NOT_FOUND,
-					"No Lending Group found.");
+					"NO LENDING GROUP FOUND.");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 	}
@@ -81,11 +81,11 @@ public class JointLiabilityLoanController {
 
 		if (plan != null) {
 			ApiResponse<CreateLendingGroup> response = ApiResponse.success(HttpStatus.OK,
-					"Lending Group fetched successfully.", plan);
+					"LENDING GROUP FETCHED SUCCESSFULLY.", plan);
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<CreateLendingGroup> response = ApiResponse.error(HttpStatus.NOT_FOUND,
-					"Lending Group not found for ID: " + id);
+					"LENDING GROUP NOT FOUND FOR ID: " + id);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 	}
@@ -99,11 +99,11 @@ public class JointLiabilityLoanController {
 
 		if (updated != null) {
 			ApiResponse<CreateLendingGroup> response = ApiResponse.success(HttpStatus.OK,
-					"Lending Group updated successfully.", updated);
+					"LENDING GROUP UPDATED SUCCESSFULLY.", updated);
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<CreateLendingGroup> response = ApiResponse.error(HttpStatus.NOT_FOUND,
-					"Lending Group not found or failed to update.");
+					"LENDING GROUP NOT FOUND OR FAILED TO UPDATE.");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 	}
@@ -114,12 +114,12 @@ public class JointLiabilityLoanController {
 		boolean deleted = jointLiabilityLoanService.deleteLendingGroup(id);
 
 		if (deleted) {
-			ApiResponse<Void> response = ApiResponse.success(HttpStatus.OK, "Lending Group deleted successfully.",
+			ApiResponse<Void> response = ApiResponse.success(HttpStatus.OK, "LENDING GROUP DELETED SUCCESSFULLY.",
 					null);
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<Void> response = ApiResponse.error(HttpStatus.NOT_FOUND,
-					"Lending Group not found for ID: " + id);
+					"LENDING GROUP NOT FOUND FOR ID: " + id);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 	}
@@ -132,11 +132,11 @@ public class JointLiabilityLoanController {
 
 		if (isSaved) {
 			ApiResponse<GroupDirectory> response = ApiResponse.success(HttpStatus.CREATED,
-					"Group Directory saved successfully.", groupDirectory);
+					"GROUP DIRECTORY SAVED SUCCESSFULLY.", groupDirectory);
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<GroupDirectory> response = ApiResponse.error(HttpStatus.BAD_REQUEST,
-					"Failed to save Group Directory.");
+					"FAILED TO SAVE GROUP DIRECTORY.");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 		}
 	}
@@ -148,11 +148,11 @@ public class JointLiabilityLoanController {
 
 		if (groups != null && !groups.isEmpty()) {
 			ApiResponse<List<GroupDirectory>> response = ApiResponse.success(HttpStatus.OK,
-					"Group Directories fetched successfully.", groups);
+					"GROUP DIRECTORIES FETCHED SUCCESSFULLY.", groups);
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<List<GroupDirectory>> response = ApiResponse.error(HttpStatus.NOT_FOUND,
-					"No Group Directory found.");
+					"NO GROUP DIRECTORY FOUND.");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 	}
@@ -164,11 +164,11 @@ public class JointLiabilityLoanController {
 
 		if (group != null) {
 			ApiResponse<GroupDirectory> response = ApiResponse.success(HttpStatus.OK,
-					"Group Directory fetched successfully.", group);
+					"GROUP DIRECTORY FETCHED SUCCESSFULLY.", group);
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<GroupDirectory> response = ApiResponse.error(HttpStatus.NOT_FOUND,
-					"Group Directory not found for ID: " + id);
+					"GROUP DIRECTORY NOT FOUND FOR ID: " + id);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 	}
@@ -182,11 +182,11 @@ public class JointLiabilityLoanController {
 
 		if (updated != null) {
 			ApiResponse<GroupDirectory> response = ApiResponse.success(HttpStatus.OK,
-					"Group Directory updated successfully.", updated);
+					"GROUP DIRECTORY UPDATED SUCCESSFULLY.", updated);
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<GroupDirectory> response = ApiResponse.error(HttpStatus.NOT_FOUND,
-					"Group Directory not found or failed to update.");
+					"GROUP DIRECTORY NOT FOUND OR FAILED TO UPDATE.");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 	}
@@ -197,12 +197,12 @@ public class JointLiabilityLoanController {
 		boolean deleted = jointLiabilityLoanService.deleteGroupDirectory(id);
 
 		if (deleted) {
-			ApiResponse<Void> response = ApiResponse.success(HttpStatus.OK, "Group Directory deleted successfully.",
+			ApiResponse<Void> response = ApiResponse.success(HttpStatus.OK, "GROUP DIRECTORY DELETED SUCCESSFULLY.",
 					null);
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<Void> response = ApiResponse.error(HttpStatus.NOT_FOUND,
-					"Group Directory not found for ID: " + id);
+					"GROUP DIRECTORY NOT FOUND FOR ID: " + id);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 	}
@@ -213,11 +213,11 @@ public class JointLiabilityLoanController {
 
 		if (groups != null && !groups.isEmpty()) {
 			ApiResponse<List<GroupDirectory>> response = ApiResponse.success(HttpStatus.OK,
-					"Group Directories fetched successfully.", groups);
+					"GROUP DIRECTORIES FETCHED SUCCESSFULLY.", groups);
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<List<GroupDirectory>> response = ApiResponse.error(HttpStatus.NOT_FOUND,
-					"No Group Directory found.");
+					"NO GROUP DIRECTORY FOUND.");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 	}
@@ -229,11 +229,11 @@ public class JointLiabilityLoanController {
 
 		if (isSaved) {
 			ApiResponse<ApplyForGroupLoan> response = ApiResponse.success(HttpStatus.CREATED,
-					"Group Loan saved successfully", applyGroupLoan);
+					"GROUP LOAN SAVED SUCCESSFULLY", applyGroupLoan);
 			return ResponseEntity.status(HttpStatus.CREATED).body(response);
 		} else {
 			ApiResponse<ApplyForGroupLoan> response = ApiResponse.error(HttpStatus.BAD_REQUEST,
-					"Failed to save Group Loan.");
+					"FAILED TO SAVE GROUP LOAN.");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 		}
 	}
@@ -243,9 +243,9 @@ public class JointLiabilityLoanController {
 	public ApiResponse<List<GroupDirectory>> fetchByGroupID(@RequestParam("groupID") String groupID) {
 		List<GroupDirectory> list = jointLiabilityLoanService.fetchByGroupID(groupID);
 		if (list != null && !list.isEmpty()) {
-			return ApiResponse.success(HttpStatus.FOUND, "Group Directory Fetched Successfully", list);
+			return ApiResponse.success(HttpStatus.FOUND, "GROUP DIRECTORY FETCHED SUCCESSFULLY", list);
 		} else {
-			return ApiResponse.error(HttpStatus.NOT_FOUND, "Group Directory Not Found");
+			return ApiResponse.error(HttpStatus.NOT_FOUND, "GROUP DIRECTORY NOT FOUND");
 		}
 	}
 
@@ -254,9 +254,9 @@ public class JointLiabilityLoanController {
 	public ApiResponse<List<CreateLendingGroup>> fetchByPlanCode(@RequestParam("planCode") String planCode) {
 		List<CreateLendingGroup> list = jointLiabilityLoanService.fetchByPlanCode(planCode);
 		if (list != null && !list.isEmpty()) {
-			return ApiResponse.success(HttpStatus.FOUND, "Lending Group Plan Fetched Successfully", list);
+			return ApiResponse.success(HttpStatus.FOUND, "LENDING GROUP PLAN FETCHED SUCCESSFULLY", list);
 		} else {
-			return ApiResponse.error(HttpStatus.NOT_FOUND, "Lending Group Plan Not Found");
+			return ApiResponse.error(HttpStatus.NOT_FOUND, "LENDING GROUP PLAN NOT FOUND");
 		}
 	}
 
@@ -267,11 +267,11 @@ public class JointLiabilityLoanController {
 
 		if (applications != null && !applications.isEmpty()) {
 			ApiResponse<List<ApplyForGroupLoan>> response = ApiResponse.success(HttpStatus.OK,
-					"Group loan applications fetched successfully.", applications);
+					"GROUP LOAN APPLICATIONS FETCHED SUCCESSFULLY.", applications);
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<List<ApplyForGroupLoan>> response = ApiResponse.error(HttpStatus.NOT_FOUND,
-					"No group loan applications found.");
+					"NO GROUP LOAN APPLICATIONS FOUND.");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 	}
@@ -280,24 +280,24 @@ public class JointLiabilityLoanController {
 	@PostMapping("/approveGroupLoan")
 	public ResponseEntity<ApiResponse<ApplyForGroupLoan>> approveGroupLoan(@RequestBody ApplyForGroupLoan approval) {
 
-		System.out.println("Approval request received for Group Code: " + approval.getGroupCode());
+		System.out.println("APPROVAL REQUEST RECEIVED FOR GROUP CODE: " + approval.getGroupCode());
 
 		String result = jointLiabilityLoanService.approveGroupLoan(approval);
 
 		switch (result) {
 		case "already_approved":
-			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Group Loan is already approved.", null));
+			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "GROUP LOAN IS ALREADY APPROVED.", null));
 
 		case "success":
-			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Group Loan approved successfully.", approval));
+			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "GROUP LOAN APPROVED SUCCESSFULLY.", approval));
 
 		case "not_found":
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(new ApiResponse<>(HttpStatus.NOT_FOUND, "Group Loan not found.", null));
+					.body(new ApiResponse<>(HttpStatus.NOT_FOUND, "GROUP LOAN NOT FOUND.", null));
 
 		default:
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body(new ApiResponse<>(HttpStatus.BAD_REQUEST, "Unknown result", null));
+					.body(new ApiResponse<>(HttpStatus.BAD_REQUEST, "UNKNOWN RESULT", null));
 		}
 	}
 
@@ -309,9 +309,9 @@ public class JointLiabilityLoanController {
 		List<ApplyForGroupLoan> list = jointLiabilityLoanService.fetchApplyGroupLoanByGroupcode(groupCode);
 
 		if (list != null && !list.isEmpty()) {
-			return ApiResponse.success(HttpStatus.FOUND, "Group Loan & Directory Fetched Successfully", list);
+			return ApiResponse.success(HttpStatus.FOUND, "GROUP LOAN & DIRECTORY FETCHED SUCCESSFULLY", list);
 		} else {
-			return ApiResponse.error(HttpStatus.NOT_FOUND, "Group Loan Not Found for this Group Code");
+			return ApiResponse.error(HttpStatus.NOT_FOUND, "GROUP LOAN NOT FOUND FOR THIS GROUP CODE");
 		}
 	}
 
@@ -322,10 +322,10 @@ public class JointLiabilityLoanController {
 
 		if (!approvedGroupLoanIds.isEmpty()) {
 			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK,
-					"Approved & Active Group Loan IDs fetched successfully", approvedGroupLoanIds));
+					"APPROVED & ACTIVE GROUP LOAN IDS FETCHED SUCCESSFULLY", approvedGroupLoanIds));
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(new ApiResponse<>(HttpStatus.NOT_FOUND, "No approved and active group loans found", null));
+					.body(new ApiResponse<>(HttpStatus.NOT_FOUND, "NO APPROVED AND ACTIVE GROUP LOANS FOUND", null));
 		}
 	}
 
@@ -336,15 +336,15 @@ public class JointLiabilityLoanController {
 			boolean isSaved = jointLiabilityLoanService.saveGroupLoanPayment(groupLoan);
 			if (isSaved) {
 				return ResponseEntity.status(HttpStatus.CREATED)
-						.body(ApiResponse.success(HttpStatus.CREATED, "Loan Payment saved successfully", groupLoan));
+						.body(ApiResponse.success(HttpStatus.CREATED, "LOAN PAYMENT SAVED SUCCESSFULLY", groupLoan));
 			} else {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(HttpStatus.BAD_REQUEST,
-						"Failed to save Loan Payment (service returned false)"));
+						"FAILED TO SAVE LOAN PAYMENT (SERVICE RETURNED FALSE)"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "Error: " + e.getMessage()));
+					.body(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "ERROR: " + e.getMessage()));
 		}
 	}
 
@@ -354,9 +354,9 @@ public class JointLiabilityLoanController {
 		List<GroupLoanPayment> list = jointLiabilityLoanService.fetchGroupLoanPayment(groupID);
 
 		if (list != null && !list.isEmpty()) {
-			return ApiResponse.success(HttpStatus.FOUND, "Group Loan Payments fetched successfully", list);
+			return ApiResponse.success(HttpStatus.FOUND, "GROUP LOAN PAYMENTS FETCHED SUCCESSFULLY", list);
 		} else {
-			return ApiResponse.error(HttpStatus.NOT_FOUND, "No loan payments found for this Group ID");
+			return ApiResponse.error(HttpStatus.NOT_FOUND, "NO LOAN PAYMENTS FOUND FOR THIS GROUP ID");
 		}
 	}
 //	
@@ -373,15 +373,15 @@ public class JointLiabilityLoanController {
 			boolean isSaved = jointLiabilityLoanService.saveLoanRepayment(repayment);
 			if (isSaved) {
 				return ResponseEntity.status(HttpStatus.CREATED)
-						.body(ApiResponse.success(HttpStatus.CREATED, "Loan repayment saved successfully", repayment));
+						.body(ApiResponse.success(HttpStatus.CREATED, "LOAN REPAYMENT SAVED SUCCESSFULLY", repayment));
 			} else {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(HttpStatus.BAD_REQUEST,
-						"Failed to save loan repayment (service returned false)"));
+						"FAILED TO SAVE LOAN REPAYMENT (SERVICE RETURNED FALSE)"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "Error: " + e.getMessage()));
+					.body(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "ERROR: " + e.getMessage()));
 		}
 	}
 

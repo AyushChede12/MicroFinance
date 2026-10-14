@@ -1,42 +1,42 @@
 let allTransactions = [];
 
-$("#searchAllBranch").click(function () {
-    $.ajax({
-        type: "GET",
-        url: "api/preference/fetchAllTransactions",
-        success: function (response) {
-            if (response.status === "FOUND") {	
-                allTransactions = response.data;
-                renderTable(allTransactions);
-            }
-        }
-    });
+$("#searchAllBranch").click(function() {
+	$.ajax({
+		type: "GET",
+		url: "api/preference/fetchAllTransactions",
+		success: function(response) {
+			if (response.status === "FOUND") {
+				allTransactions = response.data;
+				renderTable(allTransactions);
+			}
+		}
+	});
 });
 
-$("#searchBranch").click(function () {
-    let branchName = $("#branchName").val().trim().toLowerCase();
-    if (branchName === "") {
-        alert("Please enter a branch name to search.");
-        return;
-    }
+$("#searchBranch").click(function() {
+	let branchName = $("#branchName").val().trim().toLowerCase();
+	if (branchName === "") {
+		alert("PLEASE ENTER A BRANCH NAME TO SEARCH.");
+		return;
+	}
 
-    let filtered = allTransactions.filter(tx =>
-        tx.branchName.toLowerCase().includes(branchName)
-    );
-    renderTable(filtered);
+	let filtered = allTransactions.filter(tx =>
+		tx.branchName.toLowerCase().includes(branchName)
+	);
+	renderTable(filtered);
 });
 
 function renderTable(data) {
-    let tableBody = $(".datatable tbody");
-    tableBody.empty();
+	let tableBody = $(".datatable tbody");
+	tableBody.empty();
 
-    if (data.length === 0) {
-        tableBody.append(`<tr><td colspan="6">No records found</td></tr>`);
-        return;
-    }
+	if (data.length === 0) {
+		tableBody.append(`<tr><td colspan="6">NO RECORDS FOUND</td></tr>`);
+		return;
+	}
 
-    data.reverse().forEach((item, index) => {
-        let row = `<tr>
+	data.reverse().forEach((item, index) => {
+		let row = `<tr>
             <td>${index + 1}</td>
             <td>${item.branchName}</td>
             <td>${item.transactionDate}</td>
@@ -44,6 +44,6 @@ function renderTable(data) {
             <td>${item.amount}</td>
             <td>${item.modeOfPayment}</td>
         </tr>`;
-        tableBody.append(row);
-    });
+		tableBody.append(row);
+	});
 }

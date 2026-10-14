@@ -1,4 +1,3 @@
-
 $(document).ready(function() {
 
 	$.ajax({
@@ -12,12 +11,12 @@ $(document).ready(function() {
 			// Access the actual list from response.data
 			var list = response.data;
 
-			var appenddata1 = "<option value=''>Select</option>";
+			var appenddata1 = "<option value=''>--SELECT RELATION--</option>";
 
 			if (list && list.length > 0) {
 				for (var i = 0; i < list.length; i++) {
 					appenddata1 += "<option value='" + list[i].relation + "'>"
-						+ list[i].relation +
+						+ list[i].relation.toUpperCase() +
 						"</option>";
 				}
 			}
@@ -27,7 +26,7 @@ $(document).ready(function() {
 		},
 		error: function(xhr, status, error) {
 			console.error("Error:", error);
-			alert("Failed to load relatives");
+			alert("FAILED TO LOAD RELATIVES");
 		}
 	});
 
@@ -38,14 +37,14 @@ $(document).ready(function() {
 		async: true, // Correct spelling
 		success: function(data) {
 			console.log(data); // Debug the response
-			var appenddata1 = "<option value=''>Select</option>";
+			var appenddata1 = "<option value=''>--SELECT DEPARTMENT--</option>";
 			for (var i = 0; i < data.length; i++) {
-				appenddata1 += "<option value='" + data[i].departmentName + "'>" + data[i].departmentName + "</option>";
+				appenddata1 += "<option value='" + data[i].departmentName.toUpperCase() + "'>" + data[i].departmentName.toUpperCase() + "</option>";
 			}
 			$("#department").html(appenddata1); // Clear and populate
 		},
 		error: function() {
-			alert("Failed to load departments");
+			alert("FAILED TO LOAD DEPARTMENTS");
 		}
 	});
 
@@ -56,14 +55,14 @@ $(document).ready(function() {
 		async: true, // Correct spelling
 		success: function(data) {
 			console.log(data); // Debug the response
-			var appenddata1 = "<option value=''>Select</option>";
+			var appenddata1 = "<option value=''>--SELECT DESIGNATION--</option>";
 			for (var i = 0; i < data.length; i++) {
-				appenddata1 += "<option value='" + data[i].designationName + "'>" + data[i].designationName + "</option>";
+				appenddata1 += "<option value='" + data[i].designationName.toUpperCase() + "'>" + data[i].designationName.toUpperCase() + "</option>";
 			}
 			$("#designation").html(appenddata1); // Clear and populate
 		},
 		error: function() {
-			alert("Failed to load designations");
+			alert("FAILED TO LOAD DESIGNATIONS");
 		}
 	});
 
@@ -74,12 +73,12 @@ $(document).ready(function() {
 
 		// Validate required fields
 		const requiredFields = [
-			{ id: '#teamMemberCode', message: 'TeamMember Code is required.' },
-			{ id: '#signUpDate', message: 'SignUp Date is required.' },
-			{ id: '#teamMemberName', message: 'TeamMember Name is required.' },
-			{ id: '#dateOfBirth', message: 'Date of Birth is required.' },
-			{ id: '#contactNo', message: 'Contact Number is required.' },
-			{ id: '#salary', message: 'Salary is required.' }
+			{ id: '#teamMemberCode', message: 'TEAMMEMBER CODE IS REQUIRED.' },
+			{ id: '#signUpDate', message: 'SIGNUP DATE IS REQUIRED.' },
+			{ id: '#teamMemberName', message: 'TEAMMEMBER NAME IS REQUIRED.' },
+			{ id: '#dateOfBirth', message: 'DATE OF BIRTH IS REQUIRED.' },
+			{ id: '#contactNo', message: 'CONTACT NUMBER IS REQUIRED.' },
+			{ id: '#salary', message: 'SALARY IS REQUIRED.' }
 		];
 
 		requiredFields.forEach(field => {
@@ -97,7 +96,7 @@ $(document).ready(function() {
 		const contactNo = $('#contactNo').val();
 		if (contactNo && !/^\d{10}$/.test(contactNo)) {
 			isValid = false;
-			errorMessages.push('contact Number must be a 10-digit number.');
+			errorMessages.push('CONTACT NUMBER MUST BE A 10-DIGIT NUMBER.');
 			$('#contactNo').addClass('error');
 		} else {
 			$('#contactNo').removeClass('error');
@@ -107,7 +106,7 @@ $(document).ready(function() {
 		const salary = $('#salary').val();
 		if (salary && (isNaN(salary) || salary <= 0)) {
 			isValid = false;
-			errorMessages.push('Salary must be a positive number.');
+			errorMessages.push('SALARY MUST BE A POSITIVE NUMBER.');
 			$('#salary').addClass('error');
 		} else {
 			$('#salary').removeClass('error');
@@ -117,7 +116,7 @@ $(document).ready(function() {
 		const signUpDate = $('#signUpDate').val();
 		if (signUpDate && new Date(signUpDate) > new Date()) {
 			isValid = false;
-			errorMessages.push('SignUp Date cannot be in the future.');
+			errorMessages.push('SIGNUP DATE CANNOT BE IN THE FUTURE.');
 			$('#signUpDate').addClass('error');
 		} else {
 			$('#signUpDate').removeClass('error');
@@ -125,7 +124,7 @@ $(document).ready(function() {
 
 		// Display error messages
 		if (!isValid) {
-			alert('Please fix the following errors:\n' + errorMessages.join('\n'));
+			alert('PLEASE FIX THE FOLLOWING ERRORS:\n' + errorMessages.join('\n'));
 		}
 
 		return isValid;
@@ -191,14 +190,14 @@ $(document).ready(function() {
 			contentType: 'application/json',
 			data: JSON.stringify(teamMemberData),
 			success: function(response) {
-				alert("TeamMember saved successfully: " + response.teamMemberCode);
+				alert("TEAMMEMBER SAVED SUCCESSFULLY: " + response.teamMemberCode);
 
 				// Reload the page to reset the form and fetch the next employee code
 				location.reload();
 			},
 			error: function(error) {
 				console.error('Error:', error);
-				alert("Failed to save TeamMember. Please check the input data.");
+				alert("FAILED TO SAVE TEAMMEMBER. PLEASE CHECK THE INPUT DATA.");
 			}
 		});
 	});
@@ -212,16 +211,16 @@ function teamMemberCodeDropdown() {
 		url: 'api/teammember/getAllteamMember', // Update the URL if necessary
 		async: true, // Correct spelling
 		success: function(data) {
-			alert("dd");
+			alert("DD");
 			console.log(data); // Debug the response
-			var appenddata = "<option value=''>Select</option>";
+			var appenddata = "<option value=''>--SELECT CODE--</option>";
 			for (var i = 0; i < data.length; i++) {
-				appenddata += "<option value='" + data[i].teamMemberCode + "'>" + data[i].teamMemberCode + "</option>";
+				appenddata += "<option value='" + data[i].teamMemberCode + "'>" + data[i].teamMemberCode.toUpperCase() + "</option>";
 			}
 			$("#teamMemberCode").html(appenddata); // Clear and populate
 		},
 		error: function() {
-			alert("Failed to load departments");
+			alert("FAILED TO LOAD DEPARTMENTS");
 		}
 	});
 }
@@ -237,22 +236,22 @@ function fetchTeamMemberDataByCode() {
 		data: JSON.stringify({ teamMemberCode: teamMemberCode }), // 🔥 Must stringify!
 		success: function(data) {
 			if (!data || data.length === 0) {
-				alert("No team member data found.");
+				alert("NO TEAM MEMBER DATA FOUND.");
 				return;
 			}
 
 			const tableData = data.map(function(value) {
 				return (
 					`<tr>
-                        <td>${value.id}</td>
-                        <td>${value.teamMemberName}</td>
-                        <td>${value.branchName}</td>
-                        <td>${value.signUpDate}</td>
-                        <td>${value.dateOfBirth}</td>
-                        <td>${value.contactNo}</td>
-                        <td>${value.address}</td>
-                        <td>${value.department}</td>
-                    </tr>`
+                       <td>${value.id}</td>
+                       <td>${value.teamMemberName}</td>
+                       <td>${value.branchName}</td>
+                       <td>${value.signUpDate}</td>
+                       <td>${value.dateOfBirth}</td>
+                       <td>${value.contactNo}</td>
+                       <td>${value.address}</td>
+                       <td>${value.department}</td>
+                   </tr>`
 				);
 			}).join('');
 
@@ -260,7 +259,7 @@ function fetchTeamMemberDataByCode() {
 		},
 		error: function(xhr, status, error) {
 			console.error("Error fetching data:", error);
-			alert("Something went wrong while fetching team member data.");
+			alert("SOMETHING WENT WRONG WHILE FETCHING TEAM MEMBER DATA.");
 		}
 	});
 }
@@ -278,7 +277,7 @@ function searchInTheTeamMember() {
 		async: false,
 		success: function(data) {
 			if (data.length === 0) {
-				alert("No data found!");
+				alert("NO DATA FOUND!");
 				return;
 			}
 
@@ -286,7 +285,7 @@ function searchInTheTeamMember() {
 			renderTable(data);
 		},
 		error: function() {
-			alert("Failed to fetch data. Please try again.");
+			alert("FAILED TO FETCH DATA. PLEASE TRY AGAIN.");
 		}
 	});
 }
@@ -297,18 +296,18 @@ function renderTable(data) {
 	const tableData = data.map(function(value) {
 		return (
 			`<tr>
-                <td>${j++}</td>
-                <td>${value.teamMemberName}</td>
-                <td>${value.dateOfBirth}</td>
-                <td>${value.bankAC}</td>
-                <td>${value.signUpDate}</td>
-                <td>${value.contactNo}</td>  
-                <td>${value.branchName}</td>    
-                <td>${value.teamMemberCode}</td> 
-                <td>${value.designation}</td> 
-                <td>${value.department}</td>                        
+               <td>${j++}</td>
+               <td>${value.teamMemberName}</td>
+               <td>${value.dateOfBirth}</td>
+               <td>${value.bankAC}</td>
+               <td>${value.signUpDate}</td>
+               <td>${value.contactNo}</td> 
+               <td>${value.branchName}</td>   
+               <td>${value.teamMemberCode}</td>
+               <td>${value.designation}</td>
+               <td>${value.department}</td>                       
 
-            </tr>`
+           </tr>`
 		);
 	}).join('');
 	$('#searchTeamMember').html(tableData);

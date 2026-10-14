@@ -13,7 +13,7 @@ $(document).ready(function() {
 
 				// Initialize Select2 with full data and custom search matcher
 				$('#loanId').select2({
-					placeholder: '-- Search Loan ID --',
+					placeholder: '-- SEARCH LOAN ID --',
 					data: loanOptions,
 					matcher: function(params, data) {
 						// If no search term, return all
@@ -38,11 +38,11 @@ $(document).ready(function() {
 				});
 
 			} else {
-				alert("No Loan ID found.");
+				alert("NO LOAN ID FOUND.");
 			}
 		},
 		error: function() {
-			alert("Failed to load ID");
+			alert("FAILED TO LOAD ID");
 		}
 	});
 
@@ -51,20 +51,20 @@ $(document).ready(function() {
 		type: "GET",
 		success: function(response) {
 			if (response.status === "OK") {
-				$("#memberId").empty().append("<option value=''>-- Select Code --</option>");
-				$("#guarantorMemberId").empty().append("<option value=''>-- Select Code --</option>");
-				$("#coApplicantMemberId").empty().append("<option value=''>-- Select Code --</option>");
+				$("#memberId").empty().append("<option value=''>-- SELECT CODE --</option>");
+				$("#guarantorMemberId").empty().append("<option value=''>-- SELECT CODE --</option>");
+				$("#coApplicantMemberId").empty().append("<option value=''>-- SELECT CODE --</option>");
 				response.data.forEach(function(item) {
 					$("#memberId").append(`<option value='${item.memberId}'>${item.memberId}</option>`);
 					$("#guarantorMemberId").append(`<option value='${item.guarantorMemberId}'>${item.guarantorMemberId}</option>`);
 					$("#coApplicantMemberId").append(`<option value='${item.coApplicantMemberId}'>${item.coApplicantMemberId}</option>`);
 				});
 			} else {
-				alert("No Customer Code found.");
+				alert("NO CUSTOMER CODE FOUND.");
 			}
 		},
 		error: function() {
-			alert("Failed to load Data");
+			alert("FAILED TO LOAD DATA");
 		}
 	});
 
@@ -162,11 +162,11 @@ $(document).ready(function() {
 						updateToggleColor(document.getElementById('toggle-sms-send'));
 
 					} else {
-						alert("No customer found for this member code.");
+						alert("NO CUSTOMER FOUND FOR THIS MEMBER CODE.");
 					}
 				},
 				error: function() {
-					alert("Member not found or server error.");
+					alert("MEMBER NOT FOUND OR SERVER ERROR.");
 				}
 			});
 		}
@@ -176,7 +176,7 @@ $(document).ready(function() {
 		event.preventDefault();
 		const loanId = $("#loanId").val();
 		if (!loanId) {
-			alert("First select the data, then proceed to update.");
+			alert("FIRST SELECT THE DATA, THEN PROCEED TO UPDATE.");
 			return;
 		}
 
@@ -230,14 +230,14 @@ $(document).ready(function() {
 			data: JSON.stringify(loanData),
 			success: function(response) {
 				if (response.status === "OK") {
-					alert("Loan Data Updated Successfully");
+					alert("LOAN DATA UPDATED SUCCESSFULLY");
 					location.reload();
 				} else {
-					alert("Something went wrong: " + response.message);
+					alert("SOMETHING WENT WRONG: " + response.message);
 				}
 			},
 			error: function(xhr) {
-				alert("Error while Updating data: " + xhr.responseText);
+				alert("ERROR WHILE UPDATING DATA: " + xhr.responseText);
 			}
 		});
 	});
@@ -250,28 +250,28 @@ $(document).ready(function() {
 		var id = $("#id").val();
 		let loanId = $("#loanId").val();
 		if (loanId !== "") {
-			if (confirm("Are you sure you want to delete this Loan Data?")) {
+			if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS LOAN DATA?")) {
 				$.ajax({
 					url: "api/datacorrection/deleteLoanApplicationDataById",
 					type: "POST",
 					data: { id: id },
 					success: function(response) {
 						if (response.status == "OK") {
-							alert("Loan Application Data Deleted Successfully");
+							alert("LOAN APPLICATION DATA DELETED SUCCESSFULLY");
 							location.reload();
 						} else {
-							alert("Delete failed: " + response.message);
+							alert("DELETE FAILED: " + response.message);
 						}
 					},
 					error: function(xhr, status, error) {
-						alert("Failed to delete Loan Data.");
+						alert("FAILED TO DELETE LOAN DATA.");
 						console.error("Error:", error);
 					}
 				});
 			}
 		}
 		else {
-			alert("First Select Any One Data Then Proceed To Delete!");
+			alert("FIRST SELECT ANY ONE DATA THEN PROCEED TO DELETE!");
 		}
 
 	});
@@ -300,7 +300,7 @@ function photoUpload() {
 		};
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for photo.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR PHOTO.");
 	}
 }
 
@@ -316,7 +316,7 @@ function signatureUpload() {
 		};
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for signature.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR SIGNATURE.");
 	}
 }
 

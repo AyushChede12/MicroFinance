@@ -61,7 +61,7 @@ public class JointLiabilityLoanService {
 
 	@Autowired
 	GroupRepaymentRepo groupRepaymentRepo;
-	
+
 	@Value("${upload.directory}")
 	private String uploadDirectory;
 
@@ -193,9 +193,9 @@ public class JointLiabilityLoanService {
 		if (!dir.exists()) {
 			boolean created = dir.mkdirs();
 			if (created) {
-				System.out.println("Directory created: " + uploadDirectory);
+				System.out.println("DIRECTORY CREATED: " + uploadDirectory);
 			} else {
-				System.err.println("Failed to create directory: " + uploadDirectory);
+				System.err.println("FAILED TO CREATE DIRECTORY: " + uploadDirectory);
 			}
 		}
 	}
@@ -330,10 +330,10 @@ public class JointLiabilityLoanService {
 	// Service for paying members in the create saving account balance
 	public boolean saveGroupLoanPayment(GroupLoanPayment groupLoan) {
 		try {
-			System.out.println("Received GroupLoanPayment: " + groupLoan);
+			System.out.println("RECEIVED GROUPLOANPAYMENT: " + groupLoan);
 
 			if (groupLoan.getGroupID() == null || groupLoan.getGroupID().isEmpty()) {
-				throw new IllegalArgumentException("Group ID is missing in request");
+				throw new IllegalArgumentException("GROUP ID IS MISSING IN REQUEST");
 			}
 
 			double loanAmount = parseDoubleSafe(groupLoan.getLoanAmount());
@@ -347,25 +347,25 @@ public class JointLiabilityLoanService {
 			// groupLoan.setSanctionedAmount(netAmount);
 
 			if (netAmount <= 0) {
-				throw new IllegalArgumentException("Net amount is not sufficient to distribute");
+				throw new IllegalArgumentException("NET AMOUNT IS NOT SUFFICIENT TO DISTRIBUTE");
 			}
 
 			List<GroupDirectory> groups = groupDirectoryRepo.findByGroupID(groupLoan.getGroupID());
 			if (groups.isEmpty()) {
-				throw new IllegalArgumentException("Group not found with ID: " + groupLoan.getGroupID());
+				throw new IllegalArgumentException("GROUP NOT FOUND WITH ID: " + groupLoan.getGroupID());
 			}
 
 			GroupDirectory group = groups.get(0);
 			String selectedMembers = group.getSelectedMember();
 
 			if (selectedMembers == null || selectedMembers.trim().isEmpty()) {
-				throw new IllegalArgumentException("No members found in the group");
+				throw new IllegalArgumentException("NO MEMBERS FOUND IN THE GROUP");
 			}
 
 			String[] memberIds = selectedMembers.split(",");
 			double sharePerMember = netAmount / memberIds.length;
 
-			// ✅ Update balance in CreateSavingsAccount for each member
+			// Update balance in CreateSavingsAccount for each member
 			for (String memberId : memberIds) {
 				memberId = memberId.trim();
 
@@ -386,12 +386,12 @@ public class JointLiabilityLoanService {
 					createSavingRepo.save(existingAccount);
 
 				} else {
-					System.out.println("⚠️ No savings account found for member: " + memberId);
+					System.out.println("NO SAVINGS ACCOUNT FOUND FOR MEMBER: " + memberId);
 				}
 			}
 
 			groupLoanpaymentrepo.save(groupLoan);
-			System.out.println("Group loan payment saved successfully.");
+			System.out.println("GROUP LOAN PAYMENT SAVED SUCCESSFULLY.");
 			return true;
 
 		} catch (Exception e) {
@@ -410,49 +410,47 @@ public class JointLiabilityLoanService {
 	public List<GroupLoanPayment> fetchGroupLoanPayment(String groupID) {
 		return groupLoanpaymentrepo.findByGroupID(groupID);
 	}
-	
-	
+
 	public boolean saveLoanRepayment(GroupInstallmentRepayment repayment) {
-	    try {
-	        // --- Step 1: Parse numeric fields safely ---
-	        double loanAmount = parseDoubleSafe(repayment.getTotalPayable());
-	        double emi = parseDoubleSafe(repayment.getLoanEmi());
-	        double prevAmountDue = parseDoubleSafe(repayment.getAmountDue());
+		try {
+			// --- Step 1: Parse numeric fields safely ---
+			double loanAmount = parseDoubleSafe(repayment.getTotalPayable());
+			double emi = parseDoubleSafe(repayment.getLoanEmi());
+			double prevAmountDue = parseDoubleSafe(repayment.getAmountDue());
 
-	        // --- Step 2: Calculate new amount due ---
-	        double newAmountDue = loanAmount - emi;
+			// --- Step 2: Calculate new amount due ---
+			double newAmountDue = loanAmount - emi;
 
-	        // --- Step 3: Update repayment object with new amount due ---
-	        repayment.setAmountDue(String.valueOf(newAmountDue));
-	        repayment.setPaymentDate(LocalDate.now().toString()); // Optional: store current date
+			// --- Step 3: Update repayment object with new amount due ---
+			repayment.setAmountDue(String.valueOf(newAmountDue));
+			repayment.setPaymentDate(LocalDate.now().toString()); // Optional: store current date
 
-	        // --- Step 4: Save repayment record ---
-	        groupRepaymentRepo.save(repayment);
+			// --- Step 4: Save repayment record ---
+			groupRepaymentRepo.save(repayment);
 
-	        // --- Step 5: If the loan is fully paid, update loan status ---
-	        if (newAmountDue <= 0) {
-	            // ✅ Get the corresponding loan record
-	            List<ApplyForGroupLoan> loanOpt = applyForGroupLoanRepo.findByGroupCode(repayment.getGroupID());
-	            if (loanOpt.isEmpty()) {
-	                ApplyForGroupLoan loan = loanOpt.get(0);
-	                loan.setGroupLoanStatus(uploadDirectory);
-	                applyForGroupLoanRepo.save(loan);
-	                System.out.println("✅ Loan fully repaid. Status updated to Closed.");
-	            }
-	        } 
+			// --- Step 5: If the loan is fully paid, update loan status ---
+			if (newAmountDue <= 0) {
+				// Get the corresponding loan record
+				List<ApplyForGroupLoan> loanOpt = applyForGroupLoanRepo.findByGroupCode(repayment.getGroupID());
+				if (loanOpt.isEmpty()) {
+					ApplyForGroupLoan loan = loanOpt.get(0);
+					loan.setGroupLoanStatus(uploadDirectory);
+					applyForGroupLoanRepo.save(loan);
+					System.out.println("LOAN FULLY REPAID. STATUS UPDATED TO CLOSED.");
+				}
+			}
 
-	        // --- Step 6: Log details ---
-	        System.out.println("Loan Amount: " + loanAmount);
-	        System.out.println("EMI Paid: " + emi);
-	        System.out.println("New Amount Due: " + newAmountDue);
+			// --- Step 6: Log details ---
+			System.out.println("LOAN AMOUNT: " + loanAmount);
+			System.out.println("EMI PAID: " + emi);
+			System.out.println("NEW AMOUNT DUE: " + newAmountDue);
 
-	        return true;
+			return true;
 
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return false;
-	    }
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
-
 
 }

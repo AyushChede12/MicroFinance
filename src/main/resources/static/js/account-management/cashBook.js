@@ -82,7 +82,7 @@ function getCashBook() {
 
 				showNoCashBookRecords();
 
-				alert(response.message || "No CashBook Records Found");
+				alert(response.message || "NO CASHBOOK RECORDS FOUND");
 			}
 		},
 
@@ -93,7 +93,7 @@ function getCashBook() {
 
 			showNoCashBookRecords();
 
-			alert("Error fetching CashBook data");
+			alert("ERROR FETCHING CASHBOOK DATA");
 		},
 
 		complete: function() {
@@ -263,7 +263,7 @@ function showNoCashBookRecords() {
 	$("#cashBookTableBody").html(`
         <tr>
             <td colspan="8" class="text-center">
-                No CashBook Records Found
+                NO CASHBOOK RECORDS FOUND
             </td>
         </tr>
     `);
@@ -307,7 +307,7 @@ function exportToExcel() {
 
 	if (transactionRows.length === 0) {
 
-		alert("No data to export");
+		alert("NO DATA TO EXPORT");
 		return;
 	}
 
@@ -346,7 +346,7 @@ function printReport() {
 		document.querySelector(".datatable");
 
 	if (!tableElement) {
-		alert("CashBook table not found");
+		alert("CASHBOOK TABLE NOT FOUND");
 		return;
 	}
 
@@ -361,7 +361,7 @@ function printReport() {
 
 	if (transactionRows.length === 0) {
 
-		alert("No data available for printing");
+		alert("NO DATA AVAILABLE FOR PRINTING");
 		return;
 	}
 
@@ -407,7 +407,7 @@ function printReport() {
 
 	if (!printWindow) {
 
-		alert("Please allow pop-ups to print the report");
+		alert("PLEASE ALLOW POP-UPS TO PRINT THE REPORT");
 		return;
 	}
 
@@ -600,7 +600,7 @@ function printReport() {
 
             <div class="footer">
 
-                Cash Book Report
+                CASH BOOK REPORT
 
             </div>
 

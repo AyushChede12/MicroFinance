@@ -1,10 +1,10 @@
-//janvi : Customer Account no. list fetch
+//JANVI : CUSTOMER ACCOUNT NO. LIST FETCH
 $(document).ready(function() {
 	$.ajax({
 		url: "api/reports/getApprovedSavingAccount",
 		type: "GET",
 		success: function(response) {
-			console.log("API response:", response);
+			console.log("API RESPONSE:", response);
 			var dropdown1 = $('#debitAccountNumber');
 			var dropdown2 = $('#creditAccountNumber');
 			dropdown1.empty();
@@ -12,19 +12,18 @@ $(document).ready(function() {
 			dropdown2.empty();
 			dropdown2.append('<option value="">--SELECT ACCOUNT NO--</option>');
 
-
 			if (response.status === "OK" && response.data) {
 				$.each(response.data, function(index, item) {
 					dropdown1.append('<option value="' + item.accountNumber + '">' + item.accountNumber + '</option>');
 					dropdown2.append('<option value="' + item.accountNumber + '">' + item.accountNumber + '</option>');
 				});
 			} else {
-				dropdown1.append('<option value="">No Account Number found</option>');
-				dropdown2.append('<option value="">No Account Number found</option>');
+				dropdown1.append('<option value="">NO ACCOUNT NUMBER FOUND</option>');
+				dropdown2.append('<option value="">NO ACCOUNT NUMBER FOUND</option>');
 			}
 		},
 		error: function() {
-			alert("Failed to fetch Policyname.");
+			alert("FAILED TO FETCH POLICYNAME.");
 		}
 	});
 });
@@ -35,7 +34,7 @@ $('#debitAccountNumber').on('change', function() {
 
 	if (accountNumber !== "") {
 		$.ajax({
-			url: 'api/customersavings/getallbyaccountnumber', // Pass as query param
+			url: 'api/customersavings/getallbyaccountnumber', // PASS AS QUERY PARAM
 			type: 'GET',
 			data: { accountNumber: accountNumber },
 			success: function(response) {
@@ -51,12 +50,12 @@ $('#debitAccountNumber').on('change', function() {
 					$('#debitAverageBalance').val(customer.balance);
 					$('#debitContactNumber').val(customer.contactNumber);
 				} else {
-					alert('No data found!');
+					alert('NO DATA FOUND!');
 					$('#debitCustomerCode').val('');
 				}
 			},
 			error: function() {
-				alert('Error while fetching data!');
+				alert('ERROR WHILE FETCHING DATA!');
 				$('#debitCustomerCode').val('');
 			}
 		});
@@ -70,7 +69,7 @@ $('#creditAccountNumber').on('change', function() {
 
 	if (accountNumber !== "") {
 		$.ajax({
-			url: 'api/customersavings/getallbyaccountnumber', // Pass as query param
+			url: 'api/customersavings/getallbyaccountnumber', // PASS AS QUERY PARAM
 			type: 'GET',
 			data: { accountNumber: accountNumber },
 			success: function(response) {
@@ -86,12 +85,12 @@ $('#creditAccountNumber').on('change', function() {
 					$('#creditAverageBalance').val(customer.balance);
 					$('#creditContactNumber').val(customer.contactNumber);
 				} else {
-					alert('No data found!');
+					alert('NO DATA FOUND!');
 					$('#debitCustomerCode').val('');
 				}
 			},
 			error: function() {
-				alert('Error while fetching data!');
+				alert('ERROR WHILE FETCHING DATA!');
 				$('#debitCustomerCode').val('');
 			}
 		});
@@ -135,7 +134,7 @@ $(document).ready(function() {
 
 		};
 
-		console.log("Sending Transfer Data:", accountData);
+		console.log("SENDING TRANSFER DATA:", accountData);
 
 
 		/* =========================================================
@@ -143,27 +142,27 @@ $(document).ready(function() {
 		   ========================================================= */
 
 		if (!accountData.debitAccountNumber) {
-			alert("Please select Debit Account Number");
+			alert("PLEASE SELECT DEBIT ACCOUNT NUMBER");
 			return;
 		}
 
 		if (!accountData.creditAccountNumber) {
-			alert("Please select Credit Account Number");
+			alert("PLEASE SELECT CREDIT ACCOUNT NUMBER");
 			return;
 		}
 
 		if (accountData.debitAccountNumber === accountData.creditAccountNumber) {
-			alert("Debit Account and Credit Account cannot be same");
+			alert("DEBIT ACCOUNT AND CREDIT ACCOUNT CANNOT BE SAME");
 			return;
 		}
 
 		if (!accountData.transferDate) {
-			alert("Please select Transfer Date");
+			alert("PLEASE SELECT TRANSFER DATE");
 			return;
 		}
 
 		if (!accountData.amount || parseFloat(accountData.amount) <= 0) {
-			alert("Please enter a valid transfer amount");
+			alert("PLEASE ENTER A VALID TRANSFER AMOUNT");
 			return;
 		}
 
@@ -188,7 +187,7 @@ $(document).ready(function() {
 			String(now.getSeconds()).padStart(2, '0');
 
 
-		console.log("Transfer Reference No:", referenceNo);
+		console.log("TRANSFER REFERENCE NO:", referenceNo);
 
 
 		/* =========================================================
@@ -208,7 +207,7 @@ $(document).ready(function() {
 
 			success: function(response) {
 
-				console.log("Transfer API Response:", response);
+				console.log("TRANSFER API RESPONSE:", response);
 
 
 				/* =====================================================
@@ -252,7 +251,7 @@ $(document).ready(function() {
 
 
 				console.log(
-					"Saving Debit Transaction:",
+					"SAVING DEBIT TRANSACTION:",
 					debitTransaction
 				);
 
@@ -270,7 +269,7 @@ $(document).ready(function() {
 					success: function(debitResponse) {
 
 						console.log(
-							"Debit Transaction Saved:",
+							"DEBIT TRANSACTION SAVED:",
 							debitResponse
 						);
 
@@ -315,7 +314,7 @@ $(document).ready(function() {
 						};
 
 						console.log(
-							"Saving Credit Transaction:",
+							"SAVING CREDIT TRANSACTION:",
 							creditTransaction
 						);
 
@@ -333,12 +332,12 @@ $(document).ready(function() {
 							success: function(creditResponse) {
 
 								console.log(
-									"Credit Transaction Saved:",
+									"CREDIT TRANSACTION SAVED:",
 									creditResponse
 								);
 
 								alert(
-									"Fund Transfer successful and transaction saved successfully."
+									"FUND TRANSFER SUCCESSFUL AND TRANSACTION SAVED SUCCESSFULLY."
 								);
 
 								location.reload();
@@ -348,15 +347,15 @@ $(document).ready(function() {
 							error: function(xhr, status, error) {
 
 								console.error(
-									"Credit Transaction Error:",
+									"CREDIT TRANSACTION ERROR:",
 									xhr.responseText
 								);
 
 								let errorMessage =
 									xhr.responseJSON?.message ||
-									"Credit transaction could not be saved.";
+									"CREDIT TRANSACTION COULD NOT BE SAVED.";
 
-								alert(errorMessage);
+								alert(errorMessage.toUpperCase());
 
 							}
 
@@ -367,15 +366,15 @@ $(document).ready(function() {
 					error: function(xhr, status, error) {
 
 						console.error(
-							"Debit Transaction Error:",
+							"DEBIT TRANSACTION ERROR:",
 							xhr.responseText
 						);
 
 						let errorMessage =
 							xhr.responseJSON?.message ||
-							"Debit transaction could not be saved.";
+							"DEBIT TRANSACTION COULD NOT BE SAVED.";
 
-						alert(errorMessage);
+						alert(errorMessage.toUpperCase());
 
 					}
 
@@ -385,12 +384,12 @@ $(document).ready(function() {
 
 			error: function(xhr, status, error) {
 
-				console.error("Fund Transfer Error:", xhr.responseText);
-				console.error("HTTP Status:", xhr.status);
-				console.error("Status Text:", status);
-				console.error("Error:", error);
+				console.error("FUND TRANSFER ERROR:", xhr.responseText);
+				console.error("HTTP STATUS:", xhr.status);
+				console.error("STATUS TEXT:", status);
+				console.error("ERROR:", error);
 
-				let errorMessage = "Transfer failed.";
+				let errorMessage = "TRANSFER FAILED.";
 
 				if (xhr.responseJSON && xhr.responseJSON.message) {
 
@@ -401,13 +400,11 @@ $(document).ready(function() {
 					errorMessage = xhr.responseText;
 
 				}
-alert("lll");
-				alert(errorMessage);
+				alert("LLL");
+				alert(errorMessage.toUpperCase());
 			}
 
 		});
 
 	});
 });
-
-

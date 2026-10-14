@@ -16,10 +16,10 @@ $(document).ready(function() {
 				bankAccounts.forEach(bank => {
 
 					const option = `
-	                    <option value="${bank.accountId}">
-	                        ${bank.accountTitle.toUpperCase()}
-	                    </option>
-	                `;
+                        <option value="${bank.accountId}">
+                            ${bank.accountTitle.toUpperCase()}
+                        </option>
+                    `;
 
 					$("#paymentFrom").append(option);
 				});
@@ -54,12 +54,12 @@ $(document).ready(function() {
 		const monthName = $("#month").val();
 
 		if (!agentCode) {
-			alert("Please Enter Agent Code");
+			alert("PLEASE ENTER AGENT CODE");
 			return;
 		}
 
 		if (!monthName) {
-			alert("Please Select Incentive Month");
+			alert("PLEASE SELECT INCENTIVE MONTH");
 			return;
 		}
 
@@ -67,14 +67,14 @@ $(document).ready(function() {
 		const year = new Date().getFullYear();
 
 		if (!month) {
-			alert("Invalid Month");
+			alert("INVALID MONTH");
 			return;
 		}
 
 		if (agentCode.startsWith("TM")) {
 			fetchCompleteIncentiveData(agentCode, month, year);
 		} else {
-			alert("Invalid Agent Code Format");
+			alert("INVALID AGENT CODE FORMAT");
 		}
 
 	});
@@ -103,7 +103,7 @@ $(document).ready(function() {
 			!paymentMode ||
 			!paymentFrom) {
 
-			alert("Please fill all required fields!");
+			alert("PLEASE FILL ALL REQUIRED FIELDS!");
 			return;
 		}
 
@@ -152,7 +152,7 @@ $(document).ready(function() {
 
 		$("#payBtn")
 			.prop("disabled", true)
-			.text("Processing...");
+			.text("PROCESSING...");
 
 		// =========================================================
 		// 4. PAYMENT AJAX
@@ -172,7 +172,7 @@ $(document).ready(function() {
 
 				if (response.status === "OK") {
 
-					alert("✅ Incentive Paid Successfully!");
+					alert("✅ INCENTIVE PAID SUCCESSFULLY!");
 
 					location.reload();
 
@@ -188,12 +188,12 @@ $(document).ready(function() {
 
 			error: function(xhr) {
 
-				let msg = "Something went wrong!";
+				let msg = "SOMETHING WENT WRONG!";
 
 				if (xhr.responseJSON &&
 					xhr.responseJSON.message) {
 
-					msg = xhr.responseJSON.message;
+					msg = xhr.responseJSON.message.toUpperCase();
 				}
 
 				alert("❌ " + msg);
@@ -205,7 +205,6 @@ $(document).ready(function() {
 		});
 
 	});
-
 
 });
 
@@ -225,9 +224,10 @@ function fetchCompleteIncentiveData(agentCode, month, year) {
 		success: function(response) {
 
 			if (!response) {
-				alert("No Data Found");
+				alert("NO DATA FOUND");
 				return;
 			}
+
 			let data = response.data;
 
 			if (response.status == "FOUND") {
@@ -244,7 +244,7 @@ function fetchCompleteIncentiveData(agentCode, month, year) {
 			}
 		},
 		error: function() {
-			alert("Error fetching Incentive Details");
+			alert("ERROR FETCHING INCENTIVE DETAILS");
 		}
 	});
 

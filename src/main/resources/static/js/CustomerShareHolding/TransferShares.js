@@ -28,35 +28,35 @@ function transferTypeFunc() {
 // Customer List in Find By Code
 $(document).ready(function() {
 	/*  $.ajax({
-		  url: "api/customershareholdingcontroller/findAllCustomerCode", // make sure this endpoint returns customer list
-		  type: "GET",
-		  success: function(response) {
-			  console.log("API response:", response);
-			  var dropdown1 = $('#findByCode');
-			  dropdown1.empty();
-			  dropdown1.append('<option value="">Select</option>');
-			  var dropdown2 = $('#shareIssuedBy');
-			  dropdown2.empty();
-			  dropdown2.append('<option value="">Select</option>');
+		url: "api/customershareholdingcontroller/findAllCustomerCode", // make sure this endpoint returns customer list
+		type: "GET",
+		success: function(response) {
+			console.log("API response:", response);
+			var dropdown1 = $('#findByCode');
+			dropdown1.empty();
+			dropdown1.append('<option value="">SELECT</option>');
+			var dropdown2 = $('#shareIssuedBy');
+			dropdown2.empty();
+			dropdown2.append('<option value="">SELECT</option>');
 
 
-			  if (response.status === "OK" && response.data) {
-				  $.each(response.data, function(index, customer) {
-					  dropdown1.append('<option value="' + customer.memberCode + '">' + customer.memberCode  + " - " + customer.customerName +'</option>');
-					  dropdown2.append('<option value="' + customer.memberCode + '">' + customer.memberCode  + " - " + customer.customerName +'</option>');
+			if (response.status === "OK" && response.data) {
+				$.each(response.data, function(index, customer) {
+					dropdown1.append('<option value="' + customer.memberCode + '">' + customer.memberCode  + " - " + customer.customerName +'</option>');
+					dropdown2.append('<option value="' + customer.memberCode + '">' + customer.memberCode  + " - " + customer.customerName +'</option>');
 
-				  });
-			  } else {
-				  dropdown1.append('<option value="">No customers found</option>');
-				  dropdown2.append('<option value="">No customers found</option>');
+				});
+			} else {
+				dropdown1.append('<option value="">NO CUSTOMERS FOUND</option>');
+				dropdown2.append('<option value="">NO CUSTOMERS FOUND</option>');
 
-			  }
-		  },
-		  error: function() {
-			  console.error("AJAX Error:", error);  // 🔍 Error logging
-			  alert("Failed to fetch customer list.");
-	 }
-  });*/
+			}
+		},
+		error: function() {
+			console.error("AJAX Error:", error);  // 🔍 Error logging
+			alert("FAILED TO FETCH CUSTOMER LIST.");
+		}
+	});*/
 
 
 	$(document).ready(function() {
@@ -78,19 +78,19 @@ $(document).ready(function() {
 						].filter(Boolean).join(" ");
 
 						let optionHtml = `
-		                    <option value="${item.memberCode}">
-		                        ${item.memberCode} - ${(fullName).toUpperCase()}
-		                    </option>
-		                `;
+                            <option value="${item.memberCode}">
+                                ${item.memberCode} - ${(fullName).toUpperCase()}
+                            </option>
+                        `;
 
 						dropdown.append(optionHtml);
 					});
 				} else {
-					console.warn("Unexpected response:", response);
+					console.warn("UNEXPECTED RESPONSE:", response);
 				}
 			},
 			error: function(err) {
-				console.error("Error fetching customers:", err);
+				console.error("ERROR FETCHING CUSTOMERS:", err);
 			}
 		});
 	});
@@ -111,12 +111,12 @@ $(document).ready(function() {
 						$('#customerName').val(customer.customerName);
 						$('#startDate').val(customer.signupDate);
 					} else {
-						alert('No customer data found!');
+						alert('NO CUSTOMER DATA FOUND!');
 						$('#customerName').val('');
 					}
 				},
 				error: function() {
-					alert('Error while fetching customer data!');
+					alert('ERROR WHILE FETCHING CUSTOMER DATA!');
 				}
 			});
 		} else {
@@ -146,12 +146,12 @@ $(document).ready(function () {
 						// You can fill other fields here if needed:
 						// $('#previousShareCount').val(customer.previousShareCount);
 					} else {
-						alert('No customer data found!');
+						alert('NO CUSTOMER DATA FOUND!');
 						$('#customerName').val('');
 					}
 				},
 				error: function () {
-					alert('Error while fetching customer data!');
+					alert('ERROR WHILE FETCHING CUSTOMER DATA!');
 				}
 			});
 		} else {
@@ -163,7 +163,7 @@ $(document).ready(function () {
 */
 //Branch List in Branch Filed
 $(document).ready(function() {
-	//alert("branch name");
+	//alert("BRANCH NAME");
 	$.ajax({
 		url: "api/customershareholdingcontroller/findAllBranch", // make sure this endpoint returns customer list
 		type: "GET",
@@ -171,7 +171,7 @@ $(document).ready(function() {
 			console.log("API response:", response);
 			var dropdown = $('#branch');
 			dropdown.empty();
-			dropdown.append('<option value="">Select</option>');
+			dropdown.append('<option value="">SELECT</option>');
 
 			if (response.status === "FOUND" && response.data) {
 				$.each(response.data, function(index, branch) {
@@ -179,42 +179,42 @@ $(document).ready(function() {
 
 				});
 			} else {
-				dropdown.append('<option value="">No Branch found</option>');
+				dropdown.append('<option value="">NO BRANCH FOUND</option>');
 			}
 		},
 		error: function() {
-			alert("Failed to fetch customer list.");
+			alert("FAILED TO FETCH CUSTOMER LIST.");
 		}
 	});
 });
 
 //
 /*$(document).ready(function() {
-		//alert("Welcome to Transfer Share");
-		$.ajax({
-			url: "api/customershareholdingcontroller/findAllCustomerCode", // make sure this endpoint returns customer list
-			type: "GET",
-			success: function(response) {
-				console.log("API response:", response);
-				var dropdown = $('#modeOfPayment');
-				dropdown.empty();
-				dropdown.append('<option value="">Select</option>');
+	//alert("WELCOME TO TRANSFER SHARE");
+	$.ajax({
+		url: "api/customershareholdingcontroller/findAllCustomerCode", // make sure this endpoint returns customer list
+		type: "GET",
+		success: function(response) {
+			console.log("API response:", response);
+			var dropdown = $('#modeOfPayment');
+			dropdown.empty();
+			dropdown.append('<option value="">SELECT</option>');
 
-				if (response.status === "OK" && response.data) {
-					$.each(response.data, function(index, customer) {
-						console.log("Each customer item:", customer);
-						dropdown.append('<option value="' + customer.memberCode + '">' + customer.paymentBy  + '</option>');
-					    
-					});
-				} else {
-					dropdown.append('<option value="">No Payment Mode found</option>');
-				}
-			},
-			error: function() {
-				console.error("AJAX Error:", error);  // Error logging
-				alert("Failed to fetch customer list.");
+			if (response.status === "OK" && response.data) {
+				$.each(response.data, function(index, customer) {
+					console.log("Each customer item:", customer);
+					dropdown.append('<option value="' + customer.memberCode + '">' + customer.paymentBy  + '</option>');
+
+				});
+			} else {
+				dropdown.append('<option value="">NO PAYMENT MODE FOUND</option>');
+			}
+		},
+		error: function() {
+			console.error("AJAX Error:", error);  // Error logging
+			alert("FAILED TO FETCH CUSTOMER LIST.");
 	   }
-	});
+});
 });*/
 
 
@@ -245,7 +245,7 @@ $(document).ready(function() {
 
 		};
 
-		console.log("Sending:", tranfershareData);
+		console.log("SENDING:", tranfershareData);
 
 		$.ajax({
 			url: "api/customershareholdingcontroller/saveTransferShare",
@@ -253,14 +253,14 @@ $(document).ready(function() {
 			contentType: 'application/json',
 			data: JSON.stringify(tranfershareData),
 			success: function(response) {
-				console.log("✅ Success:", response);
-				alert(response.message || "TransferShare SAVED successfully");
-				alert("Certificate No : " + tranfershareData.certificateNo);
+				console.log("✅ SUCCESS:", response);
+				alert(response.message || "TRANSFERSHARE SAVED SUCCESSFULLY");
+				alert("CERTIFICATE NO : " + tranfershareData.certificateNo);
 				fetchLoanTable(); // agar defined hai
 			},
 			error: function(xhr, status, error) {
-				console.error("❌ Error:", xhr.responseText);
-				alert("Save failed. Server error or incorrect request.");
+				console.error("❌ ERROR:", xhr.responseText);
+				alert("SAVE FAILED. SERVER ERROR OR INCORRECT REQUEST.");
 			}
 		});
 	});
@@ -290,15 +290,15 @@ function TransferShareTable() {
                             <td>${share.customerName}</td>
                             <td>${share.startDate}</td>
                             <td>${share.branch}</td>
-							<td>${share.noOfShare}</td>
+                            <td>${share.noOfShare}</td>
                             <td>${share.dateOfTransfer}</td>
                             <td>
-                                <button class="iconbutton" onclick="EditTransfershare(${share.id})" title="View">
+                                <button class="iconbutton" onclick="EditTransfershare(${share.id})" title="VIEW">
                                     <i class="fa-solid fa-pen-to-square text-primary"></i>
                                 </button>
                             </td>
                             <td>
-                                <button class="iconbutton" onclick="deleteTransfershare(${share.id})" title="Delete">
+                                <button class="iconbutton" onclick="deleteTransfershare(${share.id})" title="DELETE">
                                     <i class="fa-solid fa-trash text-danger"></i>
                                 </button>
                             </td>
@@ -306,14 +306,14 @@ function TransferShareTable() {
                     `;
 				});
 			} else {
-				rows = "<tr><td colspan='9'>No data found</td></tr>";
+				rows = "<tr><td colspan='9'>NO DATA FOUND</td></tr>";
 			}
 
 			$("#transfersharetable").html(rows);
 		},
 		error: function(xhr, status, error) {
 			console.error("AJAX Error:", xhr.status, xhr.responseText);
-			alert("Error fetching data. Status: " + xhr.status);
+			alert("ERROR FETCHING DATA. STATUS: " + xhr.status);
 		}
 	});
 }
@@ -350,14 +350,14 @@ function saveOrUpdateLoanPlan() {
 		success: function (response) {
 			if (response.status === "OK") {
 				alert(response.message);
-				console.log("✅ Reloading table after save/update...");
+				console.log("✅ RELOADING TABLE AFTER SAVE/UPDATE...");
 				// TransferShareTable();
 			} else {
-				alert("Error: " + (response.message || "Operation failed"));
+				alert("ERROR: " + (response.message || "OPERATION FAILED"));
 			}
 		},
 		error: function (xhr) {
-			alert("Error: " + xhr.responseText);
+			alert("ERROR: " + xhr.responseText);
 		}
 	});
 }*/
@@ -397,18 +397,18 @@ function EditTransfershare(id) {
 				//$('#certificateNo').val(share.certificateNo);
 
 			} else {
-				alert("Transfer Share not found: " + response.message);
+				alert("TRANSFER SHARE NOT FOUND: " + response.message);
 			}
 		},
 		error: function(xhr) {
 			console.error("AJAX Error:", xhr.status, xhr.responseText);
-			alert("Error fetching transfer share details: " + xhr.responseText);
+			alert("ERROR FETCHING TRANSFER SHARE DETAILS: " + xhr.responseText);
 		}
 	});
 }
 
 
-//update Code 
+//update Code
 function updateShares() {
 
 	// Get form data
@@ -438,7 +438,7 @@ function updateShares() {
 		data: JSON.stringify(transferData),
 		success: function(response) {
 			if (response.status === "OK") {
-				alert("ransferShare UPDATE successfully");
+				alert("TRANSFERSHARE UPDATE SUCCESSFULLY");
 				$("#formid")[0].reset(); // Reset form after update
 				// Optionally reload table data
 				TransferShareTable(); // function to reload table
@@ -447,7 +447,7 @@ function updateShares() {
 			}
 		},
 		error: function(xhr) {
-			alert("❌ Error while updating data!");
+			alert("❌ ERROR WHILE UPDATING DATA!");
 			console.log(xhr);
 		}
 	});
@@ -455,9 +455,9 @@ function updateShares() {
 
 
 
-// Delete Code 
+// Delete Code
 function deleteTransfershare(id) {
-	if (confirm("Are you sure you want to delete this loan?")) {
+	if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS LOAN?")) {
 		$.ajax({
 			url: "api/customershareholdingcontroller/deleteTransferShareById",
 			type: "POST",
@@ -468,18 +468,16 @@ function deleteTransfershare(id) {
 
 				// Instead of response.success, check the status
 				if (response.status === "OK") {
-					alert("Transfershare DELETED successfully");
+					alert("TRANSFERSHARE DELETED SUCCESSFULLY");
 					TransferShareTable(); // Refresh the table
 				} else {
-					alert("Delete failed: " + response.message);
+					alert("DELETE FAILED: " + response.message);
 				}
 			},
 			error: function(xhr, status, error) {
 				console.error("Error:", error);
-				alert("Error deleting share: " + xhr.responseText);
+				alert("ERROR DELETING SHARE: " + xhr.responseText);
 			}
 		});
 	}
 }
-
-

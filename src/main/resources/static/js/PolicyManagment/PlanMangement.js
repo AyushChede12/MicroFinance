@@ -1,132 +1,132 @@
 $(document).ready(function() {
-	
-	function showError(inputId, message) {
-	    const input = $("#" + inputId);
-	    input.addClass("is-invalid");
 
-	    if ($("#" + inputId + "-error").length === 0) {
-	        input.after(`<small id="${inputId}-error" class="text-danger">${message}</small>`);
-	    } else {
-	        $("#" + inputId + "-error").text(message);
-	    }
+	function showError(inputId, message) {
+		const input = $("#" + inputId);
+		input.addClass("is-invalid");
+
+		if ($("#" + inputId + "-error").length === 0) {
+			input.after(`<small id="${inputId}-error" class="text-danger">${message}</small>`);
+		} else {
+			$("#" + inputId + "-error").text(message);
+		}
 	}
 
 	function clearError(inputId) {
-	    $("#" + inputId).removeClass("is-invalid");
-	    $("#" + inputId + "-error").remove();
+		$("#" + inputId).removeClass("is-invalid");
+		$("#" + inputId + "-error").remove();
 	}
 
 	function isEmpty(value) {
-	    return value === null || value.trim() === "";
+		return value === null || value.trim() === "";
 	}
-	
+
 	function validateDailyDeposit() {
 
-	    let isValid = true;
+		let isValid = true;
 
-	    const fields = [
-	        "planCodeDD",
-	        "planNameDD",
-	        "minimumDeposit",
-	        "rateOfInterest",
-	        "installmentType",
-	        "ddterm",
+		const fields = [
+			"planCodeDD",
+			"planNameDD",
+			"minimumDeposit",
+			"rateOfInterest",
+			"installmentType",
+			"ddterm",
 			"penaltyRate",
 			"graceDays",
 			"flexiblePlan",
-	        "interestInterval"
-	    ];
+			"interestInterval"
+		];
 
-	    fields.forEach(function(field) {
+		fields.forEach(function(field) {
 
-	        const element = $("#" + field);
+			const element = $("#" + field);
 
-	        // Check if element exists in HTML
-	        if (element.length === 0) {
-	            console.error("Field not found:", field);
-	            isValid = false;
-	            return;
-	        }
+			// Check if element exists in HTML
+			if (element.length === 0) {
+				console.error("Field not found:", field);
+				isValid = false;
+				return;
+			}
 
-	        const value = element.val();
+			const value = element.val();
 
-	        // Clear previous error
-	        clearError(field);
+			// Clear previous error
+			clearError(field);
 
-	        // Check null, undefined, empty, spaces
-	        if (value === undefined || value === null || value.trim() === "") {
+			// Check null, undefined, empty, spaces
+			if (value === undefined || value === null || value.trim() === "") {
 
-	            showError(field, "This field is required");
+				showError(field, "THIS FIELD IS REQUIRED");
 
-	            element.focus();
+				element.focus();
 
-	            isValid = false;
-	        }
-	    });
+				isValid = false;
+			}
+		});
 
-	    // Minimum Deposit validation
-	    const minDepositValue = $("#minimumDeposit").val();
+		// Minimum Deposit validation
+		const minDepositValue = $("#minimumDeposit").val();
 
-	    if (minDepositValue && minDepositValue.trim() !== "") {
+		if (minDepositValue && minDepositValue.trim() !== "") {
 
-	        const minDeposit = parseFloat(minDepositValue);
+			const minDeposit = parseFloat(minDepositValue);
 
-	        if (isNaN(minDeposit) || minDeposit <= 0) {
+			if (isNaN(minDeposit) || minDeposit <= 0) {
 
-	            showError("minimumDeposit", "Enter valid amount");
+				showError("minimumDeposit", "ENTER VALID AMOUNT");
 
-	            isValid = false;
-	        }
-	    }
+				isValid = false;
+			}
+		}
 
-	    // Rate of Interest validation
-	    const roiValue = $("#rateOfInterest").val();
+		// Rate of Interest validation
+		const roiValue = $("#rateOfInterest").val();
 
-	    if (roiValue && roiValue.trim() !== "") {
+		if (roiValue && roiValue.trim() !== "") {
 
-	        const roi = parseFloat(roiValue);
+			const roi = parseFloat(roiValue);
 
-	        if (isNaN(roi) || roi <= 0 || roi > 100) {
+			if (isNaN(roi) || roi <= 0 || roi > 100) {
 
-	            showError("rateOfInterest", "Enter valid interest (1–100)");
+				showError("rateOfInterest", "ENTER VALID INTEREST (1–100)");
 
-	            isValid = false;
-	        }
-	    }
+				isValid = false;
+			}
+		}
 
-	    return isValid;
+		return isValid;
 	}
-	
-	$('#planNameDD').on('blur', function () {
 
-	    let planName = $(this).val();
+	$('#planNameDD').on('blur', function() {
 
-	    if(planName.trim() === ''){
-	        return;
-	    }
+		let planName = $(this).val();
 
-	    $.ajax({
-	        url: 'api/Policymangment/check-plan-name',
-	        type: 'GET',
-	        data: { planName: planName },
+		if (planName.trim() === '') {
+			return;
+		}
 
-	        success: function(response) {
+		$.ajax({
+			url: 'api/Policymangment/check-plan-name',
+			type: 'GET',
+			data: { planName: planName },
 
-	            console.log("Response:", response);
+			success: function(response) {
 
-	            if(response == true){
-	                alert("Plan Name Already Exists");
-	                $('#planNameDD').val('');
-	                $('#planNameDD').focus();
-	            }
+				console.log("Response:", response);
 
-	        },
+				if (response == true) {
+					alert("PLAN NAME ALREADY EXISTS");
+					$('#planNameDD').val('');
+					$('#planNameDD').focus();
+				}
 
-	        error: function(err){
-	            console.log("Error:", err);
-	        }
+			},
 
-	    });
+			error: function(err) {
+				console.log("Error:", err);
+			}
+
+		});
 
 	});
 	$("#saveBtn").show();
@@ -137,11 +137,11 @@ $(document).ready(function() {
 	// SAVE BUTTON
 	$('#saveBtn').on('click', function(e) {
 		e.preventDefault();
-	
+
 		if (!validateDailyDeposit()) {
-		      return; // Stop if validation fails
-		  }
-		
+			return; // Stop if validation fails
+		}
+
 		const statusPlanValue = $('#toggle-status-planDD').is(':checked') ? 1 : 0;
 
 		const dailyDeposit = {
@@ -174,12 +174,12 @@ $(document).ready(function() {
 			contentType: 'application/json',
 			data: JSON.stringify(dailyDeposit),
 			success: function(response) {
-				alert("Daily Deposit Saved Successfully");
+				alert("DAILY DEPOSIT SAVED SUCCESSFULLY");
 				location.reload(); // refresh table or UI
 			},
 			error: function(xhr) {
 				console.error("Save Error:", xhr.responseText);
-				alert("Something went wrong while saving!");
+				alert("SOMETHING WENT WRONG WHILE SAVING!");
 			}
 		});
 	});
@@ -200,11 +200,11 @@ $(document).ready(function() {
 					renderTableDD(currentPageDD);
 					togglePageNavigationDD();
 				} else {
-					alert("Failed to fetch data: " + response.message);
+					alert("FAILED TO FETCH DATA: " + response.message);
 				}
 			},
 			error: function() {
-				alert("Error while calling the API.");
+				alert("ERROR WHILE CALLING THE API.");
 			}
 		});
 	}
@@ -242,7 +242,7 @@ $(document).ready(function() {
 		}
 
 		// Update page info
-		$("#pageInfoDD").text(`Page ${currentPageDD} of ${Math.ceil(totalDataDD.length / pageSizeDD)}`);
+		$("#pageInfoDD").text(`PAGE ${currentPageDD} OF ${Math.ceil(totalDataDD.length / pageSizeDD)}`);
 	}
 
 	// Button state toggling
@@ -271,18 +271,18 @@ $(document).ready(function() {
 			scrollToDDTable();
 		}
 	});
-	
-	$(document).ready(function () {
-	    fetchDailyDeposits();
-	    fetchRecurringDeposits();
-	    fetchFixedDeposits();
-	    fetchMISDeposits();
+
+	$(document).ready(function() {
+		fetchDailyDeposits();
+		fetchRecurringDeposits();
+		fetchFixedDeposits();
+		fetchMISDeposits();
 	});
-	
+
 	function scrollToDDTable() {
-	    $('html, body').animate({
-	        scrollTop: $('#ddTableWrapper').offset().top - 100
-	    }, 200);
+		$('html, body').animate({
+			scrollTop: $('#ddTableWrapper').offset().top - 100
+		}, 200);
 	}
 
 
@@ -348,11 +348,11 @@ $(document).ready(function() {
 					$('#saveBtn').hide();
 					$('#updateBtn').show();
 				} else {
-					alert('No data found for this ID');
+					alert('NO DATA FOUND FOR THIS ID');
 				}
 			},
 			error: function() {
-				alert('Failed to fetch daily deposit details.');
+				alert('FAILED TO FETCH DAILY DEPOSIT DETAILS.');
 			}
 		});
 	}
@@ -396,7 +396,7 @@ $(document).ready(function() {
 		const id = $('#formid').data('id');
 
 		if (!id) {
-			alert("ID missing. Please select a record by clicking Edit.");
+			alert("ID MISSING. PLEASE SELECT A RECORD BY CLICKING EDIT.");
 			return;
 		}
 
@@ -408,12 +408,12 @@ $(document).ready(function() {
 			contentType: 'application/json',
 			data: JSON.stringify(updatedDailyDeposit),
 			success: function() {
-				alert("Daily Deposit updated successfully.");
+				alert("DAILY DEPOSIT UPDATED SUCCESSFULLY.");
 				location.reload();
 			},
 			error: function(xhr) {
 				console.error('Update error:', xhr.responseText);
-				alert("Failed to update Daily Deposit.");
+				alert("FAILED TO UPDATE DAILY DEPOSIT.");
 			}
 		});
 	});
@@ -459,11 +459,11 @@ $(document).ready(function() {
 		const id = $(this).data('id');
 
 		if (!id) {
-			alert("Invalid record. ID not found.");
+			alert("INVALID RECORD. ID NOT FOUND.");
 			return;
 		}
 
-		if (!confirm("Are you sure you want to delete this Daily Deposit?")) {
+		if (!confirm("ARE YOU SURE YOU WANT TO DELETE THIS DAILY DEPOSIT?")) {
 			return;
 		}
 
@@ -472,12 +472,12 @@ $(document).ready(function() {
 			type: 'POST',
 			contentType: 'application/json',
 			success: function(response) {
-				alert(response.message || "Deleted successfully.");
+				alert(response.message || "DELETED SUCCESSFULLY.");
 				fetchDailyDeposits(); // Refresh table
 			},
 			error: function(xhr) {
-				const message = xhr.responseJSON?.message || "Failed to delete.";
-				alert("Error: " + message);
+				const message = xhr.responseJSON?.message || "FAILED TO DELETE.";
+				alert("ERROR: " + message);
 			}
 		});
 	});
@@ -551,46 +551,46 @@ $(document).ready(function() {
 	$("#ReccuringsaveBtn").show();
 	$("#ReccuringupdateBtn").hide();
 
-	
-	function validateRecurringDeposit() {
-	    let isValid = true;
 
-	    const fields = [
-	        "planCodeRD",
-	        "planNameRD",
-	        "minimumAmountRD",
-	        "rateOfInterestRD",
+	function validateRecurringDeposit() {
+		let isValid = true;
+
+		const fields = [
+			"planCodeRD",
+			"planNameRD",
+			"minimumAmountRD",
+			"rateOfInterestRD",
 			"rdterm",
-	        "installmentTypeRD",
+			"installmentTypeRD",
 			"componentIntervalRD",
 			"flexiblePlanRD",
 			"graceDaysRD",
 			"penaltyfineRD"
-	        
-	    ];
 
-	    fields.forEach(function(field) {
-	        const value = $("#" + field).val();
-	        clearError(field);
+		];
 
-	        if (isEmpty(value)) {
-	            showError(field, "This field is required");
-	            isValid = false;
-	        }
-	    });
+		fields.forEach(function(field) {
+			const value = $("#" + field).val();
+			clearError(field);
 
-	    const minAmount = parseFloat($("#minimumAmountRD").val());
-	    if (minAmount <= 0 || isNaN(minAmount)) {
-	        showError("minimumAmountRD", "Enter valid amount");
-	        isValid = false;
-	    }
+			if (isEmpty(value)) {
+				showError(field, "THIS FIELD IS REQUIRED");
+				isValid = false;
+			}
+		});
 
-	    return isValid;
+		const minAmount = parseFloat($("#minimumAmountRD").val());
+		if (minAmount <= 0 || isNaN(minAmount)) {
+			showError("minimumAmountRD", "ENTER VALID AMOUNT");
+			isValid = false;
+		}
+
+		return isValid;
 	}
 	// SAVE BUTTON
 	$('#ReccuringsaveBtn').on('click', function(e) {
 		e.preventDefault();
-		
+
 		if (!validateRecurringDeposit()) return;
 
 		const statusPlanValue = $('#toggle-status-planRD').is(':checked') ? 1 : 0;
@@ -624,12 +624,12 @@ $(document).ready(function() {
 			contentType: 'application/json',
 			data: JSON.stringify(reccuringDeposite),
 			success: function(response) {
-				alert("Recurring Deposit Saved Successfully");
+				alert("RECURRING DEPOSIT SAVED SUCCESSFULLY");
 				location.reload(); // ✅ Reload page after success
 			},
 			error: function(xhr) {
 				console.error("Save Error:", xhr.responseText);
-				alert("Something went wrong while saving!");
+				alert("SOMETHING WENT WRONG WHILE SAVING!");
 			}
 		});
 	});
@@ -651,11 +651,11 @@ $(document).ready(function() {
 					renderTableRD(currentPageRD);
 					togglePageNavigationRD();
 				} else {
-					alert("Failed to fetch data: " + response.message);
+					alert("FAILED TO FETCH DATA: " + response.message);
 				}
 			},
 			error: function() {
-				alert("Error while calling the API.");
+				alert("ERROR WHILE CALLING THE API.");
 			}
 		});
 	}
@@ -693,7 +693,7 @@ $(document).ready(function() {
 		}
 
 		// Update page info
-		$("#pageInfoRD").text(`Page ${currentPageRD} of ${Math.ceil(totalDataRD.length / pageSizeRD)}`);
+		$("#pageInfoRD").text(`PAGE ${currentPageRD} OF ${Math.ceil(totalDataRD.length / pageSizeRD)}`);
 	}
 
 	// Button state toggling
@@ -703,7 +703,7 @@ $(document).ready(function() {
 		$("#nextBtnRD").prop("disabled", currentPageRD === totalPages || totalPages === 0);
 	}
 
-	
+
 	// Button click handlers
 	$("#prevBtnRD").click(function() {
 		if (currentPageRD > 1) {
@@ -768,11 +768,11 @@ $(document).ready(function() {
 					$('#ReccuringsaveBtn').hide();
 					$('#ReccuringupdateBtn').show();
 				} else {
-					alert('No data found for this ID');
+					alert('NO DATA FOUND FOR THIS ID');
 				}
 			},
 			error: function() {
-				alert('Failed to fetch daily deposit details.');
+				alert('FAILED TO FETCH DAILY DEPOSIT DETAILS.');
 			}
 		});
 	}
@@ -783,7 +783,7 @@ $(document).ready(function() {
 		const id = $('#recurringformid').data('id');
 
 		if (!id) {
-			alert("ID missing. Please select a record by clicking Edit.");
+			alert("ID MISSING. PLEASE SELECT A RECORD BY CLICKING EDIT.");
 			return;
 		}
 
@@ -795,12 +795,12 @@ $(document).ready(function() {
 			contentType: 'application/json',
 			data: JSON.stringify(updatedRecurringDeposit),
 			success: function() {
-				alert("Recurring Deposit updated successfully.");
+				alert("RECURRING DEPOSIT UPDATED SUCCESSFULLY.");
 				location.reload();
 			},
 			error: function(xhr) {
 				console.error('Update error:', xhr.responseText);
-				alert("Failed to update Recurring Deposit.");
+				alert("FAILED TO UPDATE RECURRING DEPOSIT.");
 			}
 		});
 	});
@@ -841,11 +841,11 @@ $(document).ready(function() {
 		const id = $(this).data('id');
 
 		if (!id) {
-			alert("Invalid record. ID not found.");
+			alert("INVALID RECORD. ID NOT FOUND.");
 			return;
 		}
 
-		if (!confirm("Are you sure you want to delete this Recurring Deposit?")) {
+		if (!confirm("ARE YOU SURE YOU WANT TO DELETE THIS RECURRING DEPOSIT?")) {
 			return;
 		}
 
@@ -854,12 +854,12 @@ $(document).ready(function() {
 			type: 'POST',
 			contentType: 'application/json',
 			success: function(response) {
-				alert(response.message || "Deleted successfully.");
+				alert(response.message || "DELETED SUCCESSFULLY.");
 				fetchRecurringDeposits(); // Table reload logic here
 			},
 			error: function(xhr) {
-				const message = xhr.responseJSON?.message || "Failed to delete.";
-				alert("Error: " + message);
+				const message = xhr.responseJSON?.message || "FAILED TO DELETE.";
+				alert("ERROR: " + message);
 			}
 		});
 	});
@@ -922,39 +922,39 @@ $(document).ready(function() {
 	$("#FixedupdateBtn").hide();
 
 	function validateFixedDeposit() {
-	    let isValid = true;
+		let isValid = true;
 
-	    const fields = [
-	        "planCodeFD",
-	        "planNameFD",
-	        "minimumAmountFD",
+		const fields = [
+			"planCodeFD",
+			"planNameFD",
+			"minimumAmountFD",
 			"installmentTypeFD",
 			"componentIntervalFD",
 			"interestEarnedFD",
 			"flexiblePlanFD",
 			"graceDaysFD",
 			"penltyfineFD",
-	        "rateOfInterestFD",
-	        "fdterm"
-	    ];
+			"rateOfInterestFD",
+			"fdterm"
+		];
 
-	    fields.forEach(function(field) {
-	        const value = $("#" + field).val();
-	        clearError(field);
+		fields.forEach(function(field) {
+			const value = $("#" + field).val();
+			clearError(field);
 
-	        if (isEmpty(value)) {
-	            showError(field, "This field is required");
-	            isValid = false;
-	        }
-	    });
+			if (isEmpty(value)) {
+				showError(field, "THIS FIELD IS REQUIRED");
+				isValid = false;
+			}
+		});
 
-	    return isValid;
+		return isValid;
 	}
 
 	// SAVE BUTTON
 	$('#FixedsaveBtn').on('click', function(e) {
 		e.preventDefault();
-		
+
 		if (!validateFixedDeposit()) return;
 
 		const statusPlanValue = $('#toggle-status-planFD').is(':checked') ? 1 : 0;
@@ -988,12 +988,12 @@ $(document).ready(function() {
 			contentType: 'application/json',
 			data: JSON.stringify(fixedDeposit),
 			success: function(response) {
-				alert("Fixed Deposit Saved Successfully");
+				alert("FIXED DEPOSIT SAVED SUCCESSFULLY");
 				location.reload(); // Refresh UI
 			},
 			error: function(xhr) {
 				console.error("Save Error:", xhr.responseText);
-				alert("Something went wrong while saving!");
+				alert("SOMETHING WENT WRONG WHILE SAVING!");
 			}
 		});
 	});
@@ -1014,11 +1014,11 @@ $(document).ready(function() {
 					renderTableFD(currentPageFD);
 					togglePageNavigationFD();
 				} else {
-					alert("Failed to fetch data: " + response.message);
+					alert("FAILED TO FETCH DATA: " + response.message);
 				}
 			},
 			error: function() {
-				alert("Error while calling the API.");
+				alert("ERROR WHILE CALLING THE API.");
 			}
 		});
 	}
@@ -1056,7 +1056,7 @@ $(document).ready(function() {
 		}
 
 		// Update page info
-		$("#pageInfoFD").text(`Page ${currentPageFD} of ${Math.ceil(totalDataFD.length / pageSizeFD)}`);
+		$("#pageInfoFD").text(`PAGE ${currentPageFD} OF ${Math.ceil(totalDataFD.length / pageSizeFD)}`);
 	}
 
 	// Button state toggling
@@ -1129,11 +1129,11 @@ $(document).ready(function() {
 					$('#FixedsaveBtn').hide();
 					$('#FixedupdateBtn').show();
 				} else {
-					alert('No data found for this ID');
+					alert('NO DATA FOUND FOR THIS ID');
 				}
 			},
 			error: function() {
-				alert('Failed to fetch daily deposit details.');
+				alert('FAILED TO FETCH DAILY DEPOSIT DETAILS.');
 			}
 		});
 	}
@@ -1143,7 +1143,7 @@ $(document).ready(function() {
 		const id = $('#fixedformid').data('id');
 
 		if (!id) {
-			alert("ID missing. Please select a record by clicking Edit.");
+			alert("ID MISSING. PLEASE SELECT A RECORD BY CLICKING EDIT.");
 			return;
 		}
 
@@ -1155,12 +1155,12 @@ $(document).ready(function() {
 			contentType: 'application/json',
 			data: JSON.stringify(updatedFixedDeposit),
 			success: function() {
-				alert("Fixed Deposit updated successfully.");
+				alert("FIXED DEPOSIT UPDATED SUCCESSFULLY.");
 				location.reload();
 			},
 			error: function(xhr) {
 				console.error('Update error:', xhr.responseText);
-				alert("Failed to update Fixed Deposit.");
+				alert("FAILED TO UPDATE FIXED DEPOSIT.");
 			}
 		});
 	});
@@ -1191,11 +1191,11 @@ $(document).ready(function() {
 		const id = $(this).data('id');
 
 		if (!id) {
-			alert("Invalid record. ID not found.");
+			alert("INVALID RECORD. ID NOT FOUND.");
 			return;
 		}
 
-		if (!confirm("Are you sure you want to delete this Fixed Deposit?")) {
+		if (!confirm("ARE YOU SURE YOU WANT TO DELETE THIS FIXED DEPOSIT?")) {
 			return;
 		}
 
@@ -1204,12 +1204,12 @@ $(document).ready(function() {
 			type: 'POST',
 			contentType: 'application/json',
 			success: function(response) {
-				alert(response.message || "Deleted successfully.");
+				alert(response.message || "DELETED SUCCESSFULLY.");
 				fetchFixedDeposits(); // Refresh table after delete
 			},
 			error: function(xhr) {
-				const message = xhr.responseJSON?.message || "Failed to delete.";
-				alert("Error: " + message);
+				const message = xhr.responseJSON?.message || "FAILED TO DELETE.";
+				alert("ERROR: " + message);
 			}
 		});
 	});
@@ -1275,32 +1275,32 @@ $(document).ready(function() {
 
 
 	function validateMISDeposit() {
-	    let isValid = true;
+		let isValid = true;
 
-	    const fields = [
-	        "planCodeMD",
-	        "planNameMD",
-	        "minimumAmountMD",
-	        "rateOfInterestMD",
-	        "misTerm"
-	    ];
+		const fields = [
+			"planCodeMD",
+			"planNameMD",
+			"minimumAmountMD",
+			"rateOfInterestMD",
+			"misTerm"
+		];
 
-	    fields.forEach(function(field) {
-	        const value = $("#" + field).val();
-	        clearError(field);
+		fields.forEach(function(field) {
+			const value = $("#" + field).val();
+			clearError(field);
 
-	        if (isEmpty(value)) {
-	            showError(field, "This field is required");
-	            isValid = false;
-	        }
-	    });
+			if (isEmpty(value)) {
+				showError(field, "THIS FIELD IS REQUIRED");
+				isValid = false;
+			}
+		});
 
-	    return isValid;
+		return isValid;
 	}
 
 	$('#missaveBtn').on('click', function(e) {
 		e.preventDefault();
-		
+
 		if (!validateMISDeposit()) return;
 
 		const statusPlanValue = $('#toggle-status-planMIS').is(':checked') ? 1 : 0;
@@ -1333,12 +1333,12 @@ $(document).ready(function() {
 			contentType: 'application/json',
 			data: JSON.stringify(misDeposit),
 			success: function(response) {
-				alert("MIS Deposit Saved Successfully");
+				alert("MIS DEPOSIT SAVED SUCCESSFULLY");
 				location.reload();
 			},
 			error: function(xhr) {
 				console.error("Save Error:", xhr.responseText);
-				alert("Something went wrong while saving MIS Deposit!");
+				alert("SOMETHING WENT WRONG WHILE SAVING MIS DEPOSIT!");
 			}
 		});
 	});
@@ -1360,11 +1360,11 @@ $(document).ready(function() {
 					renderTableMIS(currentPageMIS);
 					togglePageNavigationMIS();
 				} else {
-					alert("Failed to fetch data: " + response.message);
+					alert("FAILED TO FETCH DATA: " + response.message);
 				}
 			},
 			error: function() {
-				alert("Error while calling the API.");
+				alert("ERROR WHILE CALLING THE API.");
 			}
 		});
 	}
@@ -1402,7 +1402,7 @@ $(document).ready(function() {
 		}
 
 		// Update page info
-		$("#pageInfoMIS").text(`Page ${currentPageMIS} of ${Math.ceil(totalDataMIS.length / pageSizeMIS)}`);
+		$("#pageInfoMIS").text(`PAGE ${currentPageMIS} OF ${Math.ceil(totalDataMIS.length / pageSizeMIS)}`);
 	}
 
 	// Button state toggling
@@ -1476,11 +1476,11 @@ $(document).ready(function() {
 					$("#missaveBtn").hide();
 					$("#misdupdateBtn").show();
 				} else {
-					alert('No data found for this ID');
+					alert('NO DATA FOUND FOR THIS ID');
 				}
 			},
 			error: function() {
-				alert('Failed to fetch MIS Deposit details.');
+				alert('FAILED TO FETCH MIS DEPOSIT DETAILS.');
 			}
 		});
 	}
@@ -1490,7 +1490,7 @@ $(document).ready(function() {
 		const id = $('#misdepositeid').data('id'); // ✅ fix here
 
 		if (!id) {
-			alert("ID missing. Please select a record to update.");
+			alert("ID MISSING. PLEASE SELECT A RECORD TO UPDATE.");
 			return;
 		}
 
@@ -1502,12 +1502,12 @@ $(document).ready(function() {
 			contentType: 'application/json',
 			data: JSON.stringify(updatedMIS),
 			success: function() {
-				alert("MIS Deposit updated successfully.");
+				alert("MIS DEPOSIT UPDATED SUCCESSFULLY.");
 				location.reload();
 			},
 			error: function(xhr) {
 				console.error('Update error:', xhr.responseText);
-				alert("Failed to update MIS Deposit.");
+				alert("FAILED TO UPDATE MIS DEPOSIT.");
 			}
 		});
 	});
@@ -1518,12 +1518,12 @@ $(document).ready(function() {
 		const id = $(this).data('id');
 
 		if (!id) {
-			alert("Invalid record ID.");
+			alert("INVALID RECORD ID.");
 			return;
 		}
 
 		// Confirmation prompt
-		if (!confirm("Are you sure you want to delete this MIS Deposit?")) {
+		if (!confirm("ARE YOU SURE YOU WANT TO DELETE THIS MIS DEPOSIT?")) {
 			return;
 		}
 
@@ -1533,12 +1533,12 @@ $(document).ready(function() {
 			type: 'POST',
 			contentType: 'application/json',
 			success: function(response) {
-				alert(response.message || "MIS Deposit deleted successfully.");
+				alert(response.message || "MIS DEPOSIT DELETED SUCCESSFULLY.");
 				fetchMISDeposits(); // Refresh the table
 			},
 			error: function(xhr) {
-				const message = xhr.responseJSON?.message || "Failed to delete the MIS Deposit.";
-				alert("Error: " + message);
+				const message = xhr.responseJSON?.message || "FAILED TO DELETE THE MIS DEPOSIT.";
+				alert("ERROR: " + message);
 				console.error("Delete error:", xhr.responseText);
 			}
 		});
@@ -1603,30 +1603,30 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function calculateMISDeposit() {
-    const principal = parseFloat(document.getElementById("minimumAmountMD").value) || 0;
-    const interestRate = parseFloat(document.getElementById("rateOfInterestMD").value) || 0; // annual %
-    const termYears = parseFloat(document.getElementById("misTerm").value) || 0; // term in years
+	const principal = parseFloat(document.getElementById("minimumAmountMD").value) || 0;
+	const interestRate = parseFloat(document.getElementById("rateOfInterestMD").value) || 0; // annual %
+	const termYears = parseFloat(document.getElementById("misTerm").value) || 0; // term in years
 
-    // Total Deposit is just principal
-    const totalDeposit = principal;
+	// Total Deposit is just principal
+	const totalDeposit = principal;
 
-    // Interest per month
-    const monthlyInterest = (principal * interestRate) / (100 * 12);
+	// Interest per month
+	const monthlyInterest = (principal * interestRate) / (100 * 12);
 
-    // Total interest over the term
-    const totalInterest = monthlyInterest * 12 * termYears;
+	// Total interest over the term
+	const totalInterest = monthlyInterest * 12 * termYears;
 
-    // Maturity amount
-    const maturityAmount = principal + totalInterest;
-	
+	// Maturity amount
+	const maturityAmount = principal + totalInterest;
+
 	const interestEarned = maturityAmount - principal;
 
-    // Interest per interval (monthly payout)
-    const interestPerInterval = monthlyInterest;
+	// Interest per interval (monthly payout)
+	const interestPerInterval = monthlyInterest;
 
-    // Update fields
-    document.getElementById("totalPaidMD").value = totalDeposit.toFixed(2);
-    document.getElementById("maturityAmountMD").value = maturityAmount.toFixed(2);
+	// Update fields
+	document.getElementById("totalPaidMD").value = totalDeposit.toFixed(2);
+	document.getElementById("maturityAmountMD").value = maturityAmount.toFixed(2);
 	document.getElementById("interestEarnedMD").value = interestEarned.toFixed(2);
 	//document.getElementById("interestPerIntervalMD").value = interestPerInterval.toFixed(2);
 }
@@ -1635,4 +1635,3 @@ function calculateMISDeposit() {
 document.getElementById("minimumAmountMD").addEventListener("input", calculateMISDeposit);
 document.getElementById("rateOfInterestMD").addEventListener("input", calculateMISDeposit);
 document.getElementById("misTerm").addEventListener("input", calculateMISDeposit);
-

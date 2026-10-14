@@ -29,28 +29,28 @@ public class CustomerShareholdingController {
 	CustomerShareholdingService customershareholdingservice;
 
 //Transfer Share - Oshin Dongre (12-06-2025)----------------------------------------------------------------------------------------
-	
+
 	// Find CustomerCode
 	@GetMapping("/findAllCustomerCode")
 	public ApiResponse<List<addCustomer>> findByCustomerCode() {
 		List<addCustomer> list = customershareholdingservice.findByCustomerCode();
 		if (list != null && !list.isEmpty()) {
-			return ApiResponse.success(HttpStatus.OK, "Transfer Share List Find Successfully", list);
+			return ApiResponse.success(HttpStatus.OK, "TRANSFER SHARE LIST FOUND SUCCESSFULLY", list);
 		} else
-			return ApiResponse.error(HttpStatus.NOT_FOUND, "Transfer Share Data List is not Found");
+			return ApiResponse.error(HttpStatus.NOT_FOUND, "TRANSFER SHARE DATA LIST IS NOT FOUND");
 	}
+
 	// fetch Customer Code
 	@PostMapping("/fetchByCustomerCode")
 	public ApiResponse<List<addCustomer>> fetchByCustomerCode(@RequestParam("memberCode") String memberCode) {
 		List<addCustomer> list = customershareholdingservice.fetchByCustomerCode(memberCode);
 		if (list != null && !list.isEmpty()) {
-			return ApiResponse.success(HttpStatus.FOUND, "Transfer Share Fetched Successfully", list);
+			return ApiResponse.success(HttpStatus.FOUND, "TRANSFER SHARE FETCHED SUCCESSFULLY", list);
 		} else {
-			return ApiResponse.error(HttpStatus.NOT_FOUND, "Transfer Share Not Found");
+			return ApiResponse.error(HttpStatus.NOT_FOUND, "TRANSFER SHARE NOT FOUND");
 		}
 	}
 
-	
 //	// Fetching CustomerCode
 //	@PostMapping("/fetchByCustomerCode")
 //	public ApiResponse<List<addCustomer>> fetchByCustomerCode(@RequestParam addCustomer addcustomer) {
@@ -67,9 +67,9 @@ public class CustomerShareholdingController {
 	public ApiResponse<List<BranchModule>> findByBranch() {
 		List<BranchModule> list = customershareholdingservice.findByBranch();
 		if (list != null && !list.isEmpty()) {
-			return ApiResponse.success(HttpStatus.FOUND, "Transfer Share List Find Successfully", list);
+			return ApiResponse.success(HttpStatus.FOUND, "TRANSFER SHARE LIST FIND SUCCESSFULY", list);
 		} else
-			return ApiResponse.error(HttpStatus.NOT_FOUND, "Transfer Share Data List is not Found");
+			return ApiResponse.error(HttpStatus.NOT_FOUND, "TRANSFER SHARE DATA LIST IS NOT FOUND");
 
 	}
 
@@ -90,16 +90,18 @@ public class CustomerShareholdingController {
 	 * "Failed to save or update Group Plan."); return
 	 * ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response); } }
 	 */
-	
+
 	// Save Code
 	@PostMapping("/saveTransferShare")
 	public ResponseEntity<ApiResponse<TransferShare>> saveTransferShare(@RequestBody TransferShare transfer) {
 		TransferShare saveTS = customershareholdingservice.saveAllTransferShare(transfer);
 		if (saveTS != null) {
-			ApiResponse<TransferShare> response = ApiResponse.success(HttpStatus.FOUND, "Transfer Share Data SAVED successfully",saveTS);
+			ApiResponse<TransferShare> response = ApiResponse.success(HttpStatus.FOUND,
+					"TRANSFER SHARE DATA SAVED SUCCESSFULLY", saveTS);
 			return ResponseEntity.status(HttpStatus.CREATED).body(response); // 201 CREATED
 		} else {
-			ApiResponse<TransferShare> errorResponse = ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR,"Transfer Share Data not SAVED");
+			ApiResponse<TransferShare> errorResponse = ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR,
+					"TRANSFER SHARE DATA NOT SAVED");
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
 		}
 	}
@@ -110,40 +112,44 @@ public class CustomerShareholdingController {
 		List<TransferShare> list = customershareholdingservice.allDataFetchTransferShareInTable();
 
 		if (list != null && !list.isEmpty()) {
-			ApiResponse<List<TransferShare>> response = new ApiResponse<>(HttpStatus.OK, "Transfer Share All Data Shown Successfully",list);
+			ApiResponse<List<TransferShare>> response = new ApiResponse<>(HttpStatus.OK,
+					"TRANSFER SHARE All DATA SHOWN SUCCESSFULLY", list);
 			return ResponseEntity.ok(response);
 		} else {
-			ApiResponse<List<TransferShare>> response = new ApiResponse<>(HttpStatus.NOT_FOUND, "Transfer Share Data is Not Found", null);
+			ApiResponse<List<TransferShare>> response = new ApiResponse<>(HttpStatus.NOT_FOUND,
+					"TRANSFER SHARE DATA IS NOT FOUND", null);
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
 		}
 	}
 
-	
 	// Edit Code
-	@GetMapping("/getTransferShareIdEdite")    
+	@GetMapping("/getTransferShareIdEdite")
 	public ResponseEntity<ApiResponse<TransferShare>> getTransferShareIdEdite(@RequestParam Long id) {
-	    TransferShare ts = customershareholdingservice.getTransferShareIdEdite(id); 
-	    
-	    if (ts != null) {
-	        ApiResponse<TransferShare> response = new ApiResponse<>(HttpStatus.OK, "Transfer Share Data Edit Successfully", ts);
-	        return ResponseEntity.ok(response);
-	    } else {
-	        // ❗ FIXED: Return the response object instead of null
-	        ApiResponse<TransferShare> response = new ApiResponse<>(HttpStatus.NOT_FOUND, "Transfer Share Data is Not Edit, because It's Not Found  : " + id, null);
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-	    }
+		TransferShare ts = customershareholdingservice.getTransferShareIdEdite(id);
+
+		if (ts != null) {
+			ApiResponse<TransferShare> response = new ApiResponse<>(HttpStatus.OK,
+					"TRANSFER SHARE DATA EDIT SUCCESSFULLY", ts);
+			return ResponseEntity.ok(response);
+		} else {
+			// ❗ FIXED: Return the response object instead of null
+			ApiResponse<TransferShare> response = new ApiResponse<>(HttpStatus.NOT_FOUND,
+					"TRANSFER SHARE DATA IS NOT EDIT, BECAUSE IT'S NOT FOUND  : " + id, null);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+		}
 	}
 
-	
-	// update code 
+	// update code
 	@PostMapping("/updateTransferShare")
 	public ResponseEntity<ApiResponse<TransferShare>> updateTransferShare(@RequestBody TransferShare transfer) {
 		TransferShare updateTS = customershareholdingservice.updateTransferShare(transfer);
 		if (updateTS != null) {
-			ApiResponse<TransferShare> response = ApiResponse.success(HttpStatus.FOUND, "Transfer Share Data Update successfully",updateTS);
+			ApiResponse<TransferShare> response = ApiResponse.success(HttpStatus.FOUND,
+					"TRANSFER SHARE DATA UPDATE SUCCESSFULLY", updateTS);
 			return ResponseEntity.status(HttpStatus.CREATED).body(response); // 201 CREATED
 		} else {
-			ApiResponse<TransferShare> errorResponse = ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR,"Transfer Share Data not Update");
+			ApiResponse<TransferShare> errorResponse = ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR,
+					"TRANSFER SHARE DATA NOT UPDATE");
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
 		}
 	}
@@ -154,10 +160,12 @@ public class CustomerShareholdingController {
 		boolean deleted = customershareholdingservice.deleteTransferShareById(id);
 
 		if (deleted) {
-			ApiResponse<TransferShare> response = new ApiResponse<>(HttpStatus.OK, "Transfer Share Data Delete Successfully", null);
-	        return ResponseEntity.ok(response);		
+			ApiResponse<TransferShare> response = new ApiResponse<>(HttpStatus.OK,
+					"TRANSFER SHARE DATA DELETED SUCCESSFULLY", null);
+			return ResponseEntity.ok(response);
 		} else {
-			ApiResponse<TransferShare> response = ApiResponse.error(HttpStatus.NOT_FOUND,"Transfer Share Data is Not Delete, because It's Not Found ");
+			ApiResponse<TransferShare> response = ApiResponse.error(HttpStatus.NOT_FOUND,
+					"TRANSFER SHARE DATA IS NOT DELETE, BECAUSE IT'S NOT FOUND ");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 	}
@@ -165,54 +173,53 @@ public class CustomerShareholdingController {
 // End TransferShare Sub Model -----------------------------------------------------------------------------------------------------
 
 //UnAllotedShare - Oshin Dongre (25-06-2025)----------------------------------------------------------------------------------------
-	
-	// Find List Of TransferShare
-		@GetMapping("/findAllTransferShare")
-		public ApiResponse<List<TransferShare>> findByTransferShare() {
-			List<TransferShare> list = customershareholdingservice.findByTransferShare();
-			if (list != null && !list.isEmpty()) {
-				return ApiResponse.success(HttpStatus.OK, "UnAllotedShare List Find Successfully", list);
-			} else
-				return ApiResponse.error(HttpStatus.NOT_FOUND, "UnAllotedShare Data List is not Found");
-		}	
-	
-	//Fetch By Find By Code 
-		@PostMapping("/fetchByFindByCode")
-		public ApiResponse<List<TransferShare>> fetchByTransferShare(@RequestParam("findByCode") String findByCode) {
-			List<TransferShare> list = customershareholdingservice.fetchByTransferShare(findByCode);
-			if (list != null && !list.isEmpty()) {
-				return ApiResponse.success(HttpStatus.FOUND, "Transfer Share Fetched Successfully", list);
-			} else {
-				return ApiResponse.error(HttpStatus.NOT_FOUND, "Transfer Share Not Found");
-			}
-		}
 
-		
+	// Find List Of TransferShare
+	@GetMapping("/findAllTransferShare")
+	public ApiResponse<List<TransferShare>> findByTransferShare() {
+		List<TransferShare> list = customershareholdingservice.findByTransferShare();
+		if (list != null && !list.isEmpty()) {
+			return ApiResponse.success(HttpStatus.OK, "UNALLOTED SHARE LIST FOUND SUCCESSFULLY", list);
+		} else
+			return ApiResponse.error(HttpStatus.NOT_FOUND, "UNALLOTED SHARE DATA IS NOT FOUND");
+	}
+
+	// Fetch By Find By Code
+	@PostMapping("/fetchByFindByCode")
+	public ApiResponse<List<TransferShare>> fetchByTransferShare(@RequestParam("findByCode") String findByCode) {
+		List<TransferShare> list = customershareholdingservice.fetchByTransferShare(findByCode);
+		if (list != null && !list.isEmpty()) {
+			return ApiResponse.success(HttpStatus.FOUND, "TRANSFER SHARE FETCHED SUCCESSFULLY", list);
+		} else {
+			return ApiResponse.error(HttpStatus.NOT_FOUND, "TRANSFER SHARE NOT FOUND");
+		}
+	}
+
 // End UnAllotedShare Sub Model -----------------------------------------------------------------------------------------------------	
-		
-// Generate Share Certificate - Oshin Dongre (25-06-2025)---------------------------------------------------------------------------------------
-		
-	// Find List Of TransferShare
-		@GetMapping("/getAllTransferShare")
-		public ApiResponse<List<TransferShare>> getAllTransferShare() {
-			List<TransferShare> list = customershareholdingservice.getAllTransferShare();
-			if (list != null && !list.isEmpty()) {
-				return ApiResponse.success(HttpStatus.OK, "UnAllotedShare List Find Successfully", list);
-			} else 
-				return ApiResponse.error(HttpStatus.NOT_FOUND, "UnAllotedShare Data List is not Found");	
-        }
-		// fetch A table 
-		@PostMapping("/fetchByCertificateNo")
-		public ApiResponse<List<TransferShare>> fetchByCertificateNo(@RequestParam("findByCode") String findByCode) {
-			List<TransferShare> list = customershareholdingservice.fetchByCertificateNo(findByCode);
-			if (list != null && !list.isEmpty()) {
-				return ApiResponse.success(HttpStatus.FOUND, "Transfer Share Fetched Successfully", list);
-			} else {
-				return ApiResponse.error(HttpStatus.NOT_FOUND, "Transfer Share Not Found");
-			}
 
+// Generate Share Certificate - Oshin Dongre (25-06-2025)---------------------------------------------------------------------------------------
+
+	// Find List Of TransferShare
+	@GetMapping("/getAllTransferShare")
+	public ApiResponse<List<TransferShare>> getAllTransferShare() {
+		List<TransferShare> list = customershareholdingservice.getAllTransferShare();
+		if (list != null && !list.isEmpty()) {
+			return ApiResponse.success(HttpStatus.OK, "UNALLOTED LIST FOUND SUCCESSFULLY", list);
+		} else
+			return ApiResponse.error(HttpStatus.NOT_FOUND, "UNALLOTED DATA LIST IS NOT FOUND");
+	}
+
+	// fetch A table
+	@PostMapping("/fetchByCertificateNo")
+	public ApiResponse<List<TransferShare>> fetchByCertificateNo(@RequestParam("findByCode") String findByCode) {
+		List<TransferShare> list = customershareholdingservice.fetchByCertificateNo(findByCode);
+		if (list != null && !list.isEmpty()) {
+			return ApiResponse.success(HttpStatus.FOUND, "TRANSFER SHARE FETCHED SUCCESSFULLY", list);
+		} else {
+			return ApiResponse.error(HttpStatus.NOT_FOUND, "TRANSFER SHARE NOT FOUND");
 		}
-	
-	
+
+	}
+
 // End Generate Share Certificate Sub Model -----------------------------------------------------------------------------------------------------
 }

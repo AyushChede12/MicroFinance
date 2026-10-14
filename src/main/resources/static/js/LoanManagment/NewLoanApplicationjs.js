@@ -58,7 +58,7 @@ $(document).ready(function() {
 			$('#summaryPrincipalText').html('&#8377; ' + loanAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
 			$('#summaryInterestText').html('&#8377; ' + totalInterest.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
 			$('#summaryPayableText').html('&#8377; ' + totalPayable.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
-			$('#summaryEmiText').html('&#8377; ' + emi.toFixed(2) + ' &times; ' + tenure + ' installments');
+			$('#summaryEmiText').html('&#8377; ' + emi.toFixed(2) + ' &times; ' + tenure + ' INSTALLMENTS');
 			$('#repaymentBreakdownBox').slideDown(200);
 		}
 	});
@@ -116,7 +116,7 @@ function fetchApprovedMembers() {
 				}
 			});
 		},
-		error: () => alert('Failed to fetch members')
+		error: () => alert('FAILED TO FETCH MEMBERS')
 	});
 }
 
@@ -427,8 +427,8 @@ function updateLoanModeFields() {
 	$('#loanTerm').attr('placeholder', `ENTER LOAN TERM (${config.label.toUpperCase()})`);
 
 	// Update helper text
-	$('#loanTermHelper').text(`Typical range: ${config.minTerm}-${config.maxTerm} ${config.unit.toLowerCase()}`);
-	$('#roiHelper').text(`Typical range: ${config.minRate}% - ${config.maxRate}%`);
+	$('#loanTermHelper').text(`TYPICAL RANGE: ${config.minTerm}-${config.maxTerm} ${config.unit.toUpperCase()}`);
+	$('#roiHelper').text(`TYPICAL RANGE: ${config.minRate}% - ${config.maxRate}%`);
 
 	// Re-check warnings and calculate EMI
 	validateModeRanges();
@@ -538,7 +538,7 @@ function calculateEMI() {
 		$('#summaryPrincipalText').html('&#8377; ' + loanAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
 		$('#summaryInterestText').html('&#8377; ' + totalInterest.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
 		$('#summaryPayableText').html('&#8377; ' + totalPayable.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
-		$('#summaryEmiText').html('&#8377; ' + emi.toFixed(2) + ' &times; ' + N + ' installments');
+		$('#summaryEmiText').html('&#8377; ' + emi.toFixed(2) + ' &times; ' + N + ' INSTALLMENTS');
 		$('#repaymentBreakdownBox').slideDown(200);
 	}
 }
@@ -554,7 +554,7 @@ function calculateNewFees() {
 	// Exit early if loan amount validation fails
 	const minAmount = hiddenLoanAmount > 0 ? hiddenLoanAmount : 1000;
 	if (loanAmount < minAmount) {
-		$("#chkloanamount").text("* Amount must be >= " + minAmount);
+		$("#chkloanamount").text("* AMOUNT MUST BE >= " + minAmount);
 		return false;
 	}
 
@@ -655,7 +655,7 @@ function recalculateDeductions() {
 
 	if (loanAmount <= 0) {
 		if (totalDeductions > 0) {
-			warningEl.removeClass('d-none').text('⚠️ Please enter a valid Loan Amount before applying deductions.');
+			warningEl.removeClass('d-none').text('⚠️ PLEASE ENTER A VALID LOAN AMOUNT BEFORE APPLYING DEDUCTIONS.');
 			netWrapper.css('color', '#dc3545');
 			saveBtn.prop('disabled', true);
 		} else {
@@ -667,7 +667,7 @@ function recalculateDeductions() {
 	}
 
 	if (totalDeductions > loanAmount) {
-		warningEl.removeClass('d-none').text(`⚠️ Total Deductions (₹${totalDeductions.toFixed(2)}) cannot exceed Loan Amount (₹${loanAmount.toFixed(2)})! Save is disabled.`);
+		warningEl.removeClass('d-none').text(`⚠️ TOTAL DEDUCTIONS (₹${totalDeductions.toFixed(2)}) CANNOT EXCEED LOAN AMOUNT (₹${loanAmount.toFixed(2)})! SAVE IS DISABLED.`);
 		netWrapper.css('color', '#dc3545');
 		saveBtn.prop('disabled', true);
 		return false;
@@ -693,13 +693,13 @@ function saveLoanApplication() {
 
 	// Validation checks with alerts
 	if (!$('#memberId').val()) {
-		alert('Please select MEMBER ID!');
+		alert('PLEASE SELECT MEMBER ID!');
 		$('#memberId').focus();
 		return false;
 	}
 
 	if (!$('#financialConsultantId').val()) {
-		alert('Please select EMPLOYEE ID!');
+		alert('PLEASE SELECT EMPLOYEE ID!');
 		$('#financialConsultantId').focus();
 		return false;
 	}
@@ -707,7 +707,7 @@ function saveLoanApplication() {
 	// Check Interest Type
 	const interestTypeVal = ($('#interestType').val() || '').trim();
 	if (!interestTypeVal) {
-		alert('Please select or enter INTEREST TYPE!');
+		alert('PLEASE SELECT OR ENTER INTEREST TYPE!');
 		$('#interestType').focus();
 		return false;
 	}
@@ -721,15 +721,15 @@ function saveLoanApplication() {
 
 	// Check required numeric fields
 	const requiredNumericFields = [
-		{ id: '#rateOfInterest', msg: 'Rate of Interest' },
-		{ id: '#loanTerm', msg: 'Loan Term' },
-		{ id: '#emiPayment', msg: 'EMI Payment' }
+		{ id: '#rateOfInterest', msg: 'RATE OF INTEREST' },
+		{ id: '#loanTerm', msg: 'LOAN TERM' },
+		{ id: '#emiPayment', msg: 'EMI PAYMENT' }
 	];
 
 	for (let field of requiredNumericFields) {
 		const value = parseFloat($(field.id).val());
 		if (!value || value <= 0) {
-			alert(`Please enter valid ${field.msg}!`);
+			alert(`PLEASE ENTER VALID ${field.msg}!`);
 			$(field.id).focus();
 			return false;
 		}
@@ -743,7 +743,7 @@ function saveLoanApplication() {
 
 	for (let selector of requiredTextFields) {
 		if (!$(selector).val().trim()) {
-			alert(`Please fill ${$(selector).attr('placeholder') || selector.replace('#', '')}!`);
+			alert(`PLEASE FILL ${$(selector).attr('placeholder') || selector.replace('#', '')}!`);
 			$(selector).focus();
 			return false;
 		}
@@ -794,10 +794,10 @@ function saveLoanApplication() {
 			const rateVal = parseFloat($('#rateOfInterest').val()) || 0;
 			let reasons = [];
 			if (termVal < modeConf.minTerm || termVal > modeConf.maxTerm) {
-				reasons.push(`Term (${termVal} ${modeConf.unit}) outside typical range [${modeConf.minTerm}-${modeConf.maxTerm}]`);
+				reasons.push(`TERM (${termVal} ${modeConf.unit}) OUTSIDE TYPICAL RANGE [${modeConf.minTerm}-${modeConf.maxTerm}]`);
 			}
 			if (rateVal < modeConf.minRate || rateVal > modeConf.maxRate) {
-				reasons.push(`Rate (${rateVal}%) outside typical range [${modeConf.minRate}%-${modeConf.maxRate}%]`);
+				reasons.push(`RATE (${rateVal}%) OUTSIDE TYPICAL RANGE [${modeConf.minRate}%-${modeConf.maxRate}%]`);
 			}
 			return reasons.length > 0 ? reasons.join('; ') : null;
 		})(),
@@ -866,7 +866,7 @@ function saveLoanApplication() {
 				loanTypeSpecificDetails[field.name] = el.checked;
 				loanApplication[field.name] = el.checked;
 				if (field.required && !el.checked) {
-					alert(`Please confirm "${field.label}"!`);
+					alert(`PLEASE CONFIRM "${field.label}"!`);
 					el.focus();
 					return false;
 				}
@@ -875,7 +875,7 @@ function saveLoanApplication() {
 				loanTypeSpecificDetails[field.name] = fileName;
 				loanApplication[field.name] = fileName;
 				if (field.required && !fileName) {
-					alert(`Please upload "${field.label}"!`);
+					alert(`PLEASE UPLOAD "${field.label}"!`);
 					el.focus();
 					return false;
 				}
@@ -884,7 +884,7 @@ function saveLoanApplication() {
 				loanTypeSpecificDetails[field.name] = val;
 				loanApplication[field.name] = val;
 				if (field.required && !val) {
-					alert(`Please enter "${field.label}"!`);
+					alert(`PLEASE ENTER "${field.label}"!`);
 					el.focus();
 					return false;
 				}
@@ -897,7 +897,7 @@ function saveLoanApplication() {
 	// Validate deductions before submission
 	const loanAmountVal = parseFloat(loanApplication.loanAmount) || 0;
 	if (loanAmountVal <= 0) {
-		alert('Loan Amount must be greater than 0!');
+		alert('LOAN AMOUNT MUST BE GREATER THAN 0!');
 		$('#loanAmount').focus();
 		return false;
 	}
@@ -910,13 +910,13 @@ function saveLoanApplication() {
 		+ (parseFloat(loanApplication.stationaryFee) || 0);
 
 	if (totalDed > loanAmountVal) {
-		alert(`Total deductions (₹${totalDed.toFixed(2)}) cannot exceed Loan Amount (₹${loanAmountVal.toFixed(2)})!`);
+		alert(`TOTAL DEDUCTIONS (₹${totalDed.toFixed(2)}) CANNOT EXCEED LOAN AMOUNT (₹${loanAmountVal.toFixed(2)})!`);
 		return false;
 	}
 
 	// Double-check no null/empty critical values before sending
 	if (!loanApplication.memberId || !loanApplication.financialConsultantId || !loanApplication.loanAmount) {
-		alert('Critical fields missing! Please check customer, employee and loan amount.');
+		alert('CRITICAL FIELDS MISSING! PLEASE CHECK CUSTOMER, EMPLOYEE AND LOAN AMOUNT.');
 		return false;
 	}
 
@@ -929,12 +929,12 @@ function saveLoanApplication() {
 		contentType: 'application/json',
 		data: JSON.stringify(loanApplication),
 		success: res => {
-			alert('Loan Application saved successfully!');
+			alert('LOAN APPLICATION SAVED SUCCESSFULLY!');
 			location.reload();
 			console.log('Save response:', res);
 		},
 		error: (xhr) => {
-			const errMsg = xhr.responseJSON?.message || "Error while saving loan application. Please check input values.";
+			const errMsg = xhr.responseJSON?.message || "ERROR WHILE SAVING LOAN APPLICATION. PLEASE CHECK INPUT VALUES.";
 			alert(errMsg);
 			console.error('Save error details:', xhr);
 			saveBtn.prop('disabled', false).text('SAVE');
@@ -978,7 +978,7 @@ function saveLoanApplication() {
 		contentType: 'application/json',
 		data: JSON.stringify(loanApplication),
 		success: res => alert(res.message),
-		error: () => alert("Error while saving loan")
+		error: () => alert("ERROR WHILE SAVING LOAN")
 	});
 }
 */

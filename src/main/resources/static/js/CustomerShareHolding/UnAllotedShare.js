@@ -1,31 +1,31 @@
-$(document).ready(function () {
+$(document).ready(function() {
 	// Populate dropdown from backend
 	$.ajax({
 		url: "api/customershareholdingcontroller/findAllTransferShare",
 		type: "GET",
-		success: function (response) {
+		success: function(response) {
 			if (response.status === "OK") {
 				let dropdown = $("#selectDecisionMaker");
-				dropdown.empty().append('<option value="">Select</option>');
+				dropdown.empty().append('<option value="">SELECT</option>');
 
-				$.each(response.data, function (i, item) {
+				$.each(response.data, function(i, item) {
 					dropdown.append(`<option value="${item.findByCode}">${item.findByCode} - ${item.customerName}</option>`);
 				});
 			} else {
-				alert("Failed to load data");
+				alert("FAILED TO LOAD DATA");
 			}
 		},
-		error: function () {
-			alert("Error loading data");
+		error: function() {
+			alert("ERROR LOADING DATA");
 		}
 	});
 
 	// Handle Search button click
-	$("#searchBtn").click(function () {
+	$("#searchBtn").click(function() {
 		let selectedCode = $("#selectDecisionMaker").val();
 
 		if (!selectedCode) {
-			alert("Please select a decision maker!");
+			alert("PLEASE SELECT A DECISION MAKER!");
 			return;
 		}
 
@@ -33,29 +33,29 @@ $(document).ready(function () {
 			url: "api/customershareholdingcontroller/fetchByFindByCode",
 			type: "POST",
 			data: { findByCode: selectedCode },
-			success: function (response) {
+			success: function(response) {
 				let tbody = $(".datatable tbody");
 				tbody.empty();
 
 				if (response.status === "FOUND" && response.data.length > 0) {
-					$.each(response.data, function (i, item) {
+					$.each(response.data, function(i, item) {
 						let row = `<tr>
-							<td>${i + 1}</td>
-							<td>${item.customerName || ""}</td>
-							<td>${item.findByCode || ""}</td>
-							<td>${item.startDate || ""}</td>
-							<td>${item.dateOfTransfer || ""}</td>
-							<td>${item.noOfShare || ""}</td>
-							<td>${item.balanceShares || ""}</td>
-						</tr>`;
+                            <td>${i + 1}</td>
+                            <td>${item.customerName || ""}</td>
+                            <td>${item.findByCode || ""}</td>
+                            <td>${item.startDate || ""}</td>
+                            <td>${item.dateOfTransfer || ""}</td>
+                            <td>${item.noOfShare || ""}</td>
+                            <td>${item.balanceShares || ""}</td>
+                        </tr>`;
 						tbody.append(row);
 					});
 				} else {
-					tbody.append('<tr><td colspan="6">No data found for selected customer</td></tr>');
+					tbody.append('<tr><td colspan="6">NO DATA FOUND FOR SELECTED CUSTOMER</td></tr>');
 				}
 			},
-			error: function () {
-				alert("Error fetching share data");
+			error: function() {
+				alert("ERROR FETCHING SHARE DATA");
 			}
 		});
 	});

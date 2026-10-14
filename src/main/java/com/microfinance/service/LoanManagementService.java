@@ -56,19 +56,24 @@ public class LoanManagementService implements org.springframework.beans.factory.
 	public void afterPropertiesSet() throws Exception {
 		if (dataSource != null) {
 			try (java.sql.Connection conn = dataSource.getConnection();
-				 java.sql.Statement stmt = conn.createStatement()) {
+					java.sql.Statement stmt = conn.createStatement()) {
 				try {
 					stmt.executeUpdate("ALTER TABLE loan_application ADD COLUMN total_interest VARCHAR(255) NULL");
-				} catch (Exception ignored) {}
+				} catch (Exception ignored) {
+				}
 				try {
-					stmt.executeUpdate("ALTER TABLE loan_application ADD COLUMN total_payable_amount VARCHAR(255) NULL");
-				} catch (Exception ignored) {}
+					stmt.executeUpdate(
+							"ALTER TABLE loan_application ADD COLUMN total_payable_amount VARCHAR(255) NULL");
+				} catch (Exception ignored) {
+				}
 				try {
 					stmt.executeUpdate("ALTER TABLE loan_payment ADD COLUMN total_interest VARCHAR(255) NULL");
-				} catch (Exception ignored) {}
+				} catch (Exception ignored) {
+				}
 				try {
 					stmt.executeUpdate("ALTER TABLE loan_payment ADD COLUMN total_payable_amount VARCHAR(255) NULL");
-				} catch (Exception ignored) {}
+				} catch (Exception ignored) {
+				}
 			} catch (Exception e) {
 				System.err.println("Column initialization note: " + e.getMessage());
 			}
@@ -188,7 +193,7 @@ public class LoanManagementService implements org.springframework.beans.factory.
 
 	public LoanSchemCatalog getLoanByCode(String code) {
 		return loanRepository.findByLoanSchemeCode(code)
-				.orElseThrow(() -> new RuntimeException("Loan Scheme not found for code: " + code));
+				.orElseThrow(() -> new RuntimeException("LOAN SCHEME NOT FOUND FOR CODE: " + code));
 	}
 
 	public List<LoanSchemCatalog> getLoanPlanName(String loanPlanName) {
@@ -201,15 +206,15 @@ public class LoanManagementService implements org.springframework.beans.factory.
 		return loanRepository.findAll();
 	}
 
-	public LoanDeductionDetails validateAndCalculateDeductions(
-			java.math.BigDecimal loanAmount, com.microfinance.model.LoanDeductionDetails details) {
+	public LoanDeductionDetails validateAndCalculateDeductions(java.math.BigDecimal loanAmount,
+			com.microfinance.model.LoanDeductionDetails details) {
 
 		if (details == null) {
 			details = new com.microfinance.model.LoanDeductionDetails();
 		}
 
 		if (loanAmount == null || loanAmount.compareTo(java.math.BigDecimal.ZERO) <= 0) {
-			throw new IllegalArgumentException("Loan Amount must be greater than 0 before calculating deductions.");
+			throw new IllegalArgumentException("LOAN AMOUNT MUST BE GREATER THAN 0 BEFORE CALCULATING DEDUCTIONS.");
 		}
 
 		java.math.BigDecimal processingFee = details.getProcessingFee() != null
@@ -234,10 +239,11 @@ public class LoanManagementService implements org.springframework.beans.factory.
 				|| insuranceFee.compareTo(java.math.BigDecimal.ZERO) < 0
 				|| valuationFees.compareTo(java.math.BigDecimal.ZERO) < 0
 				|| stationaryFee.compareTo(java.math.BigDecimal.ZERO) < 0) {
-			throw new IllegalArgumentException("Deduction fee values cannot be negative.");
+			throw new IllegalArgumentException("DEDUCTION FEE VALUES CANNOT BE NEGATIVE.");
 		}
 
-		// c. GST calculated server-side as configurable rate of processing fee if not manually supplied > 0
+		// c. GST calculated server-side as configurable rate of processing fee if not
+		// manually supplied > 0
 		java.math.BigDecimal gst = details.getGst();
 		if (gst == null || gst.compareTo(java.math.BigDecimal.ZERO) <= 0) {
 			gst = processingFee.multiply(java.math.BigDecimal.valueOf(gstRate))
@@ -247,7 +253,7 @@ public class LoanManagementService implements org.springframework.beans.factory.
 		}
 
 		if (gst.compareTo(java.math.BigDecimal.ZERO) < 0) {
-			throw new IllegalArgumentException("GST amount cannot be negative.");
+			throw new IllegalArgumentException("GST AMOUNT CANNOT BE NEGATIVE.");
 		}
 
 		// Sum of all deductions
@@ -257,11 +263,12 @@ public class LoanManagementService implements org.springframework.beans.factory.
 		// b. Sum of all deductions must NOT exceed Loan Amount
 		if (totalDeductions.compareTo(loanAmount) > 0) {
 			throw new IllegalArgumentException(
-					"Total deductions (" + totalDeductions + ") must not exceed the Loan Amount (" + loanAmount + ").");
+					"TOTAL DEDUCTIONS (" + totalDeductions + ") MUST NOT EXCEED THE LOAN AMOUNT (" + loanAmount + ").");
 		}
 
 		// d. Net Disbursement Amount = Loan Amount - Total Deductions
-		java.math.BigDecimal netDisbursement = loanAmount.subtract(totalDeductions).setScale(2, java.math.RoundingMode.HALF_UP);
+		java.math.BigDecimal netDisbursement = loanAmount.subtract(totalDeductions).setScale(2,
+				java.math.RoundingMode.HALF_UP);
 
 		// Employee validation
 		if (details.getEmployeeId() != null && !details.getEmployeeId().trim().isEmpty()) {
@@ -302,30 +309,65 @@ public class LoanManagementService implements org.springframework.beans.factory.
 				if (loanApplication.getLoanAmount() != null) {
 					loanAmt = new java.math.BigDecimal(loanApplication.getLoanAmount().trim());
 				}
-			} catch (Exception ignored) {}
+			} catch (Exception ignored) {
+			}
 
 			if (loanAmt.compareTo(java.math.BigDecimal.ZERO) > 0) {
 				com.microfinance.model.LoanDeductionDetails deduction = loanApplication.getDeductionDetails();
 				if (deduction == null) {
 					deduction = new com.microfinance.model.LoanDeductionDetails();
 				}
-				if (deduction.getProcessingFee() == null || deduction.getProcessingFee().compareTo(java.math.BigDecimal.ZERO) == 0) {
-					try { if (loanApplication.getProcessingFee() != null) deduction.setProcessingFee(new java.math.BigDecimal(loanApplication.getProcessingFee().trim())); } catch (Exception ignored) {}
+				if (deduction.getProcessingFee() == null
+						|| deduction.getProcessingFee().compareTo(java.math.BigDecimal.ZERO) == 0) {
+					try {
+						if (loanApplication.getProcessingFee() != null)
+							deduction.setProcessingFee(
+									new java.math.BigDecimal(loanApplication.getProcessingFee().trim()));
+					} catch (Exception ignored) {
+					}
 				}
-				if (deduction.getLegalCharges() == null || deduction.getLegalCharges().compareTo(java.math.BigDecimal.ZERO) == 0) {
-					try { if (loanApplication.getLegalCharges() != null) deduction.setLegalCharges(new java.math.BigDecimal(loanApplication.getLegalCharges().trim())); } catch (Exception ignored) {}
+				if (deduction.getLegalCharges() == null
+						|| deduction.getLegalCharges().compareTo(java.math.BigDecimal.ZERO) == 0) {
+					try {
+						if (loanApplication.getLegalCharges() != null)
+							deduction.setLegalCharges(
+									new java.math.BigDecimal(loanApplication.getLegalCharges().trim()));
+					} catch (Exception ignored) {
+					}
 				}
 				if (deduction.getGst() == null || deduction.getGst().compareTo(java.math.BigDecimal.ZERO) == 0) {
-					try { if (loanApplication.getGst() != null) deduction.setGst(new java.math.BigDecimal(loanApplication.getGst().trim())); } catch (Exception ignored) {}
+					try {
+						if (loanApplication.getGst() != null)
+							deduction.setGst(new java.math.BigDecimal(loanApplication.getGst().trim()));
+					} catch (Exception ignored) {
+					}
 				}
-				if (deduction.getInsuranceFee() == null || deduction.getInsuranceFee().compareTo(java.math.BigDecimal.ZERO) == 0) {
-					try { if (loanApplication.getInsuranceFee() != null) deduction.setInsuranceFee(new java.math.BigDecimal(loanApplication.getInsuranceFee().trim())); } catch (Exception ignored) {}
+				if (deduction.getInsuranceFee() == null
+						|| deduction.getInsuranceFee().compareTo(java.math.BigDecimal.ZERO) == 0) {
+					try {
+						if (loanApplication.getInsuranceFee() != null)
+							deduction.setInsuranceFee(
+									new java.math.BigDecimal(loanApplication.getInsuranceFee().trim()));
+					} catch (Exception ignored) {
+					}
 				}
-				if (deduction.getValuationFees() == null || deduction.getValuationFees().compareTo(java.math.BigDecimal.ZERO) == 0) {
-					try { if (loanApplication.getValuationFees() != null) deduction.setValuationFees(new java.math.BigDecimal(loanApplication.getValuationFees().trim())); } catch (Exception ignored) {}
+				if (deduction.getValuationFees() == null
+						|| deduction.getValuationFees().compareTo(java.math.BigDecimal.ZERO) == 0) {
+					try {
+						if (loanApplication.getValuationFees() != null)
+							deduction.setValuationFees(
+									new java.math.BigDecimal(loanApplication.getValuationFees().trim()));
+					} catch (Exception ignored) {
+					}
 				}
-				if (deduction.getStationaryChargesFee() == null || deduction.getStationaryChargesFee().compareTo(java.math.BigDecimal.ZERO) == 0) {
-					try { if (loanApplication.getStationaryFee() != null) deduction.setStationaryChargesFee(new java.math.BigDecimal(loanApplication.getStationaryFee().trim())); } catch (Exception ignored) {}
+				if (deduction.getStationaryChargesFee() == null
+						|| deduction.getStationaryChargesFee().compareTo(java.math.BigDecimal.ZERO) == 0) {
+					try {
+						if (loanApplication.getStationaryFee() != null)
+							deduction.setStationaryChargesFee(
+									new java.math.BigDecimal(loanApplication.getStationaryFee().trim()));
+					} catch (Exception ignored) {
+					}
 				}
 				if (deduction.getEmployeeId() == null || deduction.getEmployeeId().trim().isEmpty()) {
 					deduction.setEmployeeId(loanApplication.getFinancialConsultantId());
@@ -379,7 +421,8 @@ public class LoanManagementService implements org.springframework.beans.factory.
 	}
 
 	private void checkLoanModeRangeOverride(LoanApplication loanApplication) {
-		if (loanApplication == null || loanApplication.getLoanMode() == null) return;
+		if (loanApplication == null || loanApplication.getLoanMode() == null)
+			return;
 		LoanModeConfig modeConfig = LoanModeConfig.fromMode(loanApplication.getLoanMode());
 		if (modeConfig != null) {
 			boolean termOverride = false;
@@ -394,28 +437,34 @@ public class LoanManagementService implements org.springframework.beans.factory.
 						termOverride = true;
 					}
 				}
-			} catch (Exception ignored) {}
+			} catch (Exception ignored) {
+			}
 
 			try {
-				if (loanApplication.getRateOfInterest() != null && !loanApplication.getRateOfInterest().trim().isEmpty()) {
+				if (loanApplication.getRateOfInterest() != null
+						&& !loanApplication.getRateOfInterest().trim().isEmpty()) {
 					rateVal = Double.parseDouble(loanApplication.getRateOfInterest().trim());
 					if (!modeConfig.isRateInRange(rateVal)) {
 						rateOverride = true;
 					}
 				}
-			} catch (Exception ignored) {}
+			} catch (Exception ignored) {
+			}
 
 			if (termOverride || rateOverride) {
 				loanApplication.setIsRangeOverride(true);
-				if (loanApplication.getRangeOverrideReason() == null || loanApplication.getRangeOverrideReason().trim().isEmpty()) {
+				if (loanApplication.getRangeOverrideReason() == null
+						|| loanApplication.getRangeOverrideReason().trim().isEmpty()) {
 					StringBuilder reason = new StringBuilder();
 					if (termOverride) {
 						reason.append("Term (").append(termVal).append(" ").append(modeConfig.getTermUnit())
-							  .append(") outside typical range [").append(modeConfig.getMinTerm()).append("-").append(modeConfig.getMaxTerm()).append("]. ");
+								.append(") outside typical range [").append(modeConfig.getMinTerm()).append("-")
+								.append(modeConfig.getMaxTerm()).append("]. ");
 					}
 					if (rateOverride) {
 						reason.append("Rate (").append(rateVal).append("%) outside typical range [")
-							  .append(modeConfig.getMinInterestRate()).append("%-").append(modeConfig.getMaxInterestRate()).append("%].");
+								.append(modeConfig.getMinInterestRate()).append("%-")
+								.append(modeConfig.getMaxInterestRate()).append("%].");
 					}
 					loanApplication.setRangeOverrideReason(reason.toString().trim());
 				}
@@ -426,62 +475,74 @@ public class LoanManagementService implements org.springframework.beans.factory.
 	// ── Penalty Calculation ──────────────────────────────────────────────────
 
 	/**
-	 * Calculates penalty for a late EMI payment based on the installment's own due date.
+	 * Calculates penalty for a late EMI payment based on the installment's own due
+	 * date.
 	 *
-	 * Rule:
-	 *   emiDueDate  = loanDate + (installmentNo × periodDays)
-	 *   deadline    = emiDueDate + graceDays  (grace from scheme, default 5 days)
-	 *   daysLate    = max(0, paymentDate − deadline)
-	 *   penaltyAmt  = Flat | Percentage-of-EMI | PerDay
+	 * Rule: emiDueDate = loanDate + (installmentNo × periodDays) deadline =
+	 * emiDueDate + graceDays (grace from scheme, default 5 days) daysLate = max(0,
+	 * paymentDate − deadline) penaltyAmt = Flat | Percentage-of-EMI | PerDay
 	 *
-	 * @param loanDate        ISO disbursement date (yyyy-MM-dd)
-	 * @param installmentNo   1-based EMI number (1 = first EMI, 2 = second, ...)
-	 * @param loanMode        Daily / Weekly / Fortnightly / Monthly / Quarterly
-	 * @param paymentDateStr  Actual payment date (yyyy-MM-dd)
-	 * @param emiAmount       EMI amount in ₹
-	 * @param scheme          LoanSchemCatalog with penalty settings
+	 * @param loanDate       ISO disbursement date (yyyy-MM-dd)
+	 * @param installmentNo  1-based EMI number (1 = first EMI, 2 = second, ...)
+	 * @param loanMode       Daily / Weekly / Fortnightly / Monthly / Quarterly
+	 * @param paymentDateStr Actual payment date (yyyy-MM-dd)
+	 * @param emiAmount      EMI amount in ₹
+	 * @param scheme         LoanSchemCatalog with penalty settings
 	 * @return double[2] { penaltyAmount, daysLate }
 	 */
-	private double[] calculatePenalty(String loanDate, int installmentNo,
-			String loanMode, String paymentDateStr,
+	private double[] calculatePenalty(String loanDate, int installmentNo, String loanMode, String paymentDateStr,
 			double emiAmount, LoanSchemCatalog scheme) {
 
 		double penaltyAmt = 0.0;
 		int daysLate = 0;
 
 		try {
-			if (loanDate == null || paymentDateStr == null) return new double[]{0, 0};
+			if (loanDate == null || paymentDateStr == null)
+				return new double[] { 0, 0 };
 
 			// --- Grace period from scheme, default 5 days ---
 			int graceDays = 5;
 			if (scheme != null) {
 				try {
 					String ld = scheme.getLateAllowanceday();
-					if (ld != null && !ld.trim().isEmpty()) graceDays = Integer.parseInt(ld.trim());
-				} catch (Exception ignored) {}
+					if (ld != null && !ld.trim().isEmpty())
+						graceDays = Integer.parseInt(ld.trim());
+				} catch (Exception ignored) {
+				}
 			}
 
 			// --- Period per installment in days ---
 			int periodDays;
 			switch (loanMode == null ? "" : loanMode) {
-				case "Daily":       periodDays = 1;  break;
-				case "Weekly":      periodDays = 7;  break;
-				case "Fortnightly": periodDays = 14; break;
-				case "Quarterly":   periodDays = 91; break;
-				default:            periodDays = 30; break; // Monthly
+			case "Daily":
+				periodDays = 1;
+				break;
+			case "Weekly":
+				periodDays = 7;
+				break;
+			case "Fortnightly":
+				periodDays = 14;
+				break;
+			case "Quarterly":
+				periodDays = 91;
+				break;
+			default:
+				periodDays = 30;
+				break; // Monthly
 			}
 
 			// --- EMI due date = disbursement date + installmentNo × period ---
-			java.time.LocalDate disbDate  = java.time.LocalDate.parse(loanDate.trim());
-			java.time.LocalDate emiDue    = disbDate.plusDays((long) installmentNo * periodDays);
-			java.time.LocalDate deadline  = emiDue.plusDays(graceDays);
-			java.time.LocalDate payDate   = java.time.LocalDate.parse(paymentDateStr.trim());
+			java.time.LocalDate disbDate = java.time.LocalDate.parse(loanDate.trim());
+			java.time.LocalDate emiDue = disbDate.plusDays((long) installmentNo * periodDays);
+			java.time.LocalDate deadline = emiDue.plusDays(graceDays);
+			java.time.LocalDate payDate = java.time.LocalDate.parse(paymentDateStr.trim());
 
 			// --- Days late: positive only if past deadline ---
 			long rawLate = java.time.temporal.ChronoUnit.DAYS.between(deadline, payDate);
 			daysLate = (int) Math.max(0, rawLate);
 
-			if (daysLate <= 0) return new double[]{0, 0};
+			if (daysLate <= 0)
+				return new double[] { 0, 0 };
 
 			// --- Penalty rate from scheme (default 2% of EMI if not configured) ---
 			double rate = 2.0;
@@ -493,37 +554,39 @@ public class LoanManagementService implements org.springframework.beans.factory.
 				if (scheme.getPennaltyMonthly() != null && !scheme.getPennaltyMonthly().trim().isEmpty()) {
 					try {
 						rate = Double.parseDouble(scheme.getPennaltyMonthly().trim());
-					} catch (Exception ignored) {}
+					} catch (Exception ignored) {
+					}
 				}
 			}
 
-			if (rate <= 0) return new double[]{0, daysLate};
+			if (rate <= 0)
+				return new double[] { 0, daysLate };
 
 			switch (mode) {
-				case "Flat":
-					penaltyAmt = rate; // Fixed rupee amount
-					break;
-				case "Percentage":
-					penaltyAmt = (rate / 100.0) * emiAmount; // % of EMI
-					break;
-				case "PerDay":
-					penaltyAmt = (rate / 100.0) * emiAmount * daysLate; // % of EMI per day
-					break;
-				default:
-					penaltyAmt = (rate / 100.0) * emiAmount;
+			case "Flat":
+				penaltyAmt = rate; // Fixed rupee amount
+				break;
+			case "Percentage":
+				penaltyAmt = (rate / 100.0) * emiAmount; // % of EMI
+				break;
+			case "PerDay":
+				penaltyAmt = (rate / 100.0) * emiAmount * daysLate; // % of EMI per day
+				break;
+			default:
+				penaltyAmt = (rate / 100.0) * emiAmount;
 			}
 
 			penaltyAmt = Math.round(penaltyAmt * 100.0) / 100.0;
 
 		} catch (Exception e) {
-			System.err.println("Penalty calculation error: " + e.getMessage());
+			System.err.println("PENALTY CALCULATION ERROR: " + e.getMessage());
 		}
 
-		return new double[]{penaltyAmt, daysLate};
+		return new double[] { penaltyAmt, daysLate };
 	}
 
-	private double[] calculatePenalty(String loanDate, String paymentDateStr,
-			double emiAmount, LoanSchemCatalog scheme) {
+	private double[] calculatePenalty(String loanDate, String paymentDateStr, double emiAmount,
+			LoanSchemCatalog scheme) {
 		return calculatePenalty(loanDate, 1, "Monthly", paymentDateStr, emiAmount, scheme);
 	}
 
@@ -531,9 +594,8 @@ public class LoanManagementService implements org.springframework.beans.factory.
 	 * Preview API — returns penalty details for a given loanId + payment date
 	 * without saving anything. Uses the NEXT installment's due date.
 	 *
-	 * emiDueDate = loanDate + (nextInstNo × periodDays)
-	 * deadline   = emiDueDate + graceDays
-	 * daysLate   = max(0, paymentDate − deadline)
+	 * emiDueDate = loanDate + (nextInstNo × periodDays) deadline = emiDueDate +
+	 * graceDays daysLate = max(0, paymentDate − deadline)
 	 */
 	public java.util.Map<String, Object> calculatePenaltyPreview(String loanId, String paymentDateStr) {
 		java.util.Map<String, Object> result = new java.util.LinkedHashMap<>();
@@ -548,10 +610,14 @@ public class LoanManagementService implements org.springframework.beans.factory.
 
 		try {
 			LoanApplication loanApp = loanApplicationRepo.findFirstByLoanIdOrderByIdDesc(loanId);
-			if (loanApp == null) return result;
+			if (loanApp == null)
+				return result;
 
 			double emiAmount = 0.0;
-			try { emiAmount = Double.parseDouble(loanApp.getEmiPayment()); } catch (Exception ignored) {}
+			try {
+				emiAmount = Double.parseDouble(loanApp.getEmiPayment());
+			} catch (Exception ignored) {
+			}
 
 			// Next installment number = paid count + 1
 			int nextInstNo = loanPaymentRepo.findByLoanId(loanId).size() + 1;
@@ -563,46 +629,58 @@ public class LoanManagementService implements org.springframework.beans.factory.
 			if (scheme != null) {
 				try {
 					String ld = scheme.getLateAllowanceday();
-					if (ld != null && !ld.trim().isEmpty()) graceDays = Integer.parseInt(ld.trim());
-				} catch (Exception ignored) {}
+					if (ld != null && !ld.trim().isEmpty())
+						graceDays = Integer.parseInt(ld.trim());
+				} catch (Exception ignored) {
+				}
 			}
 
 			// Period per installment
 			int periodDays;
 			switch (loanApp.getLoanMode() == null ? "" : loanApp.getLoanMode()) {
-				case "Daily":       periodDays = 1;  break;
-				case "Weekly":      periodDays = 7;  break;
-				case "Fortnightly": periodDays = 14; break;
-				case "Quarterly":   periodDays = 91; break;
-				default:            periodDays = 30; break;
+			case "Daily":
+				periodDays = 1;
+				break;
+			case "Weekly":
+				periodDays = 7;
+				break;
+			case "Fortnightly":
+				periodDays = 14;
+				break;
+			case "Quarterly":
+				periodDays = 91;
+				break;
+			default:
+				periodDays = 30;
+				break;
 			}
 
 			// EMI due date and deadline
 			try {
-				java.time.LocalDate emiDue   = java.time.LocalDate.parse(loanApp.getLoanDate().trim()).plusDays((long) nextInstNo * periodDays);
+				java.time.LocalDate emiDue = java.time.LocalDate.parse(loanApp.getLoanDate().trim())
+						.plusDays((long) nextInstNo * periodDays);
 				java.time.LocalDate deadline = emiDue.plusDays(graceDays);
 				result.put("emiDueDate", emiDue.toString());
 				result.put("dueDate", emiDue.toString());
 				result.put("deadline", deadline.toString() + " (" + graceDays + "d grace)");
-			} catch (Exception ignored) {}
+			} catch (Exception ignored) {
+			}
 
 			result.put("emiAmount", String.format(java.util.Locale.US, "%.2f", emiAmount));
 
 			// Run penalty
-			double[] penaltyResult = calculatePenalty(
-					loanApp.getLoanDate(), nextInstNo,
-					loanApp.getLoanMode(), paymentDateStr,
-					emiAmount, scheme);
+			double[] penaltyResult = calculatePenalty(loanApp.getLoanDate(), nextInstNo, loanApp.getLoanMode(),
+					paymentDateStr, emiAmount, scheme);
 
 			double penaltyAmt = penaltyResult[0];
-			int daysLate      = (int) penaltyResult[1];
-			String mode       = (scheme != null && scheme.getModePanalty() != null && !scheme.getModePanalty().trim().isEmpty())
-					? scheme.getModePanalty().trim() : "Percentage (2%)";
+			int daysLate = (int) penaltyResult[1];
+			String mode = (scheme != null && scheme.getModePanalty() != null
+					&& !scheme.getModePanalty().trim().isEmpty()) ? scheme.getModePanalty().trim() : "Percentage (2%)";
 
 			result.put("penaltyAmount", String.format(java.util.Locale.US, "%.2f", penaltyAmt));
-			result.put("daysLate",      daysLate);
-			result.put("penaltyMode",   mode);
-			result.put("totalPayable",  String.format(java.util.Locale.US, "%.2f", emiAmount + penaltyAmt));
+			result.put("daysLate", daysLate);
+			result.put("penaltyMode", mode);
+			result.put("totalPayable", String.format(java.util.Locale.US, "%.2f", emiAmount + penaltyAmt));
 
 		} catch (Exception e) {
 			System.err.println("calculatePenaltyPreview error: " + e.getMessage());
@@ -683,7 +761,7 @@ public class LoanManagementService implements org.springframework.beans.factory.
 
 		LoanApplication loanApp = loanApplicationRepo.findFirstByLoanIdOrderByIdDesc(loanId);
 		if (loanApp == null) {
-			throw new RuntimeException("Loan ID not found");
+			throw new RuntimeException("LOAN ID NOT FOUND");
 		}
 
 		String mode = request.getPaymentMode() != null ? request.getPaymentMode().trim() : "Cash";
@@ -693,34 +771,65 @@ public class LoanManagementService implements org.springframework.beans.factory.
 		if (loanApp.getNetDisbursementAmount() != null && !loanApp.getNetDisbursementAmount().trim().isEmpty()) {
 			try {
 				netDisbursedAmt = Double.parseDouble(loanApp.getNetDisbursementAmount().trim());
-			} catch (Exception ignored) {}
+			} catch (Exception ignored) {
+			}
 		}
-		if (netDisbursedAmt <= 0 && loanApp.getDeductionDetails() != null && loanApp.getDeductionDetails().getNetDisbursementAmount() != null) {
+		if (netDisbursedAmt <= 0 && loanApp.getDeductionDetails() != null
+				&& loanApp.getDeductionDetails().getNetDisbursementAmount() != null) {
 			netDisbursedAmt = loanApp.getDeductionDetails().getNetDisbursementAmount().doubleValue();
 		}
 		if (netDisbursedAmt <= 0 && loanApp.getId() > 0 && loanDeductionDetailsRepo != null) {
 			try {
-				com.microfinance.model.LoanDeductionDetails ded = loanDeductionDetailsRepo.findByLoanApplicationId(loanApp.getId()).orElse(null);
+				com.microfinance.model.LoanDeductionDetails ded = loanDeductionDetailsRepo
+						.findByLoanApplicationId(loanApp.getId()).orElse(null);
 				if (ded != null && ded.getNetDisbursementAmount() != null) {
 					netDisbursedAmt = ded.getNetDisbursementAmount().doubleValue();
 				}
-			} catch (Exception ignored) {}
+			} catch (Exception ignored) {
+			}
 		}
 		if (netDisbursedAmt <= 0) {
 			double gross = 0.0;
-			try { gross = Double.parseDouble(loanApp.getLoanAmount()); } catch (Exception ignored) {}
+			try {
+				gross = Double.parseDouble(loanApp.getLoanAmount());
+			} catch (Exception ignored) {
+			}
 			double totalDed = 0.0;
-			try { totalDed += Double.parseDouble(request.getProcessingFee() != null ? request.getProcessingFee() : loanApp.getProcessingFee()); } catch (Exception ignored) {}
-			try { totalDed += Double.parseDouble(request.getLegalCharges() != null ? request.getLegalCharges() : loanApp.getLegalCharges()); } catch (Exception ignored) {}
-			try { totalDed += Double.parseDouble(request.getGst() != null ? request.getGst() : loanApp.getGst()); } catch (Exception ignored) {}
-			try { totalDed += Double.parseDouble(request.getInsuranceFee() != null ? request.getInsuranceFee() : loanApp.getInsuranceFee()); } catch (Exception ignored) {}
-			try { totalDed += Double.parseDouble(request.getValuationFees() != null ? request.getValuationFees() : loanApp.getValuationFees()); } catch (Exception ignored) {}
-			try { totalDed += Double.parseDouble(request.getStationaryFee() != null ? request.getStationaryFee() : loanApp.getStationaryFee()); } catch (Exception ignored) {}
+			try {
+				totalDed += Double.parseDouble(
+						request.getProcessingFee() != null ? request.getProcessingFee() : loanApp.getProcessingFee());
+			} catch (Exception ignored) {
+			}
+			try {
+				totalDed += Double.parseDouble(
+						request.getLegalCharges() != null ? request.getLegalCharges() : loanApp.getLegalCharges());
+			} catch (Exception ignored) {
+			}
+			try {
+				totalDed += Double.parseDouble(request.getGst() != null ? request.getGst() : loanApp.getGst());
+			} catch (Exception ignored) {
+			}
+			try {
+				totalDed += Double.parseDouble(
+						request.getInsuranceFee() != null ? request.getInsuranceFee() : loanApp.getInsuranceFee());
+			} catch (Exception ignored) {
+			}
+			try {
+				totalDed += Double.parseDouble(
+						request.getValuationFees() != null ? request.getValuationFees() : loanApp.getValuationFees());
+			} catch (Exception ignored) {
+			}
+			try {
+				totalDed += Double.parseDouble(
+						request.getStationaryFee() != null ? request.getStationaryFee() : loanApp.getStationaryFee());
+			} catch (Exception ignored) {
+			}
 			netDisbursedAmt = (totalDed > 0 && gross > totalDed) ? (gross - totalDed) : gross;
 		}
 
 		// ✅ Mode of disbursement: Cash or Saving Account
-		// If Saving Account -> Transfer net disbursement amount to customer savings account
+		// If Saving Account -> Transfer net disbursement amount to customer savings
+		// account
 		if ("Saving Account".equalsIgnoreCase(mode) || "Savings Account".equalsIgnoreCase(mode)) {
 			List<CreateSavingsAccount> accounts = createSavingRepo.findBySelectByCustomer(request.getMemberId());
 			if (accounts == null || accounts.isEmpty()) {
@@ -728,8 +837,8 @@ public class LoanManagementService implements org.springframework.beans.factory.
 			}
 
 			if (accounts == null || accounts.isEmpty()) {
-				throw new RuntimeException("Saving account not found for Member ID: " + request.getMemberId()
-						+ ". Cannot transfer loan disbursement to Saving Account.");
+				throw new RuntimeException("SAVING ACCOUNT NOT FOUND FOR MEMBER ID: " + request.getMemberId()
+						+ ". CANNOT TRANSFER LOAN DISBURSEMENT TO SAVING ACCOUNT.");
 			}
 
 			CreateSavingsAccount savingAcc = accounts.get(0);
@@ -748,7 +857,8 @@ public class LoanManagementService implements org.springframework.beans.factory.
 			// Proactively record Loan Disbursement activity (idempotent - avoid duplicate)
 			try {
 				String txnId = "TXNLOAN_" + loanId;
-				List<com.microfinance.model.SavingAccountActivity> existingActs = savingAccountActivityRepo.findAllByAccountNumber(savingAcc.getAccountNumber());
+				List<com.microfinance.model.SavingAccountActivity> existingActs = savingAccountActivityRepo
+						.findAllByAccountNumber(savingAcc.getAccountNumber());
 				boolean alreadyExists = false;
 				if (existingActs != null) {
 					for (com.microfinance.model.SavingAccountActivity ea : existingActs) {
@@ -766,14 +876,18 @@ public class LoanManagementService implements org.springframework.beans.factory.
 				if (!alreadyExists) {
 					com.microfinance.model.SavingAccountActivity loanAct = new com.microfinance.model.SavingAccountActivity();
 					loanAct.setSelectSavingTransactionId(txnId);
-					loanAct.setTransactionDate(request.getPaymentDate() != null && !request.getPaymentDate().trim().isEmpty() ? request.getPaymentDate() : java.time.LocalDate.now().toString());
-					loanAct.setSelectBranchName(loanApp.getBranchName() != null ? loanApp.getBranchName() : (savingAcc.getBranchName() != null ? savingAcc.getBranchName().getBranchName() : ""));
+					loanAct.setTransactionDate(
+							request.getPaymentDate() != null && !request.getPaymentDate().trim().isEmpty()
+									? request.getPaymentDate()
+									: java.time.LocalDate.now().toString());
+					loanAct.setSelectBranchName(loanApp.getBranchName() != null ? loanApp.getBranchName()
+							: (savingAcc.getBranchName() != null ? savingAcc.getBranchName().getBranchName() : ""));
 					loanAct.setAccountNumber(savingAcc.getAccountNumber());
 					loanAct.setCustomerCode(savingAcc.getSelectByCustomer());
 					loanAct.setCustomerName(savingAcc.getEnterCustomerName());
 					loanAct.setContactNumber(savingAcc.getContactNumber());
-					loanAct.setTransactionFor("Loan Disbursement");
-					String desc = "Loan Disbursed Credited - Loan ID: " + loanId;
+					loanAct.setTransactionFor("LOAN DISBURSEMENT");
+					String desc = "LOAN DISBURSED CREDITED - LOAN ID: " + loanId;
 					if (loanApp.getTypeOfLoan() != null && !loanApp.getTypeOfLoan().trim().isEmpty()) {
 						desc += " (" + loanApp.getTypeOfLoan().trim() + ")";
 					}
@@ -784,10 +898,11 @@ public class LoanManagementService implements org.springframework.beans.factory.
 					loanAct.setPayBy("Loan Transfer");
 					loanAct.setApproved(true);
 					savingAccountActivityRepo.save(loanAct);
-					System.out.println("✅ Recorded loan disbursement activity of " + netDisbursedAmt + " for " + savingAcc.getAccountNumber());
+					System.out.println("RECORDED LOAN DISBURSEMENT ACTIVITY OF " + netDisbursedAmt + " FOR "
+							+ savingAcc.getAccountNumber());
 				}
 			} catch (Exception actEx) {
-				System.err.println("Failed to record loan disbursement activity: " + actEx.getMessage());
+				System.err.println("FAILED TO RECORD LOAN DISBURSEMENT ACTIVITY: " + actEx.getMessage());
 			}
 
 			if (request.getAccountNo() == null || request.getAccountNo().trim().isEmpty()) {
@@ -837,7 +952,7 @@ public class LoanManagementService implements org.springframework.beans.factory.
 			periodDivisor = 4;
 			break;
 		default:
-			throw new IllegalArgumentException("Invalid frequency: " + frequency);
+			throw new IllegalArgumentException("INVALID FREQUENCY: " + frequency);
 		}
 
 		List<LoanPayment> allPayments = loanPaymentRepo.findByLoanId(loanId);
@@ -846,7 +961,8 @@ public class LoanManagementService implements org.springframework.beans.factory.
 		double remainingPrincipal = policyAmount;
 		boolean isFlat = interestType != null && interestType.toLowerCase().contains("flat");
 		boolean isReducing = interestType != null && interestType.toLowerCase().contains("reduc");
-		boolean isRule78 = interestType != null && (interestType.toLowerCase().contains("78") || interestType.toLowerCase().contains("rule"));
+		boolean isRule78 = interestType != null
+				&& (interestType.toLowerCase().contains("78") || interestType.toLowerCase().contains("rule"));
 
 		if (!allPayments.isEmpty()) {
 			LoanPayment lastPayment = allPayments.get(allPayments.size() - 1);
@@ -930,30 +1046,42 @@ public class LoanManagementService implements org.springframework.beans.factory.
 			try {
 				LoanSchemCatalog scheme = loanRepository.findByLoanPlaneName(loanApp.getLoanPlanName()).orElse(null);
 				int currentInstNo = allPayments.size() + i;
-				double[] penResult = calculatePenalty(
-						loanDate, currentInstNo,
-						loanApp.getLoanMode(), request.getPaymentDate(),
-						emiAmount, scheme);
+				double[] penResult = calculatePenalty(loanDate, currentInstNo, loanApp.getLoanMode(),
+						request.getPaymentDate(), emiAmount, scheme);
 				payment.setPenaltyAmount(String.format(java.util.Locale.US, "%.2f", penResult[0]));
 				payment.setDaysLate(String.valueOf((int) penResult[1]));
-				payment.setPenaltyMode((scheme != null && scheme.getModePanalty() != null && !scheme.getModePanalty().trim().isEmpty())
-						? scheme.getModePanalty().trim() : "Percentage (2%)");
+				payment.setPenaltyMode(
+						(scheme != null && scheme.getModePanalty() != null && !scheme.getModePanalty().trim().isEmpty())
+								? scheme.getModePanalty().trim()
+								: "Percentage (2%)");
 
 				// Store the EMI due date
 				try {
 					int periodDays;
 					switch (loanApp.getLoanMode() == null ? "" : loanApp.getLoanMode()) {
-						case "Daily":       periodDays = 1;  break;
-						case "Weekly":      periodDays = 7;  break;
-						case "Fortnightly": periodDays = 14; break;
-						case "Quarterly":   periodDays = 91; break;
-						default:            periodDays = 30; break;
+					case "Daily":
+						periodDays = 1;
+						break;
+					case "Weekly":
+						periodDays = 7;
+						break;
+					case "Fortnightly":
+						periodDays = 14;
+						break;
+					case "Quarterly":
+						periodDays = 91;
+						break;
+					default:
+						periodDays = 30;
+						break;
 					}
-					java.time.LocalDate emiDue = java.time.LocalDate.parse(loanDate.trim()).plusDays((long) currentInstNo * periodDays);
+					java.time.LocalDate emiDue = java.time.LocalDate.parse(loanDate.trim())
+							.plusDays((long) currentInstNo * periodDays);
 					payment.setDueDate(emiDue.toString());
-				} catch (Exception ignored) {}
+				} catch (Exception ignored) {
+				}
 			} catch (Exception penEx) {
-				System.err.println("Penalty wiring error: " + penEx.getMessage());
+				System.err.println("PENALTY WIRING ERROR: " + penEx.getMessage());
 			}
 
 			loanPaymentRepo.save(payment);
@@ -1012,13 +1140,13 @@ public class LoanManagementService implements org.springframework.beans.factory.
 
 	public RegularLoanStatementResponse getRegularLoanStatement(String loanCode) {
 		if (loanCode == null || loanCode.trim().isEmpty()) {
-			throw new RuntimeException("Loan code cannot be empty");
+			throw new RuntimeException("LOAN CODE CANNOT BE EMPTY");
 		}
 		loanCode = loanCode.trim();
 
 		LoanApplication loanApp = loanApplicationRepo.findFirstByLoanIdOrderByIdDesc(loanCode);
 		if (loanApp == null) {
-			throw new RuntimeException("No loan found for code " + loanCode);
+			throw new RuntimeException("NO LOAN FOUND FOR CODE " + loanCode);
 		}
 
 		String customerName = loanApp.getMemberName() != null ? loanApp.getMemberName() : "";
@@ -1027,29 +1155,34 @@ public class LoanManagementService implements org.springframework.beans.factory.
 		if (loanApp.getLoanAmount() != null) {
 			try {
 				principal = Double.parseDouble(loanApp.getLoanAmount().replaceAll("[^0-9.]", "").trim());
-			} catch (Exception ignored) {}
+			} catch (Exception ignored) {
+			}
 		}
 
 		double roi = 0.0;
 		if (loanApp.getRateOfInterest() != null) {
 			try {
 				roi = Double.parseDouble(loanApp.getRateOfInterest().replaceAll("[^0-9.]", "").trim());
-			} catch (Exception ignored) {}
+			} catch (Exception ignored) {
+			}
 		}
 
 		int tenure = 12;
 		if (loanApp.getLoanTerm() != null) {
 			try {
 				tenure = Integer.parseInt(loanApp.getLoanTerm().replaceAll("[^0-9]", "").trim());
-			} catch (Exception ignored) {}
+			} catch (Exception ignored) {
+			}
 		}
-		if (tenure <= 0) tenure = 12;
+		if (tenure <= 0)
+			tenure = 12;
 
 		double emi = 0.0;
 		if (loanApp.getEmiPayment() != null) {
 			try {
 				emi = Double.parseDouble(loanApp.getEmiPayment().replaceAll("[^0-9.]", "").trim());
-			} catch (Exception ignored) {}
+			} catch (Exception ignored) {
+			}
 		}
 
 		String loanDateStr = loanApp.getLoanDate();
@@ -1071,14 +1204,21 @@ public class LoanManagementService implements org.springframework.beans.factory.
 
 		String mode = loanApp.getLoanMode() != null ? loanApp.getLoanMode().trim().toLowerCase() : "monthly";
 		int periodsPerYear = 12;
-		if (mode.contains("daily")) periodsPerYear = 365;
-		else if (mode.contains("week")) periodsPerYear = 52;
-		else if (mode.contains("month")) periodsPerYear = 12;
-		else if (mode.contains("quarter")) periodsPerYear = 4;
-		else if (mode.contains("half") || mode.contains("semi")) periodsPerYear = 2;
-		else if (mode.contains("year") || mode.contains("annual")) periodsPerYear = 1;
+		if (mode.contains("daily"))
+			periodsPerYear = 365;
+		else if (mode.contains("week"))
+			periodsPerYear = 52;
+		else if (mode.contains("month"))
+			periodsPerYear = 12;
+		else if (mode.contains("quarter"))
+			periodsPerYear = 4;
+		else if (mode.contains("half") || mode.contains("semi"))
+			periodsPerYear = 2;
+		else if (mode.contains("year") || mode.contains("annual"))
+			periodsPerYear = 1;
 
-		String interestType = loanApp.getInterestType() != null ? loanApp.getInterestType().trim().toLowerCase() : "flat";
+		String interestType = loanApp.getInterestType() != null ? loanApp.getInterestType().trim().toLowerCase()
+				: "flat";
 		boolean isFlat = interestType.contains("flat");
 
 		// If EMI was not recorded or is 0, compute standard EMI
@@ -1107,13 +1247,19 @@ public class LoanManagementService implements org.springframework.beans.factory.
 				if (p.getNoOfInst() != null) {
 					String digits = p.getNoOfInst().replaceAll("[^0-9]", "");
 					if (!digits.isEmpty()) {
-						try { instNum = Integer.parseInt(digits); } catch (Exception ignored) {}
+						try {
+							instNum = Integer.parseInt(digits);
+						} catch (Exception ignored) {
+						}
 					}
 				}
 				if (instNum == null && p.getRemarks() != null) {
 					String digits = p.getRemarks().replaceAll("[^0-9]", "");
 					if (!digits.isEmpty()) {
-						try { instNum = Integer.parseInt(digits); } catch (Exception ignored) {}
+						try {
+							instNum = Integer.parseInt(digits);
+						} catch (Exception ignored) {
+						}
 					}
 				}
 				if (instNum == null) {
@@ -1141,12 +1287,18 @@ public class LoanManagementService implements org.springframework.beans.factory.
 
 		for (int i = 1; i <= tenure; i++) {
 			LocalDate dueDate;
-			if (mode.contains("daily")) dueDate = startDate.plusDays(i);
-			else if (mode.contains("week")) dueDate = startDate.plusWeeks(i);
-			else if (mode.contains("quarter")) dueDate = startDate.plusMonths(i * 3L);
-			else if (mode.contains("half") || mode.contains("semi")) dueDate = startDate.plusMonths(i * 6L);
-			else if (mode.contains("year") || mode.contains("annual")) dueDate = startDate.plusYears(i);
-			else dueDate = startDate.plusMonths(i);
+			if (mode.contains("daily"))
+				dueDate = startDate.plusDays(i);
+			else if (mode.contains("week"))
+				dueDate = startDate.plusWeeks(i);
+			else if (mode.contains("quarter"))
+				dueDate = startDate.plusMonths(i * 3L);
+			else if (mode.contains("half") || mode.contains("semi"))
+				dueDate = startDate.plusMonths(i * 6L);
+			else if (mode.contains("year") || mode.contains("annual"))
+				dueDate = startDate.plusYears(i);
+			else
+				dueDate = startDate.plusMonths(i);
 
 			double interestComp;
 			double principalComp;
@@ -1173,18 +1325,21 @@ public class LoanManagementService implements org.springframework.beans.factory.
 			String paidDate = null;
 			double penalty = 0.0;
 
-			if (payment != null && ("PAID".equalsIgnoreCase(payment.getPaymentStatus()) || "SUCCESS".equalsIgnoreCase(payment.getPaymentStatus()) || payment.getPaymentDate() != null)) {
+			if (payment != null && ("PAID".equalsIgnoreCase(payment.getPaymentStatus())
+					|| "SUCCESS".equalsIgnoreCase(payment.getPaymentStatus()) || payment.getPaymentDate() != null)) {
 				status = "PAID";
 				paidDate = payment.getPaymentDate();
 				if (payment.getPenaltyAmount() != null) {
 					try {
 						penalty = Double.parseDouble(payment.getPenaltyAmount().replaceAll("[^0-9.]", "").trim());
-					} catch (Exception ignored) {}
+					} catch (Exception ignored) {
+					}
 				}
 				if (payment.getEmiPayment() != null) {
 					try {
 						rowEmi = Double.parseDouble(payment.getEmiPayment().replaceAll("[^0-9.]", "").trim());
-					} catch (Exception ignored) {}
+					} catch (Exception ignored) {
+					}
 				}
 
 				totalPaid += rowEmi;
@@ -1200,40 +1355,22 @@ public class LoanManagementService implements org.springframework.beans.factory.
 				}
 			}
 
-			StatementRowDto row = new StatementRowDto(
-				i,
-				dueDate.toString(),
-				Math.round(rowEmi * 100.0) / 100.0,
-				Math.round(principalComp * 100.0) / 100.0,
-				Math.round(interestComp * 100.0) / 100.0,
-				Math.round(penalty * 100.0) / 100.0,
-				paidDate,
-				status,
-				Math.round(runningBal * 100.0) / 100.0
-			);
+			StatementRowDto row = new StatementRowDto(i, dueDate.toString(), Math.round(rowEmi * 100.0) / 100.0,
+					Math.round(principalComp * 100.0) / 100.0, Math.round(interestComp * 100.0) / 100.0,
+					Math.round(penalty * 100.0) / 100.0, paidDate, status, Math.round(runningBal * 100.0) / 100.0);
 			statementRows.add(row);
 		}
 
 		double currentOutstanding = hasPaidInstallments ? lastPaidBalance : principal;
 		currentOutstanding = Math.round(currentOutstanding * 100.0) / 100.0;
 
-		LoanSummaryDto summary = new LoanSummaryDto(
-			loanCode,
-			customerName,
-			Math.round(principal * 100.0) / 100.0,
-			Math.round(roi * 100.0) / 100.0,
-			tenure,
-			Math.round(emi * 100.0) / 100.0,
-			currentOutstanding,
-			startDate.toString()
-		);
+		LoanSummaryDto summary = new LoanSummaryDto(loanCode, customerName, Math.round(principal * 100.0) / 100.0,
+				Math.round(roi * 100.0) / 100.0, tenure, Math.round(emi * 100.0) / 100.0, currentOutstanding,
+				startDate.toString());
 
-		StatementTotalsDto totals = new StatementTotalsDto(
-			Math.round(totalPaid * 100.0) / 100.0,
-			Math.round(totalInterestPaid * 100.0) / 100.0,
-			Math.round(totalPenaltyPaid * 100.0) / 100.0,
-			currentOutstanding
-		);
+		StatementTotalsDto totals = new StatementTotalsDto(Math.round(totalPaid * 100.0) / 100.0,
+				Math.round(totalInterestPaid * 100.0) / 100.0, Math.round(totalPenaltyPaid * 100.0) / 100.0,
+				currentOutstanding);
 
 		return new RegularLoanStatementResponse(summary, statementRows, totals);
 	}
@@ -1268,12 +1405,12 @@ public class LoanManagementService implements org.springframework.beans.factory.
 	// Foreclosure settlement calculation (Server-Side)
 	public ForeclosureSettlementDto calculateForeclosureSettlement(String loanId) {
 		if (loanId == null || loanId.trim().isEmpty()) {
-			throw new IllegalArgumentException("Loan ID must not be empty.");
+			throw new IllegalArgumentException("LOAN ID MUST NOT BE EMPTY.");
 		}
 
 		LoanApplication loan = loanApplicationRepo.findFirstByLoanIdOrderByIdDesc(loanId.trim());
 		if (loan == null) {
-			throw new RuntimeException("Loan application not found for Loan ID: " + loanId);
+			throw new RuntimeException("LOAN APPLICATION NOT FOUND FOR LOAN ID: " + loanId);
 		}
 
 		ForeclosureSettlementDto dto = new ForeclosureSettlementDto();
@@ -1287,10 +1424,12 @@ public class LoanManagementService implements org.springframework.beans.factory.
 			if (loan.getMemberId() != null) {
 				try {
 					List<addCustomer> custs = addCustomerRepo.findByMemberCode(loan.getMemberId().trim());
-					if (custs != null && !custs.isEmpty() && custs.get(0).getGuardianName() != null && !custs.get(0).getGuardianName().trim().isEmpty()) {
+					if (custs != null && !custs.isEmpty() && custs.get(0).getGuardianName() != null
+							&& !custs.get(0).getGuardianName().trim().isEmpty()) {
 						rel = custs.get(0).getGuardianName().trim();
 					}
-				} catch (Exception ignored) {}
+				} catch (Exception ignored) {
+				}
 			}
 		}
 		if (rel == null || rel.trim().isEmpty()) {
@@ -1304,8 +1443,9 @@ public class LoanManagementService implements org.springframework.beans.factory.
 		// Loan Plan Name with fallback to Loan Type Plan
 		String plan = loan.getLoanPlanName();
 		if (plan == null || plan.trim().isEmpty()) {
-			plan = loan.getTypeOfLoan() != null && !loan.getTypeOfLoan().trim().isEmpty() 
-					? (loan.getTypeOfLoan().trim() + " Plan") : "Standard Loan Plan";
+			plan = loan.getTypeOfLoan() != null && !loan.getTypeOfLoan().trim().isEmpty()
+					? (loan.getTypeOfLoan().trim() + " Plan")
+					: "STANDARD LOAN PLAN";
 		}
 		dto.setLoanPlanName(plan);
 
@@ -1325,7 +1465,8 @@ public class LoanManagementService implements org.springframework.beans.factory.
 			if (loan.getLoanAmount() != null) {
 				principal = Double.parseDouble(loan.getLoanAmount().replaceAll("[^0-9.]", "").trim());
 			}
-		} catch (Exception ignored) {}
+		} catch (Exception ignored) {
+		}
 		dto.setSanctionedPrincipal(principal);
 
 		double roi = 0.0;
@@ -1333,22 +1474,26 @@ public class LoanManagementService implements org.springframework.beans.factory.
 			if (loan.getRateOfInterest() != null) {
 				roi = Double.parseDouble(loan.getRateOfInterest().replaceAll("[^0-9.]", "").trim());
 			}
-		} catch (Exception ignored) {}
+		} catch (Exception ignored) {
+		}
 
 		double emi = 0.0;
 		try {
 			if (loan.getEmiPayment() != null) {
 				emi = Double.parseDouble(loan.getEmiPayment().replaceAll("[^0-9.]", "").trim());
 			}
-		} catch (Exception ignored) {}
+		} catch (Exception ignored) {
+		}
 
 		int term = 12;
 		try {
 			if (loan.getLoanTerm() != null) {
 				term = Integer.parseInt(loan.getLoanTerm().replaceAll("[^0-9]", "").trim());
 			}
-		} catch (Exception ignored) {}
-		if (term <= 0) term = 12;
+		} catch (Exception ignored) {
+		}
+		if (term <= 0)
+			term = 12;
 		dto.setTotalInstallments(term);
 
 		// Total Payable and Total Interest calculation
@@ -1356,7 +1501,8 @@ public class LoanManagementService implements org.springframework.beans.factory.
 		if (loan.getTotalPayableAmount() != null && !loan.getTotalPayableAmount().trim().isEmpty()) {
 			try {
 				totalPayable = Double.parseDouble(loan.getTotalPayableAmount().replaceAll("[^0-9.]", "").trim());
-			} catch (Exception ignored) {}
+			} catch (Exception ignored) {
+			}
 		}
 		if (totalPayable <= 0 && emi > 0 && term > 0) {
 			totalPayable = emi * term;
@@ -1366,7 +1512,8 @@ public class LoanManagementService implements org.springframework.beans.factory.
 		if (loan.getTotalInterest() != null && !loan.getTotalInterest().trim().isEmpty()) {
 			try {
 				totalInt = Double.parseDouble(loan.getTotalInterest().replaceAll("[^0-9.]", "").trim());
-			} catch (Exception ignored) {}
+			} catch (Exception ignored) {
+			}
 		}
 		if (totalInt <= 0 && totalPayable > principal) {
 			totalInt = totalPayable - principal;
@@ -1385,7 +1532,8 @@ public class LoanManagementService implements org.springframework.beans.factory.
 
 		if (payments != null) {
 			for (LoanPayment p : payments) {
-				boolean isDisbursement = "0".equals(p.getNoOfInst()) || "Loan Disbursement".equalsIgnoreCase(p.getRemarks());
+				boolean isDisbursement = "0".equals(p.getNoOfInst())
+						|| "Loan Disbursement".equalsIgnoreCase(p.getRemarks());
 				if (!isDisbursement && "PAID".equalsIgnoreCase(p.getPaymentStatus())) {
 					paidInstallmentsList.add(p);
 					if (p.getPaymentDate() != null && !p.getPaymentDate().trim().isEmpty()) {
@@ -1395,7 +1543,8 @@ public class LoanManagementService implements org.springframework.beans.factory.
 				if (p.getPenaltyAmount() != null) {
 					try {
 						totalPenalties += Double.parseDouble(p.getPenaltyAmount().replaceAll("[^0-9.]", "").trim());
-					} catch (Exception ignored) {}
+					} catch (Exception ignored) {
+					}
 				}
 			}
 		}
@@ -1405,11 +1554,16 @@ public class LoanManagementService implements org.springframework.beans.factory.
 		dto.setLastPaymentDate(lastPaymentDateStr);
 
 		double periodDivisor = 12.0;
-		if ("Daily".equalsIgnoreCase(mode)) periodDivisor = 365.0;
-		else if ("Weekly".equalsIgnoreCase(mode)) periodDivisor = 52.0;
-		else if ("Fortnightly".equalsIgnoreCase(mode)) periodDivisor = 26.0;
-		else if ("Quarterly".equalsIgnoreCase(mode)) periodDivisor = 4.0;
-		else periodDivisor = 12.0;
+		if ("Daily".equalsIgnoreCase(mode))
+			periodDivisor = 365.0;
+		else if ("Weekly".equalsIgnoreCase(mode))
+			periodDivisor = 52.0;
+		else if ("Fortnightly".equalsIgnoreCase(mode))
+			periodDivisor = 26.0;
+		else if ("Quarterly".equalsIgnoreCase(mode))
+			periodDivisor = 4.0;
+		else
+			periodDivisor = 12.0;
 
 		double totalPrincipalPaid = 0.0;
 		double outstandingPrincipal = principal;
@@ -1435,7 +1589,8 @@ public class LoanManagementService implements org.springframework.beans.factory.
 				if (principalComponent > runningBalance) {
 					principalComponent = runningBalance;
 				}
-				if (principalComponent < 0) principalComponent = 0;
+				if (principalComponent < 0)
+					principalComponent = 0;
 				totalPrincipalPaid += principalComponent;
 				runningBalance -= principalComponent;
 				if (runningBalance <= 0) {
@@ -1481,7 +1636,8 @@ public class LoanManagementService implements org.springframework.beans.factory.
 			if (loan.getLoanDate() != null && loan.getLoanDate().trim().length() >= 10) {
 				startDate = LocalDate.parse(loan.getLoanDate().trim().substring(0, 10));
 			}
-		} catch (Exception ignored) {}
+		} catch (Exception ignored) {
+		}
 
 		int expectedMaturedInstallments = calculateElapsedInstallments(startDate, today, mode, term);
 		int arrearsCount = Math.max(0, expectedMaturedInstallments - paidCount);
@@ -1489,18 +1645,22 @@ public class LoanManagementService implements org.springframework.beans.factory.
 		dto.setOverdueArrears(roundTwoDecimals(overdueArrears));
 		dto.setPendingPenalties(roundTwoDecimals(totalPenalties));
 
-		// 4. Foreclosure fee (configurable per scheme/type, default 0% if not configured)
+		// 4. Foreclosure fee (configurable per scheme/type, default 0% if not
+		// configured)
 		double feePercent = 0.0;
 		try {
 			LoanSchemCatalog scheme = loanRepository.findByLoanPlaneName(loan.getLoanPlanName()).orElse(null);
 			// scheme specific foreclosure fee if configured
-		} catch (Exception ignored) {}
+		} catch (Exception ignored) {
+		}
 		dto.setForeclosureFeePercent(feePercent);
 		double feeAmount = roundTwoDecimals(outstandingPrincipal * (feePercent / 100.0));
 		dto.setForeclosureFeeAmount(feeAmount);
 
-		// 5. Net Payoff Amount = Principal Outstanding + Accrued Interest + Penalties + Foreclosure Fee - Rebates
-		double netPayoff = Math.max(0.0, outstandingPrincipal + accruedInterest + totalPenalties + feeAmount - unearnedRebate);
+		// 5. Net Payoff Amount = Principal Outstanding + Accrued Interest + Penalties +
+		// Foreclosure Fee - Rebates
+		double netPayoff = Math.max(0.0,
+				outstandingPrincipal + accruedInterest + totalPenalties + feeAmount - unearnedRebate);
 		dto.setNetPayoffAmount(roundTwoDecimals(netPayoff));
 
 		// 6. Check Collateral/Security
@@ -1508,7 +1668,8 @@ public class LoanManagementService implements org.springframework.beans.factory.
 		StringBuilder colInfo = new StringBuilder();
 		if (loan.getLienConfirmed() != null && loan.getLienConfirmed()) {
 			hasCollateral = true;
-			colInfo.append("Lien on Deposit A/C: ").append(loan.getDepositAccountNo() != null ? loan.getDepositAccountNo() : "Active").append("; ");
+			colInfo.append("Lien on Deposit A/C: ")
+					.append(loan.getDepositAccountNo() != null ? loan.getDepositAccountNo() : "Active").append("; ");
 		}
 		if (loan.getGuarantorSecurityType() != null && !loan.getGuarantorSecurityType().trim().isEmpty()) {
 			hasCollateral = true;
@@ -1575,18 +1736,19 @@ public class LoanManagementService implements org.springframework.beans.factory.
 	// Service for closing the loan (Transactional with Full Audit & Accounting)
 	@Transactional
 	public Map<String, Object> closeLoan(LoanClosure paymentDetails) {
-		if (paymentDetails == null || paymentDetails.getLoanId() == null || paymentDetails.getLoanId().trim().isEmpty()) {
-			throw new IllegalArgumentException("Loan ID is required to close loan.");
+		if (paymentDetails == null || paymentDetails.getLoanId() == null
+				|| paymentDetails.getLoanId().trim().isEmpty()) {
+			throw new IllegalArgumentException("LOAN ID IS REQUIRED TO CLOSE LOAN.");
 		}
 
 		String loanId = paymentDetails.getLoanId().trim();
 		LoanApplication loan = loanApplicationRepo.findFirstByLoanIdOrderByIdDesc(loanId);
 		if (loan == null) {
-			throw new RuntimeException("Loan not found for loanId: " + loanId);
+			throw new RuntimeException("LOAN NOT FOUND FOR LOAN ID: " + loanId);
 		}
 
 		if ("CLOSED".equalsIgnoreCase(loan.getLoanStatus())) {
-			throw new IllegalStateException("Loan " + loanId + " is already CLOSED.");
+			throw new IllegalStateException("LOAN " + loanId + " IS ALREADY CLOSED.");
 		}
 
 		// 1. Calculate settlement server-side to validate submitted payment
@@ -1596,44 +1758,54 @@ public class LoanManagementService implements org.springframework.beans.factory.
 		if (paymentDetails.getWaiver() != null && !paymentDetails.getWaiver().trim().isEmpty()) {
 			try {
 				waiverAmount = Double.parseDouble(paymentDetails.getWaiver().replaceAll("[^0-9.]", "").trim());
-			} catch (Exception ignored) {}
+			} catch (Exception ignored) {
+			}
 		}
 
 		double fineAmount = 0.0;
 		if (paymentDetails.getFine() != null && !paymentDetails.getFine().trim().isEmpty()) {
 			try {
 				fineAmount = Double.parseDouble(paymentDetails.getFine().replaceAll("[^0-9.]", "").trim());
-			} catch (Exception ignored) {}
+			} catch (Exception ignored) {
+			}
 		}
 
 		double feeAmount = 0.0;
 		if (paymentDetails.getForeclosureFee() != null && !paymentDetails.getForeclosureFee().trim().isEmpty()) {
 			try {
 				feeAmount = Double.parseDouble(paymentDetails.getForeclosureFee().replaceAll("[^0-9.]", "").trim());
-			} catch (Exception ignored) {}
+			} catch (Exception ignored) {
+			}
 		}
 
 		// Expected net payoff
-		double expectedPayoff = Math.max(0.0, (settlement.getPrincipalOutstanding() + settlement.getAccruedInterestTillDate() + settlement.getOverdueArrears() + fineAmount + feeAmount) - waiverAmount);
+		double expectedPayoff = Math.max(0.0,
+				(settlement.getPrincipalOutstanding() + settlement.getAccruedInterestTillDate()
+						+ settlement.getOverdueArrears() + fineAmount + feeAmount) - waiverAmount);
 
 		double submittedPayment = 0.0;
 		String rawPayment = paymentDetails.getNetAmount() != null && !paymentDetails.getNetAmount().trim().isEmpty()
-				? paymentDetails.getNetAmount() : paymentDetails.getPaymentAmount();
+				? paymentDetails.getNetAmount()
+				: paymentDetails.getPaymentAmount();
 		if (rawPayment != null && !rawPayment.trim().isEmpty()) {
 			try {
 				submittedPayment = Double.parseDouble(rawPayment.replaceAll("[^0-9.]", "").trim());
-			} catch (Exception ignored) {}
+			} catch (Exception ignored) {
+			}
 		}
 
 		// Validation check: short payment rejected (with tolerance of 0.50)
 		if (submittedPayment < (expectedPayoff - 0.50)) {
-			throw new IllegalArgumentException("Submitted payment amount (Rs. " + String.format(Locale.US, "%.2f", submittedPayment)
-					+ ") is less than required settlement amount (Rs. " + String.format(Locale.US, "%.2f", expectedPayoff) + ").");
+			throw new IllegalArgumentException(
+					"SUBMITTED PAYMENT AMOUNT (Rs. " + String.format(Locale.US, "%.2f", submittedPayment)
+							+ ") IS LESS THAN REQUIRED SETTLEMENT AMOUNT (Rs. "
+							+ String.format(Locale.US, "%.2f", expectedPayoff) + ").");
 		}
 
 		String paymentMode = paymentDetails.getPaymentMode() != null ? paymentDetails.getPaymentMode().trim() : "Cash";
-		String paymentDate = paymentDetails.getPaymentDate() != null && !paymentDetails.getPaymentDate().trim().isEmpty()
-				? paymentDetails.getPaymentDate().trim() : LocalDate.now().toString();
+		String paymentDate = paymentDetails.getPaymentDate() != null
+				&& !paymentDetails.getPaymentDate().trim().isEmpty() ? paymentDetails.getPaymentDate().trim()
+						: LocalDate.now().toString();
 
 		// 2. Savings Account auto-debit if selected
 		String savingsAccountNo = paymentDetails.getAccountNo();
@@ -1653,7 +1825,8 @@ public class LoanManagementService implements org.springframework.beans.factory.
 			}
 
 			if (savingAcc == null) {
-				throw new RuntimeException("No active savings account found for borrower " + loan.getMemberId() + " to execute debit.");
+				throw new RuntimeException(
+						"NO ACTIVE SAVINGS ACCOUNT FOUND FOR BORROWER " + loan.getMemberId() + " TO EXECUTE DEBIT.");
 			}
 
 			double curBal = 0.0;
@@ -1664,9 +1837,9 @@ public class LoanManagementService implements org.springframework.beans.factory.
 			}
 
 			if (curBal < submittedPayment) {
-				throw new RuntimeException("Insufficient balance in Savings Account (" + savingAcc.getAccountNumber()
-						+ ")! Required: Rs. " + String.format(Locale.US, "%.2f", submittedPayment)
-						+ ", Available: Rs. " + String.format(Locale.US, "%.2f", curBal));
+				throw new RuntimeException("INSUFFICIENT BALANCE IN SAVINGS ACCOUNT (" + savingAcc.getAccountNumber()
+						+ ")! REQUIRED: RS. " + String.format(Locale.US, "%.2f", submittedPayment) + ", AVAILABLE: RS. "
+						+ String.format(Locale.US, "%.2f", curBal));
 			}
 
 			double newBal = curBal - submittedPayment;
@@ -1694,7 +1867,7 @@ public class LoanManagementService implements org.springframework.beans.factory.
 				act.setApproved(true);
 				savingAccountActivityRepo.save(act);
 			} catch (Exception actEx) {
-				System.err.println("Saving account activity log error: " + actEx.getMessage());
+				System.err.println("SAVING ACCOUNT ACTIVITY LOG ERROR: " + actEx.getMessage());
 			}
 		}
 
@@ -1723,7 +1896,9 @@ public class LoanManagementService implements org.springframework.beans.factory.
 		closingPayment.setChequeNo(paymentDetails.getChequeNo());
 		closingPayment.setChequeDate(paymentDetails.getChequeDate());
 		closingPayment.setCharges(paymentDetails.getCharges());
-		closingPayment.setRemarks("FORECLOSURE - Early Settlement: " + (paymentDetails.getReasonForClosure() != null ? paymentDetails.getReasonForClosure() : "Voluntary Prepayment"));
+		closingPayment.setRemarks("FORECLOSURE - Early Settlement: "
+				+ (paymentDetails.getReasonForClosure() != null ? paymentDetails.getReasonForClosure()
+						: "Voluntary Prepayment"));
 		closingPayment.setNoOfInst(String.valueOf(nextInstNo));
 		closingPayment.setAmountDue("0.00");
 		closingPayment.setPenaltyAmount(String.format(Locale.US, "%.2f", fineAmount));
@@ -1764,9 +1939,12 @@ public class LoanManagementService implements org.springframework.beans.factory.
 			try {
 				ActivityLog log = new ActivityLog();
 				log.setTimestamp(LocalDateTime.now());
-				log.setUsername(paymentDetails.getFinancialConsultantName() != null ? paymentDetails.getFinancialConsultantName() : "STAFF");
+				log.setUsername(paymentDetails.getFinancialConsultantName() != null
+						? paymentDetails.getFinancialConsultantName()
+						: "STAFF");
 				log.setAction("COLLATERAL_RELEASE");
-				log.setDetails("Collateral released for Loan " + loanId + " upon early foreclosure. Reason: " + paymentDetails.getReasonForClosure());
+				log.setDetails("Collateral released for Loan " + loanId + " upon early foreclosure. Reason: "
+						+ paymentDetails.getReasonForClosure());
 				log.setStatus("SUCCESS");
 				log.setUrl("/api/loanmanegment/closeLoan");
 				log.setMethod("POST");
@@ -1806,16 +1984,17 @@ public class LoanManagementService implements org.springframework.beans.factory.
 	public Map<String, Object> payRegularInstallment(Map<String, Object> req) {
 		String loanId = req.get("loanId") != null ? req.get("loanId").toString().trim() : "";
 		if (loanId.isEmpty()) {
-			throw new RuntimeException("Loan ID is required");
+			throw new RuntimeException("LOAN ID IS REQUIRED");
 		}
 
 		LoanApplication loanApp = loanApplicationRepo.findFirstByLoanIdOrderByIdDesc(loanId);
 		if (loanApp == null) {
-			throw new RuntimeException("Loan not found for Loan ID: " + loanId);
+			throw new RuntimeException("LOAN NOT FOUND FOR LOAN ID: " + loanId);
 		}
 
 		String paymentMode = req.get("paymentMode") != null ? req.get("paymentMode").toString().trim() : "Cash";
-		String paymentDate = req.get("paymentDate") != null ? req.get("paymentDate").toString().trim() : java.time.LocalDate.now().toString();
+		String paymentDate = req.get("paymentDate") != null ? req.get("paymentDate").toString().trim()
+				: java.time.LocalDate.now().toString();
 		String accountNo = req.get("accountNo") != null ? req.get("accountNo").toString().trim() : "";
 
 		double paymentAmount = 0.0;
@@ -1824,14 +2003,17 @@ public class LoanManagementService implements org.springframework.beans.factory.
 		} catch (Exception e) {
 			try {
 				paymentAmount = Double.parseDouble(loanApp.getEmiPayment());
-			} catch (Exception ignored) {}
+			} catch (Exception ignored) {
+			}
 		}
 
 		double penaltyAmount = 0.0;
 		if (req.get("penaltyAmount") != null) {
 			try {
-				penaltyAmount = Double.parseDouble(req.get("penaltyAmount").toString().replaceAll("[^0-9.]", "").trim());
-			} catch (Exception ignored) {}
+				penaltyAmount = Double
+						.parseDouble(req.get("penaltyAmount").toString().replaceAll("[^0-9.]", "").trim());
+			} catch (Exception ignored) {
+			}
 		}
 
 		double totalPayable = paymentAmount + penaltyAmount;
@@ -1853,7 +2035,7 @@ public class LoanManagementService implements org.springframework.beans.factory.
 			}
 
 			if (savingAcc == null) {
-				throw new RuntimeException("No savings account found for customer " + loanApp.getMemberId());
+				throw new RuntimeException("NO SAVINGS ACCOUNT FOUND FOR CUSTOMER " + loanApp.getMemberId());
 			}
 
 			double curBal = 0.0;
@@ -1864,7 +2046,9 @@ public class LoanManagementService implements org.springframework.beans.factory.
 			}
 
 			if (curBal < totalPayable) {
-				throw new RuntimeException("Insufficient balance in Savings Account (" + savingAcc.getAccountNumber() + ")! Required: Rs. " + String.format(java.util.Locale.US, "%.2f", totalPayable) + ", Available: Rs. " + String.format(java.util.Locale.US, "%.2f", curBal));
+				throw new RuntimeException("INSUFFICIENT BALANCE IN SAVINGS ACCOUNT (" + savingAcc.getAccountNumber()
+						+ ")! REQUIRED: RS. " + String.format(java.util.Locale.US, "%.2f", totalPayable)
+						+ ", AVAILABLE: RS. " + String.format(java.util.Locale.US, "%.2f", curBal));
 			}
 
 			double newBal = curBal - totalPayable;
@@ -1882,7 +2066,7 @@ public class LoanManagementService implements org.springframework.beans.factory.
 				act.setCustomerName(savingAcc.getEnterCustomerName());
 				act.setContactNumber(savingAcc.getContactNumber());
 				act.setTransactionFor("Loan EMI Repayment");
-				act.setComments("EMI Installment Repayment for Loan " + loanId);
+				act.setComments("EMI INSTALLMENT REPAYMENT FOR LOAN " + loanId);
 				act.setTransactionType("Withdrawal");
 				act.setTransactionAmount(String.format(java.util.Locale.US, "%.2f", totalPayable));
 				act.setAverageBalance(String.format(java.util.Locale.US, "%.2f", newBal));
@@ -1890,7 +2074,7 @@ public class LoanManagementService implements org.springframework.beans.factory.
 				act.setApproved(true);
 				savingAccountActivityRepo.save(act);
 			} catch (Exception actEx) {
-				System.err.println("Saving account activity error: " + actEx.getMessage());
+				System.err.println("SAVING ACCOUNT ACTIVITY ERROR: " + actEx.getMessage());
 			}
 
 			accountNo = savingAcc.getAccountNumber();
@@ -1903,7 +2087,8 @@ public class LoanManagementService implements org.springframework.beans.factory.
 			if (!rawInst.isEmpty()) {
 				try {
 					instNo = Integer.parseInt(rawInst);
-				} catch (Exception ignored) {}
+				} catch (Exception ignored) {
+				}
 			}
 		}
 
@@ -1918,7 +2103,8 @@ public class LoanManagementService implements org.springframework.beans.factory.
 		} else {
 			try {
 				lastDue = Double.parseDouble(loanApp.getLoanAmount());
-			} catch (Exception ignored) {}
+			} catch (Exception ignored) {
+			}
 		}
 
 		double newAmountDue = Math.max(0.0, lastDue - paymentAmount);
@@ -1940,7 +2126,7 @@ public class LoanManagementService implements org.springframework.beans.factory.
 		payment.setPaymentMode(paymentMode);
 		payment.setPaymentStatus("PAID");
 		payment.setAccountNo(accountNo);
-		payment.setRemarks("Installment " + instNo);
+		payment.setRemarks("INSTALLMENT " + instNo);
 		payment.setNoOfInst(String.valueOf(instNo));
 		payment.setAmountDue(String.format(java.util.Locale.US, "%.2f", newAmountDue));
 		payment.setPenaltyAmount(String.format(java.util.Locale.US, "%.2f", penaltyAmount));
@@ -1957,7 +2143,8 @@ public class LoanManagementService implements org.springframework.beans.factory.
 		int term = 0;
 		try {
 			term = Integer.parseInt(loanApp.getLoanTerm());
-		} catch (Exception ignored) {}
+		} catch (Exception ignored) {
+		}
 
 		boolean isClosed = (newAmountDue <= 0.01) || (term > 0 && instNo >= term);
 		if (isClosed) {
@@ -1970,7 +2157,7 @@ public class LoanManagementService implements org.springframework.beans.factory.
 			closure.setMemberId(loanApp.getMemberId());
 			closure.setLoanStatus("CLOSED");
 			closure.setPaymentDate(paymentDate);
-			closure.setRemarks("Loan closed after Installment " + instNo);
+			closure.setRemarks("LOAN CLOSED AFTER INSTALLMENT " + instNo);
 			closure.setLoanAmount(loanApp.getLoanAmount());
 			closure.setTypeOfLoan(loanApp.getTypeOfLoan());
 			closure.setBranchName(loanApp.getBranchName());
@@ -1982,7 +2169,8 @@ public class LoanManagementService implements org.springframework.beans.factory.
 
 		Map<String, Object> resp = new java.util.HashMap<>();
 		resp.put("status", "OK");
-		resp.put("message", "Installment " + instNo + " of Rs. " + String.format(java.util.Locale.US, "%.2f", totalPayable) + " paid successfully!");
+		resp.put("message", "INSTALLMENT " + instNo + " OF RS. "
+				+ String.format(java.util.Locale.US, "%.2f", totalPayable) + " PAID SUCCESSFULLY!");
 		resp.put("installmentNo", instNo);
 		resp.put("remainingDue", String.format(java.util.Locale.US, "%.2f", newAmountDue));
 		resp.put("isLoanClosed", isClosed);
@@ -1991,13 +2179,13 @@ public class LoanManagementService implements org.springframework.beans.factory.
 
 	public Map<String, Object> resetLoanInstallments(String loanId) {
 		if (loanId == null || loanId.trim().isEmpty()) {
-			throw new RuntimeException("Loan ID is required");
+			throw new RuntimeException("LOAN ID IS REQUIRED");
 		}
 		loanId = loanId.trim();
 
 		LoanApplication loanApp = loanApplicationRepo.findFirstByLoanIdOrderByIdDesc(loanId);
 		if (loanApp == null) {
-			throw new RuntimeException("Loan not found for ID: " + loanId);
+			throw new RuntimeException("LOAN NOT FOUND FOR ID: " + loanId);
 		}
 
 		List<LoanPayment> existingPayments = loanPaymentRepo.findByLoanId(loanId);
@@ -2012,7 +2200,8 @@ public class LoanManagementService implements org.springframework.beans.factory.
 
 		Map<String, Object> res = new HashMap<>();
 		res.put("status", "OK");
-		res.put("message", "Loan " + loanId + " installments reset successfully. Removed " + removedCount + " premature payment records.");
+		res.put("message", "LOAN " + loanId + " INSTALLMENTS RESET SUCCESSFULLY. REMOVED " + removedCount
+				+ " PREMATURE PAYMENT RECORDS.");
 		res.put("loanId", loanId);
 		res.put("loanAmount", loanApp.getLoanAmount());
 		res.put("loanDate", loanApp.getLoanDate());

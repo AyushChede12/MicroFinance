@@ -1,159 +1,158 @@
-
 let allServiceData = [];
 
 
 function getDateRange(option) {
-    let today = new Date();
-    let startDate, endDate;
+	let today = new Date();
+	let startDate, endDate;
 
-    switch (option) {
-        case "today":
-            startDate = endDate = today;
-            break;
+	switch (option) {
+		case "today":
+			startDate = endDate = today;
+			break;
 
-        case "yesterday":
-            let y = new Date();
-            y.setDate(today.getDate() - 1);
-            startDate = endDate = y;
-            break;
+		case "yesterday":
+			let y = new Date();
+			y.setDate(today.getDate() - 1);
+			startDate = endDate = y;
+			break;
 
-        case "last7":
-            let s7 = new Date();
-            s7.setDate(today.getDate() - 6); 
-            startDate = s7;
-            endDate = today;
-            break;
+		case "last7":
+			let s7 = new Date();
+			s7.setDate(today.getDate() - 6);
+			startDate = s7;
+			endDate = today;
+			break;
 
-        case "last30":
-            let s30 = new Date();
-            s30.setDate(today.getDate() - 29); 
-            startDate = s30;
-            endDate = today;
-            break;
+		case "last30":
+			let s30 = new Date();
+			s30.setDate(today.getDate() - 29);
+			startDate = s30;
+			endDate = today;
+			break;
 
-        case "thisMonth":
-            startDate = new Date(today.getFullYear(), today.getMonth(), 1);
-            endDate = today;
-            break;
+		case "thisMonth":
+			startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+			endDate = today;
+			break;
 
-        case "lastMonth":
-            startDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-            endDate = new Date(today.getFullYear(), today.getMonth(), 0);
-            break;
+		case "lastMonth":
+			startDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+			endDate = new Date(today.getFullYear(), today.getMonth(), 0);
+			break;
 
-        default:
-            startDate = endDate = today;
-    }
+		default:
+			startDate = endDate = today;
+	}
 
-    return {
-        startDate: startDate.toISOString().split("T")[0],
-        endDate: endDate.toISOString().split("T")[0]
-    };
+	return {
+		startDate: startDate.toISOString().split("T")[0],
+		endDate: endDate.toISOString().split("T")[0]
+	};
 }
 
 
-$("#searchServiceChargeBtn").click(function () {
+$("#searchServiceChargeBtn").click(function() {
 
-    const selected = $("#byDate").val();
+	const selected = $("#byDate").val();
 
-    if (!selected) {
-        alert("Please select a date range!");
-        return;
-    }
+	if (!selected) {
+		alert("PLEASE SELECT A DATE RANGE!");
+		return;
+	}
 
-    const { startDate, endDate } = getDateRange(selected);
+	const { startDate, endDate } = getDateRange(selected);
 
-    const reqBody = { startDate, endDate };
+	const reqBody = { startDate, endDate };
 
-    $.ajax({
-        url: "api/customersavings/getServiceChargeData",
-        type: "POST",
-        contentType: "application/json",
-        data: JSON.stringify(reqBody),
+	$.ajax({
+		url: "api/customersavings/getServiceChargeData",
+		type: "POST",
+		contentType: "application/json",
+		data: JSON.stringify(reqBody),
 
-        success: function (resp) {
-            if (resp.status === "OK" && Array.isArray(resp.data) && resp.data.length > 0) {
-                allServiceData = resp.data;
-                loadServiceTable(allServiceData);
-            } else {
-                $("#serviceTableBody").html(`
-                    <tr><td colspan="6" class="text-center">No Records Found</td></tr>
+		success: function(resp) {
+			if (resp.status === "OK" && Array.isArray(resp.data) && resp.data.length > 0) {
+				allServiceData = resp.data;
+				loadServiceTable(allServiceData);
+			} else {
+				$("#serviceTableBody").html(`
+                    <tr><td colspan="6" class="text-center">NO RECORDS FOUND</td></tr>
                 `);
-            }
-        },
+			}
+		},
 
-        error: function (xhr) {
-            alert("Error fetching records: " + xhr.responseText);
-        }
-    });
+		error: function(xhr) {
+			alert("ERROR FETCHING RECORDS: " + xhr.responseText);
+		}
+	});
 });
 
 
 function loadServiceTable(data) {
-    let rows = "";
-    let index = 1;
+	let rows = "";
+	let index = 1;
 
-    data.forEach(acc => {
-        rows += `
+	data.forEach(acc => {
+		rows += `
             <tr>
                 <td>${index}</td>
                 <td>${acc.accountNumber}</td>
                 <td>${acc.openingDate}</td>
                 <td class="balance">${acc.balance}</td>
-                <td>${acc.messageSend === "1" ? "Enabled" : "Disabled"}</td>
+                <td>${acc.messageSend === "1" ? "ENABLED" : "DISABLED"}</td>
                 <td>
                     <button class="apply-service-btn btn btn-sm btn-warning" data-id="${acc.id}">
-                        Apply
+                        APPLY
                     </button>
                 </td>
             </tr>
         `;
-        index++;  // <-- Yaha increment karna jaruri hai
-    });
+		index++;  // <-- Yaha increment karna jaruri hai
+	});
 
-    $("#serviceTableBody").html(rows);
+	$("#serviceTableBody").html(rows);
 }
 
 
-   
 
-$(document).on("click", ".apply-service-btn", function () {
 
-    const row = $(this).closest("tr");
-    const id = $(this).data("id");
+$(document).on("click", ".apply-service-btn", function() {
 
-    console.log("CLICKED ID:", id);
+	const row = $(this).closest("tr");
+	const id = $(this).data("id");
 
-    if (!confirm("Are you sure you want to deduct service charges?")) return;
+	console.log("CLICKED ID:", id);
 
-    $.ajax({
-        url: "api/customersavings/deduct-service-charges",
-        type: "POST",
-        contentType: "application/json",
-        data: JSON.stringify({ id: id }),
+	if (!confirm("ARE YOU SURE YOU WANT TO DEDUCT SERVICE CHARGES?")) return;
 
-        success: function (response) {
+	$.ajax({
+		url: "api/customersavings/deduct-service-charges",
+		type: "POST",
+		contentType: "application/json",
+		data: JSON.stringify({ id: id }),
 
-            console.log("API RESPONSE:", response);
+		success: function(response) {
 
-            if (response.status === "OK" && response.newBalance !== undefined) {
+			console.log("API RESPONSE:", response);
 
-                const newBalance = response.newBalance;
+			if (response.status === "OK" && response.newBalance !== undefined) {
 
-                row.find(".balance").text(newBalance.toFixed(2));
+				const newBalance = response.newBalance;
 
-               
-                alert("Service Charge Successfully Deducted!\nNew Balance: " + newBalance);
+				row.find(".balance").text(newBalance.toFixed(2));
 
-                return;
-            }
 
-            alert("Failed: " + (response.message || "Unknown error"));
-        },
+				alert("SERVICE CHARGE SUCCESSFULLY DEDUCTED!\nNEW BALANCE: " + newBalance);
 
-        error: function (xhr) {
-            console.error("ERROR:", xhr.responseText);
-            alert("Error applying service charges");
-        }
-    });
+				return;
+			}
+
+			alert("FAILED: " + (response.message || "UNKNOWN ERROR"));
+		},
+
+		error: function(xhr) {
+			console.error("ERROR:", xhr.responseText);
+			alert("ERROR APPLYING SERVICE CHARGES");
+		}
+	});
 });

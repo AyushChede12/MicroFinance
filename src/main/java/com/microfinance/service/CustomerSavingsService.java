@@ -234,11 +234,11 @@ public class CustomerSavingsService {
 
 		if (isNew) {
 			return ApiResponse.success(HttpStatus.CREATED,
-					"Saved successfully. Director Name: " + saveSavingAccountDetails.getEnterCustomerName(),
+					"SAVED SUCCESSFULLY. DIRECTOR NAME: " + saveSavingAccountDetails.getEnterCustomerName(),
 					saveSavingAccountDetails);
 		} else {
 			return ApiResponse.success(HttpStatus.OK,
-					"Updated successfully. Director Name: " + saveSavingAccountDetails.getEnterCustomerName(),
+					"UPDATED SUCCESSFULLY. DIRECTOR NAME: " + saveSavingAccountDetails.getEnterCustomerName(),
 					saveSavingAccountDetails);
 		}
 	}
@@ -253,10 +253,10 @@ public class CustomerSavingsService {
 
 			try {
 				photo.transferTo(destinationFile); // Save the file to the destination path
-				System.out.println("File successfully saved at: " + destinationFile.getAbsolutePath());
+				System.out.println("FILE SUCCESSFULLY SAVED AT: " + destinationFile.getAbsolutePath());
 				return fileName; // Return the saved file's name
 			} catch (IOException e) {
-				System.err.println("File saving failed: " + e.getMessage());
+				System.err.println("FILE SAVING FAILED: " + e.getMessage());
 				throw e; // Rethrow the exception to handle errors
 			}
 		}
@@ -284,9 +284,9 @@ public class CustomerSavingsService {
 		if (!uploadDir.exists()) {
 			boolean created = uploadDir.mkdirs();
 			if (created) {
-				System.out.println("Upload directory created at: " + uploadDirectory);
+				System.out.println("UPLOAD DIRECTORY CREATED AT: " + uploadDirectory);
 			} else {
-				System.err.println("Failed to create upload directory: " + uploadDirectory);
+				System.err.println("FAILED TO CREATE UPLOAD DIRECTORY: " + uploadDirectory);
 			}
 		}
 	}
@@ -388,9 +388,9 @@ public class CustomerSavingsService {
 				try {
 					savingAccountActivityRepo.delete(dup);
 					System.out.println(
-							"Deleted duplicate loan activity ID " + dup.getId() + " for account " + accountNumber);
+							"DELETED DUPLICATE LOAN ACTIVITY ID " + dup.getId() + " FOR ACCOUNT " + accountNumber);
 				} catch (Exception ex) {
-					System.err.println("Error deleting duplicate loan activity: " + ex.getMessage());
+					System.err.println("ERROR DELETING DUPLICATE LOAN ACTIVITY: " + ex.getMessage());
 				}
 			}
 		}
@@ -571,7 +571,7 @@ public class CustomerSavingsService {
 				}
 			}
 		} catch (Exception ex) {
-			System.err.println("Error synchronizing credit fund transfers: " + ex.getMessage());
+			System.err.println("ERROR SYNCHRONIZING CREDIT FUND TRANSFERS: " + ex.getMessage());
 		}
 
 		// 5. Loan Disbursements into Savings Account
@@ -658,7 +658,7 @@ public class CustomerSavingsService {
 									lp.getMemberName() != null ? lp.getMemberName() : acc.getEnterCustomerName());
 							loanAct.setContactNumber(acc.getContactNumber());
 							loanAct.setTransactionFor("Loan Disbursement");
-							String desc = "Loan Disbursed Credited - Loan ID: " + loanId;
+							String desc = "LOAN DISBURSED CREDITED - LOAN ID: " + loanId;
 							if (lp.getTypeOfLoan() != null && !lp.getTypeOfLoan().trim().isEmpty()) {
 								desc += " (" + lp.getTypeOfLoan().trim() + ")";
 							}
@@ -676,7 +676,7 @@ public class CustomerSavingsService {
 				}
 			}
 		} catch (Exception ex) {
-			System.err.println("Error synchronizing loan disbursements: " + ex.getMessage());
+			System.err.println("ERROR SYNCHRONIZING LOAN DISBURSEMENTS: " + ex.getMessage());
 		}
 
 		// 6. SB Interest Credits
@@ -701,7 +701,7 @@ public class CustomerSavingsService {
 						intAct.setContactNumber(acc.getContactNumber());
 						intAct.setTransactionFor("Interest Credit");
 						intAct.setComments(
-								"SB Interest Credited (" + (sit.getFromDate() != null ? sit.getFromDate() : "") + " to "
+								"SB INTEREST CREDITED (" + (sit.getFromDate() != null ? sit.getFromDate() : "") + " TO "
 										+ (sit.getToDate() != null ? sit.getToDate() : "") + ")");
 						intAct.setTransactionType("Deposit");
 						intAct.setTransactionAmount(
@@ -715,7 +715,7 @@ public class CustomerSavingsService {
 				}
 			}
 		} catch (Exception ex) {
-			System.err.println("Error synchronizing SB interests: " + ex.getMessage());
+			System.err.println("ERROR SYNCHRONIZING SB INTERESTS: " + ex.getMessage());
 		}
 
 		// Re-fetch all activities if new ones were added
@@ -800,7 +800,8 @@ public class CustomerSavingsService {
 	public List<String> getAccountNumbersByType(String accountType) {
 		List<CreateSavingsAccount> accounts;
 		if (accountType != null && !accountType.trim().isEmpty()) {
-			accounts = createSavingAccountRepo.findByTypeofaccountContainingIgnoreCaseAndIsApproved(accountType.trim(), false);
+			accounts = createSavingAccountRepo.findByTypeofaccountContainingIgnoreCaseAndIsApproved(accountType.trim(),
+					false);
 			if (accounts.isEmpty()) {
 				String cleanType = accountType.replaceAll("\\s+", "").toLowerCase();
 				accounts = createSavingAccountRepo.findAll().stream()
@@ -898,7 +899,7 @@ public class CustomerSavingsService {
 				result.put(cleanedCode, accountNumbers);
 			}
 
-			System.out.println("Accounts for " + cleanedCode + ": " + accountNumbers);
+			System.out.println("ACCOUNTS FOR " + cleanedCode + ": " + accountNumbers);
 		}
 
 		return result;
@@ -923,7 +924,7 @@ public class CustomerSavingsService {
 
 		// 1️⃣ Existing record fetch karo
 		SavingSchemeCatalog entity = savingSchmeCatalogRepo.findById(id)
-				.orElseThrow(() -> new RuntimeException("Saving account not found with id : " + id));
+				.orElseThrow(() -> new RuntimeException("SAVING ACCOUNT NOT FOUND WITH ID : " + id));
 
 		// 2️⃣ JS payload ke fields set karo
 		entity.setPolicyName((String) payload.get("policyName"));
@@ -955,7 +956,7 @@ public class CustomerSavingsService {
 		double newBalance = balance - smsCharge;
 
 		CreateSavingsAccount acc = createSavingAccountRepo.findById(id)
-				.orElseThrow(() -> new RuntimeException("Account not found"));
+				.orElseThrow(() -> new RuntimeException("ACCOUNT NOT FOUND"));
 
 		acc.setBalance(String.valueOf(newBalance));
 		createSavingAccountRepo.save(acc);
@@ -965,7 +966,7 @@ public class CustomerSavingsService {
 
 	public ApiResponse<SavingsInterestTransfer> transferInterest(SavingsInterestTransfer interest) {
 		if (interest.getAccountNumber() == null || interest.getAccountNumber().trim().isEmpty()) {
-			return ApiResponse.error(HttpStatus.BAD_REQUEST, "Account number is required");
+			return ApiResponse.error(HttpStatus.BAD_REQUEST, "ACCOUNT NUMBER IS REQUIRED");
 		}
 
 		// ===== DUPLICATE CHECK =====
@@ -974,8 +975,8 @@ public class CustomerSavingsService {
 					interest.getAccountNumber(), interest.getFromDate(), interest.getToDate());
 
 			if (alreadyTransferred) {
-				return ApiResponse.error(HttpStatus.CONFLICT, "Interest already transferred for account "
-						+ interest.getAccountNumber() + " for this date range");
+				return ApiResponse.error(HttpStatus.CONFLICT, "INTEREST ALREADY TRANSFERRED FOR ACCOUNT "
+						+ interest.getAccountNumber() + " FOR THIS DATE RANGE");
 			}
 		}
 
@@ -983,7 +984,7 @@ public class CustomerSavingsService {
 		Optional<CreateSavingsAccount> optAcc = createSavingAccountRepo
 				.findByAccountNumber(interest.getAccountNumber());
 		if (!optAcc.isPresent()) {
-			return ApiResponse.error(HttpStatus.NOT_FOUND, "Savings account not found: " + interest.getAccountNumber());
+			return ApiResponse.error(HttpStatus.NOT_FOUND, "SAVINGS ACCOUNT NOT FOUND: " + interest.getAccountNumber());
 		}
 		CreateSavingsAccount savingsAccount = optAcc.get();
 
@@ -1068,7 +1069,7 @@ public class CustomerSavingsService {
 			intAct.setContactNumber(savingsAccount.getContactNumber());
 			intAct.setTransactionFor("Interest Credit");
 			intAct.setComments(
-					"SB Interest Credited (" + savedInterest.getFromDate() + " to " + savedInterest.getToDate() + ")");
+					"SB INTEREST CREDITED (" + savedInterest.getFromDate() + " TO " + savedInterest.getToDate() + ")");
 			intAct.setTransactionType("Deposit");
 			intAct.setTransactionAmount(interestAmount.toPlainString());
 			intAct.setAverageBalance(newBalance.toString());
@@ -1076,16 +1077,16 @@ public class CustomerSavingsService {
 			intAct.setApproved(true);
 			savingAccountActivityRepo.save(intAct);
 		} catch (Exception ex) {
-			System.err.println("Failed to log interest activity: " + ex.getMessage());
+			System.err.println("FAILED TO LOG INTEREST ACTIVITY: " + ex.getMessage());
 		}
 
-		return ApiResponse.success(HttpStatus.OK, "Interest transferred & main account balance updated successfully",
+		return ApiResponse.success(HttpStatus.OK, "INTEREST TRANSFERRED & MAIN ACCOUNT BALANCE UPDATED SUCCESSFULLY",
 				savedInterest);
 	}
 
 	public ApiResponse<Map<String, Object>> transferInterestBatch(List<SavingsInterestTransfer> interestList) {
 		if (interestList == null || interestList.isEmpty()) {
-			return ApiResponse.error(HttpStatus.BAD_REQUEST, "No accounts selected for interest transfer");
+			return ApiResponse.error(HttpStatus.BAD_REQUEST, "NO ACCOUNTS SELECTED FOR INTEREST TRANSFER");
 		}
 
 		int successCount = 0;
@@ -1118,7 +1119,7 @@ public class CustomerSavingsService {
 		data.put("errors", messages);
 
 		return ApiResponse.success(HttpStatus.OK,
-				"Interest transfer completed: " + successCount + " successful, " + failedCount + " skipped/failed",
+				"INTEREST TRANSFER COMPLETED: " + successCount + " SUCCESSFUL, " + failedCount + " SKIPPED/FAILED",
 				data);
 	}
 
@@ -1185,7 +1186,7 @@ public class CustomerSavingsService {
 				}
 			}
 		} catch (Exception e) {
-			System.err.println("Error resolving net disbursement amount for " + loanId + ": " + e.getMessage());
+			System.err.println("ERROR RESOLVING NET DISBURSEMENT AMOUNT FOR " + loanId + ": " + e.getMessage());
 		}
 		return 0.0;
 	}

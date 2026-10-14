@@ -6,7 +6,7 @@ $(document).ready(function() {
 		let password = $("#password").val().trim();
 
 		if (!username || !password) {
-			$("#errorMsg").text("UserName and password are required").show();
+			$("#errorMsg").text("USERNAME AND PASSWORD ARE REQUIRED").show();
 			return;
 		}
 
@@ -27,9 +27,9 @@ $(document).ready(function() {
 			},
 			error: function(xhr) {
 				if (xhr.status === 401) {
-					$("#errorMsg").text("Invalid username or password").show();
+					$("#errorMsg").text("INVALID USERNAME OR PASSWORD").show();
 				} else {
-					$("#errorMsg").text("Something went wrong. Try again!").show();
+					$("#errorMsg").text("SOMETHING WENT WRONG. TRY AGAIN!").show();
 				}
 			}
 		});
@@ -47,11 +47,11 @@ $(document).ready(function() {
 					// Redirect to dashboard.jsp
 					window.location.href = "openDashboard";
 				} else {
-					alert("Invalid credentials");
+					alert("INVALID CREDENTIALS");
 				}
 			},
 			error: function() {
-				alert("Login failed!");
+				alert("LOGIN FAILED!");
 			}
 		});*/
 	});

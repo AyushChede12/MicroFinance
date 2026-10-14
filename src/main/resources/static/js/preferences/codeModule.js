@@ -11,7 +11,7 @@ $(document).ready(function() {
 
 		// Simple validation
 		if (isNaN(noOfDigit) || isNaN(lastNo) || !codePrefix) {
-			alert("⚠️ Please ensure Code Prefix, No. of Digit, and Last No. are correctly filled.");
+			alert("⚠️ PLEASE ENSURE CODE PREFIX, NO. OF DIGIT, AND LAST NO. ARE CORRECTLY FILLED.");
 			return;
 		}
 
@@ -33,10 +33,10 @@ $(document).ready(function() {
 				const preview = response.data.preview;
 				$row.find('td[data-label="Preview Customer"] input').val(preview);
 				$row.attr("data-id", response.data.id); // Save ID in case it was a new entry
-				alert("✅ Customer Code saved successfully For Code Module!");
+				alert("✅ CUSTOMER CODE SAVED SUCCESSFULLY FOR CODE MODULE!");
 			},
 			error: function(xhr) {
-				const msg = xhr.responseJSON?.message || "Something went wrong!";
+				const msg = xhr.responseJSON?.message || "SOMETHING WENT WRONG!";
 				alert("❌ " + msg);
 			}
 		});
@@ -54,7 +54,7 @@ $(document).ready(function() {
 
 		// Simple validation
 		if (isNaN(noOfDigit) || isNaN(lastNo) || !codePrefix) {
-			alert("⚠️ Please ensure Code Prefix, No. of Digit, and Last No. are correctly filled.");
+			alert("⚠️ PLEASE ENSURE CODE PREFIX, NO. OF DIGIT, AND LAST NO. ARE CORRECTLY FILLED.");
 			return;
 		}
 
@@ -76,10 +76,10 @@ $(document).ready(function() {
 				const preview = response.data.preview;
 				$row.find('td[data-label="Preview Financial"] input').val(preview);
 				$row.attr("data-id", response.data.id); // Save ID in case it was a new entry
-				alert("✅ Financial Code saved successfully For Code Module!");
+				alert("✅ FINANCIAL CODE SAVED SUCCESSFULLY FOR CODE MODULE!");
 			},
 			error: function(xhr) {
-				const msg = xhr.responseJSON?.message || "Something went wrong!";
+				const msg = xhr.responseJSON?.message || "SOMETHING WENT WRONG!";
 				alert("❌ " + msg);
 			}
 		});
@@ -97,7 +97,7 @@ $(document).ready(function() {
 
 		// Simple validation
 		if (isNaN(noOfDigit) || isNaN(lastNo) || !codePrefix) {
-			alert("⚠️ Please ensure Code Prefix, No. of Digit, and Last No. are correctly filled.");
+			alert("⚠️ PLEASE ENSURE CODE PREFIX, NO. OF DIGIT, AND LAST NO. ARE CORRECTLY FILLED.");
 			return;
 		}
 
@@ -119,10 +119,10 @@ $(document).ready(function() {
 				const preview = response.data.preview;
 				$row.find('td[data-label="Preview Team"] input').val(preview);
 				$row.attr("data-id", response.data.id); // Save ID in case it was a new entry
-				alert("✅ Team Member Code saved successfully For Code Module!");
+				alert("✅ TEAM MEMBER CODE SAVED SUCCESSFULLY FOR CODE MODULE!");
 			},
 			error: function(xhr) {
-				const msg = xhr.responseJSON?.message || "Something went wrong!";
+				const msg = xhr.responseJSON?.message || "SOMETHING WENT WRONG!";
 				alert("❌ " + msg);
 			}
 		});
@@ -140,7 +140,7 @@ $(document).ready(function() {
 
 		// Simple validation
 		if (isNaN(noOfDigit) || isNaN(lastNo) || !codePrefix) {
-			alert("⚠️ Please ensure Code Prefix, No. of Digit, and Last No. are correctly filled.");
+			alert("⚠️ PLEASE ENSURE CODE PREFIX, NO. OF DIGIT, AND LAST NO. ARE CORRECTLY FILLED.");
 			return;
 		}
 
@@ -162,10 +162,10 @@ $(document).ready(function() {
 				const preview = response.data.preview;
 				$row.find('td[data-label="Preview RD"] input').val(preview);
 				$row.attr("data-id", response.data.id); // Save ID in case it was a new entry
-				alert("✅ RD Policy No saved successfully For Code Module!");
+				alert("✅ RD POLICY NO SAVED SUCCESSFULLY FOR CODE MODULE!");
 			},
 			error: function(xhr) {
-				const msg = xhr.responseJSON?.message || "Something went wrong!";
+				const msg = xhr.responseJSON?.message || "SOMETHING WENT WRONG!";
 				alert("❌ " + msg);
 			}
 		});
@@ -183,7 +183,7 @@ $(document).ready(function() {
 
 		// Simple validation
 		if (isNaN(noOfDigit) || isNaN(lastNo) || !codePrefix) {
-			alert("⚠️ Please ensure Code Prefix, No. of Digit, and Last No. are correctly filled.");
+			alert("⚠️ PLEASE ENSURE CODE PREFIX, NO. OF DIGIT, AND LAST NO. ARE CORRECTLY FILLED.");
 			return;
 		}
 
@@ -205,10 +205,10 @@ $(document).ready(function() {
 				const preview = response.data.preview;
 				$row.find('td[data-label="Preview FD"] input').val(preview);
 				$row.attr("data-id", response.data.id); // Save ID in case it was a new entry
-				alert("✅ FD Policy No saved successfully For Code Module!");
+				alert("✅ FD POLICY NO SAVED SUCCESSFULLY FOR CODE MODULE!");
 			},
 			error: function(xhr) {
-				const msg = xhr.responseJSON?.message || "Something went wrong!";
+				const msg = xhr.responseJSON?.message || "SOMETHING WENT WRONG!";
 				alert("❌ " + msg);
 			}
 		});
@@ -226,7 +226,7 @@ $(document).ready(function() {
 
 		// Simple validation
 		if (isNaN(noOfDigit) || isNaN(lastNo) || !codePrefix) {
-			alert("⚠️ Please ensure Code Prefix, No. of Digit, and Last No. are correctly filled.");
+			alert("⚠️ PLEASE ENSURE CODE PREFIX, NO. OF DIGIT, AND LAST NO. ARE CORRECTLY FILLED.");
 			return;
 		}
 
@@ -248,10 +248,10 @@ $(document).ready(function() {
 				const preview = response.data.preview;
 				$row.find('td[data-label="Preview DD"] input').val(preview);
 				$row.attr("data-id", response.data.id); // Save ID in case it was a new entry
-				alert("✅ DD Policy No saved successfully For Code Module!");
+				alert("✅ DD POLICY NO SAVED SUCCESSFULLY FOR CODE MODULE!");
 			},
 			error: function(xhr) {
-				const msg = xhr.responseJSON?.message || "Something went wrong!";
+				const msg = xhr.responseJSON?.message || "SOMETHING WENT WRONG!";
 				alert("❌ " + msg);
 			}
 		});
@@ -269,7 +269,7 @@ $(document).ready(function() {
 
 		// Simple validation
 		if (isNaN(noOfDigit) || isNaN(lastNo) || !codePrefix) {
-			alert("⚠️ Please ensure Code Prefix, No. of Digit, and Last No. are correctly filled.");
+			alert("⚠️ PLEASE ENSURE CODE PREFIX, NO. OF DIGIT, AND LAST NO. ARE CORRECTLY FILLED.");
 			return;
 		}
 
@@ -291,10 +291,10 @@ $(document).ready(function() {
 				const preview = response.data.preview;
 				$row.find('td[data-label="Preview MIS"] input').val(preview);
 				$row.attr("data-id", response.data.id); // Save ID in case it was a new entry
-				alert("✅ MIS Policy No saved successfully For Code Module!");
+				alert("✅ MIS POLICY NO SAVED SUCCESSFULLY FOR CODE MODULE!");
 			},
 			error: function(xhr) {
-				const msg = xhr.responseJSON?.message || "Something went wrong!";
+				const msg = xhr.responseJSON?.message || "SOMETHING WENT WRONG!";
 				alert("❌ " + msg);
 			}
 		});
@@ -312,7 +312,7 @@ $(document).ready(function() {
 
 		// Simple validation
 		if (isNaN(noOfDigit) || isNaN(lastNo) || !codePrefix) {
-			alert("⚠️ Please ensure Code Prefix, No. of Digit, and Last No. are correctly filled.");
+			alert("⚠️ PLEASE ENSURE CODE PREFIX, NO. OF DIGIT, AND LAST NO. ARE CORRECTLY FILLED.");
 			return;
 		}
 
@@ -334,10 +334,10 @@ $(document).ready(function() {
 				const preview = response.data.preview;
 				$row.find('td[data-label="Preview ACC"] input').val(preview);
 				$row.attr("data-id", response.data.id); // Save ID in case it was a new entry
-				alert("✅ Saving Account No saved successfully For Code Module!");
+				alert("✅ SAVING ACCOUNT NO SAVED SUCCESSFULLY FOR CODE MODULE!");
 			},
 			error: function(xhr) {
-				const msg = xhr.responseJSON?.message || "Something went wrong!";
+				const msg = xhr.responseJSON?.message || "SOMETHING WENT WRONG!";
 				alert("❌ " + msg);
 			}
 		});
@@ -355,7 +355,7 @@ $(document).ready(function() {
 
 		// Simple validation
 		if (isNaN(noOfDigit) || isNaN(lastNo) || !codePrefix) {
-			alert("⚠️ Please ensure Code Prefix, No. of Digit, and Last No. are correctly filled.");
+			alert("⚠️ PLEASE ENSURE CODE PREFIX, NO. OF DIGIT, AND LAST NO. ARE CORRECTLY FILLED.");
 			return;
 		}
 
@@ -377,10 +377,10 @@ $(document).ready(function() {
 				const preview = response.data.preview;
 				$row.find('td[data-label="Preview LOAN"] input').val(preview);
 				$row.attr("data-id", response.data.id); // Save ID in case it was a new entry
-				alert("✅ Loan ID saved successfully For Code Module!");
+				alert("✅ LOAN ID SAVED SUCCESSFULLY FOR CODE MODULE!");
 			},
 			error: function(xhr) {
-				const msg = xhr.responseJSON?.message || "Something went wrong!";
+				const msg = xhr.responseJSON?.message || "SOMETHING WENT WRONG!";
 				alert("❌ " + msg);
 			}
 		});
@@ -398,7 +398,7 @@ $(document).ready(function() {
 
 		// Simple validation
 		if (isNaN(noOfDigit) || isNaN(lastNo) || !codePrefix) {
-			alert("⚠️ Please ensure Code Prefix, No. of Digit, and Last No. are correctly filled.");
+			alert("⚠️ PLEASE ENSURE CODE PREFIX, NO. OF DIGIT, AND LAST NO. ARE CORRECTLY FILLED.");
 			return;
 		}
 
@@ -420,10 +420,10 @@ $(document).ready(function() {
 				const preview = response.data.preview;
 				$row.find('td[data-label="Preview GROUP"] input').val(preview);
 				$row.attr("data-id", response.data.id); // Save ID in case it was a new entry
-				alert("✅ Group Code saved successfully For Code Module!");
+				alert("✅ GROUP CODE SAVED SUCCESSFULLY FOR CODE MODULE!");
 			},
 			error: function(xhr) {
-				const msg = xhr.responseJSON?.message || "Something went wrong!";
+				const msg = xhr.responseJSON?.message || "SOMETHING WENT WRONG!";
 				alert("❌ " + msg);
 			}
 		});
@@ -467,4 +467,3 @@ document.addEventListener("DOMContentLoaded", function() {
 		}
 	});
 });
-

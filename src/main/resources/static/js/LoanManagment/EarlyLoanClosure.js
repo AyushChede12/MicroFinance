@@ -34,11 +34,11 @@ function populateApprovedLoanIds() {
 					$dropdown.append(`<option value="${id}">${id}</option>`);
 				});
 			} else {
-				console.warn("No active loan IDs found.");
+				console.warn("NO ACTIVE LOAN IDS FOUND.");
 			}
 		},
 		error: function(xhr) {
-			console.error("Error fetching Loan IDs:", xhr.responseText);
+			console.error("ERROR FETCHING LOAN IDS:", xhr.responseText);
 		}
 	});
 }
@@ -67,7 +67,7 @@ function populateFinancialConsultants() {
 			}
 		},
 		error: function(xhr) {
-			console.error("Error loading financial consultants:", xhr.responseText);
+			console.error("ERROR LOADING FINANCIAL CONSULTANTS:", xhr.responseText);
 		}
 	});
 }
@@ -167,7 +167,7 @@ function fetchForeclosureSettlement(loanId) {
 		dataType: "json",
 		success: function(response) {
 			if (response.status !== "OK" || !response.data) {
-				alert("Failed to calculate foreclosure: " + (response.message || "Unknown error"));
+				alert("FAILED TO CALCULATE FORECLOSURE: " + (response.message || "UNKNOWN ERROR").toUpperCase());
 				return;
 			}
 
@@ -182,7 +182,7 @@ function fetchForeclosureSettlement(loanId) {
 			$('#contactNo').val(d.contactNo || '');
 			$('#branchName').val(d.branchName || '');
 			$('#paymentBranch').val(d.branchName || '');
-			$('#loanPlanName').val(d.loanPlanName || d.typeOfLoan || 'Standard Plan');
+			$('#loanPlanName').val(d.loanPlanName || d.typeOfLoan || 'STANDARD PLAN');
 			$('#loanTerm').val(d.loanTerm || '');
 			$('#loanMode').val(d.loanMode || '');
 			$('#loanAmount').val(d.sanctionedPrincipal ? d.sanctionedPrincipal.toFixed(2) : (d.loanAmount || '0.00'));
@@ -201,7 +201,7 @@ function fetchForeclosureSettlement(loanId) {
 			}
 
 			// Populate Repayment & Due Breakdown
-			$('#noOfInst').val(`${d.paidInstallments || 0} / ${d.totalInstallments || 0} Paid`);
+			$('#noOfInst').val(`${d.paidInstallments || 0} / ${d.totalInstallments || 0} PAID`);
 			$('#principalDue').val((d.principalOutstanding || 0).toFixed(2));
 			$('#interestDue').val((d.accruedInterestTillDate || 0).toFixed(2));
 			$('#amountPaid').val((d.totalPrincipalPaid || 0).toFixed(2));
@@ -229,7 +229,7 @@ function fetchForeclosureSettlement(loanId) {
 			$('#summaryPrincipalPaid').text(`₹${(d.totalPrincipalPaid || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}`);
 			$('#summaryPrincipalDue').text(`₹${(d.principalOutstanding || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}`);
 			$('#summaryAccruedInterest').text(`₹${(d.accruedInterestTillDate || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}`);
-			$('#summaryElapsedDays').text(`(${d.elapsedDaysSinceLastPayment || 0} days accrued)`);
+			$('#summaryElapsedDays').text(`(${d.elapsedDaysSinceLastPayment || 0} DAYS ACCRUED)`);
 			$('#summaryArrearsFines').text(`₹${arrearsTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`);
 			$('#summaryNetPayoff').text(`₹${netPayoff.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`);
 
@@ -251,7 +251,7 @@ function fetchForeclosureSettlement(loanId) {
 
 			// Store savings account details if available
 			if (d.savingsAccountNumber) {
-				$('#accountNo').val(`${d.savingsAccountNumber} (Bal: ₹${(d.savingsAccountBalance || 0).toFixed(2)})`);
+				$('#accountNo').val(`${d.savingsAccountNumber} (BAL: ₹${(d.savingsAccountBalance || 0).toFixed(2)})`);
 			} else {
 				$('#accountNo').val('');
 			}
@@ -259,8 +259,8 @@ function fetchForeclosureSettlement(loanId) {
 			$('#settlementSummaryCard').slideDown(300);
 		},
 		error: function(xhr) {
-			console.error("Foreclosure calculation error:", xhr.responseText);
-			alert("Error calculating foreclosure settlement: " + (xhr.responseJSON?.message || xhr.statusText));
+			console.error("FORECLOSURE CALCULATION ERROR:", xhr.responseText);
+			alert("ERROR CALCULATING FORECLOSURE SETTLEMENT: " + (xhr.responseJSON?.message || xhr.statusText).toUpperCase());
 		}
 	});
 }
@@ -301,10 +301,10 @@ function handlePaymentModeChange(mode) {
 			const bal = currentSettlementData.savingsAccountBalance || 0;
 			const net = parseFloat($('#netAmount').val()) || 0;
 			if (bal < net) {
-				alert(`Warning: Member's savings balance (₹${bal.toFixed(2)}) is insufficient for payoff amount (₹${net.toFixed(2)})!`);
+				alert(`WARNING: MEMBER'S SAVINGS BALANCE (₹${bal.toFixed(2)}) IS INSUFFICIENT FOR PAYOFF AMOUNT (₹${net.toFixed(2)})!`);
 			}
 		} else {
-			alert("Warning: No active Savings Account found for this borrower to execute auto-debit.");
+			alert("WARNING: NO ACTIVE SAVINGS ACCOUNT FOUND FOR THIS BORROWER TO EXECUTE AUTO-DEBIT.");
 		}
 	}
 }
@@ -313,40 +313,40 @@ function handlePaymentModeChange(mode) {
 function initiateClosureConfirmation() {
 	const loanId = $('#earlyLoanclosureId').val();
 	if (!loanId) {
-		alert("Please select a Loan ID first.");
+		alert("PLEASE SELECT A LOAN ID FIRST.");
 		$('#earlyLoanclosureId').focus();
 		return;
 	}
 
 	const branch = $('#paymentBranch').val();
 	if (!branch) {
-		alert("Payment Branch is required.");
+		alert("PAYMENT BRANCH IS REQUIRED.");
 		$('#paymentBranch').focus();
 		return;
 	}
 
 	const consultantId = $('#financialConsultantId').val();
 	if (!consultantId) {
-		alert("Please select an approving Financial Consultant.");
+		alert("PLEASE SELECT AN APPROVING FINANCIAL CONSULTANT.");
 		$('#financialConsultantId').focus();
 		return;
 	}
 
 	const payMode = $('#paymentMode').val();
 	if (!payMode) {
-		alert("Please select a Mode of Payment.");
+		alert("PLEASE SELECT A MODE OF PAYMENT.");
 		$('#paymentMode').focus();
 		return;
 	}
 
 	if (payMode === 'Cheque') {
 		if (!$('#chequeNo').val() || !$('#chequeDate').val()) {
-			alert("Cheque Number and Cheque Date are required for Cheque payment.");
+			alert("CHEQUE NUMBER AND CHEQUE DATE ARE REQUIRED FOR CHEQUE PAYMENT.");
 			return;
 		}
 	} else if (payMode === 'Online' || payMode === 'NEFT') {
 		if (!$('#ref_UpiId').val()) {
-			alert("Reference Number / UPI ID is required for Online/NEFT payment.");
+			alert("REFERENCE NUMBER / UPI ID IS REQUIRED FOR ONLINE/NEFT PAYMENT.");
 			return;
 		}
 	} else if (payMode === 'Saving Account') {
@@ -354,7 +354,7 @@ function initiateClosureConfirmation() {
 			const bal = currentSettlementData.savingsAccountBalance || 0;
 			const net = parseFloat($('#netAmount').val()) || 0;
 			if (bal < net) {
-				alert(`Cannot proceed: Insufficient balance in Savings Account (Available: ₹${bal.toFixed(2)}, Required: ₹${net.toFixed(2)}).`);
+				alert(`CANNOT PROCEED: INSUFFICIENT BALANCE IN SAVINGS ACCOUNT (AVAILABLE: ₹${bal.toFixed(2)}, REQUIRED: ₹${net.toFixed(2)}).`);
 				return;
 			}
 		}
@@ -362,7 +362,7 @@ function initiateClosureConfirmation() {
 
 	const reason = $('#reasonForClosure').val();
 	if (reason === 'Other' && !$('#remarks').val().trim()) {
-		alert("Remarks are mandatory when 'Other' is selected as reason for closure.");
+		alert("REMARKS ARE MANDATORY WHEN 'OTHER' IS SELECTED AS REASON FOR CLOSURE.");
 		$('#remarks').focus();
 		return;
 	}
@@ -370,7 +370,7 @@ function initiateClosureConfirmation() {
 	const submittedAmount = parseFloat($('#paymentAmount').val()) || 0;
 	const requiredPayoff = parseFloat($('#netAmount').val()) || 0;
 	if (submittedAmount < (requiredPayoff - 0.50)) {
-		alert(`Payment amount (₹${submittedAmount.toFixed(2)}) cannot be less than the required net payoff amount (₹${requiredPayoff.toFixed(2)}).`);
+		alert(`PAYMENT AMOUNT (₹${submittedAmount.toFixed(2)}) CANNOT BE LESS THAN THE REQUIRED NET PAYOFF AMOUNT (₹${requiredPayoff.toFixed(2)}).`);
 		return;
 	}
 
@@ -447,7 +447,7 @@ function resetEarlyClosureForm() {
 // 9. Execute Loan Closure via AJAX POST
 function executeLoanClosure() {
 	const $btn = $('#confirmProceedCloseBtn');
-	$btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span>Processing...');
+	$btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span>PROCESSING...');
 
 	// Collect Payload
 	const payload = {
@@ -497,7 +497,7 @@ function executeLoanClosure() {
 		loanStatus: "CLOSED"
 	};
 
-	console.log("Submitting Loan Foreclosure:", payload);
+	console.log("SUBMITTING LOAN FORECLOSURE:", payload);
 
 	$.ajax({
 		url: "api/loanmanegment/closeLoan",
@@ -511,7 +511,7 @@ function executeLoanClosure() {
 			hideModal('#closureConfirmModal');
 			hideModal('#closureSuccessModal');
 
-			const successMessage = (response && response.message) ? response.message : `Loan ${payload.loanId} closed and settled successfully.`;
+			const successMessage = (response && response.message) ? response.message.toUpperCase() : `LOAN ${payload.loanId} CLOSED AND SETTLED SUCCESSFULLY.`;
 
 			// 2. Alert popup as requested by user
 			alert(successMessage);
@@ -529,13 +529,13 @@ function executeLoanClosure() {
 		error: function(xhr) {
 			$btn.prop('disabled', false).html('<i class="bi bi-check-circle me-1"></i> YES, EXECUTE CLOSURE');
 			hideModal('#closureConfirmModal');
-			console.error("Closure error:", xhr.responseText);
-			let errMsg = "Failed to close loan.";
+			console.error("CLOSURE ERROR:", xhr.responseText);
+			let errMsg = "FAILED TO CLOSE LOAN.";
 			try {
 				const res = JSON.parse(xhr.responseText);
-				if (res && res.message) errMsg = res.message;
+				if (res && res.message) errMsg = res.message.toUpperCase();
 			} catch (e) {
-				if (xhr.statusText) errMsg = xhr.statusText;
+				if (xhr.statusText) errMsg = xhr.statusText.toUpperCase();
 			}
 			alert(errMsg);
 		}
@@ -546,7 +546,7 @@ function executeLoanClosure() {
 function printForeclosureReceipt() {
 	const printContents = document.getElementById('printableReceiptArea').innerHTML;
 	const win = window.open('', '_blank', 'height=600,width=800');
-	win.document.write('<html><head><title>Loan Foreclosure Settlement Receipt</title>');
+	win.document.write('<html><head><title>LOAN FORECLOSURE SETTLEMENT RECEIPT</title>');
 	win.document.write('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">');
 	win.document.write('<style>body { padding: 30px; font-family: Courier, monospace; }</style>');
 	win.document.write('</head><body>');

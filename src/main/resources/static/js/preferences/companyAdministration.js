@@ -90,142 +90,142 @@ $(document).ready(function() {
 		var contactPattern = /^[6-9][0-9]{9}$/;
 		var panPattern = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
 		var pinPattern = /^[1-9][0-9]{5}$/;
-		var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+		var emailPattern = /^[a-zA-Z0-9.\_%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 		const cinPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/; // Alpha + numeric + special char
 		const tanPattern = /^[A-Z]{4}[0-9]{5}[A-Z]{1}$/;
 
 		let isValid = true;
 
 		if (companyName === '') {
-			$('#chkcompanyname').text('* This field is required');
+			$('#chkcompanyname').text('* THIS FIELD IS REQUIRED');
 			$('#companyName').focus();
 			isValid = false;
 		}
 		if (shortName === '') {
-			$('#chkshortname').text('* This field is required');
+			$('#chkshortname').text('* THIS FIELD IS REQUIRED');
 			$('#shortName').focus();
 			isValid = false;
 		}
 		if (signUpDate === '') {
-			$('#chksignupdate').text('* This field is required');
+			$('#chksignupdate').text('* THIS FIELD IS REQUIRED');
 			$('#signUpDate').focus();
 			isValid = false;
 		}
 		if (cinNo === '') {
-			$('#chkcinno').text('* This field is required');
+			$('#chkcinno').text('* THIS FIELD IS REQUIRED');
 			$('#cinNo').focus();
 			isValid = false;
 		} else if (!cinPattern.test(cinNo)) {
-			$('#chkcinno').text('CIN No must contain alphabets, numbers, and at least one special character.');
+			$('#chkcinno').text('CIN NO MUST CONTAIN ALPHABETS, NUMBERS, AND AT LEAST ONE SPECIAL CHARACTER.');
 			$('#cinNo').focus();
 			isValid = false;
 		}
 		if (pan === '') {
-			$('#chkpan').text('* This field is required');
+			$('#chkpan').text('* THIS FIELD IS REQUIRED');
 			$('#pan').focus();
 			isValid = false;
 		} else if (!panPattern.test(pan)) {
-			alert("Please enter a valid PAN card number (e.g., ABCDE1234F).");
+			alert("PLEASE ENTER A VALID PAN CARD NUMBER (E.G., ABCDE1234F).");
 			$('#pan').focus();
 			return false;
 		}
 		if (tan === '') {
-			$('#chktan').text('* This field is required');
+			$('#chktan').text('* THIS FIELD IS REQUIRED');
 			if (isValid) $('#tan').focus();
 			isValid = false;
 		} else if (!tanPattern.test(tan)) {
-			$('#chktan').text('TAN No must contain only alphabets and numbers (no special characters).');
+			$('#chktan').text('TAN NO MUST CONTAIN ONLY ALPHABETS AND NUMBERS (NO SPECIAL CHARACTERS).');
 			$('#tan').focus();
 			isValid = false;
 		}
 		if (gstin === '') {
-			$('#chkgstin').text('* This field is required');
+			$('#chkgstin').text('* THIS FIELD IS REQUIRED');
 			$('#gstin').focus();
 			isValid = false;
 		}
 		if (declaredValue === '') {
-			$('#chkdeclaredvalue').text('* This field is required');
+			$('#chkdeclaredvalue').text('* THIS FIELD IS REQUIRED');
 			$('#declaredValue').focus();
 			isValid = false;
 		}
 		if (address === '') {
-			$('#chkaddress').text('* This field is required');
+			$('#chkaddress').text('* THIS FIELD IS REQUIRED');
 			$('#address').focus();
 			isValid = false;
 		}
 		if (state === '') {
-			$('#chkstate').text('* This field is required');
+			$('#chkstate').text('* THIS FIELD IS REQUIRED');
 			$('#state').focus();
 			isValid = false;
 		}
 		if (city === '') {
-			$('#chkcity').text('* This field is required');
+			$('#chkcity').text('* THIS FIELD IS REQUIRED');
 			$('#city').focus();
 			isValid = false;
 		}
 		if (pinCode === '') {
-			$('#chkpincode').text('* This field is required');
+			$('#chkpincode').text('* THIS FIELD IS REQUIRED');
 			$('#pinCode').focus();
 			isValid = false;
 		} else if (!pinPattern.test(pinCode)) {
-			alert("Please enter a valid 6-digit PIN code (first digit cannot be 0).");
+			alert("PLEASE ENTER A VALID 6-DIGIT PIN CODE (FIRST DIGIT CANNOT BE 0).");
 			$('#pinCode').focus();
 			return false;
 		}
 		if (emailId === '') {
-			$('#chkemailid').text('* This field is required');
+			$('#chkemailid').text('* THIS FIELD IS REQUIRED');
 			$('#emailId').focus();
 			isValid = false;
 		} else if (!emailPattern.test(emailId)) {
-			alert('Please enter a valid email address (e.g., example@domain.com)');
+			alert('PLEASE ENTER A VALID EMAIL ADDRESS (E.G., EXAMPLE@DOMAIN.COM)');
 			$('#emailId').focus();
 			isValid = false;
 		}
 		if (authorizedShareCapital === '') {
-			$('#chkauthorizedsharecapital').text('* This field is required');
+			$('#chkauthorizedsharecapital').text('* THIS FIELD IS REQUIRED');
 			$('#authorizedShareCapital').focus();
 			isValid = false;
 		}
 		if (paidUpCapital === '') {
-			$('#chkpaidupcapital').text('* This field is required');
+			$('#chkpaidupcapital').text('* THIS FIELD IS REQUIRED');
 			$('#paidUpCapital').focus();
 			isValid = false;
 		}
 		if (nof === '') {
-			$('#chknof').text('* This field is required');
+			$('#chknof').text('* THIS FIELD IS REQUIRED');
 			$('#nof').focus();
 			isValid = false;
 		}
 		if (helplineNo === '') {
-			$('#chkhelplineno').text('* This field is required');
+			$('#chkhelplineno').text('* THIS FIELD IS REQUIRED');
 			$('#helplineNo').focus();
 			isValid = false;
 		} else if (!contactPattern.test(helplineNo)) {
-			alert("Please enter a valid 10-digit HelpLine number.");
+			alert("PLEASE ENTER A VALID 10-DIGIT HELPLINE NUMBER.");
 			$('#helplineNo').focus();
 			return false;
 		}
 		if (tdsWithPan === '') {
-			$('#chktdswithpan').text('* This field is required');
+			$('#chktdswithpan').text('* THIS FIELD IS REQUIRED');
 			$('#tdsWithPan').focus();
 			isValid = false;
 		}
 		if (tdsWithoutPan === '') {
-			$('#chktdswithoutpan').text('* This field is required');
+			$('#chktdswithoutpan').text('* THIS FIELD IS REQUIRED');
 			$('#tdsWithoutPan').focus();
 			isValid = false;
 		}
 		if (taxDeduction === '') {
-			$('#chktaxdeduction').text('* This field is required');
+			$('#chktaxdeduction').text('* THIS FIELD IS REQUIRED');
 			$('#taxDeduction').focus();
 			isValid = false;
 		}
 		if (branchManagerContactNo === '') {
-			$('#chkbranchManagerContactNo').text('* This field is required');
+			$('#chkbranchManagerContactNo').text('* THIS FIELD IS REQUIRED');
 			$('#branchManagerContactNo').focus();
 			isValid = false;
 		} else if (!contactPattern.test(branchManagerContactNo)) {
-			alert("Please enter a valid 10-digit Branch Manager Contact Number.");
+			alert("PLEASE ENTER A VALID 10-DIGIT BRANCH MANAGER CONTACT NUMBER.");
 			$('#branchManagerContactNo').focus();
 			return false;
 		}
@@ -276,11 +276,11 @@ $(document).ready(function() {
 			contentType: "application/json",
 			data: JSON.stringify(formData),
 			success: function() {
-				alert("Company details updated successfully!");
+				alert("COMPANY DETAILS UPDATED SUCCESSFULLY!");
 				location.reload();
 			},
 			error: function() {
-				alert("Error updating company details");
+				alert("ERROR UPDATING COMPANY DETAILS");
 			}
 		});
 
@@ -296,10 +296,10 @@ $(document).ready(function() {
 
 	function createNewField() {
 		const fieldHtml = `
-            <div class="textUploadSet mb-4">
-                <input style="text-transform: uppercase;" type="text" class="form-control nameField" placeholder="ENTER IMAGE NAME...">
-                <div class="uploadContainer"></div>
-            </div>`;
+           <div class="textUploadSet mb-4">
+               <input style="text-transform: uppercase;" type="text" class="form-control nameField" placeholder="ENTER IMAGE NAME...">
+               <div class="uploadContainer"></div>
+           </div>`;
 		$("#fieldContainer").append(fieldHtml);
 	}
 
@@ -315,16 +315,16 @@ $(document).ready(function() {
 		const uniqueId = "file-" + Date.now();
 
 		const html = `
-            <div class="uploadField mt-2">
-                <label>${val.toUpperCase()} *</label>
-                <label for="${uniqueId}">
-                    <input type="file" id="${uniqueId}" hidden accept="image/*" onchange="previewImage('${uniqueId}')">
-                    <div>
-                        <img src="Uploads/upload.png" id="preview-${uniqueId}" style="width:120px;">
-                    </div>
-                </label>
-            </div>
-        `;
+           <div class="uploadField mt-2">
+               <label>${val.toUpperCase()} *</label>
+               <label for="${uniqueId}">
+                   <input type="file" id="${uniqueId}" hidden accept="image/*" onchange="previewImage('${uniqueId}')">
+                   <div>
+                       <img src="Uploads/upload.png" id="preview-${uniqueId}" style="width:120px;">
+                   </div>
+               </label>
+           </div>
+       `;
 
 		box.html(html);
 	});
@@ -341,7 +341,7 @@ $(document).ready(function() {
 			const file = input.files[0];
 
 			if (!file) {
-				alert("Select file for " + fieldName);
+				alert("SELECT FILE FOR " + fieldName);
 				return;
 			}
 
@@ -364,7 +364,7 @@ $(document).ready(function() {
 			});
 		});
 
-		alert("Uploading Images...");
+		alert("UPLOADING IMAGES...");
 	});
 
 	// =================================================
@@ -374,7 +374,7 @@ $(document).ready(function() {
 
 	function loadCompanyImages() {
 
-		$("#storedImages").html(`<h5>Loading...</h5>`);
+		$("#storedImages").html(`<h5>LOADING...</h5>`);
 
 		$.ajax({
 			url: "api/preference/images/" + companyId,
@@ -389,18 +389,18 @@ $(document).ready(function() {
 					let imageUrl = "Uploads/company/" + companyId + "/" + img.fileName;
 
 					html += `
-	                    <div class="col-lg-3 text-center mb-4">
-	                        <div class="img-box">
-	                            <img src="${imageUrl}"
-	                                 width="150"
-	                                 height="150"
-	                                 style="object-fit:contain;border:1px solid #ccc"
-	                                 onerror="console.log('Image not found:', this.src)">
-	                            <button class="deleteImg" data-id="${img.id}">&times;</button>
-	                        </div>
-	                        <p>${img.name.toUpperCase()}</p>
-	                    </div>
-	                `;
+                    <div class="col-lg-3 text-center mb-4">
+                        <div class="img-box">
+                            <img src="${imageUrl}"
+                                 width="150"
+                                 height="150"
+                                 style="object-fit:contain;border:1px solid #ccc"
+                                 onerror="console.log('Image not found:', this.src)">
+                            <button class="deleteImg" data-id="${img.id}">&times;</button>
+                        </div>
+                        <p>${img.name.toUpperCase()}</p>
+                    </div>
+                `;
 				});
 
 				html += "</div>";
@@ -419,7 +419,7 @@ $(document).ready(function() {
 	// 7️⃣ DELETE IMAGE
 	// =================================================
 	$(document).on("click", ".deleteImg", function() {
-		alert("hh");
+		alert("HH");
 		const id = $(this).data("id");
 		alert(id);
 
@@ -427,11 +427,11 @@ $(document).ready(function() {
 			url: "api/preference/delete/" + id,
 			type: "POST",
 			success: function() {
-				alert("Image Deleted Successfully!");
+				alert("IMAGE DELETED SUCCESSFULLY!");
 				loadCompanyImages();
 			},
 			error: function() {
-				alert("error...");
+				alert("ERROR...");
 			}
 		});
 	});
@@ -476,4 +476,3 @@ var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggl
 tooltipTriggerList.map(function(tooltipTriggerEl) {
 	return new bootstrap.Tooltip(tooltipTriggerEl);
 });
-

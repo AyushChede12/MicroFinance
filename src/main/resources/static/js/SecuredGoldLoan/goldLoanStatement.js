@@ -6,7 +6,7 @@ $(document).ready(function() {
 		success: function(response) {
 			// Check data
 			if (!(response && response.data && Array.isArray(response.data))) {
-				alert("No Gold Data found.");
+				alert("NO GOLD DATA FOUND.");
 				return;
 			}
 
@@ -32,7 +32,7 @@ $(document).ready(function() {
 
 			// 👉 Step 3: Select2 Initialize (distinct data)
 			$('#findByGoldLoanId').select2({
-				placeholder: '-- Search Gold ID or Name --',
+				placeholder: '-- SEARCH GOLD ID OR NAME --',
 				data: customerOptions,
 				matcher: function(params, data) {
 					if ($.trim(params.term) === '') return data;
@@ -46,7 +46,7 @@ $(document).ready(function() {
 		},
 		error: function(xhr, status, error) {
 			console.error("Error fetching Gold Data:", error);
-			alert("Failed to load Gold ID.");
+			alert("FAILED TO LOAD GOLD ID.");
 		}
 	});
 
@@ -56,7 +56,7 @@ $(document).ready(function() {
 
 		var goldId = $("#findByGoldLoanId").val().trim();
 		if (!goldId) {
-			alert("Please enter a Gold ID");
+			alert("PLEASE ENTER A GOLD ID");
 			return;
 		}
 
@@ -73,34 +73,34 @@ $(document).ready(function() {
 	    <div style="border:1px dashed #333; padding:15px; border-radius:10px;">
 	        <!-- Header with Loan Statement + Print Button -->
 	        <div style="display:flex; justify-content:space-between; align-items:center;">
-	            <h4 style="margin:0;">Loan Statement</h4>
-	            <button onclick="loanStatement()"  
+	            <h4 style="margin:0;">LOAN STATEMENT</h4>
+	            <button onclick="loanStatement()" 
 	                style="padding:6px 12px; border:none; background:#007bff; color:#fff; border-radius:6px; cursor:pointer;">
-	                Print
+	                PRINT
 	            </button>
 	        </div>
 
 	        <!-- Customer Name and Loan Type in same row -->
 	        <div style="display:flex; justify-content:space-between; margin-top:10px;">
-	            <p><b>Customer Name:</b> ${first.customerName}</p>
-	            <p><b>Interest Type:</b> ${first.interestType}</p>
+	            <p><b>CUSTOMER NAME:</b> ${first.customerName}</p>
+	            <p><b>INTEREST TYPE:</b> ${first.interestType}</p>
 	        </div>
 
 	        <div style="display:flex; justify-content:space-between; margin-top:10px;">
-	           <p><b>Gold ID:</b> ${first.goldID}</p>
-	           <p style="margin-left:5px;"><b>Plan Name:</b> ${first.loanPlanName}</p>
+	           <p><b>GOLD ID:</b> ${first.goldID}</p>
+	           <p style="margin-left:5px;"><b>PLAN NAME:</b> ${first.loanPlanName}</p>
 	        </div>
 	        <hr/>
 
-	        <h5>Payments</h5>
+	        <h5>PAYMENTS</h5>
 	        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; font-weight:bold; border-bottom:2px solid #000; padding:6px 0;">
-	            <div>Payment Date</div>
-				<div>Installment No.</div>
-	            <div>Amount Paid</div>
-	            <div>Amount Due</div>
-	            <div>Payment Status</div>
+	            <div>PAYMENT DATE</div>
+				<div>INSTALLMENT NO.</div>
+	            <div>AMOUNT PAID</div>
+	            <div>AMOUNT DUE</div>
+	            <div>PAYMENT STATUS</div>
 	        </div>
-	   
+
 	                    `;
 
 					// Add data rows
@@ -120,11 +120,11 @@ $(document).ready(function() {
 					$(".recent-sales").html(detailsHtml);
 
 				} else {
-					$(".recent-sales").html("<p style='color:red;'>No data found for this Loan ID</p>");
+					$(".recent-sales").html("<p style='color:red;'>NO DATA FOUND FOR THIS LOAN ID</p>");
 				}
 			},
 			error: function(xhr, status, error) {
-				$(".recent-sales").html("<p style='color:red;'>Error fetching data</p>");
+				$(".recent-sales").html("<p style='color:red;'>ERROR FETCHING DATA</p>");
 			}
 		});
 	});

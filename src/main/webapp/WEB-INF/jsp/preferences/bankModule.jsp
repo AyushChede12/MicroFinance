@@ -196,9 +196,8 @@
 						id="cancelledCheque" hidden="hidden" onchange="photoUpload();"
 						style="background-size: cover; background-repeat: no-repeat" />
 						<div id="img-view">
-							<img src="Uploads/upload.png" alt="upload_icon"
-								id="photoPreview" /><input type="hidden" name="photoHidden"
-								id="photoHidden">
+							<img src="Uploads/upload.png" alt="upload_icon" id="photoPreview" /><input
+								type="hidden" name="photoHidden" id="photoHidden">
 
 							<!-- <p id="upload-text"
                     style="font-size: 12px; margin-top: 15px"

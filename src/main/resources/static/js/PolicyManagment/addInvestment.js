@@ -45,14 +45,14 @@ $(document).ready(function() {
 
 			} else {
 
-				alert("No approved customers found.");
+				alert("NO APPROVED CUSTOMERS FOUND.");
 
 			}
 		},
 
 		error: function() {
 
-			alert("Failed to fetch approved customers.");
+			alert("FAILED TO FETCH APPROVED CUSTOMERS.");
 
 		}
 	});
@@ -180,7 +180,7 @@ function fetchBySelectedCustomer() {
 			} else {
 
 				alert(
-					"No data found for the selected member."
+					"NO DATA FOUND FOR THE SELECTED MEMBER."
 				);
 
 				clearCustomerFields();
@@ -194,7 +194,7 @@ function fetchBySelectedCustomer() {
 		) {
 
 			alert(
-				"Failed to fetch data: " +
+				"FAILED TO FETCH DATA: " +
 				textStatus +
 				", " +
 				errorThrown
@@ -398,7 +398,7 @@ function getSchemeNameBySchemeType() {
 			);
 
 			alert(
-				"An error occurred while fetching scheme data. Please try again."
+				"AN ERROR OCCURRED WHILE FETCHING SCHEME DATA. PLEASE TRY AGAIN."
 			);
 		}
 	});
@@ -442,7 +442,7 @@ function updateSchemeMode() {
 
 		schemeModeDropdown.append(
 			new Option(
-				"Select",
+				"SELECT",
 				""
 			)
 		);
@@ -607,7 +607,7 @@ function fetchTermBySchemeName() {
 		default:
 
 			alert(
-				"Invalid scheme type selected."
+				"INVALID SCHEME TYPE SELECTED."
 			);
 
 			return;
@@ -665,7 +665,7 @@ function fetchTermBySchemeName() {
 			} else {
 
 				alert(
-					"No scheme data found."
+					"NO SCHEME DATA FOUND."
 				);
 			}
 		},
@@ -682,7 +682,7 @@ function fetchTermBySchemeName() {
 			);
 
 			alert(
-				"Error fetching scheme data. Please try again."
+				"ERROR FETCHING SCHEME DATA. PLEASE TRY AGAIN."
 			);
 		}
 	});
@@ -1012,7 +1012,7 @@ $("#saveBtn").click(function(e) {
 	if (!schemeType) {
 
 		alert(
-			"Please select a Scheme Type first."
+			"PLEASE SELECT A SCHEME TYPE FIRST."
 		);
 
 		return;
@@ -1033,7 +1033,7 @@ $("#saveBtn").click(function(e) {
 		if (!isFDSplitValid()) {
 
 			alert(
-				"Please complete the FD split allocation before saving."
+				"PLEASE COMPLETE THE FD SPLIT ALLOCATION BEFORE SAVING."
 			);
 
 			return;
@@ -1276,7 +1276,7 @@ $("#saveBtn").click(function(e) {
 
 
 
-			if (schemeType === "FD") {	
+			if (schemeType === "FD") {
 
 				// =============================================
 				// FD
@@ -1302,7 +1302,7 @@ $("#saveBtn").click(function(e) {
 				} catch (error) {
 
 					alert(
-						"Invalid FD split allocation."
+						"INVALID FD SPLIT ALLOCATION."
 					);
 
 					return;
@@ -1316,7 +1316,7 @@ $("#saveBtn").click(function(e) {
 				) {
 
 					alert(
-						"FD split amounts are required."
+						"FD SPLIT AMOUNTS ARE REQUIRED."
 					);
 
 					return;
@@ -1334,7 +1334,7 @@ $("#saveBtn").click(function(e) {
 				if (firstFDSplit <= 0) {
 
 					alert(
-						"Invalid first FD split amount."
+						"INVALID FIRST FD SPLIT AMOUNT."
 					);
 
 					return;
@@ -1439,7 +1439,7 @@ $("#saveBtn").click(function(e) {
 					getFDSplitJSON()
 				);
 			}
-			
+
 			// Step 3:
 			// Send POST request
 			$.ajax({
@@ -1468,10 +1468,10 @@ $("#saveBtn").click(function(e) {
 				error: function(xhr) {
 
 					alert(
-						"❌ Error: " +
+						"❌ ERROR: " +
 						(
 							xhr.responseJSON?.message ||
-							"Something went wrong."
+							"SOMETHING WENT WRONG."
 						)
 					);
 
@@ -1483,7 +1483,7 @@ $("#saveBtn").click(function(e) {
 		error: function() {
 
 			alert(
-				"❌ Failed to generate policy code."
+				"❌ FAILED TO GENERATE POLICY CODE."
 			);
 		}
 	});
@@ -1617,7 +1617,7 @@ function photopreview() {
 	} else {
 
 		alert(
-			"Please upload a valid image file for photo."
+			"PLEASE UPLOAD A VALID IMAGE FILE FOR PHOTO."
 		);
 	}
 }
@@ -1672,7 +1672,7 @@ function signpreview() {
 	} else {
 
 		alert(
-			"Please upload a valid image file for signature."
+			"PLEASE UPLOAD A VALID IMAGE FILE FOR SIGNATURE."
 		);
 	}
 }
@@ -1707,7 +1707,7 @@ function photoUpload() {
 	} else {
 
 		alert(
-			"Please upload a valid image file for photo."
+			"PLEASE UPLOAD A VALID IMAGE FILE FOR PHOTO."
 		);
 	}
 }
@@ -1742,7 +1742,7 @@ function signatureUpload() {
 	} else {
 
 		alert(
-			"Please upload a valid image file for signature."
+			"PLEASE UPLOAD A VALID IMAGE FILE FOR SIGNATURE."
 		);
 	}
 }
@@ -1974,7 +1974,7 @@ $(document).ready(function() {
 			if (totalRows <= 1) {
 
 				alert(
-					"At least one FD amount is required."
+					"AT LEAST ONE FD AMOUNT IS REQUIRED."
 				);
 
 				return;
@@ -2101,7 +2101,7 @@ $(document).ready(function() {
 		if (totalAmount <= 0) {
 
 			showFDStatus(
-				"Please enter Policy Amount first.",
+				"PLEASE ENTER POLICY AMOUNT FIRST.",
 				"warning"
 			);
 
@@ -2116,7 +2116,7 @@ $(document).ready(function() {
 		if (allocatedAmount <= 0) {
 
 			showFDStatus(
-				"Please enter FD split amount.",
+				"PLEASE ENTER FD SPLIT AMOUNT.",
 				"warning"
 			);
 
@@ -2138,7 +2138,7 @@ $(document).ready(function() {
 				totalAmount;
 
 			showFDStatus(
-				"FD allocation exceeds total amount by ₹" +
+				"FD ALLOCATION EXCEEDS TOTAL AMOUNT BY ₹" +
 				exceeded.toFixed(2),
 				"danger"
 			);
@@ -2159,7 +2159,7 @@ $(document).ready(function() {
 			showFDStatus(
 				"₹" +
 				remainingAmount.toFixed(2) +
-				" amount is still remaining.",
+				" AMOUNT IS STILL REMAINING.",
 				"warning"
 			);
 
@@ -2179,7 +2179,7 @@ $(document).ready(function() {
 		) {
 
 			showFDStatus(
-				"FD split is valid. Total amount is fully allocated.",
+				"FD SPLIT IS VALID. TOTAL AMOUNT IS FULLY ALLOCATED.",
 				"success"
 			);
 

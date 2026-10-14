@@ -101,7 +101,7 @@ public class PreferenceService {
 		// TODO Auto-generated method stub
 		if (branchModule.getId() != null) {
 			BranchModule existing = branchModuleRepo.findById(branchModule.getId())
-					.orElseThrow(() -> new RuntimeException("Branch not found with ID: " + branchModule.getId()));
+					.orElseThrow(() -> new RuntimeException("BRANCH NOT FOUND WITH ID: " + branchModule.getId()));
 
 			existing.setBranchCode(branchModule.getBranchCode());
 			existing.setBranchName(branchModule.getBranchName());
@@ -144,13 +144,13 @@ public class PreferenceService {
 
 	public void validateBranchNameExists(String branchName) {
 		if (branchName == null || branchName.trim().isEmpty()) {
-			throw new BadRequestException("Branch name is required");
+			throw new BadRequestException("BRANCH NAME IS REQUIRED");
 		}
 
 		Optional<BranchModule> branchOpt = branchModuleRepo.findByBranchNameIgnoreCase(branchName.trim());
 
 		if (branchOpt.isPresent()) {
-			throw new BadRequestException("Invalid branch name: " + branchName);
+			throw new BadRequestException("INVALID BRANCH NAME: " + branchName);
 		}
 	}
 
@@ -159,7 +159,7 @@ public class PreferenceService {
 //		// TODO Auto-generated method stub
 //		if (bankModule.getId() != null) {
 //			BankModule existing = bankModuleRepo.findById(bankModule.getId())
-//					.orElseThrow(() -> new RuntimeException("Bank not found with ID: " + bankModule.getId()));
+//					.orElseThrow(() -> new RuntimeException("BANK NOT FOUND WITH ID: " + bankModule.getId()));
 //
 //			existing.setBankName(bankModule.getBankName());
 //			existing.setAccountNo(bankModule.getAccountNo());
@@ -197,7 +197,7 @@ public class PreferenceService {
 		// TODO Auto-generated method stub
 		if (relativeModule.getId() != null) {
 			RelativeModule existing = relativeModuleRepo.findById(relativeModule.getId())
-					.orElseThrow(() -> new RuntimeException("Relative not found with ID: " + relativeModule.getId()));
+					.orElseThrow(() -> new RuntimeException("RELATIVE NOT FOUND WITH ID: " + relativeModule.getId()));
 
 			existing.setRelation(relativeModule.getRelation());
 
@@ -226,7 +226,7 @@ public class PreferenceService {
 		// TODO Auto-generated method stub
 		if (categorymodule.getId() != null) {
 			CategoryModule existing = categoryModuleRepo.findById(categorymodule.getId())
-					.orElseThrow(() -> new RuntimeException("Category not found with ID: " + categorymodule.getId()));
+					.orElseThrow(() -> new RuntimeException("CATEGORY NOT FOUND WITH ID: " + categorymodule.getId()));
 
 			existing.setCategory(categorymodule.getCategory());
 			existing.setCaste(categorymodule.getCaste());
@@ -256,7 +256,7 @@ public class PreferenceService {
 		// TODO Auto-generated method stub
 		if (financialyear.getId() != null) {
 			FinancialYear existing = financialYearRepo.findById(financialyear.getId()).orElseThrow(
-					() -> new RuntimeException("Financial Year not found with ID: " + financialyear.getId()));
+					() -> new RuntimeException("FINANCIAL YEAR NOT FOUND WITH ID: " + financialyear.getId()));
 
 			existing.setFinancialYearName(financialyear.getFinancialYearName());
 			existing.setDateFrom(financialyear.getDateFrom());
@@ -340,7 +340,7 @@ public class PreferenceService {
 				String fileName1 = saveFile(photo); // Save the signature
 				executiveFounder.setPhoto(fileName1);
 			} catch (IOException e) {
-				return ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "File upload failed");
+				return ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "FILE UPLOAD FAILED");
 			}
 		}
 
@@ -350,7 +350,7 @@ public class PreferenceService {
 				String fileName1 = saveFile1(signature); // Save the signature
 				executiveFounder.setSignature(fileName1);
 			} catch (IOException e) {
-				return ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "File upload failed");
+				return ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "FILE UPLOAD FAILED");
 			}
 		}
 
@@ -359,7 +359,7 @@ public class PreferenceService {
 				String fileName1 = saveFile1(aadharCard); // Save the signature
 				executiveFounder.setAadharCard(fileName1);
 			} catch (IOException e) {
-				return ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "File upload failed");
+				return ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "FILE UPLOAD FAILED");
 			}
 		}
 
@@ -368,7 +368,7 @@ public class PreferenceService {
 				String fileName1 = saveFile1(panCard); // Save the signature
 				executiveFounder.setPanCard(fileName1);
 			} catch (IOException e) {
-				return ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "File upload failed");
+				return ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "FILE UPLOAD FAILED");
 			}
 		}
 
@@ -377,7 +377,7 @@ public class PreferenceService {
 				String fileName1 = saveFile1(cheque); // Save the signature
 				executiveFounder.setCheque(fileName1);
 			} catch (IOException e) {
-				return ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "File upload failed");
+				return ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "FILE UPLOAD FAILED");
 			}
 		}
 
@@ -386,10 +386,10 @@ public class PreferenceService {
 
 		if (isNew) {
 			return ApiResponse.success(HttpStatus.CREATED,
-					"Saved successfully. Director Name: " + savedExecutiveFounder.getFullName(), savedExecutiveFounder);
+					"SAVED SUCCESSFULLY. DIRECTOR NAME: " + savedExecutiveFounder.getFullName(), savedExecutiveFounder);
 		} else {
 			return ApiResponse.success(HttpStatus.OK,
-					"Updated successfully. Director Name: " + savedExecutiveFounder.getFullName(),
+					"UPDATED SUCCESSFULLY. DIRECTOR NAME: " + savedExecutiveFounder.getFullName(),
 					savedExecutiveFounder);
 		}
 	}
@@ -404,10 +404,10 @@ public class PreferenceService {
 
 			try {
 				photo.transferTo(destinationFile); // Save the file to the destination path
-				System.out.println("File successfully saved at: " + destinationFile.getAbsolutePath());
+				System.out.println("FILE SUCCESSFULLY SAVED AT: " + destinationFile.getAbsolutePath());
 				return fileName; // Return the saved file's name
 			} catch (IOException e) {
-				System.err.println("File saving failed: " + e.getMessage());
+				System.err.println("FILE SAVING FAILED: " + e.getMessage());
 				throw e; // Rethrow the exception to handle errors
 			}
 		}
@@ -424,10 +424,10 @@ public class PreferenceService {
 
 			try {
 				signature.transferTo(destinationFile); // Save the file to the destination path
-				System.out.println("File successfully saved at: " + destinationFile.getAbsolutePath());
+				System.out.println("FILE SUCCESSFULLY SAVED AT: " + destinationFile.getAbsolutePath());
 				return fileName; // Return the saved file's name
 			} catch (IOException e) {
-				System.err.println("File saving failed: " + e.getMessage());
+				System.err.println("FILE SAVING FAILED: " + e.getMessage());
 				throw e; // Rethrow the exception to handle errors
 			}
 		}
@@ -439,9 +439,9 @@ public class PreferenceService {
 		if (!uploadDir.exists()) {
 			boolean created = uploadDir.mkdirs(); // Create directories if they don't exist
 			if (created) {
-				System.out.println("Upload directory created at: " + uploadDirectory);
+				System.out.println("UPLOAD DIRECTORY CREATED AT: " + uploadDirectory);
 			} else {
-				System.err.println("Failed to create upload directory: " + uploadDirectory);
+				System.err.println("FAILED TO CREATE UPLOAD DIRECTORY: " + uploadDirectory);
 			}
 		}
 	}
@@ -621,7 +621,7 @@ public class PreferenceService {
 				String fileName1 = saveFile(cancelledCheque); // Save the signature
 				bankModule.setCancelledCheque(fileName1);
 			} catch (IOException e) {
-				return ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "File upload failed");
+				return ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "FILE UPLOAD FAILED");
 			}
 		}
 
@@ -630,10 +630,10 @@ public class PreferenceService {
 
 		if (isNew) {
 			return ApiResponse.success(HttpStatus.CREATED,
-					"Saved successfully. Bank Name: " + savedBankModule.getBankName(), savedBankModule);
+					"SAVED SUCCESSFULLY. BANK NAME: " + savedBankModule.getBankName(), savedBankModule);
 		} else {
 			return ApiResponse.success(HttpStatus.OK,
-					"Updated successfully. Director Name: " + savedBankModule.getBankName(), savedBankModule);
+					"UPDATED SUCCESSFULLY. DIRECTOR NAME: " + savedBankModule.getBankName(), savedBankModule);
 		}
 	}
 
@@ -651,7 +651,7 @@ public class PreferenceService {
 			throws Exception {
 
 		CompanyAdministration company = companyAdministrationRepo.findById(companyId)
-				.orElseThrow(() -> new IllegalArgumentException("Invalid Company ID: " + companyId));
+				.orElseThrow(() -> new IllegalArgumentException("INVALID COMPANY ID: " + companyId));
 
 		Path companyDir = Paths.get(uploadDirectory, "company", companyId.toString());
 		Files.createDirectories(companyDir);

@@ -400,7 +400,7 @@ $(document).ready(function() {
 	function printCertificate(data) {
 
 		if (!data) {
-			alert("Policy data not available.");
+			alert("POLICY DATA NOT AVAILABLE.");
 			return;
 		}
 
@@ -420,7 +420,7 @@ $(document).ready(function() {
 
 			if (!printWindow) {
 				alert(
-					"Please allow pop-ups to print the certificate."
+					"PLEASE ALLOW POP-UPS TO PRINT THE CERTIFICATE."
 				);
 				return;
 			}
@@ -431,7 +431,7 @@ $(document).ready(function() {
 				"<html>" +
 				"<head>" +
 
-				"<title>Policy Issue Certificate</title>" +
+				"<title>POLICY ISSUE CERTIFICATE</title>" +
 
 				"<style>" +
 
@@ -594,7 +594,7 @@ $(document).ready(function() {
 			);
 
 			alert(
-				"Failed to load policies."
+				"FAILED TO LOAD POLICIES."
 			);
 		}
 	});
@@ -611,7 +611,7 @@ $(document).ready(function() {
 			$("#policyTableBody").empty();
 
 			alert(
-				"Please select a policy."
+				"PLEASE SELECT A POLICY."
 			);
 
 			return;
@@ -747,7 +747,7 @@ $(document).ready(function() {
 				} else {
 
 					alert(
-						"No data found for the selected policy."
+						"NO DATA FOUND FOR THE SELECTED POLICY."
 					);
 
 					$("#policyTableBody")
@@ -766,7 +766,7 @@ $(document).ready(function() {
 				);
 
 				alert(
-					"Error while fetching policy data."
+					"ERROR WHILE FETCHING POLICY DATA."
 				);
 
 				$("#policyTableBody")
@@ -908,7 +908,7 @@ $(document).ready(function() {
 					"<td colspan='11' " +
 					"class='text-center'>" +
 
-					"No data available" +
+					"NO DATA AVAILABLE" +
 
 					"</td>" +
 
@@ -929,7 +929,7 @@ $(document).ready(function() {
 			);
 
 			alert(
-				"Failed to load financial consultant data."
+				"FAILED TO LOAD FINANCIAL CONSULTANT DATA."
 			);
 		}
 	});

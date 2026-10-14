@@ -8,13 +8,13 @@ $(document).ready(function() {
 		let endDate = $("#endDate").val();
 
 		if (!branchName || !startDate || !endDate) {
-			alert("Please select all fields");
+			alert("PLEASE SELECT ALL FIELDS");
 			return;
 		}
 
 		$("#showBtn")
 			.prop("disabled", true)
-			.text("Loading...");
+			.text("LOADING...");
 
 		$.ajax({
 
@@ -36,7 +36,7 @@ $(document).ready(function() {
 
 				} else {
 
-					alert(response.message || "No Records Found");
+					alert(response.message || "NO RECORDS FOUND");
 
 					bindTable([]);
 
@@ -50,11 +50,11 @@ $(document).ready(function() {
 			error: function(xhr) {
 
 				console.error(
-					"Fund Transfer Fetch Error:",
+					"FUND TRANSFER FETCH ERROR:",
 					xhr
 				);
 
-				alert("Error fetching data");
+				alert("ERROR FETCHING DATA");
 
 				$("#showBtn")
 					.prop("disabled", false)
@@ -113,7 +113,7 @@ $(document).ready(function() {
 			$(".datatable tbody").append(`
                 <tr id="noSearchResult">
                     <td colspan="9" class="text-center">
-                        No Customer Found
+                        NO CUSTOMER FOUND
                     </td>
                 </tr>
             `);
@@ -143,7 +143,7 @@ function bindTable(data) {
 		rows = `
             <tr>
                 <td colspan="9" class="text-center">
-                    No Records Found
+                    NO RECORDS FOUND
                 </td>
             </tr>
         `;
@@ -182,7 +182,6 @@ function bindTable(data) {
 
 
 			rows += `
-
                 <tr>
 
                     <td>${index + 1}</td>
@@ -220,7 +219,6 @@ function bindTable(data) {
                     </td>
 
                 </tr>
-
             `;
 		});
 	}
@@ -266,7 +264,7 @@ function exportToExcel() {
 
 	if (rows.length === 0) {
 
-		alert("No data to export");
+		alert("NO DATA TO EXPORT");
 		return;
 	}
 
@@ -320,12 +318,11 @@ function printReport() {
 
 
 	printWindow.document.write(`
-
         <html>
 
         <head>
 
-            <title>Fund Transfer Report</title>
+            <title>FUND TRANSFER REPORT</title>
 
             <style>
 
@@ -363,60 +360,53 @@ function printReport() {
 
         </head>
 
-
         <body>
 
             <h2>
                 FUND TRANSFER REPORT
             </h2>
 
-
             <p>
 
-                <b>Branch:</b>
+                <b>BRANCH:</b>
                 ${branch}
 
                 <br>
 
-                <b>From:</b>
+                <b>FROM:</b>
                 ${startDate}
 
                 &nbsp;&nbsp;
 
-                <b>To:</b>
+                <b>TO:</b>
                 ${endDate}
 
             </p>
 
-
             ${table}
-
 
             <br>
 
-
             <p style="text-align:right;">
 
-                <b>Total Debit:</b>
+                <b>TOTAL DEBIT:</b>
                 ${$("#totalDebit").text()}
 
                 |
 
-                <b>Total Credit:</b>
+                <b>TOTAL CREDIT:</b>
                 ${$("#totalCredit").text()}
 
                 |
 
-                <b>Closing Balance:</b>
+                <b>CLOSING BALANCE:</b>
                 ${$("#closingBalance").text()}
 
             </p>
 
-
         </body>
 
         </html>
-
     `);
 
 

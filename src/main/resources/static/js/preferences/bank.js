@@ -13,7 +13,7 @@ function photoUpload() {
 		};
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for photo.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR PHOTO.");
 	}
 }
 
@@ -51,38 +51,38 @@ $(document).ready(function() {
 			if (file) {
 				let fileSizeKB = file.size / 1024; // Convert to KB
 				if (fileSizeKB < 10 || fileSizeKB > 900) {
-					$('#' + labelId).text(`* ${fieldName} size must be between in KB`);
+					$('#' + labelId).text(`* ${fieldName} SIZE MUST BE BETWEEN IN KB`);
 					isValid = false;
 				}
 			}
 		}
 
 		// Validation
-		if (bankName === '') { $('#chkbankname').text('* This field is required'); isValid = false; }
+		if (bankName === '') { $('#chkbankname').text('* THIS FIELD IS REQUIRED'); isValid = false; }
 		if (accountNo === '') {
-			$('#chkaccountno').text('* This field is required');
+			$('#chkaccountno').text('* THIS FIELD IS REQUIRED');
 			isValid = false;
 		} else if (!accountNoPattern.test(accountNo)) {
-			$('#chkaccountno').text('* Account number must contain only digits');
+			$('#chkaccountno').text('* ACCOUNT NUMBER MUST CONTAIN ONLY DIGITS');
 			$('#accountNo').focus();
 			isValid = false;
 		}
-		if (address === '') { $('#chkaddress').text('* This field is required'); isValid = false; }
-		if (ifscCode === '') { $('#chkifsccode').text('* This field is required'); isValid = false; }
-		if (micrCode === '') { $('#chkmicrcode').text('* This field is required'); isValid = false; }
-		if (openingDate === '') { $('#chkopeningdate').text('* This field is required'); isValid = false; }
-		if (openingBalance === '') { $('#chkopeningbalance').text('* This field is required'); isValid = false; }
-		if (closingDate === '') { $('#chkclosingdate').text('* This field is required'); isValid = false; }
+		if (address === '') { $('#chkaddress').text('* THIS FIELD IS REQUIRED'); isValid = false; }
+		if (ifscCode === '') { $('#chkifsccode').text('* THIS FIELD IS REQUIRED'); isValid = false; }
+		if (micrCode === '') { $('#chkmicrcode').text('* THIS FIELD IS REQUIRED'); isValid = false; }
+		if (openingDate === '') { $('#chkopeningdate').text('* THIS FIELD IS REQUIRED'); isValid = false; }
+		if (openingBalance === '') { $('#chkopeningbalance').text('* THIS FIELD IS REQUIRED'); isValid = false; }
+		if (closingDate === '') { $('#chkclosingdate').text('* THIS FIELD IS REQUIRED'); isValid = false; }
 		if (contactNo === '') {
-			$('#chkcontactno').text('* This field is required'); isValid = false;
+			$('#chkcontactno').text('* THIS FIELD IS REQUIRED'); isValid = false;
 		} else if (!contactPattern.test(contactNo)) {
-			alert("Please enter a valid 10-digit mobile number starting from 6 to 9.");
+			alert("PLEASE ENTER A VALID 10-DIGIT MOBILE NUMBER STARTING FROM 6 TO 9.");
 			isValid = false;
 		}
 
 		// Validate file
 		if (!cancelledCheque) {
-			$('#chkphoto').text('* Please upload Cancelled Cheque');
+			$('#chkphoto').text('* PLEASE UPLOAD CANCELLED CHEQUE');
 			isValid = false;
 		} else {
 			$('#chkphoto').text('');
@@ -112,16 +112,16 @@ $(document).ready(function() {
 			processData: false,       // ✅ Important for FormData
 			success: function(response) {
 				if (response.status === 'OK' || response.status === 'CREATED') {
-					alert(response.message || "Bank saved successfully!");
+					alert(response.message || "BANK SAVED SUCCESSFULLY!");
 					location.reload();
 				} else {
-					alert("Unexpected response format");
+					alert("UNEXPECTED RESPONSE FORMAT");
 					console.log(response);
 				}
 			},
 			error: function(xhr) {
 				console.error('Error:', xhr.responseText);
-				alert('Failed to save bank data.');
+				alert('FAILED TO SAVE BANK DATA.');
 			}
 		});
 	});
@@ -146,11 +146,11 @@ function loadMISData() {
 				renderTable(currentPageMISD);
 				togglePageNavigationMISD();
 			} else {
-				alert("Failed to fetch data: " + response.message);
+				alert("FAILED TO FETCH DATA: " + response.message);
 			}
 		},
 		error: function() {
-			alert("Error while calling the API.");
+			alert("ERROR WHILE CALLING THE API.");
 		}
 	});
 }
@@ -169,38 +169,38 @@ function renderTable(page) {
 			? person.cancelledCheque
 			: 'images/upload/no-image.png';
 		let row = `<tr>
-				<td>${i + 1}</td>
-                <td>${(person.bankName || '').toUpperCase()}</td>
-                <td>${(person.accountNo || '').toUpperCase()}</td>
-				<td>${(person.ifscCode || '').toUpperCase()}</td>
-				<td>${(person.micrCode || '').toUpperCase()}</td>
-                <td>${(person.contactNo || '').toUpperCase()}</td>
-                <td>${(person.address || '').toUpperCase()}</td>
-                <td>${(person.openingDate || '').toUpperCase()}</td>
-                <td>${(person.openingBalance || '').toUpperCase()}</td>
-				<td>${(person.closingDate || '').toUpperCase()}</td>
-				<td>
-				                <img src="Uploads/${chequePath}" 
-				                     alt="Cheque" 
-				                     class="cheque-thumb" 
-				                     onclick="showChequePreview('Uploads/${chequePath}')">
-				            </td>
-                <td>
-                  <button class="iconbutton" onclick="viewData(${person.id})" title="View">
-                    <i class="fa-solid fa-pen-to-square text-primary"></i>
-                  </button>
-                </td>
-                <td>
-                  <button class="iconbutton" onclick="deleteData(${person.id})" title="Delete">
-                    <i class="fa-solid fa-trash text-danger"></i>
-                  </button>
-                </td>
-              </tr>`;
+			<td>${i + 1}</td>
+               <td>${(person.bankName || '').toUpperCase()}</td>
+               <td>${(person.accountNo || '').toUpperCase()}</td>
+			<td>${(person.ifscCode || '').toUpperCase()}</td>
+			<td>${(person.micrCode || '').toUpperCase()}</td>
+               <td>${(person.contactNo || '').toUpperCase()}</td>
+               <td>${(person.address || '').toUpperCase()}</td>
+               <td>${(person.openingDate || '').toUpperCase()}</td>
+               <td>${(person.openingBalance || '').toUpperCase()}</td>
+			<td>${(person.closingDate || '').toUpperCase()}</td>
+			<td>
+			                <img src="Uploads/${chequePath}" 
+			                     alt="Cheque" 
+			                     class="cheque-thumb" 
+			                     onclick="showChequePreview('Uploads/${chequePath}')">
+			            </td>
+               <td>
+                 <button class="iconbutton" onclick="viewData(${person.id})" title="VIEW">
+                   <i class="fa-solid fa-pen-to-square text-primary"></i>
+                 </button>
+               </td>
+               <td>
+                 <button class="iconbutton" onclick="deleteData(${person.id})" title="DELETE">
+                   <i class="fa-solid fa-trash text-danger"></i>
+                 </button>
+               </td>
+             </tr>`;
 		tableBody.append(row);
 	}
 
 	// Update page info
-	$("#pageInfo").text(`Page ${currentPageMISD} of ${Math.ceil(totalDataMISD.length / pageSizeMISD)}`);
+	$("#pageInfo").text(`PAGE ${currentPageMISD} OF ${Math.ceil(totalDataMISD.length / pageSizeMISD)}`);
 }
 
 // Button state toggling
@@ -283,18 +283,18 @@ function viewData(id) {
 					$("#photoHidden").val("");
 				}
 			} else {
-				alert("Branch not found: " + response.message);
+				alert("BRANCH NOT FOUND: " + response.message);
 			}
 		},
 		error: function(xhr) {
-			alert("Request failed: " + xhr.responseText);
+			alert("REQUEST FAILED: " + xhr.responseText);
 		}
 	});
 
 }
 
 function deleteData(id) {
-	if (confirm("Are you sure you want to delete this bank?")) {
+	if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS BANK?")) {
 		$.ajax({
 			url: "api/preference/deleteBankModuleById",
 			type: "POST",
@@ -304,12 +304,12 @@ function deleteData(id) {
 					alert(response.message);
 					location.reload();
 				} else {
-					alert("Delete failed: " + response.message);
+					alert("DELETE FAILED: " + response.message);
 				}
 			},
 			error: function(xhr, status, error) {
-				alert("Failed to delete bank.");
-				console.error("Error:", error);
+				alert("FAILED TO DELETE BANK.");
+				console.error("ERROR:", error);
 			}
 		});
 	}
@@ -339,31 +339,31 @@ function updateBank() {
 		if (file) {
 			let fileSizeKB = file.size / 1024; // Convert to KB
 			if (fileSizeKB < 10 || fileSizeKB > 900) {
-				$('#' + labelId).text(`* ${fieldName} size must be between in KB`);
+				$('#' + labelId).text(`* ${fieldName} SIZE MUST BE BETWEEN IN KB`);
 				isValid = false;
 			}
 		}
 	}
 
 	// Validation
-	if (bankName === '') { $('#chkbankname').text('* This field is required'); isValid = false; }
-	if (accountNo === '') { $('#chkaccountno').text('* This field is required'); isValid = false; }
-	if (address === '') { $('#chkaddress').text('* This field is required'); isValid = false; }
-	if (ifscCode === '') { $('#chkifsccode').text('* This field is required'); isValid = false; }
-	if (micrCode === '') { $('#chkmicrcode').text('* This field is required'); isValid = false; }
-	if (openingDate === '') { $('#chkopeningdate').text('* This field is required'); isValid = false; }
-	if (openingBalance === '') { $('#chkopeningbalance').text('* This field is required'); isValid = false; }
-	if (closingDate === '') { $('#chkclosingdate').text('* This field is required'); isValid = false; }
+	if (bankName === '') { $('#chkbankname').text('* THIS FIELD IS REQUIRED'); isValid = false; }
+	if (accountNo === '') { $('#chkaccountno').text('* THIS FIELD IS REQUIRED'); isValid = false; }
+	if (address === '') { $('#chkaddress').text('* THIS FIELD IS REQUIRED'); isValid = false; }
+	if (ifscCode === '') { $('#chkifsccode').text('* THIS FIELD IS REQUIRED'); isValid = false; }
+	if (micrCode === '') { $('#chkmicrcode').text('* THIS FIELD IS REQUIRED'); isValid = false; }
+	if (openingDate === '') { $('#chkopeningdate').text('* THIS FIELD IS REQUIRED'); isValid = false; }
+	if (openingBalance === '') { $('#chkopeningbalance').text('* THIS FIELD IS REQUIRED'); isValid = false; }
+	if (closingDate === '') { $('#chkclosingdate').text('* THIS FIELD IS REQUIRED'); isValid = false; }
 	if (contactNo === '') {
-		$('#chkcontactno').text('* This field is required'); isValid = false;
+		$('#chkcontactno').text('* THIS FIELD IS REQUIRED'); isValid = false;
 	} else if (!contactPattern.test(contactNo)) {
-		alert("Please enter a valid 10-digit mobile number starting from 6–9.");
+		alert("PLEASE ENTER A VALID 10-DIGIT MOBILE NUMBER STARTING FROM 6–9.");
 		isValid = false;
 	}
 
 	// Validate file
 	if (!cancelledCheque) {
-		$('#chkphoto').text('* Please upload Cancelled Cheque');
+		$('#chkphoto').text('* PLEASE UPLOAD CANCELLED CHEQUE');
 		isValid = false;
 	} else {
 		$('#chkphoto').text('');
@@ -386,7 +386,7 @@ function updateBank() {
 	formData.append("openingBalance", $("#openingBalance").val());
 	formData.append("closingDate", $("#closingDate").val());
 	formData.append("address", $("#address").val());
-	
+
 
 	// 👇 add file if selected
 	let chequeFile = $("#cancelledCheque")[0].files[0];
@@ -402,14 +402,14 @@ function updateBank() {
 		contentType: false,       // important: allow multipart/form-data
 		success: function(response) {
 			if (response.status === "OK") {
-				alert("Bank Updated Successfully");
+				alert("BANK UPDATED SUCCESSFULLY");
 				location.reload();
 			} else {
-				alert("Operation failed: " + response.message);
+				alert("OPERATION FAILED: " + response.message);
 			}
 		},
 		error: function(xhr) {
-			alert("Update failed: " + xhr.responseText);
+			alert("UPDATE FAILED: " + xhr.responseText);
 		}
 	});
 }

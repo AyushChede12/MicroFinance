@@ -5,7 +5,7 @@ $(document).ready(function() {
 		success: function(response) {
 			// Check data
 			if (!(response && response.data && Array.isArray(response.data))) {
-				alert("No Gold Data found.");
+				alert("NO GOLD DATA FOUND.");
 				return;
 			}
 
@@ -31,7 +31,7 @@ $(document).ready(function() {
 
 			// 👉 Step 3: Select2 Initialize (distinct data)
 			$('#findByGoldLoanId').select2({
-				placeholder: '-- Search Gold ID --',
+				placeholder: '-- SEARCH GOLD ID --',
 				data: goldOptions,
 				matcher: function(params, data) {
 					if ($.trim(params.term) === '') return data;
@@ -45,7 +45,7 @@ $(document).ready(function() {
 		},
 		error: function(xhr, status, error) {
 			console.error("Error fetching Gold Data:", error);
-			alert("Failed to load Gold ID.");
+			alert("FAILED TO LOAD GOLD ID.");
 		}
 	});
 
@@ -134,69 +134,69 @@ $(document).ready(function() {
 						calculateNetAmount();
 
 					} else {
-						alert("No customer found for this member code.");
+						alert("NO CUSTOMER FOUND FOR THIS MEMBER CODE.");
 					}
 				},
 				error: function() {
-					alert("Member not found or server error.");
+					alert("MEMBER NOT FOUND OR SERVER ERROR.");
 				}
 			});
 		}
 	});
-	
-	$("#closeLoanBtn").click(function (e) {
-	    e.preventDefault();
 
-	    let requestData = {
-	        goldID: $("#findByGoldLoanId").val(),
-	        dateOfLoan: $("#closeLoanDate").val(),
-	        customerCode: $("#customerCode").val(),
-	        customerName: $("#customerName").val(),
-	        contactNo: $("#contactNo").val(),
-	        branchName: $("#branchName").val(),
-	        loanPlanName: $("#loanPlanName").val(),
-	        loanTerm: $("#loanTerm").val(),
-	        loanMode: $("#loanMode").val(),
-	        loanAmount: $("#loanAmount").val(),
-	        rateOfInterest: $("#rateOfInterest").val(),
-	        interestType: $("#interestType").val(),
-	        emiPayment: $("#emiPayment").val(),
-	        totalInterestOfLoan: $("#totalinterestofLoan").val(),
-	        sanctionedAmount: $("#sanctionedAmount").val(),
-	        totalPayableOfLoan: $("#totalPayableofLoan").val(),
+	$("#closeLoanBtn").click(function(e) {
+		e.preventDefault();
 
-	        // Payment Details
-	        noOfInstPaid: $("#noOfInst").val(),
-	        interestDue: $("#interestDue").val(),
-	        principalDue: $("#principaldue").val(),
-	        amountPaidTillDate: $("#amountPaid").val(),
-	        loanBalanceAmount: $("#balanceLoanAmount").val(),
-	        dueDate: $("#dueDate").val(),
-	        paymentBranch: $("#paymentBranch").val(),
-	        paymentDate: $("#paymentDate").val(),
-	        deductFine: $("#deductfine").val(),
-	        deductFineAmount: $("#deductfineamount").val(),
-	        paymentAmount: $("#paymentamount").val(),
-	        netAmount: $("#netamount").val(),
-	        financialCode: $("#financialConsultantId").val(),
-	        financialName: $("#financialConsultantName").val(),
-	        remarks: $("#remark").val(),
-	        goldLoanStatus: "CLOSED"
-	    };
+		let requestData = {
+			goldID: $("#findByGoldLoanId").val(),
+			dateOfLoan: $("#closeLoanDate").val(),
+			customerCode: $("#customerCode").val(),
+			customerName: $("#customerName").val(),
+			contactNo: $("#contactNo").val(),
+			branchName: $("#branchName").val(),
+			loanPlanName: $("#loanPlanName").val(),
+			loanTerm: $("#loanTerm").val(),
+			loanMode: $("#loanMode").val(),
+			loanAmount: $("#loanAmount").val(),
+			rateOfInterest: $("#rateOfInterest").val(),
+			interestType: $("#interestType").val(),
+			emiPayment: $("#emiPayment").val(),
+			totalInterestOfLoan: $("#totalinterestofLoan").val(),
+			sanctionedAmount: $("#sanctionedAmount").val(),
+			totalPayableOfLoan: $("#totalPayableofLoan").val(),
 
-	    $.ajax({
-	        url: "api/securedGoldLoan/closeGoldLoan",
-	        type: "POST",
-	        contentType: "application/json",
-	        data: JSON.stringify(requestData),
-	        success: function (response) {
-	            alert("Loan Closed Successfully!");
-	        },
-	        error: function (err) {
-	            console.log(err);
-	            alert("Something went wrong!");
-	        }
-	    });
+			// Payment Details
+			noOfInstPaid: $("#noOfInst").val(),
+			interestDue: $("#interestDue").val(),
+			principalDue: $("#principaldue").val(),
+			amountPaidTillDate: $("#amountPaid").val(),
+			loanBalanceAmount: $("#balanceLoanAmount").val(),
+			dueDate: $("#dueDate").val(),
+			paymentBranch: $("#paymentBranch").val(),
+			paymentDate: $("#paymentDate").val(),
+			deductFine: $("#deductfine").val(),
+			deductFineAmount: $("#deductfineamount").val(),
+			paymentAmount: $("#paymentamount").val(),
+			netAmount: $("#netamount").val(),
+			financialCode: $("#financialConsultantId").val(),
+			financialName: $("#financialConsultantName").val(),
+			remarks: $("#remark").val(),
+			goldLoanStatus: "CLOSED"
+		};
+
+		$.ajax({
+			url: "api/securedGoldLoan/closeGoldLoan",
+			type: "POST",
+			contentType: "application/json",
+			data: JSON.stringify(requestData),
+			success: function(response) {
+				alert("LOAN CLOSED SUCCESSFULLY!");
+			},
+			error: function(err) {
+				console.log(err);
+				alert("SOMETHING WENT WRONG!");
+			}
+		});
 	});
 
 });

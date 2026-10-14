@@ -1,5 +1,7 @@
 $(document).ready(function() {
+
 	$()
+
 	BranchNameDropdown();
 
 	toggleTransferFields($('#transferMode').val());
@@ -14,7 +16,6 @@ $(document).ready(function() {
 		saveBankCashTransfer();
 	});
 
-
 	$("#searchBtn").click(function(e) {
 		e.preventDefault();
 		searchBankCashTransfers();
@@ -24,7 +25,9 @@ $(document).ready(function() {
 		const selectedBranch = $(this).val();
 		BankCashLedgerDropdown(selectedBranch);
 	});
+
 });
+
 function showTableData() {
 	const tableBody = $("#tableBody");
 	const toggleBtn = $("#toggleBtn");
@@ -44,8 +47,6 @@ function showTableData() {
 		}
 	}
 }
-
-
 
 function toggleTransferFields(mode) {
 	const m = (mode || '').toLowerCase().trim();
@@ -67,6 +68,7 @@ function toggleTransferFields(mode) {
 		$('.onlineFields').removeClass('d-none');
 	}
 }
+
 // 🔹 Save Entry
 function saveBankCashTransfer() {
 	const bankData = {
@@ -86,24 +88,24 @@ function saveBankCashTransfer() {
 	// Client-side validation
 	if (!bankData.branchName || !bankData.dateOfEntry || !bankData.transferMode ||
 		!bankData.creditLedger || !bankData.debitLedger || !bankData.transactionAmount) {
-		alert("Please fill in all required fields.");
+		alert("PLEASE FILL IN ALL REQUIRED FIELDS.");
 		return;
 	}
 
 	// Conditional validation
 	if (bankData.transferMode.toLowerCase() === "cheque") {
 		if (!bankData.chequeNo || !bankData.chequeDate || !bankData.bankName) {
-			alert("Cheque No, Date and Bank Name are required for Cheque payments.");
-			return;
-		}
-	}
-	if (bankData.transferMode.toLowerCase() === "online transfer") {
-		if (!bankData.transactionRef) {
-			alert("Transaction Ref is required for Online Transfer.");
+			alert("CHEQUE NO, DATE AND BANK NAME ARE REQUIRED FOR CHEQUE PAYMENTS.");
 			return;
 		}
 	}
 
+	if (bankData.transferMode.toLowerCase() === "online transfer") {
+		if (!bankData.transactionRef) {
+			alert("TRANSACTION REF IS REQUIRED FOR ONLINE TRANSFER.");
+			return;
+		}
+	}
 
 	$.ajax({
 		type: "POST",
@@ -112,17 +114,17 @@ function saveBankCashTransfer() {
 		data: JSON.stringify(bankData),
 		success: function(response) {
 			if (response?.status === "CREATED") {
-				alert(response.message || "Entry saved successfully.");
+				alert(response.message || "ENTRY SAVED SUCCESSFULLY.");
 				$("#formid")[0].reset();
 				$('.chequeFields').addClass('d-none');
 				$('.onlineFields').addClass('d-none');
 				loadBankCashTransferData();
 			} else {
-				alert(response.message || "Unexpected response.");
+				alert(response.message || "UNEXPECTED RESPONSE.");
 			}
 		},
 		error: function(xhr) {
-			let msg = "Error saving entry.";
+			let msg = "ERROR SAVING ENTRY.";
 			try {
 				const res = JSON.parse(xhr.responseText);
 				if (res?.message) msg = res.message;
@@ -131,7 +133,9 @@ function saveBankCashTransfer() {
 		}
 	});
 }
+
 loadBankCashTransferData();
+
 // 🔹 Load All Entries
 function loadBankCashTransferData() {
 	$.ajax({
@@ -141,40 +145,41 @@ function loadBankCashTransferData() {
 		success: function(response) {
 			const list = response.data || [];
 			const tbody = $("#tableBody").empty();
+
 			if (list.length === 0) {
-				tbody.append("<tr><td colspan='8'>No Bank Cash Transfer Entries found.</td></tr>");
+				tbody.append("<tr><td colspan='8'>NO BANK CASH TRANSFER ENTRIES FOUND.</td></tr>");
 				return;
 			}
 
 			list.forEach(entry => {
 				const row = `
-								<tr> 
-									<td>${entry.id ?? ''}</td>
-									<td>${(entry.branchName).toUpperCase() ?? ''}</td>
-									<td>${entry.voucherID ?? ''}</td>
-									<td>${entry.dateOfEntry ?? ''}</td>
-									<td>${(entry.creditLedger).toUpperCase() ?? ''}</td>
-									<td>${(entry.debitLedger).toUpperCase() ?? ''}</td>
-									<td>${(entry.transferMode).toUpperCase() ?? ''}</td>
-									<td>${(entry.transactionAmount).toUpperCase() ?? ''}</td>
-									<td>${(entry.remarks).toUpperCase() ?? ''}</td>
-									<td>
-										<button class="iconbutton" onclick="viewBankCashTransfer(${entry.id})" title="View">
-											<i class="fa-solid fa-eye text-primary"></i>
-										</button>
-									</td>
-									<td>
-										<button class="iconbutton" onclick="deleteBankCashTransfer(${entry.id})" title="Delete">
-											<i class="fa-solid fa-trash text-danger"></i>
-										</button>
-									</td>
-								</tr>
-							`;
+                    <tr>
+                        <td>${entry.id ?? ''}</td>
+                        <td>${(entry.branchName).toUpperCase() ?? ''}</td>
+                        <td>${entry.voucherID ?? ''}</td>
+                        <td>${entry.dateOfEntry ?? ''}</td>
+                        <td>${(entry.creditLedger).toUpperCase() ?? ''}</td>
+                        <td>${(entry.debitLedger).toUpperCase() ?? ''}</td>
+                        <td>${(entry.transferMode).toUpperCase() ?? ''}</td>
+                        <td>${(entry.transactionAmount).toUpperCase() ?? ''}</td>
+                        <td>${(entry.remarks).toUpperCase() ?? ''}</td>
+                        <td>
+                            <button class="iconbutton" onclick="viewBankCashTransfer(${entry.id})" title="View">
+                                <i class="fa-solid fa-eye text-primary"></i>
+                            </button>
+                        </td>
+                        <td>
+                            <button class="iconbutton" onclick="deleteBankCashTransfer(${entry.id})" title="Delete">
+                                <i class="fa-solid fa-trash text-danger"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
 				tbody.append(row);
 			});
 		},
 		error: function() {
-			alert("Failed to load Bank Cash Transfer Entry.");
+			alert("FAILED TO LOAD BANK CASH TRANSFER ENTRY.");
 		}
 	});
 }
@@ -187,6 +192,7 @@ function viewBankCashTransfer(id) {
 		contentType: "application/json",
 		success: function(response) {
 			const data = response.data;
+
 			// Branch preselect
 			$("#entryBranchName option").each(function() {
 				if ($(this).val()?.trim().toLowerCase() === data.branchName?.trim().toLowerCase()) {
@@ -212,7 +218,7 @@ function viewBankCashTransfer(id) {
 
 		},
 		error: function() {
-			alert("Failed to load incoming receipt data");
+			alert("FAILED TO LOAD INCOMING RECEIPT DATA");
 		}
 	});
 }
@@ -224,7 +230,7 @@ function searchBankCashTransfers() {
 	const endDate = $('#endDate').val();
 
 	if (!branchName || !startDate || !endDate) {
-		alert("Please fill in all search fields.");
+		alert("PLEASE FILL IN ALL SEARCH FIELDS.");
 		return;
 	}
 
@@ -238,39 +244,39 @@ function searchBankCashTransfers() {
 			const tbody = $("#tableBody").empty();
 
 			if (list.length === 0) {
-				tbody.append("<tr><td colspan='8'>No matching results found.</td></tr>");
+				tbody.append("<tr><td colspan='8'>NO MATCHING RESULTS FOUND.</td></tr>");
 				return;
 			}
 
 			$.each(list, function(index, entry) {
 				const row = `
-				                    <tr>
-									<td>${entry.id || ''}</td>
-									<td>${(entry.branchName).toUpperCase() || ''}</td>
-									<td>${entry.voucherID || ''}</td>
-									<td>${(entry.dateOfEntry).toUpperCase() || ''}</td>
-									<td>${(entry.creditLedger).toUpperCase() || ''}</td>
-									<td>${(entry.debitLedger).toUpperCase() || ''}</td>
-									<td>${(entry.transferMode).toUpperCase() || ''}</td>
-									<td>${(entry.transactionAmount).toUpperCase() || ''}</td>
-									<td>${(entry.remarks).toUpperCase() || ''}</td>
-									<td>
-										<button class="iconbutton" onclick="viewBankCashTransfer(${entry.id})" title="View">
-											<i class="fa-solid fa-eye text-primary"></i>
-										</button>
-									</td>
-									<td>
-										<button class="iconbutton" onclick="deleteBankCashTransfer(${entry.id})" title="Delete">
-											<i class="fa-solid fa-trash text-danger"></i>
-										</button>
-									</td>
-				                    </tr>
-				                `;
+                    <tr>
+                        <td>${entry.id || ''}</td>
+                        <td>${(entry.branchName).toUpperCase() || ''}</td>
+                        <td>${entry.voucherID || ''}</td>
+                        <td>${(entry.dateOfEntry).toUpperCase() || ''}</td>
+                        <td>${(entry.creditLedger).toUpperCase() || ''}</td>
+                        <td>${(entry.debitLedger).toUpperCase() || ''}</td>
+                        <td>${(entry.transferMode).toUpperCase() || ''}</td>
+                        <td>${(entry.transactionAmount).toUpperCase() || ''}</td>
+                        <td>${(entry.remarks).toUpperCase() || ''}</td>
+                        <td>
+                            <button class="iconbutton" onclick="viewBankCashTransfer(${entry.id})" title="View">
+                                <i class="fa-solid fa-eye text-primary"></i>
+                            </button>
+                        </td>
+                        <td>
+                            <button class="iconbutton" onclick="deleteBankCashTransfer(${entry.id})" title="Delete">
+                                <i class="fa-solid fa-trash text-danger"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
 				tbody.append(row);
 			});
 		},
 		error: function() {
-			alert("Search failed");
+			alert("SEARCH FAILED");
 		}
 	});
 }
@@ -283,24 +289,27 @@ function BranchNameDropdown() {
 		url: 'api/preference/getAllBranchModule',
 		success: function(response) {
 			let options = "<option value=''>--SELECT BRANCH NAME--</option>";
+
 			// The actual branch array is inside response.data
 			if (response && Array.isArray(response.data)) {
 				response.data.forEach(branch => {
 					options += `<option value='${branch.branchName}'>${branch.branchName.toUpperCase()}</option>`;
 				});
 			}
+
 			$("#searchBranchName").html(options);
 			$("#entryBranchName").html(options);
 		},
 		error: function() {
-			alert("Failed to load branch names.");
+			alert("FAILED TO LOAD BRANCH NAMES.");
 		}
 	});
 }
+
 // Load ONLY Cash/Bank ledgers under Assets for both Debit & Credit
 function BankCashLedgerDropdown(branchName, selectedCr = "", selectedDr = "") {
 	if (!branchName || branchName.trim() === "") {
-		console.warn("Branch name is missing. Skipping ledger dropdown load.");
+		console.warn("BRANCH NAME IS MISSING. SKIPPING LEDGER DROPDOWN LOAD.");
 		return;
 	}
 
@@ -310,39 +319,39 @@ function BankCashLedgerDropdown(branchName, selectedCr = "", selectedDr = "") {
 		contentType: "application/json",
 		success: function(data) {
 			if (data.status == "OK") {
-			const ledgers = data.data || [];
+				const ledgers = data.data || [];
 
-			let crOptions = "<option value=''>--SELECT CREDIT LEDGER--</option>";
-			let drOptions = "<option value=''>--SELECT DEBIT LEDGER--</option>";
+				let crOptions = "<option value=''>--SELECT CREDIT LEDGER--</option>";
+				let drOptions = "<option value=''>--SELECT DEBIT LEDGER--</option>";
 
-			ledgers.forEach(ledger => {
-				const g = (ledger.groupName || "").toLowerCase();
-				const t = (ledger.accountType || "").toLowerCase();
-				const title = ledger.accountTitle;
+				ledgers.forEach(ledger => {
+					const g = (ledger.groupName || "").toLowerCase();
+					const t = (ledger.accountType || "").toLowerCase();
+					const title = ledger.accountTitle;
 
-				// ✅ Only Assets → Cash/Bank
-				if (g === "assets" && (t === "cash in hand" || t === "bank account")) {
-					const isSelectedDr = title.trim().toLowerCase() === (selectedDr || "").trim().toLowerCase() ? "selected" : "";
-					drOptions += `<option value="${title}" ${isSelectedDr}>${title.toUpperCase()}</option>`;
-					const isSelectedCr = title.trim().toLowerCase() === (selectedCr || "").trim().toLowerCase() ? "selected" : "";
-					crOptions += `<option value="${title}" ${isSelectedCr}>${title.toUpperCase()}</option>`;
-				}
-			});
+					// ✅ Only Assets → Cash/Bank
+					if (g === "assets" && (t === "cash in hand" || t === "bank account")) {
+						const isSelectedDr = title.trim().toLowerCase() === (selectedDr || "").trim().toLowerCase() ? "selected" : "";
+						drOptions += `<option value="${title}" ${isSelectedDr}>${title.toUpperCase()}</option>`;
+						const isSelectedCr = title.trim().toLowerCase() === (selectedCr || "").trim().toLowerCase() ? "selected" : "";
+						crOptions += `<option value="${title}" ${isSelectedCr}>${title.toUpperCase()}</option>`;
+					}
+				});
 
-			$("#debitLedger").html(drOptions);
-			$("#creditLedger").html(crOptions);
-			}else{
-				alert("Data Not Found");
+				$("#debitLedger").html(drOptions);
+				$("#creditLedger").html(crOptions);
+			} else {
+				alert("DATA NOT FOUND");
 			}
 		},
 		error: function() {
-			alert("Failed to load Cash/Bank ledgers for selected branch");
+			alert("FAILED TO LOAD CASH/BANK LEDGERS FOR SELECTED BRANCH");
 		}
 	});
 }
 
 function deleteBankCashTransfer(id) {
-	if (confirm("Are you sure you want to delete this Data?")) {
+	if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS DATA?")) {
 		$.ajax({
 			url: "accountManagement/deleteBankCashTransferById",
 			type: "POST",
@@ -352,15 +361,13 @@ function deleteBankCashTransfer(id) {
 					alert(response.message);
 					location.reload();
 				} else {
-					alert("Delete failed: " + response.message);
+					alert("DELETE FAILED: " + response.message);
 				}
 			},
 			error: function(xhr, status, error) {
-				alert("Failed to delete data.");
-				console.error("Error:", error);
+				alert("FAILED TO DELETE DATA.");
+				console.error("ERROR:", error);
 			}
 		});
 	}
-
 }
-

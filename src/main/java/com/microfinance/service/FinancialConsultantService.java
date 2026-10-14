@@ -29,7 +29,7 @@ public class FinancialConsultantService {
 
 	@Autowired
 	AddCustomerRepo addCustomerRepo;
-	
+
 	@Autowired
 	ConsultantPromotionRepo consultantpromotionRepo;
 
@@ -57,7 +57,8 @@ public class FinancialConsultantService {
 	}
 
 	public ApiResponse<addFinancialConsultant> saveOrUpdateFinancialConsultant(
-			FinancialConsultantDto financialConsultantDto, MultipartFile financialPhoto, MultipartFile finnacialSignature) {
+			FinancialConsultantDto financialConsultantDto, MultipartFile financialPhoto,
+			MultipartFile finnacialSignature) {
 		// TODO Auto-generated method stub
 
 		addFinancialConsultant addFinancialConsultant = new addFinancialConsultant();
@@ -116,8 +117,6 @@ public class FinancialConsultantService {
 				return ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "File upload failed");
 			}
 		}
-		
-		
 
 		// Save entity to the database
 		addFinancialConsultant addfinancialConsultant = financialConsultationRepo.save(addFinancialConsultant);
@@ -125,12 +124,15 @@ public class FinancialConsultantService {
 		// Return response
 		if (isNew) {
 			return ApiResponse.success(HttpStatus.CREATED,
-					"Saved successfully. Financial Code: " + addfinancialConsultant.getFinancialCode(), addfinancialConsultant);
+					"Saved successfully. Financial Code: " + addfinancialConsultant.getFinancialCode(),
+					addfinancialConsultant);
 		} else {
 			return ApiResponse.success(HttpStatus.OK,
-					"Updated successfully. Finnacial Code: " + addfinancialConsultant.getFinancialCode(), addfinancialConsultant);
+					"Updated successfully. Finnacial Code: " + addfinancialConsultant.getFinancialCode(),
+					addfinancialConsultant);
 		}
 	}
+
 	private String saveFile1(MultipartFile finnacialSignature) throws IOException {
 		// TODO Auto-generated method stub
 		if (finnacialSignature != null && !finnacialSignature.isEmpty()) {
@@ -142,10 +144,10 @@ public class FinancialConsultantService {
 
 			try {
 				finnacialSignature.transferTo(destinationFile); // Save the file to the destination path
-				System.out.println("File successfully saved at: " + destinationFile.getAbsolutePath());
+				System.out.println("FILE SUCCESSFULLY SAVED AT: " + destinationFile.getAbsolutePath());
 				return fileName; // Return the saved file's name
 			} catch (IOException e) {
-				System.err.println("File saving failed: " + e.getMessage());
+				System.err.println("FILE SAVING FAILED: " + e.getMessage());
 				throw e; // Rethrow the exception to handle errors
 			}
 		}
@@ -160,28 +162,27 @@ public class FinancialConsultantService {
 
 			try {
 				file.transferTo(destinationFile);
-				System.out.println("File successfully saved at: " + destinationFile.getAbsolutePath());
+				System.out.println("FILE SUCCESSFULLY SAVED AT: " + destinationFile.getAbsolutePath());
 				return fileName;
 			} catch (IOException e) {
-				System.err.println("File saving failed: " + e.getMessage());
+				System.err.println("FILE SAVING FAILED: " + e.getMessage());
 				throw e;
 			}
 		}
 		return null;
 	}
-	
+
 	private void ensureUploadDirectoryExists() {
 		File uploadDir = new File(uploadDirectory);
 		if (!uploadDir.exists()) {
 			boolean created = uploadDir.mkdirs();
 			if (created) {
-				System.out.println("Upload directory created at: " + uploadDirectory);
+				System.out.println("UPLOAD DIRECTORY CREATED AT: " + uploadDirectory);
 			} else {
-				System.err.println("Failed to create upload directory: " + uploadDirectory);
+				System.err.println("FAILED TO CREATE UPLOAD DIRECTORY: " + uploadDirectory);
 			}
 		}
 	}
-	
 
 	public List<addFinancialConsultant> getAllFinancialConsultantDetails() {
 		// TODO Auto-generated method stub
@@ -200,13 +201,12 @@ public class FinancialConsultantService {
 			return true;
 		}
 		return false;
-    }
+	}
 
 	public List<addFinancialConsultant> fetchfinancialHierarchyByFinancialCode(String financialCode) {
 		// TODO Auto-generated method stub
 		return financialConsultationRepo.findByFinancialCode(financialCode);
 	}
-	
 
 	public addFinancialConsultant save(addFinancialConsultant customer) {
 		// TODO Auto-generated method stub
@@ -222,26 +222,21 @@ public class FinancialConsultantService {
 		// TODO Auto-generated method stub
 		consultantpromotionRepo.save(promotionData);
 
-        // Step 2: Find consultant and update position
-        Optional<addFinancialConsultant> optional = financialConsultationRepo.findById(id);
-        if (optional.isPresent()) {
-            addFinancialConsultant consultant = optional.get();
-            consultant.setSelectPosition(promotionData.getNewPosition());
-            financialConsultationRepo.save(consultant);
-            return "Promotion saved and consultant position updated.";
-        } else {
-            throw new RuntimeException("Consultant not found with ID: " + id);
-        }
-    }
+		// Step 2: Find consultant and update position
+		Optional<addFinancialConsultant> optional = financialConsultationRepo.findById(id);
+		if (optional.isPresent()) {
+			addFinancialConsultant consultant = optional.get();
+			consultant.setSelectPosition(promotionData.getNewPosition());
+			financialConsultationRepo.save(consultant);
+			return "PROMOTION SAVED AND CONSULTANT POSITION UPDATED.";
+		} else {
+			throw new RuntimeException("CONSULTANT NOT FOUND WITH ID: " + id);
+		}
+	}
 
 	public List<ConsultantPromotionManagement> getAllPromotionManagementDetail() {
 		// TODO Auto-generated method stub
 		return consultantpromotionRepo.findAll();
 	}
-	
 
-	
-
-	
-	
 }

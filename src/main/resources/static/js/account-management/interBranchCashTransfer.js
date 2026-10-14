@@ -32,35 +32,35 @@ $(document).ready(function() {
 
 		if (transactionDate === "") {
 
-			alert("Please select transaction date");
+			alert("PLEASE SELECT TRANSACTION DATE");
 
 			return;
 		}
 
 		if (sourceBranch === "") {
 
-			alert("Please select source branch");
+			alert("PLEASE SELECT SOURCE BRANCH");
 
 			return;
 		}
 
 		if (receivingBranch === "") {
 
-			alert("Please select receiving branch");
+			alert("PLEASE SELECT RECEIVING BRANCH");
 
 			return;
 		}
 
 		if (sourceBranch === receivingBranch) {
 
-			alert("Source and Receiving Branch cannot be same");
+			alert("SOURCE AND RECEIVING BRANCH CANNOT BE SAME");
 
 			return;
 		}
 
 		if (amount === "" || parseFloat(amount) <= 0) {
 
-			alert("Please enter valid amount");
+			alert("PLEASE ENTER VALID AMOUNT");
 
 			return;
 		}
@@ -127,7 +127,7 @@ $(document).ready(function() {
 
 				} else {
 
-					alert("Transfer Failed");
+					alert("TRANSFER FAILED");
 
 				}
 
@@ -165,18 +165,18 @@ function loadTransferHistory() {
 
 				tableData = `
 
-					<tr>
+                    <tr>
 
-						<td colspan="3"
-							class="text-center">
+                        <td colspan="3"
+                            class="text-center">
 
-							No Transfer History Found
+                            NO TRANSFER HISTORY FOUND
 
-						</td>
+                        </td>
 
-					</tr>
+                    </tr>
 
-				`;
+                `;
 
 			}
 
@@ -188,35 +188,35 @@ function loadTransferHistory() {
 
 				tableData += `
 
-				    <tr>
+                    <tr>
 
-				        <td>
+                        <td>
 
-				            ${item.transactionDate}
+                            ${item.transactionDate}
 
-				        </td>
+                        </td>
 
-				        <td>
+                        <td>
 
-				            ${item.branchName}
+                            ${item.branchName}
 
-				        </td>
+                        </td>
 
-				        <td>
+                        <td>
 
-				            ${item.narration.replace("Cash Transfer To ", "")}
+                            ${item.narration.replace("Cash Transfer To ", "")}
 
-				        </td>
+                        </td>
 
-				        <td>
+                        <td>
 
-				            ${item.credit}
+                            ${item.credit}
 
-				        </td>
+                        </td>
 
-				    </tr>
+                    </tr>
 
-				`;
+                `;
 
 			});
 
@@ -228,7 +228,7 @@ function loadTransferHistory() {
 
 			console.log(xhr);
 
-			alert("Failed to load transfer history");
+			alert("FAILED TO LOAD TRANSFER HISTORY");
 
 		}
 

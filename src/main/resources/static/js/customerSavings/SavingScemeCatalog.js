@@ -15,12 +15,12 @@ $(document).ready(function() {
 			contentType: "application/json",
 			data: JSON.stringify(formData),
 			success: function() {
-				alert("Data saved successfully!");
+				alert("DATA SAVED SUCCESSFULLY!");
 				fetchAllData();
 			},
 			error: function(xhr) {
 				console.error(xhr.responseText);
-				alert("Save failed");
+				alert("SAVE FAILED");
 			}
 		});
 	});
@@ -34,7 +34,7 @@ $(document).ready(function() {
 		console.log("UPDATE ID =", id);
 
 		if (!id) {
-			alert("Please select a record to update!");
+			alert("PLEASE SELECT A RECORD TO UPDATE!");
 			return;
 		}
 
@@ -49,14 +49,14 @@ $(document).ready(function() {
 			data: JSON.stringify(formData),
 
 			success: function() {
-				alert("Record updated successfully!");
+				alert("RECORD UPDATED SUCCESSFULLY!");
 				$("#savingAccountId").val("");
 				fetchAllData();
 			},
 
 			error: function(xhr) {
 				console.error(xhr.responseText);
-				alert("Update failed!");
+				alert("UPDATE FAILED!");
 			}
 		});
 	});
@@ -72,7 +72,7 @@ $(document).ready(function() {
 				const tableBody = $(".datatable tbody");
 				tableBody.empty();
 
-				console.log("API Response:", response);
+				console.log("API RESPONSE:", response);
 
 				let dataList = [];
 
@@ -85,45 +85,45 @@ $(document).ready(function() {
 
 					$.each(dataList, function(index, item) {
 						rows += `
-	                        <tr>
-	                            <td>${index + 1}</td>
-	                            <td>${item.policyName ? item.policyName.toUpperCase() : ""}</td>
-	                            <td>${item.customerName ? item.customerName.toUpperCase() : ""}</td>
-	                            <td>${item.initialDeposite ?? ""}</td>
-	                            <td>${item.monthlyMinimumBalance ?? ""}</td>
-	                            <td>${item.dailyLimit ?? ""}</td>
-	                            <td>${item.monthlyCardLimit ?? ""}</td>
-	                            <td>${item.yearlyCardLimit ?? ""}</td>
-	                            <td>
-	                                <button class="iconbutton" onclick="viewData(${item.id})">
-	                                    <i class="fa-solid fa-pen-to-square text-primary"></i>
-	                                </button>
-	                            </td>
-	                            <td>
-	                                <button class="iconbutton" onclick="deleteData(${item.id})">
-	                                    <i class="fa-solid fa-trash text-danger"></i>
-	                                </button>
-	                            </td>
-	                        </tr>`;
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${item.policyName ? item.policyName.toUpperCase() : ""}</td>
+                            <td>${item.customerName ? item.customerName.toUpperCase() : ""}</td>
+                            <td>${item.initialDeposite ?? ""}</td>
+                            <td>${item.monthlyMinimumBalance ?? ""}</td>
+                            <td>${item.dailyLimit ?? ""}</td>
+                            <td>${item.monthlyCardLimit ?? ""}</td>
+                            <td>${item.yearlyCardLimit ?? ""}</td>
+                            <td>
+                                <button class="iconbutton" onclick="viewData(${item.id})">
+                                    <i class="fa-solid fa-pen-to-square text-primary"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <button class="iconbutton" onclick="deleteData(${item.id})">
+                                    <i class="fa-solid fa-trash text-danger"></i>
+                                </button>
+                            </td>
+                        </tr>`;
 					});
 
 					tableBody.html(rows);
 				} else {
 					tableBody.html(`
-	                    <tr>
-	                        <td colspan="10" class="text-center">No data found</td>
-	                    </tr>
-	                `);
+                    <tr>
+                        <td colspan="10" class="text-center">NO DATA FOUND</td>
+                    </tr>
+                `);
 				}
 			},
 
 			error: function(xhr) {
-				console.error("Error:", xhr.responseText);
+				console.error("ERROR:", xhr.responseText);
 			}
 		});
 	}
 
-	// initial load
+	// INITIAL LOAD
 	fetchAllData();
 });
 
@@ -157,19 +157,20 @@ function getFormData() {
 		yearlyCardLimit: $("#yearlyCardLimit").val()
 	};
 }
+
 $(document).ready(function() {
 
 	/* ===== ERROR TEXT CSS ===== */
 	$("<style>")
 		.prop("type", "text/css")
 		.html(`
-            .error-text{
-                color:red;
-                font-size:12px;
-                margin-top:4px;
-                display:block;
-            }
-        `)
+           .error-text{
+               color:red;
+               font-size:12px;
+               margin-top:4px;
+               display:block;
+           }
+       `)
 		.appendTo("head");
 
 
@@ -189,97 +190,97 @@ $(document).ready(function() {
 		$(".error-text").text("");
 
 		function error(id, msg) {
-			$("#" + id + "Error").text(msg);
+			$("#" + id + "Error").text(msg.toUpperCase());
 			if (isValid) $("#" + id).focus();
 			isValid = false;
 		}
 
 		/* ===== TEXT ===== */
 		if ($("#policyName").val().trim() === "") {
-			error("policyName", "Policy name is required");
+			error("policyName", "POLICY NAME IS REQUIRED");
 		}
 
 		if ($("#customerName").val().trim() === "") {
-			error("customerName", "Customer name is required");
+			error("customerName", "CUSTOMER NAME IS REQUIRED");
 		}
 
 		/* ===== REQUIRED NUMBERS ===== */
 		if ($("#yearlyROI").val() === "" || Number($("#yearlyROI").val()) <= 0) {
-			error("yearlyROI", "Enter valid yearly ROI");
+			error("yearlyROI", "ENTER VALID YEARLY ROI");
 		}
 
 		if ($("#initialDeposit").val() === "" || Number($("#initialDeposit").val()) <= 0) {
-			error("initialDeposit", "Initial deposit must be greater than 0");
+			error("initialDeposit", "INITIAL DEPOSIT MUST BE GREATER THAN 0");
 		}
 
 		if ($("#minimumOpeningBalance").val() === "" ||
 			Number($("#minimumOpeningBalance").val()) <= 0) {
-			error("minimumOpeningBalance", "Minimum opening balance required");
+			error("minimumOpeningBalance", "MINIMUM OPENING BALANCE REQUIRED");
 		}
 
 		if ($("#dailyLimit").val() === "" || Number($("#dailyLimit").val()) <= 0) {
-			error("dailyLimit", "Daily limit required");
+			error("dailyLimit", "DAILY LIMIT REQUIRED");
 		}
 
 		if ($("#weeklyLimit").val() === "" || Number($("#weeklyLimit").val()) <= 0) {
-			error("weeklyLimit", "Weekly limit required");
+			error("weeklyLimit", "WEEKLY LIMIT REQUIRED");
 		}
 
 		if ($("#monthlyLimit").val() === "" || Number($("#monthlyLimit").val()) <= 0) {
-			error("monthlyLimit", "Monthly limit required");
+			error("monthlyLimit", "MONTHLY LIMIT REQUIRED");
 		}
 
 		if ($("#monthlyCardLimit").val() === "" || Number($("#monthlyCardLimit").val()) <= 0) {
-			error("monthlyCardLimit", "Monthly card limit required");
+			error("monthlyCardLimit", "MONTHLY CARD LIMIT REQUIRED");
 		}
 
 		if ($("#yearlyCardLimit").val() === "" || Number($("#yearlyCardLimit").val()) <= 0) {
-			error("yearlyCardLimit", "Yearly card limit required");
+			error("yearlyCardLimit", "YEARLY CARD LIMIT REQUIRED");
 		}
 
 		/* ===== OPTIONAL NUMBERS ===== */
 		if ($("#reservedFunds").val() !== "" &&
 			Number($("#reservedFunds").val()) < 0) {
-			error("reservedFunds", "Invalid reserved funds");
+			error("reservedFunds", "INVALID RESERVED FUNDS");
 		}
 
 		if ($("#monthlyFreeIFSC").val() !== "" &&
 			Number($("#monthlyFreeIFSC").val()) < 0) {
-			error("monthlyFreeIFSC", "Invalid IFSC transactions");
+			error("monthlyFreeIFSC", "INVALID IFSC TRANSACTIONS");
 		}
 
 		if ($("#freeMoneyTransfers").val() !== "" &&
 			Number($("#freeMoneyTransfers").val()) < 0) {
-			error("freeMoneyTransfers", "Invalid free transfers");
+			error("freeMoneyTransfers", "INVALID FREE TRANSFERS");
 		}
 
 		if ($("#limitPerTransaction").val() !== "" &&
 			Number($("#limitPerTransaction").val()) <= 0) {
-			error("limitPerTransaction", "Invalid per transaction limit");
+			error("limitPerTransaction", "INVALID PER TRANSACTION LIMIT");
 		}
 
 		if ($("#serviceFee").val() !== "" &&
 			Number($("#serviceFee").val()) < 0) {
-			error("serviceFee", "Invalid service fee");
+			error("serviceFee", "INVALID SERVICE FEE");
 		}
 
 		if ($("#cardFee").val() !== "" &&
 			Number($("#cardFee").val()) < 0) {
-			error("cardFee", "Invalid card fee");
+			error("cardFee", "INVALID CARD FEE");
 		}
 
 		/* ===== SELECT ===== */
 		if ($("#messagingFees").val() === "") {
-			error("messagingFees", "Select messaging fees");
+			error("messagingFees", "SELECT MESSAGING FEES");
 		}
 
 		if ($("#messagingFees").val() === "YES" &&
 			$("#messagingInterval").val() === "") {
-			error("messagingInterval", "Select messaging interval");
+			error("messagingInterval", "SELECT MESSAGING INTERVAL");
 		}
 
 		if ($("#billingCycle").val() === "") {
-			error("billingCycle", "Select billing cycle");
+			error("billingCycle", "SELECT BILLING CYCLE");
 		}
 
 		/* ===== LOGICAL CHECK ===== */
@@ -287,7 +288,7 @@ $(document).ready(function() {
 			Number($("#monthlyCardLimit").val()) >
 			Number($("#yearlyCardLimit").val())
 		) {
-			error("monthlyCardLimit", "Monthly card limit cannot exceed yearly limit");
+			error("monthlyCardLimit", "MONTHLY CARD LIMIT CANNOT EXCEED YEARLY LIMIT");
 		}
 
 		return isValid;
@@ -342,12 +343,12 @@ function viewData(id) {
 				$("#monthlyCardLimit").val(d.monthlyCardLimit);
 				$("#yearlyCardLimit").val(d.yearlyCardLimit);
 			} else {
-				alert("Record not found");
+				alert("RECORD NOT FOUND");
 			}
 		},
 
 		error: function() {
-			alert("Failed to load record");
+			alert("FAILED TO LOAD RECORD");
 		}
 	});
 }
@@ -355,7 +356,7 @@ function viewData(id) {
 
 // ================= DELETE =================
 function deleteData(id) {
-	if (!confirm("Are you sure you want to delete this Scheme?")) return;
+	if (!confirm("ARE YOU SURE YOU WANT TO DELETE THIS SCHEME?")) return;
 
 	$.ajax({
 		type: "POST",
@@ -363,15 +364,15 @@ function deleteData(id) {
 
 		success: function(response) {
 			if (response.data === "success") {
-				alert("Deleted successfully!");
+				alert("DELETED SUCCESSFULLY!");
 				location.reload();
 			} else {
-				alert("Delete failed");
+				alert("DELETE FAILED");
 			}
 		},
 
 		error: function() {
-			alert("Delete error");
+			alert("DELETE ERROR");
 		}
 	});
 }

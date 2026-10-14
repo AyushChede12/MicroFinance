@@ -20,7 +20,7 @@ $(document).ready(function() {
 				}
 			},
 			error: function(xhr) {
-				console.error("Account load error:", xhr.responseText);
+				console.error("ACCOUNT LOAD ERROR:", xhr.responseText);
 			}
 		});
 	}
@@ -54,11 +54,11 @@ $(document).ready(function() {
 					$('#currentBalance').val(acc.balance || 0);
 
 				} else {
-					alert("Account details not found");
+					alert("ACCOUNT DETAILS NOT FOUND");
 				}
 			},
 			error: function() {
-				alert("Failed to fetch account details");
+				alert("FAILED TO FETCH ACCOUNT DETAILS");
 			}
 		});
 	});
@@ -77,7 +77,7 @@ $(document).ready(function() {
 		let toDateVal = $('#toDate').val();
 
 		if (!balance || !rate || !interestType || !fromDateVal || !toDateVal) {
-			alert("Please fill all required fields");
+			alert("PLEASE FILL ALL REQUIRED FIELDS");
 			return;
 		}
 
@@ -85,11 +85,11 @@ $(document).ready(function() {
 		let toDate = new Date(toDateVal);
 
 		if (fromDate > toDate) {
-			alert("From Date cannot be greater than To Date");
+			alert("FROM DATE CANNOT BE GREATER THAN TO DATE");
 			return;
 		}
 
-		// ===== TOTAL DAYS (Same as backend expectation) =====
+		// ===== TOTAL DAYS (SAME AS BACKEND EXPECTATION) =====
 		let timeDiff = toDate - fromDate;
 		let totalDays = Math.floor(timeDiff / (1000 * 60 * 60 * 24)) + 1;
 		$('#totalDays').val(totalDays);
@@ -101,7 +101,7 @@ $(document).ready(function() {
 		interestAmount = parseFloat(interestAmount.toFixed(2));
 
 		if (interestAmount <= 0) {
-			alert("Calculated interest is invalid");
+			alert("CALCULATED INTEREST IS INVALID");
 			return;
 		}
 
@@ -128,18 +128,18 @@ document.addEventListener("DOMContentLoaded", function() {
 		const startDate = new Date(fromDate.value);
 		const endDate = new Date(toDate.value);
 
-		// Validate date order
+		// VALIDATE DATE ORDER
 		if (endDate < startDate) {
-			alert("TO DATE cannot be earlier than FROM DATE");
+			alert("TO DATE CANNOT BE EARLIER THAN FROM DATE");
 			totalDays.value = "";
 			toDate.value = "";
 			return;
 		}
 
-		// Difference in milliseconds
+		// DIFFERENCE IN MILLISECONDS
 		const diffTime = endDate.getTime() - startDate.getTime();
 
-		// Convert to days (+1 for inclusive count)
+		// CONVERT TO DAYS (+1 FOR INCLUSIVE COUNT)
 		const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
 
 		totalDays.value = diffDays;
@@ -166,19 +166,19 @@ $(document).ready(function() {
 		let maxToDate = new Date(fromDate);
 
 		if (interestType === "monthly") {
-			// +1 month
+			// +1 MONTH
 			maxToDate.setMonth(fromDate.getMonth() + 1);
 
 		} else if (interestType === "quaterly") {
-			// +3 months
+			// +3 MONTHS
 			maxToDate.setMonth(fromDate.getMonth() + 3);
 
 		} else if (interestType === "yearly") {
-			// +1 year
+			// +1 YEAR
 			maxToDate.setFullYear(fromDate.getFullYear() + 1);
 		}
 
-		// format YYYY-MM-DD
+		// FORMAT YYYY-MM-DD
 		function formatDate(date) {
 			let d = new Date(date),
 				month = '' + (d.getMonth() + 1),
@@ -193,18 +193,18 @@ $(document).ready(function() {
 
 		$('#toDate').attr('min', formatDate(minToDate));
 		$('#toDate').attr('max', formatDate(maxToDate));
-		$('#toDate').val(""); // force reselect
+		$('#toDate').val(""); // FORCE RESELECT
 
 	});
 
-	/* ---- Extra Safety: Validate on ToDate Change ---- */
+	/* ---- EXTRA SAFETY: VALIDATE ON TODATE CHANGE ---- */
 	$('#toDate').on('change', function() {
 
 		let toDate = new Date($(this).val());
 		let maxDate = new Date($(this).attr('max'));
 
 		if (toDate > maxDate) {
-			alert("Selected date is not allowed for selected interest type");
+			alert("SELECTED DATE IS NOT ALLOWED FOR SELECTED INTEREST TYPE");
 			$(this).val("");
 		}
 	});
@@ -231,12 +231,12 @@ $(document).ready(function() {
 
 		// ===== BASIC VALIDATION =====
 		if (!interestData.accountNumber || !interestData.interestRate || !interestData.totalDays) {
-			alert("Please fill all required interest details");
+			alert("PLEASE FILL ALL REQUIRED INTEREST DETAILS");
 			return;
 		}
 
 		// ===== CONFIRMATION =====
-		if (!confirm("Are you sure you want to transfer interest?")) {
+		if (!confirm("ARE YOU SURE YOU WANT TO TRANSFER INTEREST?")) {
 			return;
 		}
 
@@ -249,18 +249,18 @@ $(document).ready(function() {
 			success: function(response) {
 
 				if (response.status === "OK") {
-					alert(response.message);
-					// Optional: disable button to prevent double click
+					alert(response.message.toUpperCase());
+					// OPTIONAL: DISABLE BUTTON TO PREVENT DOUBLE CLICK
 					//$("#transferInterestBtn").prop("disabled", true);
 				} else {
-					alert(response.message);
+					alert(response.message.toUpperCase());
 				}
 			},
 			error: function(xhr) {
 				if (xhr.responseJSON && xhr.responseJSON.message) {
-					alert(xhr.responseJSON.message);
+					alert(xhr.responseJSON.message.toUpperCase());
 				} else {
-					alert("Error while transferring interest");
+					alert("ERROR WHILE TRANSFERRING INTEREST");
 				}
 			}
 		});

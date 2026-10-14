@@ -6,16 +6,16 @@ $(document).ready(function() {
 		type: "GET",
 		success: function(response) {
 			if (response.status =/api== "FOUND") {
-				$("#accountNumber").empty().append("<option value=''>-- Select Account No --</option>");
+				$("#accountNumber").empty().append("<option value=''>-- SELECT ACCOUNT NO --</option>");
 				response.data.forEach(function(item) {
 					$("#accountNumber").append(`<option value='${item.accountNumber}'>${item.accountNumber}</option>`);
 				});
 			} else {
-				alert("No Account Number found.");
+				alert("NO ACCOUNT NUMBER FOUND.");
 			}
 		},
 		error: function() {
-			alert("Failed to load Account Numbers.");
+			alert("FAILED TO LOAD ACCOUNT NUMBERS.");
 		}
 	});*/
 
@@ -34,7 +34,7 @@ $(document).ready(function() {
 
 				// Initialize Select2 with full data and custom search matcher
 				$('#accountNumber').select2({
-					placeholder: '-- Search Account Number',
+					placeholder: '-- SEARCH ACCOUNT NUMBER',
 					data: savingOptions,
 					matcher: function(params, data) {
 						// If no search term, return all
@@ -59,11 +59,11 @@ $(document).ready(function() {
 				});
 
 			} else {
-				alert("No Account Number found.");
+				alert("NO ACCOUNT NUMBER FOUND.");
 			}
 		},
 		error: function() {
-			alert("Failed to load Account Number.");
+			alert("FAILED TO LOAD ACCOUNT NUMBER.");
 		}
 	});
 
@@ -74,7 +74,7 @@ $(document).ready(function() {
 			if (response.status == "FOUND") {
 				const branchList = response.data;
 				$("#branchName").empty(); // Clear existing options
-				$("#branchName").append("<option value=''>-- Select Branch --</option>");
+				$("#branchName").append("<option value=''>-- SELECT BRANCH --</option>");
 
 				for (let i = 0; i < branchList.length; i++) {
 					let branch = branchList[i];
@@ -83,12 +83,12 @@ $(document).ready(function() {
 
 				}
 			} else {
-				alert("Error: " + response.message);
+				alert("ERROR: " + response.message);
 			}
 		},
 		error: function(xhr) {
 			console.error("Error loading branches:", xhr.responseText);
-			alert("Failed to load dropdown data.");
+			alert("FAILED TO LOAD DROPDOWN DATA.");
 		}
 	});
 
@@ -120,11 +120,11 @@ $(document).ready(function() {
 					$("#payBy").val(data.payBy);
 
 				} else {
-					alert("Transfer Share Details Not Found For Customer");
+					alert("TRANSFER SHARE DETAILS NOT FOUND FOR CUSTOMER");
 				}
 			},
 			error: function() {
-				alert("Shares not found or server error");
+				alert("SHARES NOT FOUND OR SERVER ERROR");
 			}
 		});
 
@@ -134,28 +134,28 @@ $(document).ready(function() {
 		var id = $("#id").val();
 		let accountNumber = $("#accountNumber").val();
 		if (accountNumber !== "") {
-			if (confirm("Are you sure you want to delete this Saving Transaction?")) {
+			if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS SAVING TRANSACTION?")) {
 				$.ajax({
 					url: "api/datacorrection/deleteSavingTransactionRemoval",
 					type: "POST",
 					data: { id: id },
 					success: function(response) {
 						if (response.status == "OK") {
-							alert("Saving Transaction Deleted Successfully");
+							alert("SAVING TRANSACTION DELETED SUCCESSFULLY");
 							location.reload();
 						} else {
-							alert("Delete failed: " + response.message);
+							alert("DELETE FAILED: " + response.message);
 						}
 					},
 					error: function(xhr, status, error) {
-						alert("Failed to delete Saving Transaction.");
+						alert("FAILED TO DELETE SAVING TRANSACTION.");
 						console.error("Error:", error);
 					}
 				});
 			}
 		}
 		else {
-			alert("First Select Any One Data Then Proceed To Delete!");
+			alert("FIRST SELECT ANY ONE DATA THEN PROCEED TO DELETE!");
 		}
 
 

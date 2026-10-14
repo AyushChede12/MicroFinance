@@ -24,7 +24,7 @@ function loadBranchDropdown() {
 			$("#branchName").html(options);
 		},
 		error: function() {
-			alert("Failed to load branch names.");
+			alert("FAILED TO LOAD BRANCH NAMES.");
 		}
 	});
 }
@@ -54,15 +54,15 @@ function loadLedgerDropdown(branchName) {
 
 			ledgers.forEach(ledger => {
 				options += `<option value="${ledger.accountTitle}">
-								${ledger.accountTitle.toUpperCase()}
-							</option>`;
+							${ledger.accountTitle.toUpperCase()}
+						</option>`;
 			});
 
 			$("#ledgerName").html(options);
 		},
 		error: function() {
 			resetLedgerDropdown();
-			alert("Failed to load ledger list.");
+			alert("FAILED TO LOAD LEDGER LIST.");
 		}
 	});
 }
@@ -81,7 +81,7 @@ function fetchLedgerSummary() {
 
 	// ✅ Validation
 	if (!branch || !ledger || !startDate || !endDate) {
-		alert("Please fill all required fields.");
+		alert("PLEASE FILL ALL REQUIRED FIELDS.");
 		return;
 	}
 
@@ -100,7 +100,7 @@ function fetchLedgerSummary() {
 			tbody.empty();
 
 			if (data.length === 0) {
-				tbody.append(`<tr><td colspan="6" class="text-center">No records found</td></tr>`);
+				tbody.append(`<tr><td colspan="6" class="text-center">NO RECORDS FOUND</td></tr>`);
 				$("#summaryInfo").html("");
 				return;
 			}
@@ -117,44 +117,43 @@ function fetchLedgerSummary() {
 				totalCredit += credit;
 
 				const row = `
-                    <tr>
-                        <td>${entry.dateOfEntry || ''}</td>
-                        <td>${entry.voucherId.toUpperCase() || ''}</td>
-                        <td>${(entry.remarks).toUpperCase() || ''}</td>
-                        <td>${entry.accountCode || ''}</td>
-                        <td class="text-right">${Number(debit).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
-                        <td class="text-right">${Number(credit).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
-                    </tr>
-                `;
+                   <tr>
+                       <td>${entry.dateOfEntry || ''}</td>
+                       <td>${entry.voucherId.toUpperCase() || ''}</td>
+                       <td>${(entry.remarks).toUpperCase() || ''}</td>
+                       <td>${entry.accountCode || ''}</td>
+                       <td class="text-right">${Number(debit).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                       <td class="text-right">${Number(credit).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                   </tr>
+               `;
 				tbody.append(row);
 			});
 
 			// ✅ Add Totals Row
 			tbody.append(`
-                <tr class="font-weight-bold table-warning">
-                    <td colspan="4" class="text-right">Total:</td>
-                    <td class="text-right">${totalDebit.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
-                    <td class="text-right">${totalCredit.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
-                </tr>
-            `);
+               <tr class="font-weight-bold table-warning">
+                   <td colspan="4" class="text-right">TOTAL:</td>
+                   <td class="text-right">${totalDebit.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                   <td class="text-right">${totalCredit.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+               </tr>
+           `);
 
 			// ✅ Display Opening & Closing Balances
 			const first = data[0];
 			if (first.openingBalance !== undefined && first.closingBalance !== undefined) {
 				$("#summaryInfo").html(`
-                    <div class="alert alert-info py-2">
-                        <strong>BRANCH:</strong> ${branch.toUpperCase()} |
-                        <strong>LEDGER:</strong> ${ledger.toUpperCase()} |
-                        <strong>OPENING BALANCE:</strong> ${Number(first.openingBalance).toLocaleString('en-IN', { minimumFractionDigits: 2 })} |
-                        <strong>CLOSING BALANCE:</strong> ${Number(first.closingBalance).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-                    </div>
-                `);
+                   <div class="alert alert-info py-2">
+                       <strong>BRANCH:</strong> ${branch.toUpperCase()} |
+                       <strong>LEDGER:</strong> ${ledger.toUpperCase()} |
+                       <strong>OPENING BALANCE:</strong> ${Number(first.openingBalance).toLocaleString('en-IN', { minimumFractionDigits: 2 })} |
+                       <strong>CLOSING BALANCE:</strong> ${Number(first.closingBalance).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                   </div>
+               `);
 			}
 		},
 		error: function(xhr) {
-			alert("Failed to load ledger summary.");
+			alert("FAILED TO LOAD LEDGER SUMMARY.");
 			console.error(xhr.responseText);
 		}
 	});
 }
-

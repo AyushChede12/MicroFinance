@@ -64,11 +64,11 @@ $(document).ready(function() {
 
 
 					} else {
-						alert("Loan data not found.");
+						alert("LOAN DATA NOT FOUND.");
 					}
 				},
 				error: function(xhr) {
-					alert("Error fetching data: " + xhr.responseText);
+					alert("ERROR FETCHING DATA: " + xhr.responseText);
 				}
 			});
 		}
@@ -82,7 +82,7 @@ function fetchLoanDetails() {
 	const loanId = $("#loanId").val(); // Assume you have an input with this ID
 
 	if (!loanId) {
-		alert("Please enter Loan ID");
+		alert("PLEASE ENTER LOAN ID");
 		return;
 	}
 
@@ -100,28 +100,28 @@ function fetchLoanDetails() {
 
 				// When appending rows:
 				const row = `
-                        <tr>
-                        <td>${serialNumber++}</td>
-                    	<td>${loan.memberId || "-"}</td>
-                        <td>${loan.memberName || "-"}</td>
-                        <td>${loan.dateOfBirth || "-"}</td>
-                        <td>${loan.age || "-"}</td>
-                        <td>${loan.contactNo || "-"}</td>
-                        <td>${loan.address || "-"}</td>
-                        <td>${loan.loanPlanName || "-"}</td>
-                        <td>${loan.loanDate || "-"}</td>
-                        <td>${loan.loanAmount || "-"}</td>
-                        <td>${loan.purposeOfLoan || "-"}</td>
-                    </tr>
-                `;
+                       <tr>
+                       <td>${serialNumber++}</td>
+                   	<td>${loan.memberId || "-"}</td>
+                       <td>${loan.memberName || "-"}</td>
+                       <td>${loan.dateOfBirth || "-"}</td>
+                       <td>${loan.age || "-"}</td>
+                       <td>${loan.contactNo || "-"}</td>
+                       <td>${loan.address || "-"}</td>
+                       <td>${loan.loanPlanName || "-"}</td>
+                       <td>${loan.loanDate || "-"}</td>
+                       <td>${loan.loanAmount || "-"}</td>
+                       <td>${loan.purposeOfLoan || "-"}</td>
+                   </tr>
+               `;
 				tbody.append(row);
 			} else {
-				alert("No loan data found");
+				alert("NO LOAN DATA FOUND");
 			}
 		},
 		error: function(xhr, status, error) {
 			console.error("Error fetching loan details:", error);
-			alert("Failed to fetch loan details");
+			alert("FAILED TO FETCH LOAN DETAILS");
 		}
 	});
 }

@@ -3,7 +3,7 @@ $(document).ready(function() {
 		url: "api/reports/getApprovedSavingAccount",
 		type: "GET",
 		success: function(response) {
-			console.log("API response:", response);
+			console.log("API RESPONSE:", response);
 			var dropdown1 = $('#accountNumber');
 			dropdown1.empty();
 			dropdown1.append('<option value="">--SELECT ACCOUNT NO--</option>');
@@ -13,36 +13,36 @@ $(document).ready(function() {
 					dropdown1.append('<option value="' + item.accountNumber + '">' + item.accountNumber + '</option>');
 				});
 			} else {
-				dropdown1.append('<option value="">No Account Number found</option>');
+				dropdown1.append('<option value="">NO ACCOUNT NUMBER FOUND</option>');
 			}
 		},
 		error: function() {
-			alert("Failed to fetch accountNumber.");
+			alert("FAILED TO FETCH ACCOUNTNUMBER.");
 		}
 	});
 });
 
-//janvi fetch by account number
-//fetch saving account details by account number
+//JANVI FETCH BY ACCOUNT NUMBER
+//FETCH SAVING ACCOUNT DETAILS BY ACCOUNT NUMBER
 $(document).ready(function() {
 	$('#searchByAccNo').click(function() {
 		let accountNumber = $('#accountNumber').val().trim();
 
 		if (accountNumber === "") {
-			alert("Please select an account number first.");
+			alert("PLEASE SELECT AN ACCOUNT NUMBER FIRST.");
 			return;
 		}
 
-		// Disable button and show loading state
-		$('#searchByAccNo').prop('disabled', true).text('Searching...');
+		// DISABLE BUTTON AND SHOW LOADING STATE
+		$('#searchByAccNo').prop('disabled', true).text('SEARCHING...');
 
-		// Fetch customer details
+		// FETCH CUSTOMER DETAILS
 		$.ajax({
 			url: 'api/customersavings/getallbyaccountnumber',
 			type: 'GET',
 			data: { accountNumber: accountNumber },
 			success: function(response) {
-				console.log("Customer Details Response:", response);
+				console.log("CUSTOMER DETAILS RESPONSE:", response);
 
 				if (response.data && response.data.length > 0) {
 					let customer = response.data[0];
@@ -61,23 +61,23 @@ $(document).ready(function() {
 					$('#modeOfOp').text((customer.operationType || '').toUpperCase());
 					$('#BranchName').text(branch.toUpperCase() || '');
 				} else {
-					alert('No customer data found.');
+					alert('NO CUSTOMER DATA FOUND.');
 				}
 			},
 			error: function(xhr) {
-				console.error("Customer fetch error:", xhr);
-				alert('Error fetching customer data. Maybe account is not approved.');
+				console.error("CUSTOMER FETCH ERROR:", xhr);
+				alert('ERROR FETCHING CUSTOMER DATA. MAYBE ACCOUNT IS NOT APPROVED.');
 				if (typeof clearAccountForm === 'function') {
-					clearAccountForm(); // Optional, only if you have defined this
+					clearAccountForm(); // OPTIONAL, ONLY IF YOU HAVE DEFINED THIS
 				}
 			},
 			complete: function() {
-				// Re-enable button after customer fetch
-				$('#searchByAccNo').prop('disabled', false).text('Search');
+				// RE-ENABLE BUTTON AFTER CUSTOMER FETCH
+				$('#searchByAccNo').prop('disabled', false).text('SEARCH');
 			}
 		});
 
-		// Fetch account transaction activity
+		// FETCH ACCOUNT TRANSACTION ACTIVITY
 		$.ajax({
 			url: "api/customersavings/getsavingaccountactivity",
 			type: "GET",
@@ -90,7 +90,7 @@ $(document).ready(function() {
 					let tableBody = $("#tableSavingAcc");
 					tableBody.empty();
 
-					// 🔴 IMPORTANT: Opening Balance
+					// 🔴 IMPORTANT: OPENING BALANCE
 					let runningBalance = parseFloat(data[0].openingBalance || 0);
 
 					data.forEach((item) => {
@@ -125,12 +125,12 @@ $(document).ready(function() {
 					});
 
 				} else {
-					alert("No transactions found.");
+					alert("NO TRANSACTIONS FOUND.");
 					$("#tableSavingAcc").empty();
 				}
 			},
 			error: function() {
-				alert("Error fetching transaction data.");
+				alert("ERROR FETCHING TRANSACTION DATA.");
 			}
 		});
 

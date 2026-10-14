@@ -12,13 +12,13 @@ $(document).ready(function() {
 		let isValid = true;
 
 		if (category === '') {
-			$('#chkcategory').text('* This field is required');
+			$('#chkcategory').text('* THIS FIELD IS REQUIRED');
 			$('#category').focus();
 			isValid = false;
 		}
 
 		if (caste === '') {
-			$('#chkcaste').text('* This field is required');
+			$('#chkcaste').text('* THIS FIELD IS REQUIRED');
 			$('#caste').focus();
 			isValid = false;
 		}
@@ -42,12 +42,12 @@ $(document).ready(function() {
 					alert(response.message);
 					location.reload();
 				} else {
-					alert("Error: " + (response.message || "Unknown error occurred."));
+					alert("ERROR: " + (response.message || "UNKNOWN ERROR OCCURRED."));
 				}
 			},
 			error: function(xhr) {
 				console.error('Error:', xhr.responseText);
-				alert('Failed to save Category data.');
+				alert('FAILED TO SAVE CATEGORY DATA.');
 			}
 		});
 	});
@@ -56,21 +56,21 @@ $(document).ready(function() {
 });
 
 function deleteData(id) {
-	if (confirm("Are you sure you want to delete this Category?")) {
+	if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS CATEGORY?")) {
 		$.ajax({
 			url: "api/preference/deleteCategoryModuleById",
 			type: "POST",
 			data: { id: id },
 			success: function(response) {
 				if (response.status = "OK") {
-					alert("Category Deleted Successfully");
+					alert("CATEGORY DELETED SUCCESSFULLY");
 					location.reload();
 				} else {
-					alert("Delete failed: " + response.message);
+					alert("DELETE FAILED: " + response.message);
 				}
 			},
 			error: function(xhr, status, error) {
-				alert("Failed to delete Caste.");
+				alert("FAILED TO DELETE CASTE.");
 				console.error("Error:", error);
 			}
 		});
@@ -91,11 +91,11 @@ function viewData(id) {
 				$("#category").val(category.category);
 				$("#caste").val(category.caste);
 			} else {
-				alert("Branch not found: " + response.message);
+				alert("BRANCH NOT FOUND: " + response.message);
 			}
 		},
 		error: function(xhr) {
-			alert("Request failed: " + xhr.responseText);
+			alert("REQUEST FAILED: " + xhr.responseText);
 		}
 	});
 
@@ -114,13 +114,13 @@ function updateCategory() {
 	let isValid = true;
 
 	if (category === '') {
-		$('#chkcategory').text('* This field is required');
+		$('#chkcategory').text('* THIS FIELD IS REQUIRED');
 		$('#category').focus();
 		isValid = false;
 	}
 
 	if (caste === '') {
-		$('#chkcaste').text('* This field is required');
+		$('#chkcaste').text('* THIS FIELD IS REQUIRED');
 		$('#caste').focus();
 		isValid = false;
 	}
@@ -142,14 +142,14 @@ function updateCategory() {
 		data: JSON.stringify(payload),
 		success: function(response) {
 			if (response.status == "OK") {
-				alert("Category and Caste Updated Successfully");
+				alert("CATEGORY AND CASTE UPDATED SUCCESSFULLY");
 				location.reload();
 			} else {
-				alert("Operation failed: " + response.message);
+				alert("OPERATION FAILED: " + response.message);
 			}
 		},
 		error: function(xhr) {
-			alert("Update failed: " + xhr.responseText);
+			alert("UPDATE FAILED: " + xhr.responseText);
 		}
 	});
 }
@@ -175,11 +175,11 @@ function loadCategoryData() {
 				allCategoryData = response.data || [];
 				renderCategoryTable(allCategoryData);
 			} else {
-				alert("Failed to fetch Category data: " + response.message);
+				alert("FAILED TO FETCH CATEGORY DATA: " + response.message);
 			}
 		},
 		error: function() {
-			alert("Error while calling the API.");
+			alert("ERROR WHILE CALLING THE API.");
 		}
 	});
 }
@@ -189,20 +189,20 @@ function renderCategoryTable(data) {
 	tableBody.empty();
 	data.forEach((item, index) => {
 		let row = `<tr>
-                        <td>${index + 1}</td>
-                        <td>${(item.category || '').toUpperCase()}</td>
-                        <td>${(item.caste || '').toUpperCase()}</td>
-                        <td>
-                            <button type="button" class="iconbutton" onclick="viewData(${item.id})" title="View">
-                                <i class="fa-solid fa-pen-to-square text-primary"></i>
-                            </button>
-                        </td>
-                        <td>
-                            <button type="button" class="iconbutton ms-2" onclick="deleteData(${item.id})" title="Delete">
-                                <i class="fa-solid fa-trash text-danger"></i>
-                            </button>
-                        </td>
-                    </tr>`;
+                       <td>${index + 1}</td>
+                       <td>${(item.category || '').toUpperCase()}</td>
+                       <td>${(item.caste || '').toUpperCase()}</td>
+                       <td>
+                           <button type="button" class="iconbutton" onclick="viewData(${item.id})" title="VIEW">
+                               <i class="fa-solid fa-pen-to-square text-primary"></i>
+                           </button>
+                       </td>
+                       <td>
+                           <button type="button" class="iconbutton ms-2" onclick="deleteData(${item.id})" title="DELETE">
+                               <i class="fa-solid fa-trash text-danger"></i>
+                           </button>
+                       </td>
+                   </tr>`;
 		tableBody.append(row);
 	});
 }

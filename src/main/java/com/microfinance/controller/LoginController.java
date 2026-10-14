@@ -26,15 +26,15 @@ public class LoginController {
 	@PostMapping("/loginValidate")
 	public ApiResponse<User> login(@RequestBody User user, HttpSession session) {
 		if (user.getUsername() == null || user.getPassword() == null) {
-			return ApiResponse.error(HttpStatus.BAD_REQUEST, "Username and password are required");
+			return ApiResponse.error(HttpStatus.BAD_REQUEST, "USERNAME AND PASSWORD ARE REQUIRED");
 		}
 
 		User loginUser = userService.validateUser(user.getUsername(), user.getPassword());
 		if (loginUser != null) {
 			session.setAttribute("username", loginUser.getUsername()); // ✅ save in session
-			return ApiResponse.success(HttpStatus.OK, "Login successful", loginUser);
+			return ApiResponse.success(HttpStatus.OK, "LOGIN SUCCESSFUL", loginUser);
 		} else {
-			return ApiResponse.error(HttpStatus.UNAUTHORIZED, "Invalid username or password");
+			return ApiResponse.error(HttpStatus.UNAUTHORIZED, "INVALID USERNAME OR PASSWORD");
 		}
 	}
 

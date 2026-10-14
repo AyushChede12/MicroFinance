@@ -1,221 +1,264 @@
-$(document).ready(function () {
-	let allApprovedData = [];
+let allRecurringData = [];
 
-	// ✅ 1. Fetch all approved loan applications on page load
+$(document).ready(function() {
+
+	// ================= TODAY DATE =================
+	function getToday() {
+		let today = new Date();
+		today.setHours(0, 0, 0, 0);
+		return today;
+	}
+
+	// ================= DUE STATUS =================
+	function getDueStatus(dateStr) {
+
+		if (!dateStr) {
+			return { text: "-", color: "black", days: "-" };
+		}
+
+		let today = getToday();
+		let dueDate = new Date(dateStr);
+		dueDate.setHours(0, 0, 0, 0);
+
+		let diffTime = dueDate - today;
+		let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+		if (diffDays < 0) {
+			return { text: "OVERDUE", color: "red", days: Math.abs(diffDays) };
+		} else if (diffDays === 0) {
+			return { text: "DUE TODAY", color: "orange", days: "0" };
+		} else {
+			return { text: "UPCOMING", color: "green", days: diffDays };
+		}
+	}
+
+	// ================= FETCH DATA =================
 	$.ajax({
-		url: "api/reports/getUnapprovedLoanApplication",
-		method: "GET",
-		success: function (response) {
-			console.log("API Response:", response);
+		url: "api/datacorrection/fetchAllApprovedPolicyRenewal",
+		type: "GET",
+		success: function(response) {
 
 			if (response && response.data && Array.isArray(response.data)) {
-				allApprovedData = response.data;
 
-				// ✅ Fill branch dropdown
+				allRecurringData = response.data;
+
 				let branches = new Set();
-				allApprovedData.forEach(loan => {
-					if (loan.branchName) branches.add(loan.branchName);
-				});
-				branches.forEach(branch => {
-					$('#branchName1').append(`<option value="${branch}">${branch}</option>`);
+
+				allRecurringData.forEach(p => {
+					if (p.branchname) {
+						branches.add(p.branchname);
+					}
 				});
 
-				// ✅ Render full table initially
-				renderTable(allApprovedData);
-			} else {
-				$(".datatable tbody").html("<tr><td colspan='10'>No Notapproved loans found.</td></tr>");
+				branches.forEach(branch => {
+					$("#branchName").append(`<option value="${branch}">${branch}</option>`);
+				});
+
+				renderTable(allRecurringData);
 			}
 		},
-		error: function () {
-			alert("Error while fetching loan data.");
+		error: function() {
+			alert("DATA LOAD FAILED");
 		}
 	});
 
-	// ✅ 2. Filter on Find button click
-	$('#findBtn').click(function (e) {
+	// ================= FIND FILTER =================
+	$("#findBtn").click(function(e) {
+
 		e.preventDefault();
 
-		const selectedBranch = $('#branchName1').val();
-		const fromDate = $('#fromDate').val();
-		const toDate = $('#toDate').val();
+		let branch = $("#branchName").val();
+		let fromDate = $("#fromDate").val();
+		let toDate = $("#toDate").val();
 
-		if (!fromDate || !toDate) {
-			alert("Please select both From and To dates.");
-			return;
-		}
+		let filtered = allRecurringData.filter(policy => {
 
-		const filtered = allApprovedData.filter(loan => {
-			const loanDate = loan.loanDate;
+			let renewalDate = new Date(policy.renewalDate);
+
 			return (
-				(!selectedBranch || loan.branchName === selectedBranch) &&
-				loanDate >= fromDate &&
-				loanDate <= toDate
+				(!branch || policy.branchname === branch) &&
+				(!fromDate || renewalDate >= new Date(fromDate)) &&
+				(!toDate || renewalDate <= new Date(toDate))
 			);
 		});
 
 		renderTable(filtered);
 	});
 
-	// ✅ 3. Render the table and handle print popup
+	// ================= RENDER TABLE =================
 	function renderTable(data) {
-		let tableBody = $(".datatable tbody");
-		tableBody.empty();
+
+		let tbody = $(".datatable tbody");
+		tbody.empty();
 
 		if (!data.length) {
-			tableBody.append("<tr><td colspan='10'>No matching Loan Applications found.</td></tr>");
+			tbody.append("<tr><td colspan='9'>NO DATA FOUND</td></tr>");
 			return;
 		}
 
-		data.forEach((loan, index) => {
+		data.forEach(function(policy, index) {
+
+			let status = getDueStatus(policy.renewalDate);
+
 			let row = `
-				<tr>
-					<td>${index + 1}</td>
-					<td>${loan.loanId || ''}</td>
-					<td>${loan.loanPlanName || ''}</td>
-					<td>${loan.interestType || ''}</td>
-					<td>${loan.loanDate || ''}</td>
-					<td>${loan.loanAmount || ''}</td>
-					<td>${loan.contactNo || ''}</td>
-					<td>${loan.branchName || ''}</td>
-					<td>${loan.approvalStatus ? 'Yes' : 'No'}</td>
-					<td>
-						<button class="iconbutton printPopupBtn" data-id="${loan.id}" data-bs-toggle="modal" data-bs-target="#printModal">
-							<i class="bi bi-printer" style="color: green;"></i>
-						</button>
-					</td>
-				</tr>
-			`;
-			tableBody.append(row);
+            <tr>
+                <td>${index + 1}</td>
+                <td>${policy.policyCode || ""}</td>
+                <td>${policy.clientName || ""}</td>
+                <td>${policy.policyAmount || ""}</td>
+                <td>${policy.lastPaymentDate || ""}</td>
+                <td>${policy.renewalDate || ""}</td>
+                <td>${status.days}</td>
+                <td style="color:${status.color};font-weight:bold;">
+                    ${status.text}
+                </td>
+                <td>
+                    <button class="iconbutton printPopupBtn" 
+                        data-id="${policy.id}" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#printModal">
+                        <i class="bi bi-printer" style="color:green;"></i>
+                    </button>
+                </td>
+            </tr>
+            `;
+
+			tbody.append(row);
 		});
 
-		// ✅ Handle print popup
-		$(".printPopupBtn").click(function () {
-			const id = $(this).data("id");
-			const selectedPolicy = allApprovedData.find(p => p.id === id);
+		// ================= PRINT POPUP DATA (TABLE FORMAT) =================
+		$(".printPopupBtn").click(function() {
 
-			if (selectedPolicy) {
-				let html = `
-					<h4 class="text-center mb-4">Loan Application Full Details</h4>
-					<div class="row">
-						${createField("Loan ID", selectedPolicy.loanId)}
-						${createField("Loan Date", selectedPolicy.loanDate)}
-						${createField("Member ID", selectedPolicy.memberId)}
-						${createField("Relative Details", selectedPolicy.relativeDetails)}
-						${createField("Date of Birth", selectedPolicy.dateOfBirth)}
-						${createField("Age", selectedPolicy.age)}
-						${createField("Contact No", selectedPolicy.contactNo)}
-						${createField("Message Status", selectedPolicy.messageStatus)}
-						${createField("Address", selectedPolicy.address)}
-						${createField("Pin Code", selectedPolicy.pinCode)}
-						${createField("Branch Name", selectedPolicy.branchName)}
-						${createField("Loan Plan Name", selectedPolicy.loanPlanName)}
-						${createField("Type Of Loan", selectedPolicy.typeOfLoan)}
-						${createField("Loan Mode", selectedPolicy.loanMode)}
-						${createField("Loan Term", selectedPolicy.loanTerm)}
-						${createField("Rate Of Interest", selectedPolicy.rateOfInterest)}
-						${createField("Loan Amount", selectedPolicy.loanAmount)}
-						${createField("Interest Type", selectedPolicy.interestType)}
-						${createField("EMI Payment", selectedPolicy.emiPayment)}
-						${createField("Purpose Of Loan", selectedPolicy.purposeOfLoan)}
-						${createField("Guarantor Member ID", selectedPolicy.guarantorMemberId)}
-						${createField("Guarantor Identity", selectedPolicy.guarantorIdentity)}
-						${createField("Guarantor Address", selectedPolicy.guarantorAddress)}
-						${createField("Guarantor Pin Code", selectedPolicy.guarantorPinCode)}
-						${createField("Guarantor Contact No", selectedPolicy.guarantorContactNo)}
-						${createField("Guarantor Security Type", selectedPolicy.guarantorSecurityType)}
-						${createField("Co-Applicant Member ID", selectedPolicy.coApplicantMemberId)}
-						${createField("Co-Applicant Identity", selectedPolicy.coApplicantIdentity)}
-						${createField("Co-Applicant Address", selectedPolicy.coApplicantAddress)}
-						${createField("Co-Applicant Pin Code", selectedPolicy.coApplicantPinCode)}
-						${createField("Co-Applicant Contact No", selectedPolicy.coApplicantContactNo)}
-						${createField("Co-Applicant Security Type", selectedPolicy.coApplicantSecurityType)}
-						${createField("Processing Fee", selectedPolicy.processingFee)}
-						${createField("Legal Charges", selectedPolicy.legalCharges)}
-						${createField("GST", selectedPolicy.gst)}
-						${createField("Insurance Fee", selectedPolicy.insuranceFee)}
-						${createField("Valuation Fees", selectedPolicy.valuationFees)}
-						${createField("Stationary Fee", selectedPolicy.stationaryFee)}
-						${createField("Financial Consultant ID", selectedPolicy.financialConsultantId)}
-						${createField("Financial Consultant Name", selectedPolicy.financialConsultantName)}
-						${createField("Approval Date", selectedPolicy.approvalDate)}
-						${createField("Approval Status", selectedPolicy.approvalStatus ? "Yes" : "No")}
-						${createField("Photo", selectedPolicy.photo)}
-						${createField("Signature", selectedPolicy.signature)}
-						${createField("Payment Date", selectedPolicy.paymentDate)}
-						${createField("Payment Status", selectedPolicy.paymentStatus)}
-						${createField("Payment Mode", selectedPolicy.paymentMode)}
-						${createField("Account No", selectedPolicy.accountNo)}
-						${createField("Ref/UPI ID", selectedPolicy.ref_UpiId)}
-						${createField("Charges", selectedPolicy.charges)}
-						${createField("Remarks", selectedPolicy.remarks)}
-						${createField("Cheque Date", selectedPolicy.chequeDate)}
-						${createField("Cheque No", selectedPolicy.chequeNo)}
-					</div>
-				`;
-				$("#modalDataContainer").html(html);
-			}
+			let id = $(this).data("id");
+			let policy = allRecurringData.find(p => p.id === id);
+			if (!policy) return;
+
+			let status = getDueStatus(policy.renewalDate);
+
+			let html = `
+
+            <div style="font-family:Arial;padding:20px;">
+
+                <!-- Header -->
+                <div style="text-align:center;">
+                    <h3 style="margin:0;">CO OPERATIVE SOCIETY LTD NAGPUR</h3>
+                    <p style="margin:2px;">PLOT NO 497 NEW NANDANWAN</p>
+                    <p style="margin:2px;">MAHARASHTRA - 440024</p>
+                    <p style="margin:2px;font-size:14px;">
+                        CIN : ASJ#567 | EMAIL : example@gmail.com | HELPLINE : 9566200223
+                    </p>
+                </div>
+
+                <hr>
+
+                <h4 style="text-align:center;margin-bottom:20px;">
+                    RECURRING INSTALLMENT DUE REPORT
+                </h4>
+
+                <!-- TABLE -->
+                <table style="width:100%;border-collapse:collapse;">
+
+                    <tr style="background:#0d6efd;color:#fff;">
+                        <th colspan="4" style="padding:8px;border:1px solid #000;">
+                            POLICY DETAILS
+                        </th>
+                    </tr>
+
+                    <tr>
+                        <th style="border:1px solid #000;padding:8px;">POLICY CODE</th>
+                        <td style="border:1px solid #000;padding:8px;">${policy.policyCode}</td>
+
+                        <th style="border:1px solid #000;padding:8px;">CUSTOMER NAME</th>
+                        <td style="border:1px solid #000;padding:8px;">${policy.clientName}</td>
+                    </tr>
+
+                    <tr>
+                        <th style="border:1px solid #000;padding:8px;">BRANCH</th>
+                        <td style="border:1px solid #000;padding:8px;">${policy.branchname}</td>
+
+                        <th style="border:1px solid #000;padding:8px;">POLICY AMOUNT</th>
+                        <td style="border:1px solid #000;padding:8px;">₹${policy.policyAmount}</td>
+                    </tr>
+
+                    <tr>
+                        <th style="border:1px solid #000;padding:8px;">LAST PAYMENT DATE</th>
+                        <td style="border:1px solid #000;padding:8px;">${policy.lastPaymentDate}</td>
+
+                        <th style="border:1px solid #000;padding:8px;">DUE DATE</th>
+                        <td style="border:1px solid #000;padding:8px;">${policy.renewalDate}</td>
+                    </tr>
+
+                    <tr>
+                        <th style="border:1px solid #000;padding:8px;">STATUS</th>
+                        <td style="border:1px solid #000;padding:8px;color:${status.color};font-weight:bold;">
+                            ${status.text}
+                        </td>
+
+                        <th style="border:1px solid #000;padding:8px;">DAYS</th>
+                        <td style="border:1px solid #000;padding:8px;">
+                            ${status.days}
+                        </td>
+                    </tr>
+
+                </table>
+
+                <br><br>
+
+                <!-- Footer -->
+                <div style="display:flex;justify-content:space-between;">
+                    <span>GENERATED ON : ${new Date().toLocaleDateString()}</span>
+                    <span>AUTHORIZED SIGNATURE</span>
+                </div>
+
+            </div>
+            `;
+
+			$("#modalDataContainer").html(html);
 		});
 	}
 
-	// ✅ Helper to render label-value field
-	function createField(label, value) {
-		return `
-			<div class="col-md-6 mb-3">
-				<strong>${label}:</strong> <span>${value || ''}</span>
-			</div>
-		`;
-	}
+	// ================= PRINT BUTTON =================
+	$("#printBtn").click(function() {
 
-	// ✅ 4. Print modal data
-	$("#printBtn").click(function () {
-		const content = document.getElementById("modalDataContainer").innerHTML;
-		const printWindow = window.open('', '', 'width=900,height=700');
+		let printContent = document.getElementById("modalDataContainer").innerHTML;
 
-		printWindow.document.write(`
-			<html>
-			<head>
-				<title>Print</title>
-				<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-				<style>
-					body { font-family: Arial; padding: 30px; background: #fff; color: #000; }
-					.print-container { width: 100%; margin: auto; }
-					.heading { text-align: center; margin-bottom: 30px; font-size: 24px; font-weight: bold; border-bottom: 2px solid #000; padding-bottom: 10px; }
-					.row { display: flex; flex-wrap: wrap; }
-					.col-md-6 { width: 50%; padding: 10px 15px; box-sizing: border-box; }
-				</style>
-			</head>
-			<body>
-				<div class="print-container">
-					<div class="heading">Loan Application Full Details</div>
-					${content}
-				</div>
-			</body>
-			</html>
-		`);
-		printWindow.document.close();
-		printWindow.focus();
-		printWindow.print();
-		printWindow.close();
+		let newWindow = window.open('', '', 'width=900,height=700');
+
+		newWindow.document.write(`
+            <html>
+            <head>
+                <title>PRINT</title>
+            </head>
+            <body>
+                ${printContent}
+            </body>
+            </html>
+        `);
+
+		newWindow.document.close();
+		newWindow.print();
 	});
 
-	// ✅ 5. Download as PDF
-	$("#downloadBtn").click(function () {
-		const { jsPDF } = window.jspdf;
-		const doc = new jsPDF({
-			orientation: "portrait",
-			unit: "pt",
-			format: "a4"
-		});
-		const content = document.getElementById("modalDataContainer");
+	// ================= DOWNLOAD PDF =================
+	$("#downloadBtn").click(function() {
 
-		doc.html(content, {
-			callback: function (doc) {
-				doc.save("LoanApplicationDetails.pdf");
-			},
-			x: 10,
-			y: 10,
-			autoPaging: 'text',
-			html2canvas: { scale: 0.5 }
-		});
+		let printContent = document.getElementById("modalDataContainer").innerHTML;
+
+		let newWindow = window.open('', '', 'width=900,height=700');
+
+		newWindow.document.write(`
+            <html>
+            <head>
+                <title>PDF</title>
+            </head>
+            <body>
+                ${printContent}
+            </body>
+            </html>
+        `);
+
+		newWindow.document.close();
+		newWindow.print();
 	});
+
 });

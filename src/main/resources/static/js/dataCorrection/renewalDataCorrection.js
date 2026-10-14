@@ -4,16 +4,16 @@ $(document).ready(function() {
 		type: "GET",
 		success: function(response) {
 			if (response.status === "OK") {
-				$("#policyCode").empty().append("<option value=''>-- Select Policy Code --</option>");
+				$("#policyCode").empty().append("<option value=''>-- SELECT POLICY CODE --</option>");
 				response.data.forEach(function(item) {
 					$("#policyCode").append(`<option value='${item.policyCode}'>${item.customerName}-${item.policyCode}</option>`);
 				});
 			} else {
-				alert("No Policy codes found.");
+				alert("NO POLICY CODES FOUND.");
 			}
 		},
 		error: function() {
-			alert("Failed to load Policy codes.");
+			alert("FAILED TO LOAD POLICY CODES.");
 		}
 	});*/
 
@@ -31,7 +31,7 @@ $(document).ready(function() {
 
 				// Initialize Select2 with full data and custom search matcher
 				$('#policyCode').select2({
-					placeholder: '-- Search Policy Code or Name --',
+					placeholder: '-- SEARCH POLICY CODE OR NAME --',
 					data: policyOptions,
 					matcher: function(params, data) {
 						// If no search term, return all
@@ -56,11 +56,11 @@ $(document).ready(function() {
 				});
 
 			} else {
-				alert("No Policy codes found.");
+				alert("NO POLICY CODES FOUND.");
 			}
 		},
 		error: function() {
-			alert("Failed to load Policy codes.");
+			alert("FAILED TO LOAD POLICY CODES.");
 		}
 	});
 
@@ -94,11 +94,11 @@ $(document).ready(function() {
 						$("#noOfInstPaid").val(data.noOfInstPaid);
 						$("#modeOfPayment").val(data.modeOfPayment);
 					} else {
-						alert("No customer found for this member code.");
+						alert("NO CUSTOMER FOUND FOR THIS MEMBER CODE.");
 					}
 				},
 				error: function() {
-					alert("Member not found or server error.");
+					alert("MEMBER NOT FOUND OR SERVER ERROR.");
 				}
 			});
 		}
@@ -108,28 +108,28 @@ $(document).ready(function() {
 		var id = $("#id").val();
 		let policyCode = $("#policyCode").val();
 		if (policyCode !== "") {
-			if (confirm("Are you sure you want to delete this Policy Renewal Data?")) {
+			if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS POLICY RENEWAL DATA?")) {
 				$.ajax({
 					url: "api/datacorrection/deletePolicyRenewalDataById",
 					type: "POST",
 					data: { id: id },
 					success: function(response) {
 						if (response.status == "OK") {
-							alert("Policy Renewal Data Deleted Successfully");
+							alert("POLICY RENEWAL DATA DELETED SUCCESSFULLY");
 							location.reload();
 						} else {
-							alert("Delete failed: " + response.message);
+							alert("DELETE FAILED: " + response.message);
 						}
 					},
 					error: function(xhr, status, error) {
-						alert("Failed to delete Policy Renewal.");
+						alert("FAILED TO DELETE POLICY RENEWAL.");
 						console.error("Error:", error);
 					}
 				});
 			}
 		}
 		else {
-			alert("First Select Any One Data Then Proceed To Delete!");
+			alert("FIRST SELECT ANY ONE DATA THEN PROCEED TO DELETE!");
 		}
 
 	});

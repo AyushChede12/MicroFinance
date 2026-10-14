@@ -27,14 +27,14 @@ function showTableData() {
 
 	if (tableBody.children().length === 0) {
 		loadManualJournalData(); // Will populate #tableBody
-		toggleBtn.html('Hide');
+		toggleBtn.html('HIDE');
 	} else {
 		if (tableBody.is(":visible")) {
 			tableBody.hide();
-			toggleBtn.html('Show');
+			toggleBtn.html('SHOW');
 		} else {
 			tableBody.show();
-			toggleBtn.html('Hide');
+			toggleBtn.html('HIDE');
 		}
 	}
 }
@@ -51,7 +51,7 @@ function saveManualJournal() {
 	};
 
 	if (!data.branchName || !data.dateOfEntry || !data.creditLedger || !data.debitLedger || !data.transactionAmount) {
-		alert("Please fill all required fields.");
+		alert("PLEASE FILL ALL REQUIRED FIELDS.");
 		return;
 	}
 
@@ -62,22 +62,22 @@ function saveManualJournal() {
 		data: JSON.stringify(data),
 		success: function(response) {
 			if (response?.status === "CREATED" || response.status == 201) {
-				alert(response.message || "Entry saved successfully.");
+				alert((response.message || "ENTRY SAVED SUCCESSFULLY.").toUpperCase());
 				$("#formid")[0].reset();
-				$("#creditLedger, #debitLedger").html("<option value=''>Select Ledger</option>");
+				$("#creditLedger, #debitLedger").html("<option value=''>SELECT LEDGER</option>");
 				if (response.data?.voucherID) {
 					$("#voucherID").val(response.data.voucherID);
 				}
 				loadManualJournalData();
 			} else {
-				alert(response.message || "Unexpected response.");
+				alert((response.message || "UNEXPECTED RESPONSE.").toUpperCase());
 			}
 		},
 		error: function(xhr) {
-			let msg = "Error saving entry.";
+			let msg = "ERROR SAVING ENTRY.";
 			try {
 				const res = JSON.parse(xhr.responseText);
-				if (res?.message) msg = res.message;
+				if (res?.message) msg = res.message.toUpperCase();
 			} catch (e) { }
 			alert(msg);
 		}
@@ -95,40 +95,40 @@ function loadManualJournalData() {
 			const tbody = $("#tableBody").empty();
 
 			if (list.length === 0) {
-				tbody.append("<tr><td colspan='8'>No Manual Journal Entries found.</td></tr>");
+				tbody.append("<tr><td colspan='8'>NO MANUAL JOURNAL ENTRIES FOUND.</td></tr>");
 				return;
 			}
 
 			list.forEach(entry => {
 				tbody.append(`
-          <tr>
-            <td>${entry.id || ''}</td>
-            <td>${entry.branchName.toUpperCase() || ''}</td>
-            <td>${entry.voucherID ?? ''}</td>
-            <td>${entry.dateOfEntry || ''}</td>
-            <td>${entry.creditLedger.toUpperCase() || ''}</td>
-            <td>${entry.debitLedger || ''}</td>
-            <td>${entry.transactionAmount || ''}</td>
-            <td>${entry.remarks || ''}</td>
-            <td>
-              <button class="iconbutton" onclick="viewManualJournal(${entry.id})" title="View">
-                <i class="fa-solid fa-eye text-primary"></i>
-              </button>
-            </td>
-			<td>
-				<button class="iconbutton" onclick="deleteManualJournalEntry(${entry.id})" title="Delete">
-					<i class="fa-solid fa-trash text-danger"></i>
-				</button>
-			</td>
-          </tr>
-        `);
+         <tr>
+           <td>${entry.id || ''}</td>
+           <td>${entry.branchName.toUpperCase() || ''}</td>
+           <td>${entry.voucherID ?? ''}</td>
+           <td>${entry.dateOfEntry || ''}</td>
+           <td>${entry.creditLedger.toUpperCase() || ''}</td>
+           <td>${entry.debitLedger || ''}</td>
+           <td>${entry.transactionAmount || ''}</td>
+           <td>${entry.remarks || ''}</td>
+           <td>
+             <button class="iconbutton" onclick="viewManualJournal(${entry.id})" title="VIEW">
+               <i class="fa-solid fa-eye text-primary"></i>
+             </button>
+           </td>
+		<td>
+			<button class="iconbutton" onclick="deleteManualJournalEntry(${entry.id})" title="DELETE">
+				<i class="fa-solid fa-trash text-danger"></i>
+			</button>
+		</td>
+         </tr>
+       `);
 			});
 		},
 		error: function(xhr) {
-			let msg = "Failed to load Manual Journal entries.";
+			let msg = "FAILED TO LOAD MANUAL JOURNAL ENTRIES.";
 			try {
 				const res = JSON.parse(xhr.responseText);
-				if (res?.message) msg = res.message;
+				if (res?.message) msg = res.message.toUpperCase();
 			} catch (e) { }
 			alert(msg);
 		}
@@ -143,7 +143,7 @@ function viewManualJournal(id) {
 		contentType: "application/json",
 		success: function(response) {
 			const entry = response.data;
-			if (!entry) return alert("No entry data found.");
+			if (!entry) return alert("NO ENTRY DATA FOUND.");
 
 			// Branch preselect
 			$("#entryBranchName option").each(function() {
@@ -162,10 +162,10 @@ function viewManualJournal(id) {
 			LedgerDropdown(entry.branchName, entry.creditLedger, entry.debitLedger);
 		},
 		error: function(xhr) {
-			let msg = "Error loading entry.";
+			let msg = "ERROR LOADING ENTRY.";
 			try {
 				const res = JSON.parse(xhr.responseText);
-				if (res?.message) msg = res.message;
+				if (res?.message) msg = res.message.toUpperCase();
 			} catch (e) { }
 			alert(msg);
 		}
@@ -179,7 +179,7 @@ function searchManualJournal() {
 	const endDate = $('#endDate').val();
 
 	if (!branchName || !startDate || !endDate) {
-		alert("Please fill in all search fields.");
+		alert("PLEASE FILL IN ALL SEARCH FIELDS.");
 		return;
 	}
 
@@ -193,40 +193,40 @@ function searchManualJournal() {
 			const tbody = $("#tableBody").empty();
 
 			if (list.length === 0) {
-				tbody.append("<tr><td colspan='8'>No matching results found.</td></tr>");
+				tbody.append("<tr><td colspan='8'>NO MATCHING RESULTS FOUND.</td></tr>");
 				return;
 			}
 
 			list.forEach(entry => {
 				tbody.append(`
-          <tr>
-            <td>${entry.id || ''}</td>
-            <td>${entry.branchName.toUpperCase() || ''}</td>
-            <td>${entry.voucherID ?? ''}</td>
-            <td>${entry.dateOfEntry || ''}</td>
-            <td>${entry.creditLedger.toUpperCase() || ''}</td>
-            <td>${entry.debitLedger.toUpperCase() || ''}</td>
-            <td>${entry.transactionAmount || ''}</td>
-            <td>${entry.remarks.toUpperCase() || ''}</td>
-            <td>
-              <button class="iconbutton" onclick="viewManualJournal(${entry.id})" title="View">
-                <i class="fa-solid fa-eye text-primary"></i>
-              </button>
-            </td>
-			<td>
-				<button class="iconbutton" onclick="deleteManualJournalEntry(${entry.id})" title="Delete">
-					<i class="fa-solid fa-trash text-danger"></i>
-				</button>
-			</td>
-          </tr>
-        `);
+         <tr>
+           <td>${entry.id || ''}</td>
+           <td>${entry.branchName.toUpperCase() || ''}</td>
+           <td>${entry.voucherID ?? ''}</td>
+           <td>${entry.dateOfEntry || ''}</td>
+           <td>${entry.creditLedger.toUpperCase() || ''}</td>
+           <td>${entry.debitLedger.toUpperCase() || ''}</td>
+           <td>${entry.transactionAmount || ''}</td>
+           <td>${entry.remarks.toUpperCase() || ''}</td>
+           <td>
+             <button class="iconbutton" onclick="viewManualJournal(${entry.id})" title="VIEW">
+               <i class="fa-solid fa-eye text-primary"></i>
+             </button>
+           </td>
+		<td>
+			<button class="iconbutton" onclick="deleteManualJournalEntry(${entry.id})" title="DELETE">
+				<i class="fa-solid fa-trash text-danger"></i>
+			</button>
+		</td>
+         </tr>
+       `);
 			});
 		},
 		error: function(xhr) {
-			let msg = "Search failed.";
+			let msg = "SEARCH FAILED.";
 			try {
 				const res = JSON.parse(xhr.responseText);
-				if (res?.message) msg = res.message;
+				if (res?.message) msg = res.message.toUpperCase();
 			} catch (e) { }
 			alert(msg);
 		}
@@ -250,7 +250,7 @@ function BranchNameDropdown() {
 			$("#entryBranchName").html(options);
 		},
 		error: function() {
-			alert("Failed to load branch names.");
+			alert("FAILED TO LOAD BRANCH NAMES.");
 		}
 	});
 }
@@ -284,27 +284,27 @@ function LedgerDropdown(branchName, selectedCr = "", selectedDr = "") {
 			$("#debitLedger").html(drOptions);
 		},
 		error: function() {
-			alert("Failed to load ledger accounts for selected branch");
+			alert("FAILED TO LOAD LEDGER ACCOUNTS FOR SELECTED BRANCH");
 		}
 	});
 }
 
 function deleteManualJournalEntry(id) {
-	if (confirm("Are you sure you want to delete this Data?")) {
+	if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS DATA?")) {
 		$.ajax({
 			url: "accountManagement/deleteManualJournalById",
 			type: "POST",
 			data: { id: id },
 			success: function(response) {
 				if (response.status == "OK") {
-					alert(response.message);
+					alert((response.message || "").toUpperCase());
 					location.reload();
 				} else {
-					alert("Delete failed: " + response.message);
+					alert("DELETE FAILED: " + (response.message || "").toUpperCase());
 				}
 			},
 			error: function(xhr, status, error) {
-				alert("Failed to delete data.");
+				alert("FAILED TO DELETE DATA.");
 				console.error("Error:", error);
 			}
 		});

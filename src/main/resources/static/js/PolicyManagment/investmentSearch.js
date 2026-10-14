@@ -25,12 +25,12 @@ $(document).ready(function() {
 					}
 				});
 			} else {
-				alert("No Policy found.");
+				alert("NO POLICY FOUND.");
 			}
 		},
 		error: function(xhr, status, error) {
 			console.error("Error fetching Policies:", error);
-			alert("Failed to load Policy codes.");
+			alert("FAILED TO LOAD POLICY CODES.");
 		}
 	});
 
@@ -44,22 +44,22 @@ $(document).ready(function() {
 				tbody.empty();
 				$.each(response.data, function(index, item) {
 					var row = `
-	                    <tr style="font-family: 'Poppins', sans-serif;">
-	                        <td>${index + 1}</td>
-	                        <td>${item.policyCode || ''}</td>
-	                        <td>${item.customerName.toUpperCase() || ''}</td>
-	                        <td>${item.policyStartDate || ''}</td>
-	                        <td>${item.contactNo || ''}</td>
-	                        <td>${item.address.toUpperCase() || ''}</td>
-	                        <td>${item.district.toUpperCase() || ''}</td>
-	                        <td>${item.state.toUpperCase() || ''}</td>
-	                        <td>${item.branchName.toUpperCase() || ''}</td>
-	                        <td>${item.schemeType.toUpperCase() || ''}</td>
-	                        <td>${item.policyAmount || ''}</td>
-	                        <td>${item.maturityAmount || ''}</td>
-	                        <td>${item.paymentBy.toUpperCase() || ''}</td>
-	                        <td>${item.approved == true ? 'APPROVED' : 'PENDING'}</td>
-	                    </tr>`;
+                    <tr style="font-family: 'Poppins', sans-serif;">
+                        <td>${index + 1}</td>
+                        <td>${item.policyCode || ''}</td>
+                        <td>${item.customerName.toUpperCase() || ''}</td>
+                        <td>${item.policyStartDate || ''}</td>
+                        <td>${item.contactNo || ''}</td>
+                        <td>${item.address.toUpperCase() || ''}</td>
+                        <td>${item.district.toUpperCase() || ''}</td>
+                        <td>${item.state.toUpperCase() || ''}</td>
+                        <td>${item.branchName.toUpperCase() || ''}</td>
+                        <td>${item.schemeType.toUpperCase() || ''}</td>
+                        <td>${item.policyAmount || ''}</td>
+                        <td>${item.maturityAmount || ''}</td>
+                        <td>${item.paymentBy.toUpperCase() || ''}</td>
+                        <td>${item.approved == true ? 'APPROVED' : 'PENDING'}</td>
+                    </tr>`;
 					tbody.append(row);
 				});
 
@@ -74,13 +74,13 @@ $(document).ready(function() {
 
 			} else {
 				$("#policyTableBody").html(
-					`<tr><td colspan="15" class="text-center">No data available</td></tr>`
+					`<tr><td colspan="15" class="text-center">NO DATA AVAILABLE</td></tr>`
 				);
 			}
 		},
 		error: function(xhr, status, error) {
 			console.error("❌ Error fetching policies:", error);
-			alert("Failed to load policy data.");
+			alert("FAILED TO LOAD POLICY DATA.");
 		}
 	});
 
@@ -104,32 +104,32 @@ $(document).ready(function() {
 					$('#policyTableBody').empty();
 
 					const newRow = `
-		                <tr>
-		                    <td>1</td>
-		                    <td>${data.policyCode || ''}</td>
-		                    <td>${data.customerName.toUpperCase() || ''}</td>
-		                    <td>${data.policyStartDate || ''}</td>
-		                    <td>${data.contactNo || ''}</td>
-		                    <td>${data.address.toUpperCase() || ''}</td>
-		                    <td>${data.district.toUpperCase() || ''}</td>
-		                    <td>${data.state.toUpperCase() || ''}</td>
-		                    <td>${data.branchName.toUpperCase() || ''}</td>
-		                    <td>${data.schemeType.toUpperCase() || ''}</td>
-		                    <td>${data.policyAmount || ''}</td>
-		                    <td>${data.maturityAmount || ''}</td>
-		                    <td>${data.paymentBy.toUpperCase() || ''}</td>
-		                    <td>${(data.approved === true || data.approved === 'true' || data.approved === 1) ? 'APPROVED' : 'PENDING'}</td>
-		                </tr>`;
+	                <tr>
+	                    <td>1</td>
+	                    <td>${data.policyCode || ''}</td>
+	                    <td>${data.customerName.toUpperCase() || ''}</td>
+	                    <td>${data.policyStartDate || ''}</td>
+	                    <td>${data.contactNo || ''}</td>
+	                    <td>${data.address.toUpperCase() || ''}</td>
+	                    <td>${data.district.toUpperCase() || ''}</td>
+	                    <td>${data.state.toUpperCase() || ''}</td>
+	                    <td>${data.branchName.toUpperCase() || ''}</td>
+	                    <td>${data.schemeType.toUpperCase() || ''}</td>
+	                    <td>${data.policyAmount || ''}</td>
+	                    <td>${data.maturityAmount || ''}</td>
+	                    <td>${data.paymentBy.toUpperCase() || ''}</td>
+	                    <td>${(data.approved === true || data.approved === 'true' || data.approved === 1) ? 'APPROVED' : 'PENDING'}</td>
+	                </tr>`;
 					$('#policyTableBody').append(newRow);
 
 				} else {
-					alert("No data found for the selected policy.");
+					alert("NO DATA FOUND FOR THE SELECTED POLICY.");
 					$('#policyTableBody').empty();
 				}
 			},
 			error: function(xhr) {
 				console.error("❌ Error:", xhr);
-				alert("Error while fetching policy data.");
+				alert("ERROR WHILE FETCHING POLICY DATA.");
 			}
 		});
 

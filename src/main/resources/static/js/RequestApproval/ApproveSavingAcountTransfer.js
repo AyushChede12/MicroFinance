@@ -18,7 +18,7 @@ $(document).ready(function() {
 		}).get();
 
 		if (selectedIds.length === 0) {
-			alert("Please select at least one row to approve.");
+			alert("PLEASE SELECT AT LEAST ONE ROW TO APPROVE.");
 			return;
 		}
 
@@ -39,7 +39,7 @@ $(document).ready(function() {
 					}
 				},
 				error: function(xhr) {
-					alert("Error approving ID " + id);
+					alert("ERROR APPROVING ID " + id);
 					console.error(xhr);
 				}
 			});
@@ -58,19 +58,19 @@ function loadSavingAccountFundTransfer() {
 				populateMemberCodeDropdown(allSavingAccountFundTransfer);
 				renderTable(allSavingAccountFundTransfer);
 			} else {
-				alert("No data found.");
+				alert("NO DATA FOUND.");
 			}
 		},
 		error: function(xhr) {
 			console.error("Error fetching data:", xhr);
-			alert("Failed to load data.");
+			alert("FAILED TO LOAD DATA.");
 		}
 	});
 }
 
 function populateMemberCodeDropdown(data) {
 	const dropdown = $('#branchName');
-	dropdown.empty().append('<option value="">Select Branch</option>');
+	dropdown.empty().append('<option value="">SELECT BRANCH</option>');
 
 	const uniqueCodes = [...new Set(data.map(item => item.debitAccountBranch))];
 
@@ -89,7 +89,7 @@ function renderTable(data) {
 		tbody.append(`
 			<tr>
 				<td colspan="12" style="text-align:center; font-family: 'Poppins', sans-serif;">
-					No data found
+					NO DATA FOUND
 				</td>
 			</tr>
 		`);
@@ -109,8 +109,8 @@ function renderTable(data) {
 				<td>${item.creditAccountNumber || '-'}</td>
 				<td>${item.creditCustomerCode || '-'}</td>
 				<td>${item.creditAccountBranch || '-'}</td>
-				
-				
+
+
 			</tr>
 		`;
 		tbody.append(row);
@@ -122,7 +122,7 @@ function filterSavingAccountFundTransfer() {
 	const selectedCode = $('#branchName').val();
 	const fromDateVal = $('#fromDate').val();
 	const toDateVal = $('#toDate').val();
-	
+
 
 	const fromDate = fromDateVal ? new Date(fromDateVal) : null;
 	const toDate = toDateVal ? new Date(toDateVal) : null;

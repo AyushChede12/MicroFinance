@@ -5,7 +5,7 @@ $(document).ready(function() {
 		success: function(response) {
 			// Check data
 			if (!(response && response.data && Array.isArray(response.data))) {
-				alert("No Gold Data found.");
+				alert("NO GOLD DATA FOUND.");
 				return;
 			}
 
@@ -31,7 +31,7 @@ $(document).ready(function() {
 
 			// 👉 Step 3: Select2 Initialize (distinct data)
 			$('#findByGoldLoanId').select2({
-				placeholder: '-- Search Gold ID --',
+				placeholder: '-- SEARCH GOLD ID --',
 				data: goldOptions,
 				matcher: function(params, data) {
 					if ($.trim(params.term) === '') return data;
@@ -45,7 +45,7 @@ $(document).ready(function() {
 		},
 		error: function(xhr, status, error) {
 			console.error("Error fetching Gold Data:", error);
-			alert("Failed to load Gold ID.");
+			alert("FAILED TO LOAD GOLD ID.");
 		}
 	});
 
@@ -70,11 +70,11 @@ $(document).ready(function() {
 						$("#financialConsultantName").val(data.financialConsultantName);
 
 					} else {
-						alert("No customer found for this member code.");
+						alert("NO CUSTOMER FOUND FOR THIS MEMBER CODE.");
 					}
 				},
 				error: function() {
-					alert("Member not found or server error.");
+					alert("MEMBER NOT FOUND OR SERVER ERROR.");
 				}
 			});
 		}
@@ -161,30 +161,30 @@ function renderTable(data) {
 	tbody.empty();
 
 	if (data.length === 0) {
-		tbody.append(`<tr><td colspan="16" class="text-center">No Records Found</td></tr>`);
+		tbody.append(`<tr><td colspan="16" class="text-center">NO RECORDS FOUND</td></tr>`);
 		return;
 	}
 
 	data.forEach((item, index) => {
 		tbody.append(`
-            <tr>
-                <td>${index + 1}</td>
-                <td>${item.goldID}</td>
-                <td>${item.customerName}</td>
-                <td>${item.memberCode}</td>
-                <td>${item.contactNo}</td>
-                <td>${item.address}</td>
-                <td>${item.branchName}</td>
-                <td>${item.loanPlanName}</td>
-                <td>${item.typeOfLoan}</td>
-                <td>${item.loanMode}</td>
-                <td>${item.loanDate}</td>
-                <td>${item.loanTerm}</td>
-                <td>${item.loanAmount}</td>
-                <td>${item.emiPayment}</td>
-                <td>${item.itemName}</td>
-                <td>${item.purposeOfLoan}</td>
-            </tr>
-        `);
+           <tr>
+               <td>${index + 1}</td>
+               <td>${item.goldID}</td>
+               <td>${item.customerName}</td>
+               <td>${item.memberCode}</td>
+               <td>${item.contactNo}</td>
+               <td>${item.address}</td>
+               <td>${item.branchName}</td>
+               <td>${item.loanPlanName}</td>
+               <td>${item.typeOfLoan}</td>
+               <td>${item.loanMode}</td>
+               <td>${item.loanDate}</td>
+               <td>${item.loanTerm}</td>
+               <td>${item.loanAmount}</td>
+               <td>${item.emiPayment}</td>
+               <td>${item.itemName}</td>
+               <td>${item.purposeOfLoan}</td>
+           </tr>
+       `);
 	});
 }

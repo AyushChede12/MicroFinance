@@ -45,7 +45,7 @@ $(document).ready(function() {
 				xhr
 			);
 
-			alert("Failed to load FD policies.");
+			alert("FAILED TO LOAD FD POLICIES.");
 		}
 	});
 
@@ -77,7 +77,7 @@ $(document).ready(function() {
 
 				if (!response || !response.data) {
 
-					alert("FD Policy data not found.");
+					alert("FD POLICY DATA NOT FOUND.");
 					return;
 				}
 
@@ -215,7 +215,7 @@ $(document).ready(function() {
 				) {
 
 					console.warn(
-						"WARNING: FD split total does not match total deposit."
+						"WARNING: FD SPLIT TOTAL DOES NOT MATCH TOTAL DEPOSIT."
 					);
 
 				}
@@ -496,7 +496,7 @@ $(document).ready(function() {
 					xhr
 				);
 
-				alert("FD Policy not found!");
+				alert("FD POLICY NOT FOUND!");
 			}
 		});
 
@@ -545,7 +545,7 @@ $(document).ready(function() {
 		if (!policyCode) {
 
 			alert(
-				"Please select a Policy Code."
+				"PLEASE SELECT A POLICY CODE."
 			);
 
 			return;
@@ -555,7 +555,7 @@ $(document).ready(function() {
 		if (policyAmount <= 0) {
 
 			alert(
-				"Invalid Policy Amount."
+				"INVALID POLICY AMOUNT."
 			);
 
 			return;
@@ -565,7 +565,7 @@ $(document).ready(function() {
 		if (paymentDue <= 0) {
 
 			alert(
-				"No payment is due for this FD."
+				"NO PAYMENT IS DUE FOR THIS FD."
 			);
 
 			return;
@@ -595,24 +595,24 @@ $(document).ready(function() {
 		const confirmPayment =
 			confirm(
 
-				"Please confirm FD payment details:\n\n" +
+				"PLEASE CONFIRM FD PAYMENT DETAILS:\n\n" +
 
-				"Policy Code : " +
+				"POLICY CODE : " +
 				policyCode +
 
-				"\nPolicy Amount : ₹" +
+				"\nPOLICY AMOUNT : ₹" +
 				policyAmount.toFixed(2) +
 
-				"\nPayment Amount : ₹" +
+				"\nPAYMENT AMOUNT : ₹" +
 				paymentAmount.toFixed(2) +
 
-				"\nPayment Due : ₹" +
+				"\nPAYMENT DUE : ₹" +
 				paymentDue.toFixed(2) +
 
-				"\nPenalty Amount : ₹" +
+				"\nPENALTY AMOUNT : ₹" +
 				penaltyAmount.toFixed(2) +
 
-				"\n\nDo you want to save this FD payment?"
+				"\n\nDO YOU WANT TO SAVE THIS FD PAYMENT?"
 			);
 
 
@@ -707,9 +707,9 @@ $(document).ready(function() {
 						var customerName = $("#clientName").val();
 						var transactionType = "";
 						if ("CASH".equalsIgnoreCase(paymentBy)) {
-						    transactionType = "FD_INSTALLMENT_CASH";
+							transactionType = "FD_INSTALLMENT_CASH";
 						} else {
-						    transactionType = "TRANSFER";
+							transactionType = "TRANSFER";
 						}
 
 						const accountTransactionData = {
@@ -811,7 +811,7 @@ $(document).ready(function() {
 											"✅ " +
 											(
 												response.message ||
-												"FD payment saved successfully."
+												"FD PAYMENT SAVED SUCCESSFULLY."
 											)
 										);
 
@@ -822,14 +822,14 @@ $(document).ready(function() {
 
 
 									alert(
-										"⚠️ FD payment saved, but Cash Book transaction could not be saved.\n\n" +
+										"⚠️ FD PAYMENT SAVED, BUT CASH BOOK TRANSACTION COULD NOT BE SAVED.\n\n" +
 										(
 											accountResponse &&
 												accountResponse.message
 												?
 												accountResponse.message
 												:
-												"Account transaction failed."
+												"ACCOUNT TRANSACTION FAILED."
 										)
 									);
 
@@ -854,7 +854,7 @@ $(document).ready(function() {
 
 
 									alert(
-										"⚠️ FD payment saved, but Cash Book transaction could not be saved."
+										"⚠️ FD PAYMENT SAVED, BUT CASH BOOK TRANSACTION COULD NOT BE SAVED."
 									);
 
 
@@ -868,7 +868,7 @@ $(document).ready(function() {
 
 
 					} else {
-						alert("else")
+						alert("ELSE")
 
 
 						// =================================================
@@ -880,7 +880,7 @@ $(document).ready(function() {
 							"✅ " +
 							(
 								response.message ||
-								"FD payment saved successfully."
+								"FD PAYMENT SAVED SUCCESSFULLY."
 							)
 						);
 
@@ -893,7 +893,7 @@ $(document).ready(function() {
 
 			error:
 				function(xhr) {
-					alert("error func");
+					alert("ERROR FUNC");
 
 					console.error(
 						"FD Payment Error:",
@@ -902,7 +902,7 @@ $(document).ready(function() {
 
 
 					let message =
-						"Failed to save FD payment.";
+						"FAILED TO SAVE FD PAYMENT.";
 
 
 					if (
@@ -946,7 +946,7 @@ $(document).ready(function() {
 
 		if (!selectedPolicyCode) {
 
-			alert("Please select a policy code first!");
+			alert("PLEASE SELECT A POLICY CODE FIRST!");
 
 			$("#installmentModal").modal("hide");
 
@@ -1379,7 +1379,7 @@ $(document).ready(function() {
 
 
 				let message =
-					"Failed to fetch FD payment data.";
+					"FAILED TO FETCH FD PAYMENT DATA.";
 
 
 				if (

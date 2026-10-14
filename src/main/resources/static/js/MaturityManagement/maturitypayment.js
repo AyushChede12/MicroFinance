@@ -6,7 +6,7 @@ $(document).ready(function() {
 		let plantype = $(this).val();
 
 		if (!plantype) {
-			alert("Please select a valid plan type.");
+			alert("PLEASE SELECT A VALID PLAN TYPE.");
 			return;
 		}
 
@@ -27,7 +27,7 @@ $(document).ready(function() {
 					const transferOptions = [
 						{
 							id: '',
-							text: '-- Select Policy Code --'
+							text: '-- SELECT POLICY CODE --'
 						},
 						...filteredData.map(function(item) {
 							return {
@@ -39,7 +39,7 @@ $(document).ready(function() {
 
 					$('#policyCode').empty().select2({
 
-						placeholder: '-- Select Policy Code --',
+						placeholder: '-- SELECT POLICY CODE --',
 						data: transferOptions,
 
 						matcher: function(params, data) {
@@ -60,12 +60,12 @@ $(document).ready(function() {
 					$('#policyCode').val('').trigger('change');
 
 				} else {
-					alert("No policy codes found.");
+					alert("NO POLICY CODES FOUND.");
 				}
 			},
 
 			error: function() {
-				alert("Failed to load policy codes.");
+				alert("FAILED TO LOAD POLICY CODES.");
 			}
 		});
 	});
@@ -93,7 +93,7 @@ $(document).ready(function() {
 						$('#Approvebranch').val(data.branchName);
 						$('#duration').val(calDuration(data)); //function calDuration(data)
 						$('#sysPayable').val(sysPayable(data)); //function sysPayable(data)
-						$('#deduction').val(Deduction(data));	//function Deduction(data)					
+						$('#deduction').val(Deduction(data));	//function Deduction(data)
 						$('#netPayable').val(netPayment(data)); //function netpay(data)
 						$('#panelty').val(Panelty(data));	//function Panelty(data)
 
@@ -117,11 +117,11 @@ $(document).ready(function() {
 
 
 					} else {
-						alert("No data found for this policy.");
+						alert("NO DATA FOUND FOR THIS POLICY.");
 					}
 				},
 				error: function() {
-					alert("Error fetching policy details.");
+					alert("ERROR FETCHING POLICY DETAILS.");
 				}
 			});
 		} else {
@@ -143,7 +143,7 @@ $(document).ready(function() {
 				});
 
 				$('#userApprover').empty().select2({
-					placeholder: '-- Select Team Member --',
+					placeholder: '-- SELECT TEAM MEMBER --',
 					data: teamOptions,
 					matcher: function(params, data) {
 						if ($.trim(params.term) === '') return data;
@@ -157,11 +157,11 @@ $(document).ready(function() {
 					}
 				});
 			} else {
-				alert("No team members found.");
+				alert("NO TEAM MEMBERS FOUND.");
 			}
 		},
 		error: function() {
-			alert("Failed to load team members.");
+			alert("FAILED TO LOAD TEAM MEMBERS.");
 		}
 	});
 
@@ -220,8 +220,8 @@ $(document).ready(function() {
 			data: JSON.stringify(data),
 			success: function(response) {
 				alert(response.status === "OK"
-					? "Saved: " + response.message
-					: "Failed: " + response.message
+					? "SAVED: " + response.message
+					: "FAILED: " + response.message
 				);
 				if (response.status === "OK") {
 					updateAddNewInvestmentAmount(data);
@@ -231,7 +231,7 @@ $(document).ready(function() {
 			},
 			error: function(xhr, status, error) {
 				console.error("Save error:", error, xhr.responseText);
-				alert("Something went wrong while saving the data.");
+				alert("SOMETHING WENT WRONG WHILE SAVING THE DATA.");
 			}
 		});
 	});
@@ -244,13 +244,13 @@ $(document).ready(function() {
 	let amount = parseFloat($('#amount').val()) || 0;
 	let paidAmount = parseFloat($('#depositAmount').val()) || 0;
 	let deposit=0;
-	
+
 	if (!isNaN(amount) && !isNaN(paidAmount)) {
 			deposit = amount + paidAmount;
 			alert("depositAmount " + deposit);
 		}
 		return deposit;
-	
+
 }
 */
 // update in addinvestment table
@@ -262,7 +262,7 @@ function updateAddNewInvestmentAmount(data) {
 	let lastinstdate = new Date(document.getElementById("paymentDate").value);
 
 	if (!policyCode || !depositAmount) {
-		alert("Please enter both Policy Code and Deposit Amount.");
+		alert("PLEASE ENTER BOTH POLICY CODE AND DEPOSIT AMOUNT.");
 		return;
 	}
 	let details = {
@@ -281,12 +281,12 @@ function updateAddNewInvestmentAmount(data) {
 		contentType: "application/json",
 		data: JSON.stringify(details),
 		success: function(response) {
-			alert("Update successful!");
+			alert("UPDATE SUCCESSFUL!");
 			console.log("Updated record:", response);
 		},
 		error: function(xhr, status, error) {
 			console.error("Update failed:", error);
-			alert("Failed to update installment details.");
+			alert("FAILED TO UPDATE INSTALLMENT DETAILS.");
 		}
 	});
 }
@@ -304,7 +304,7 @@ function calDuration(data) {
 	if (schemeMode && openingDate && maturityDate) {
 		if (schemeMode.toLowerCase() === "monthly") {
 			duration = (maturityDate.getFullYear() - openingDate.getFullYear()) * 12 + (maturityDate.getMonth() - openingDate.getMonth());
-			durationText = duration + (duration === 1 ? " month" : " months");
+			durationText = duration + (duration === 1 ? " MONTH" : " MONTHS");
 		}
 		else
 			if (schemeMode.toLowerCase() === "yearly") {
@@ -316,7 +316,7 @@ function calDuration(data) {
 				) {
 					duration--;
 				}
-				durationText = duration + (duration === 1 ? " year" : " years");
+				durationText = duration + (duration === 1 ? " YEAR" : " YEARS");
 			}
 	}
 	return durationText;
@@ -410,5 +410,3 @@ function DueAmount(data) {
 	return dueamount;
 
 }
-
-

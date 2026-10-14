@@ -21,7 +21,7 @@ $(document).ready(function() {
 
 				// Initialize Select2
 				$('#groupCode').select2({
-					placeholder: '-- Search Group Code --',
+					placeholder: '-- SEARCH GROUP CODE --',
 					data: groupOptions,
 					allowClear: true,
 					matcher: function(params, data) {
@@ -36,11 +36,11 @@ $(document).ready(function() {
 
 				});
 			} else {
-				alert("No approved Group found.");
+				alert("NO APPROVED GROUP FOUND.");
 			}
 		},
 		error: function() {
-			alert("Failed to load Group codes.");
+			alert("FAILED TO LOAD GROUP CODES.");
 		}
 	});
 
@@ -82,11 +82,11 @@ $(document).ready(function() {
 
 
 					} else {
-						alert("No customer found for this member code.");
+						alert("NO CUSTOMER FOUND FOR THIS MEMBER CODE.");
 					}
 				},
 				error: function() {
-					alert("Member not found or server error.");
+					alert("MEMBER NOT FOUND OR SERVER ERROR.");
 				}
 			});
 		}
@@ -99,18 +99,18 @@ $(document).ready(function() {
 			console.log("API response:", response);
 			var dropdown1 = $('#planCode');
 			dropdown1.empty();
-			dropdown1.append('<option value="">Select</option>');
+			dropdown1.append('<option value="">SELECT</option>');
 
 			if (response.status === "OK" && response.data) {
 				$.each(response.data, function(index, customer) {
 					dropdown1.append('<option value="' + customer.planCode + '">' + customer.planCode + '</option>');
 				});
 			} else {
-				dropdown1.append('<option value="">No groups found</option>');
+				dropdown1.append('<option value="">NO GROUPS FOUND</option>');
 			}
 		},
 		error: function() {
-			alert("Failed to fetch group list.");
+			alert("FAILED TO FETCH GROUP LIST.");
 		}
 	});
 
@@ -118,7 +118,7 @@ $(document).ready(function() {
 		event.preventDefault();
 		let groupCode = $("#groupCode").val();
 		if (!groupCode) {
-			alert("First select the data, then proceed to update.");
+			alert("FIRST SELECT THE DATA, THEN PROCEED TO UPDATE.");
 			return;
 		}
 		const groupData = {
@@ -163,7 +163,7 @@ $(document).ready(function() {
 				}
 			},
 			error: function(xhr, status, error) {
-				alert("❌ Error: " + xhr.responseText);
+				alert("❌ ERROR: " + xhr.responseText);
 			}
 		});
 	});
@@ -172,28 +172,28 @@ $(document).ready(function() {
 		var id = $("#id").val();
 		let groupCode = $("#groupCode").val();
 		if (groupCode !== "") {
-			if (confirm("Are you sure you want to delete this Joint Liability Data?")) {
+			if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS JOINT LIABILITY DATA?")) {
 				$.ajax({
 					url: "api/datacorrection/deleteJointLiabilityDataById",
 					type: "POST",
 					data: { id: id },
 					success: function(response) {
 						if (response.status == "OK") {
-							alert("Joint Liability Data Deleted Successfully");
+							alert("JOINT LIABILITY DATA DELETED SUCCESSFULLY");
 							location.reload();
 						} else {
-							alert("Delete failed: " + response.message);
+							alert("DELETE FAILED: " + response.message);
 						}
 					},
 					error: function(xhr, status, error) {
-						alert("Failed to delete Joint Liability.");
+						alert("FAILED TO DELETE JOINT LIABILITY.");
 						console.error("Error:", error);
 					}
 				});
 			}
 		}
 		else {
-			alert("First Select Any One Data Then Proceed To Delete!");
+			alert("FIRST SELECT ANY ONE DATA THEN PROCEED TO DELETE!");
 		}
 
 	});

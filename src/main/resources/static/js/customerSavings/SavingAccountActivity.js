@@ -41,18 +41,18 @@ function loadAccountNumberDropdown() {
 					// ⚠️ backend field name confirm karo
 					dropdown.append(
 						`<option value="${acc.accountNumber}">
-                            ${acc.accountNumber}
-                         </option>`
+                           ${acc.accountNumber}
+                        </option>`
 					);
 				});
 
 			} else {
-				alert("No Saving Account Found");
+				alert("NO SAVING ACCOUNT FOUND");
 			}
 		},
 		error: function(xhr) {
-			console.error("Account dropdown error:", xhr.responseText);
-			alert("Unable to load account numbers");
+			console.error("ACCOUNT DROPDOWN ERROR:", xhr.responseText);
+			alert("UNABLE TO LOAD ACCOUNT NUMBERS");
 		}
 	});
 }
@@ -74,15 +74,15 @@ $('#accountNumber').on('change', function() {
 
 		success: function(response) {
 
-			console.log("Full Response:", response);
+			console.log("FULL RESPONSE:", response);
 
 			if ((response.status === "OK" || response.status === "FOUND")
 				&& response.data && response.data.length > 0) {
 
 				let customer = response.data[0];
 
-				console.log("Customer:", customer);
-				console.log("Branch Object:", customer.branchName);
+				console.log("CUSTOMER:", customer);
+				console.log("BRANCH OBJECT:", customer.branchName);
 
 				let branch = "";
 
@@ -104,14 +104,14 @@ $('#accountNumber').on('change', function() {
 				reloadTransactionTable(accountNumber);
 
 			} else {
-				alert("No account found!");
+				alert("NO ACCOUNT FOUND!");
 				clearAccountForm();
 			}
 		},
 
 		error: function(xhr, status, error) {
-			console.error("Error fetching account details:", xhr.responseText);
-			alert("Server error while fetching account data");
+			console.error("ERROR FETCHING ACCOUNT DETAILS:", xhr.responseText);
+			alert("SERVER ERROR WHILE FETCHING ACCOUNT DATA");
 			clearAccountForm();
 		}
 	});
@@ -150,7 +150,7 @@ $(document).ready(function() {
 			isNaN(transactionAmount)
 		) {
 
-			alert("Please fill all required fields");
+			alert("PLEASE FILL ALL REQUIRED FIELDS");
 
 			return;
 		}
@@ -174,7 +174,7 @@ $(document).ready(function() {
 
 		if (avgBalance < 0) {
 
-			$('#balanceError').text("Balance is low");
+			$('#balanceError').text("BALANCE IS LOW");
 
 			return;
 		}
@@ -280,7 +280,7 @@ $(document).ready(function() {
 				function(response) {
 
 					alert(
-						"Transaction saved successfully"
+						"TRANSACTION SAVED SUCCESSFULLY"
 					);
 
 
@@ -364,8 +364,8 @@ $(document).ready(function() {
 							transactionDate,
 
 						narration:
-							"Saving Account " +
-							transactionType +
+							"SAVING ACCOUNT " +
+							transactionType.toUpperCase() +
 							" - " +
 							accountNumber +
 							" - " +
@@ -391,7 +391,7 @@ $(document).ready(function() {
 							"-" +
 							transactionDate +
 							"-" +
-							transactionType,
+							transactionType.toUpperCase(),
 
 						status:
 							"SUCCESS",
@@ -408,7 +408,7 @@ $(document).ready(function() {
 
 
 					console.log(
-						"Saving Account Cash Transaction:",
+						"SAVING ACCOUNT CASH TRANSACTION:",
 						accountTransactionData
 					);
 
@@ -442,7 +442,7 @@ $(document).ready(function() {
 							) {
 
 								console.log(
-									"Account Transaction Response:",
+									"ACCOUNT TRANSACTION RESPONSE:",
 									accountResponse
 								);
 
@@ -453,7 +453,7 @@ $(document).ready(function() {
 								) {
 
 									console.log(
-										"Cash Book transaction saved successfully."
+										"CASH BOOK TRANSACTION SAVED SUCCESSFULLY."
 									);
 
 								}
@@ -461,12 +461,12 @@ $(document).ready(function() {
 								else {
 
 									console.warn(
-										"Saving Account transaction saved, but Cash Book transaction could not be saved.",
+										"SAVING ACCOUNT TRANSACTION SAVED, BUT CASH BOOK TRANSACTION COULD NOT BE SAVED.",
 										accountResponse
 									);
 
 									alert(
-										"⚠️ Saving Account transaction saved, but Cash Book transaction could not be saved."
+										"⚠️ SAVING ACCOUNT TRANSACTION SAVED, BUT CASH BOOK TRANSACTION COULD NOT BE SAVED."
 									);
 								}
 							},
@@ -480,13 +480,13 @@ $(document).ready(function() {
 							) {
 
 								console.error(
-									"Account Transaction Error:",
+									"ACCOUNT TRANSACTION ERROR:",
 									accountXhr.responseText
 								);
 
 
 								alert(
-									"⚠️ Saving Account transaction saved, but Cash Book transaction could not be saved."
+									"⚠️ SAVING ACCOUNT TRANSACTION SAVED, BUT CASH BOOK TRANSACTION COULD NOT BE SAVED."
 								);
 							}
 					});
@@ -502,12 +502,12 @@ $(document).ready(function() {
 				) {
 
 					console.error(
-						"Error saving transaction:",
+						"ERROR SAVING TRANSACTION:",
 						xhr.responseText
 					);
 
 					alert(
-						"Failed to save transaction"
+						"FAILED TO SAVE TRANSACTION"
 					);
 				}
 		});
@@ -536,31 +536,31 @@ function reloadTransactionTable(accountNumber) {
 				$.each(response.data, function(index, txn) {
 
 					let row = `
-                        <tr>
-                            <td>${index + 1}</td>
-                            <td>${(txn.selectBranchName || '').toUpperCase()}</td>
-                            <td>${txn.transactionDate || ''}</td>
-                            <td>${txn.accountNumber || ''}</td>
-                            <td>${(txn.transactionType || '').toUpperCase()}</td>
-                            <td>${txn.transactionAmount || ''}</td>
-                            <td>${txn.averageBalance || ''}</td>
-                            <td>${(txn.payBy || '').toUpperCase()}</td>
-                            <td>${(txn.comments || '').toUpperCase()}</td>
-                            <td>${txn.selectSavingTransactionId || ''}</td>
-                            <td>${txn.createdBy || 'ADMIN'}</td>
-                        </tr>
-                    `;
+                       <tr>
+                           <td>${index + 1}</td>
+                           <td>${(txn.selectBranchName || '').toUpperCase()}</td>
+                           <td>${txn.transactionDate || ''}</td>
+                           <td>${txn.accountNumber || ''}</td>
+                           <td>${(txn.transactionType || '').toUpperCase()}</td>
+                           <td>${txn.transactionAmount || ''}</td>
+                           <td>${txn.averageBalance || ''}</td>
+                           <td>${(txn.payBy || '').toUpperCase()}</td>
+                           <td>${(txn.comments || '').toUpperCase()}</td>
+                           <td>${txn.selectSavingTransactionId || ''}</td>
+                           <td>${(txn.createdBy || 'ADMIN').toUpperCase()}</td>
+                       </tr>
+                   `;
 
 					tbody.append(row);
 				});
 
 			} else {
-				tbody.append(`<tr><td colspan="11" class="text-center">No Data Found</td></tr>`);
+				tbody.append(`<tr><td colspan="11" class="text-center">NO DATA FOUND</td></tr>`);
 			}
 		},
 		error: function(xhr, status, error) {
-			console.error("Error fetching transactions:", xhr.responseText);
-			alert("Failed to load table data");
+			console.error("ERROR FETCHING TRANSACTIONS:", xhr.responseText);
+			alert("FAILED TO LOAD TABLE DATA");
 		}
 	});
 }
@@ -579,11 +579,11 @@ function updateMainAccountBalance(accountNumber, newBalance) {
 			balance: newBalance
 		}),
 		success: function(response) {
-			alert(response.message || "Balance updated successfully");
+			alert((response.message || "BALANCE UPDATED SUCCESSFULLY").toUpperCase());
 		},
 		error: function(xhr, status, error) {
-			console.error("Error updating balance:", xhr.responseText);
-			alert("Failed to update main balance");
+			console.error("ERROR UPDATING BALANCE:", xhr.responseText);
+			alert("FAILED TO UPDATE MAIN BALANCE");
 		}
 	});
 }
@@ -621,8 +621,6 @@ function addOption(selectBox, text) {
 
 document.addEventListener("DOMContentLoaded", function() {
 	document.getElementById("memberFeesTable").style.display = "none";
-
-
 });
 
 document.getElementById("transactionAmount").addEventListener("click", function(event) {

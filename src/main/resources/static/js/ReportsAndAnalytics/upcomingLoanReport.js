@@ -1,11 +1,11 @@
-$(document).ready(function () {
+$(document).ready(function() {
 
 	/* ---------------- BRANCH DROPDOWN ---------------- */
 
 	$.ajax({
 		url: "api/datacorrection/fetchAllApprovedLoanApplications",
 		type: "GET",
-		success: function (response) {
+		success: function(response) {
 
 			if (response.status === "OK") {
 
@@ -19,7 +19,7 @@ $(document).ready(function () {
 				});
 
 				$("#branchName1").empty();
-				$("#branchName1").append("<option value=''>-- Select Branch Name --</option>");
+				$("#branchName1").append("<option value=''>-- SELECT BRANCH NAME --</option>");
 
 				uniqueBranches.forEach(branchName => {
 					$("#branchName1").append(
@@ -28,13 +28,13 @@ $(document).ready(function () {
 				});
 
 			} else {
-				alert("Error: " + response.message);
+				alert("ERROR: " + response.message);
 			}
 
 		},
-		error: function (xhr) {
+		error: function(xhr) {
 			console.error("Error loading branches:", xhr.responseText);
-			alert("Failed to load dropdown data.");
+			alert("FAILED TO LOAD DROPDOWN DATA.");
 		}
 	});
 
@@ -44,7 +44,7 @@ $(document).ready(function () {
 	$.ajax({
 		url: "api/datacorrection/fetchAllApprovedLoanApplications",
 		type: "GET",
-		success: function (response) {
+		success: function(response) {
 
 			if (response.status === "OK") {
 
@@ -58,7 +58,7 @@ $(document).ready(function () {
 				});
 
 				$("#loanPlanName").empty();
-				$("#loanPlanName").append("<option value=''>-- Select Loan Name --</option>");
+				$("#loanPlanName").append("<option value=''>-- SELECT LOAN NAME --</option>");
 
 				uniquePlans.forEach(plan => {
 					$("#loanPlanName").append(
@@ -67,13 +67,13 @@ $(document).ready(function () {
 				});
 
 			} else {
-				alert("Error: " + response.message);
+				alert("ERROR: " + response.message);
 			}
 
 		},
-		error: function (xhr) {
+		error: function(xhr) {
 			console.error("Error loading plans:", xhr.responseText);
-			alert("Failed to load dropdown data.");
+			alert("FAILED TO LOAD DROPDOWN DATA.");
 		}
 	});
 
@@ -84,7 +84,7 @@ $(document).ready(function () {
 
 /* ---------------- FIND BUTTON ---------------- */
 
-$(document).on('click', '#findBtn', function (e) {
+$(document).on('click', '#findBtn', function(e) {
 	e.preventDefault();
 	loadEmiReport();
 });
@@ -114,7 +114,7 @@ function loadEmiReport() {
 		type: 'GET',
 		dataType: 'json',
 
-		success: function (response) {
+		success: function(response) {
 
 			let data = (response && response.data) || [];
 
@@ -156,9 +156,9 @@ function loadEmiReport() {
 
 		},
 
-		error: function (xhr, status, error) {
+		error: function(xhr, status, error) {
 			console.error("Error fetching EMI data:", error);
-			alert("Something went wrong while fetching EMI data.");
+			alert("SOMETHING WENT WRONG WHILE FETCHING EMI DATA.");
 		}
 	});
 }
@@ -211,7 +211,7 @@ function bindTable(data) {
 
 		tbody.append(`<tr>
 			<td colspan="12" class="text-center text-danger">
-			No records found
+			NO RECORDS FOUND
 			</td>
 		</tr>`);
 

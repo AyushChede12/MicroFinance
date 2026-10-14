@@ -25,8 +25,8 @@ function populateLoanIdDropdown() {
 					if (loan.loanId) {
 						$dropdown.append(
 							`<option value="${loan.loanId}">
-                                ${loan.loanId}
-                             </option>`
+                               ${loan.loanId}
+                            </option>`
 						);
 					}
 				});
@@ -56,6 +56,7 @@ $(document).ready(function() {
 				success: function(response) {
 					console.log("Full Response:", response);
 					console.log("Loan Data:", response.data);
+
 					if (response.status === "OK" && response.data) {
 						const data = response.data;
 
@@ -75,7 +76,9 @@ $(document).ready(function() {
 						$("#loanTerm").val(data.loanTerm);
 						$("#rateOfInterest").val(data.rateOfInterest);
 						$("#loanAmount").val(data.loanAmount);
+
 						let netDisbursed = data.netDisbursementAmount || data.sanctionedAmount;
+
 						if (!netDisbursed || parseFloat(netDisbursed) <= 0) {
 							let gross = parseFloat(data.loanAmount) || 0;
 							let proc = parseFloat(data.processingFee) || 0;
@@ -83,8 +86,12 @@ $(document).ready(function() {
 							let ins = parseFloat(data.insuranceFee) || 0;
 							let gst = parseFloat(data.gst) || 0;
 							let totalDed = proc + legal + ins + gst;
-							netDisbursed = (gross > 0 && totalDed > 0) ? (gross - totalDed).toFixed(2) : (gross > 0 ? gross.toFixed(2) : "0.00");
+
+							netDisbursed = (gross > 0 && totalDed > 0)
+								? (gross - totalDed).toFixed(2)
+								: (gross > 0 ? gross.toFixed(2) : "0.00");
 						}
+
 						$("#netDisbursementAmount").val(netDisbursed);
 						$("#netDisbursementAmountDeduction").val(netDisbursed);
 						$("#interestType").val(data.interestType);
@@ -113,14 +120,13 @@ $(document).ready(function() {
 						$("#financialConsultantName").val(data.financialConsultantName);
 
 						if (data.approvalStatus === true || data.approvalStatus === 1 || data.approvalStatus === "1") {
-							$('#approvalStatus').val("Approved").css('color', 'green');
+							$("#approvalStatus").val("APPROVED").css("color", "green");
 						} else {
-							$('#approvalStatus').val("Not Approved").css('color', 'red');
+							$("#approvalStatus").val("NOT APPROVED").css("color", "red");
 						}
 
 						// PHOTO
 						if (data.photo) {
-
 							const photoPath = "/" + data.photo;
 
 							console.log("Photo Path =>", photoPath);
@@ -132,10 +138,8 @@ $(document).ready(function() {
 							$("#photoPreview").attr("src", "/Uploads/default-placeholder.jpg");
 						}
 
-
 						// SIGNATURE
 						if (data.signature) {
-
 							const signPath = "/" + data.signature;
 
 							console.log("Signature Path =>", signPath);
@@ -147,13 +151,12 @@ $(document).ready(function() {
 							$("#signaturePreview").attr("src", "/Uploads/default-placeholder.jpg");
 						}
 
-
 					} else {
-						alert("Loan data not found.");
+						alert("LOAN DATA NOT FOUND.");
 					}
 				},
 				error: function(xhr) {
-					alert("Error fetching data: " + xhr.responseText);
+					alert("ERROR FETCHING DATA: " + xhr.responseText);
 				}
 			});
 		}
@@ -180,23 +183,25 @@ function signatureSizeEdit(e) {
 	previewimg.style.borderRadius = "20px";
 }
 
-$('#approveBtn').click(function(event) {
+$("#approveBtn").click(function(event) {
 	event.preventDefault(); // Prevent the form from submitting
 
-	const loanId = $('#findByLoanId').val();
-	const approvalDate = $('#approvalDate').val();
+	const loanId = $("#findByLoanId").val();
+	const approvalDate = $("#approvalDate").val();
+
 	/*alert(loanId);
 	alert(approvalDate);*/
+
 	if (!loanId) {
-		alert("Please select Loan ID");
+		alert("PLEASE SELECT LOAN ID");
 		$("#findByLoanId").focus();
 		return;
 	}
+
 	if (!approvalDate) {
-		alert("Please Select Approval Date");
+		alert("PLEASE SELECT APPROVAL DATE");
 		return;
 	}
-
 
 	const requestData = {
 		loanId: loanId,
@@ -210,11 +215,11 @@ $('#approveBtn').click(function(event) {
 		contentType: "application/json",
 		data: JSON.stringify(requestData),
 		success: function(response) {
-			alert(response.message);
+			alert(String(response.message).toUpperCase());
 			location.reload();
 		},
 		error: function(xhr) {
-			alert("Error: " + xhr.responseText);
+			alert("ERROR: " + xhr.responseText);
 		}
 	});
 });

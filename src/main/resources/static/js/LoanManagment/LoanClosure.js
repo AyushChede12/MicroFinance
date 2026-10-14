@@ -214,11 +214,11 @@ function fetchLoanDetails(loanId, installmentCount) {
 				console.log("Balance Loan Amount:", balanceLoanAmount);
 
 			} else {
-				alert("Loan data not found.");
+				alert("LOAN DATA NOT FOUND.");
 			}
 		},
 		error: function(xhr) {
-			alert("Error fetching loan data: " + xhr.responseText);
+			alert("ERROR FETCHING LOAN DATA: " + xhr.responseText);
 		}
 	});
 }
@@ -253,7 +253,7 @@ $(document).ready(function() {
 
 		const loanId = $("#earlyLoanclosureId").val();
 		if (!loanId) {
-			alert("Please select a Loan ID first.");
+			alert("PLEASE SELECT A LOAN ID FIRST.");
 			return;
 		}
 
@@ -311,12 +311,12 @@ $(document).ready(function() {
 			contentType: "application/json",
 			data: JSON.stringify(loanClosureData),
 			success: function(response) {
-				alert(response.message || "Loan closed successfully!");
+				alert(response.message || "LOAN CLOSED SUCCESSFULLY!");
 				location.reload();
 			},
 			error: function(xhr) {
 				console.error("Error:", xhr.responseText);
-				let errMsg = "Something went wrong while closing the loan!";
+				let errMsg = "SOMETHING WENT WRONG WHILE CLOSING THE LOAN!";
 				try {
 					const res = JSON.parse(xhr.responseText);
 					if (res && res.message) errMsg = res.message;

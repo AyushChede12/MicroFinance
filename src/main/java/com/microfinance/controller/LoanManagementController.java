@@ -46,10 +46,10 @@ public class LoanManagementController {
 
 			if (customerList == null || customerList.isEmpty()) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND)
-						.body(new ApiResponse<>(HttpStatus.NOT_FOUND, "No customer found for member code", null));
+						.body(new ApiResponse<>(HttpStatus.NOT_FOUND, "NO CUSTOMER FOUND FOR MEMBER CODE", null));
 			}
 
-			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Customer(s) found", customerList));
+			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "CUSTOMER(S) FOUND", customerList));
 		} catch (RuntimeException ex) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), null));
@@ -66,7 +66,7 @@ public class LoanManagementController {
 		List<LoanSchemCatalog> loanschemCodeList = loanServices.getSchemeCatalog();
 
 		ApiResponse<List<LoanSchemCatalog>> response = new ApiResponse<>(HttpStatus.FOUND,
-				"Loan Schem fetched successfully", loanschemCodeList);
+				"LOAN SCHEM FETCHED SUCCESSFULLY", loanschemCodeList);
 
 		return ResponseEntity.ok(response);
 	}
@@ -76,7 +76,7 @@ public class LoanManagementController {
 		List<LoanSchemCatalog> loanschemCodeList = loanServices.getLoanPlanName(loanPlanName);
 
 		ApiResponse<List<LoanSchemCatalog>> response = new ApiResponse<>(HttpStatus.FOUND,
-				"Loan Schem fetched successfully", loanschemCodeList);
+				"LOAN SCHEM FETCHED SUCCESSFULLY", loanschemCodeList);
 
 		return ResponseEntity.ok(response);
 	}
@@ -87,7 +87,7 @@ public class LoanManagementController {
 	public ResponseEntity<ApiResponse<LoanSchemCatalog>> getLoanByCode(@RequestParam String code) {
 		try {
 			LoanSchemCatalog loanScheme = loanServices.getLoanByCode(code);
-			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Loan Scheme found", loanScheme));
+			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "LOAN SCHEME FOUND", loanScheme));
 		} catch (RuntimeException ex) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body(new ApiResponse<>(HttpStatus.NOT_FOUND, ex.getMessage(), null));
@@ -101,28 +101,31 @@ public class LoanManagementController {
 
 		try {
 			loanApplication.syncDynamicFields();
-			if (loanApplication.getLoanTypeSpecificDetails() != null && !loanApplication.getLoanTypeSpecificDetails().trim().isEmpty()) {
+			if (loanApplication.getLoanTypeSpecificDetails() != null
+					&& !loanApplication.getLoanTypeSpecificDetails().trim().isEmpty()) {
 				try {
 					Map<String, Object> map = new com.fasterxml.jackson.databind.ObjectMapper().readValue(
-						loanApplication.getLoanTypeSpecificDetails(),
-						new com.fasterxml.jackson.core.type.TypeReference<Map<String, Object>>() {}
-					);
+							loanApplication.getLoanTypeSpecificDetails(),
+							new com.fasterxml.jackson.core.type.TypeReference<Map<String, Object>>() {
+							});
 					String err = LoanApplyController.validateDynamicFields(loanApplication.getTypeOfLoan(), map);
 					if (err != null) {
 						return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 								.body(ApiResponse.error(HttpStatus.BAD_REQUEST, err));
 					}
-				} catch (Exception ignored) {}
+				} catch (Exception ignored) {
+				}
 			}
 
 			boolean isSaved = loanServices.saveLoanApplicationData(loanApplication);
 
 			if (isSaved) {
 				ApiResponse<LoanApplication> response = ApiResponse.success(HttpStatus.CREATED,
-						"Loan Application saved successfully.", loanApplication);
+						"LOAN APPLICATION SAVED SUCCESSFULLY.", loanApplication);
 				return ResponseEntity.ok(response);
 			} else {
-				ApiResponse<LoanApplication> response = ApiResponse.error(HttpStatus.BAD_REQUEST, "Failed to save loan application.");
+				ApiResponse<LoanApplication> response = ApiResponse.error(HttpStatus.BAD_REQUEST,
+						"FAILED TO SAVE LOAN APPLICATION.");
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 			}
 		} catch (IllegalArgumentException ex) {
@@ -136,7 +139,7 @@ public class LoanManagementController {
 		try {
 			if (dto.getLoanAmount() == null || dto.getLoanAmount().compareTo(java.math.BigDecimal.ZERO) <= 0) {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-						.body(ApiResponse.error(HttpStatus.BAD_REQUEST, "Loan Amount must be greater than 0."));
+						.body(ApiResponse.error(HttpStatus.BAD_REQUEST, "LOAN AMOUNT MUST BE GREATER THAN 0."));
 			}
 
 			com.microfinance.model.LoanDeductionDetails details = new com.microfinance.model.LoanDeductionDetails();
@@ -161,13 +164,13 @@ public class LoanManagementController {
 			dto.setNetDisbursementAmount(details.getNetDisbursementAmount());
 			dto.setEmployeeName(details.getEmployeeName());
 
-			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "Deductions calculated successfully", dto));
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "DEDUCTIONS CALCULATED SUCCESSFULLY", dto));
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body(ApiResponse.error(HttpStatus.BAD_REQUEST, e.getMessage()));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "Calculation error: " + e.getMessage()));
+					.body(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "CALCULATION ERROR: " + e.getMessage()));
 		}
 	}
 
@@ -177,10 +180,10 @@ public class LoanManagementController {
 		List<String> loanIds = loanServices.fetchAllLoanIds();
 
 		if (loanIds != null && !loanIds.isEmpty()) {
-			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Loan IDs fetched successfully", loanIds));
+			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "LOAN IDS FETCHED SUCCESSFULLY", loanIds));
 		} else {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT)
-					.body(new ApiResponse<>(HttpStatus.NO_CONTENT, "No Loan IDs found", null));
+					.body(new ApiResponse<>(HttpStatus.NO_CONTENT, "NO LOAN IDS FOUND", null));
 		}
 	}
 
@@ -190,29 +193,29 @@ public class LoanManagementController {
 		LoanApplication loan = loanServices.getLoanById(loanId);
 
 		if (loan != null) {
-			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Loan found", loan));
+			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "LOAN FOUND", loan));
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(new ApiResponse<>(HttpStatus.NOT_FOUND, "Loan not found", null));
+					.body(new ApiResponse<>(HttpStatus.NOT_FOUND, "LOAN NOT FOUND", null));
 		}
 	}
 
 	// Api for approving the loan application (Vaibhav)
 	@PostMapping("/approve")
 	public ResponseEntity<ApiResponse<LoanApplication>> approveLoan(@RequestBody LoanApplication approval) {
-		System.out.println("Approval request received for Loan ID: " + approval.getLoanId());
+		System.out.println("APPROVAL REQUEST RECEIVED FOR LOAN ID: " + approval.getLoanId());
 		String result = loanServices.updateApproval(approval);
 
 		switch (result) {
-			case "already_approved":
-				return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Loan is already approved.", null));
+		case "already_approved":
+			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "LOAN IS ALREADY APPROVED.", null));
 
-			case "success":
-				return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Loan approved successfully.", approval));
+		case "success":
+			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "LOAN APPROVED SUCCESSFULLY.", approval));
 
-			default:
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-						.body(new ApiResponse<>(HttpStatus.BAD_REQUEST, "Unknown result", null));
+		default:
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(new ApiResponse<>(HttpStatus.BAD_REQUEST, "UNKNOWN RESULT", null));
 		}
 	}
 
@@ -222,10 +225,10 @@ public class LoanManagementController {
 		List<String> approvedLoanIds = loanServices.getApprovedLoanIds();
 
 		if (!approvedLoanIds.isEmpty()) {
-			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Approved & Active loan IDs fetched successfully",
+			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "APPROVED & ACTIVE LOAN IDS FETCHED SUCCESSFULLY",
 					approvedLoanIds));
 		} else {
-			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "No approved and active loans found",
+			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "NO APPROVED AND ACTIVE LOANS FOUND",
 					java.util.Collections.emptyList()));
 		}
 	}
@@ -241,12 +244,12 @@ public class LoanManagementController {
 
 			String message;
 			if (isClosed) {
-				message = "Loan is closed.";
+				message = "LOAN IS CLOSED.";
 			} else if ("Saving Account".equalsIgnoreCase(request.getPaymentMode())
 					|| "Savings Account".equalsIgnoreCase(request.getPaymentMode())) {
-				message = "Loan disbursed successfully and transferred to Customer's Savings Account.";
+				message = "LOAN DISBURSED SUCCESSFULLY AND TRANSFERRED TO CUSTOMER'S SAVINGS ACCOUNT.";
 			} else {
-				message = "Loan disbursed successfully in Cash.";
+				message = "LOAN DISBURSED SUCCESSFULLY IN CASH.";
 			}
 
 			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, message, data));
@@ -261,22 +264,17 @@ public class LoanManagementController {
 
 	// API for fetching all data of loan payment
 	@GetMapping("/fetchLoanPaymentsByLoanId")
-	public ResponseEntity<ApiResponse<List<LoanPayment>>> fetchLoanPaymentsByLoanId(
-			@RequestParam String loanId) {
+	public ResponseEntity<ApiResponse<List<LoanPayment>>> fetchLoanPaymentsByLoanId(@RequestParam String loanId) {
 
 		List<LoanPayment> list = loanServices.fetchLoanPaymentsByLoanId(loanId);
 
 		if (list != null && !list.isEmpty()) {
-			ApiResponse<List<LoanPayment>> response = new ApiResponse<>(
-					HttpStatus.OK,
-					"Loan Payments fetched successfully",
-					list);
+			ApiResponse<List<LoanPayment>> response = new ApiResponse<>(HttpStatus.OK,
+					"LOAN PAYMENTS FETCHED SUCCESSFULLY", list);
 			return ResponseEntity.ok(response);
 		} else {
-			ApiResponse<List<LoanPayment>> response = new ApiResponse<>(
-					HttpStatus.OK,
-					"No payments yet for Loan ID: " + loanId,
-					java.util.Collections.emptyList());
+			ApiResponse<List<LoanPayment>> response = new ApiResponse<>(HttpStatus.OK,
+					"NO PAYMENTS YET FOR LOAN ID: " + loanId, java.util.Collections.emptyList());
 			return ResponseEntity.ok(response);
 		}
 	}
@@ -287,10 +285,10 @@ public class LoanManagementController {
 		List<String> loanIds = loanServices.getStatementLoanId();
 
 		if (loanIds != null && !loanIds.isEmpty()) {
-			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Loan IDs fetched successfully", loanIds));
+			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "LOAN IDS FETCHED SUCCESSFULLY", loanIds));
 		} else {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT)
-					.body(new ApiResponse<>(HttpStatus.NO_CONTENT, "No Loan IDs found", null));
+					.body(new ApiResponse<>(HttpStatus.NO_CONTENT, "NO LOAN IDS FOUND", null));
 		}
 	}
 
@@ -300,37 +298,31 @@ public class LoanManagementController {
 		List<LoanPayment> loanPayments = loanServices.fetchLoanStatement(loanId);
 
 		if (loanPayments != null && !loanPayments.isEmpty()) {
-			return ResponseEntity.ok(
-					new ApiResponse<>(HttpStatus.OK, "Loan payments found", loanPayments));
+			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "LOAN PAYMENTS FOUND", loanPayments));
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(new ApiResponse<>(HttpStatus.NOT_FOUND, "No loan payments found for this Loan ID", null));
+					.body(new ApiResponse<>(HttpStatus.NOT_FOUND, "NO LOAN PAYMENTS FOUND FOR THIS LOAN ID", null));
 		}
 	}
 
 	// API for fetching single installment data by loanId and installment number
 	@GetMapping("/fetchLoanPaymentByLoanIdAndInst")
-	public ResponseEntity<ApiResponse<LoanPayment>> fetchLoanPaymentByLoanIdAndInst(
-			@RequestParam String loanId,
+	public ResponseEntity<ApiResponse<LoanPayment>> fetchLoanPaymentByLoanIdAndInst(@RequestParam String loanId,
 			@RequestParam String remarks) {
 
 		String normalizedRemarks = remarks.trim().toLowerCase();
 		List<LoanPayment> payments = loanServices.fetchLoanPaymentsByLoanId(loanId);
-		LoanPayment payment = payments.stream()
-				.filter(p -> {
-					if (p == null) return false;
-					String r = p.getRemarks() != null ? p.getRemarks().trim().toLowerCase() : "";
-					String n = p.getNoOfInst() != null ? p.getNoOfInst().trim().toLowerCase() : "";
-					String idStr = String.valueOf(p.getId());
-					return r.equals(normalizedRemarks)
-							|| n.equals(normalizedRemarks)
-							|| idStr.equals(normalizedRemarks)
-							|| (normalizedRemarks.matches("\\d+") && (n.equals(normalizedRemarks) || r.endsWith(" " + normalizedRemarks)))
-							|| r.contains(normalizedRemarks)
-							|| (!r.isEmpty() && normalizedRemarks.contains(r));
-				})
-				.findFirst()
-				.orElse(null);
+		LoanPayment payment = payments.stream().filter(p -> {
+			if (p == null)
+				return false;
+			String r = p.getRemarks() != null ? p.getRemarks().trim().toLowerCase() : "";
+			String n = p.getNoOfInst() != null ? p.getNoOfInst().trim().toLowerCase() : "";
+			String idStr = String.valueOf(p.getId());
+			return r.equals(normalizedRemarks) || n.equals(normalizedRemarks) || idStr.equals(normalizedRemarks)
+					|| (normalizedRemarks.matches("\\d+")
+							&& (n.equals(normalizedRemarks) || r.endsWith(" " + normalizedRemarks)))
+					|| r.contains(normalizedRemarks) || (!r.isEmpty() && normalizedRemarks.contains(r));
+		}).findFirst().orElse(null);
 
 		if (payment != null) {
 			if (payment.getDueDate() == null || payment.getDueDate().trim().isEmpty()) {
@@ -338,45 +330,50 @@ public class LoanManagementController {
 					int instNo = 1;
 					if (payment.getRemarks() != null && payment.getRemarks().matches(".*\\d+.*")) {
 						String digits = payment.getRemarks().replaceAll("\\D+", "");
-						if (!digits.isEmpty()) instNo = Integer.parseInt(digits);
+						if (!digits.isEmpty())
+							instNo = Integer.parseInt(digits);
 					} else if (payment.getNoOfInst() != null && payment.getNoOfInst().matches("\\d+")) {
 						instNo = Integer.parseInt(payment.getNoOfInst());
 					}
 					int periodDays = 30;
 					String mode = payment.getLoanMode();
-					if ("Daily".equalsIgnoreCase(mode)) periodDays = 1;
-					else if ("Weekly".equalsIgnoreCase(mode)) periodDays = 7;
-					else if ("Fortnightly".equalsIgnoreCase(mode)) periodDays = 14;
-					else if ("Quarterly".equalsIgnoreCase(mode)) periodDays = 91;
+					if ("Daily".equalsIgnoreCase(mode))
+						periodDays = 1;
+					else if ("Weekly".equalsIgnoreCase(mode))
+						periodDays = 7;
+					else if ("Fortnightly".equalsIgnoreCase(mode))
+						periodDays = 14;
+					else if ("Quarterly".equalsIgnoreCase(mode))
+						periodDays = 91;
 
 					String baseDate = payment.getLoanDate();
 					if (baseDate != null && !baseDate.trim().isEmpty()) {
-						java.time.LocalDate emiDue = java.time.LocalDate.parse(baseDate.trim()).plusDays((long) instNo * periodDays);
+						java.time.LocalDate emiDue = java.time.LocalDate.parse(baseDate.trim())
+								.plusDays((long) instNo * periodDays);
 						payment.setDueDate(emiDue.toString());
 					}
-				} catch (Exception ignored) {}
+				} catch (Exception ignored) {
+				}
 			}
 
-			ApiResponse<LoanPayment> response = new ApiResponse<>(
-					HttpStatus.OK,
-					"Loan Installment fetched successfully",
-					payment);
+			ApiResponse<LoanPayment> response = new ApiResponse<>(HttpStatus.OK,
+					"LOAN INSTALLMENT FETCHED SUCCESSFULLY", payment);
 			return ResponseEntity.ok(response);
 		} else {
-			ApiResponse<LoanPayment> response = new ApiResponse<>(
-					HttpStatus.NOT_FOUND,
-					"No installment found for Loan ID: " + loanId + " and Installment: " + remarks,
-					null);
+			ApiResponse<LoanPayment> response = new ApiResponse<>(HttpStatus.NOT_FOUND,
+					"NO INSTALLMENT FOUND FOR LOAN ID: " + loanId + " AND INSTALLMENT: " + remarks, null);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 	}
 
 	// API for calculating foreclosure settlement breakdown server-side
 	@GetMapping("/calculateForeclosure")
-	public ResponseEntity<ApiResponse<com.microfinance.dto.ForeclosureSettlementDto>> calculateForeclosure(@RequestParam("loanId") String loanId) {
+	public ResponseEntity<ApiResponse<com.microfinance.dto.ForeclosureSettlementDto>> calculateForeclosure(
+			@RequestParam("loanId") String loanId) {
 		try {
 			com.microfinance.dto.ForeclosureSettlementDto dto = loanServices.calculateForeclosureSettlement(loanId);
-			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "Foreclosure settlement calculated successfully", dto));
+			return ResponseEntity
+					.ok(ApiResponse.success(HttpStatus.OK, "FORECLOSURE SETTLEMENT CALCULATED SUCCESSFULLY", dto));
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body(ApiResponse.error(HttpStatus.BAD_REQUEST, e.getMessage()));
@@ -391,7 +388,8 @@ public class LoanManagementController {
 	public ResponseEntity<ApiResponse<Map<String, Object>>> closeLoan(@RequestBody LoanClosure paymentDetails) {
 		try {
 			Map<String, Object> result = loanServices.closeLoan(paymentDetails);
-			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, (String) result.getOrDefault("message", "Loan closed successfully"), result));
+			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK,
+					(String) result.getOrDefault("message", "LOAN CLOSED SUCCESSFULLY"), result));
 		} catch (IllegalArgumentException | IllegalStateException e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body(new ApiResponse<>(HttpStatus.BAD_REQUEST, e.getMessage(), null));
@@ -409,10 +407,10 @@ public class LoanManagementController {
 
 		if (closedLoanIds != null && !closedLoanIds.isEmpty()) {
 			return ResponseEntity
-					.ok(new ApiResponse<>(HttpStatus.OK, "Closed loan IDs fetched successfully", closedLoanIds));
+					.ok(new ApiResponse<>(HttpStatus.OK, "CLOSED LOAN IDS FETCHED SUCCESSFULLY", closedLoanIds));
 		} else {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT)
-					.body(new ApiResponse<>(HttpStatus.NO_CONTENT, "No closed loan records found", null));
+					.body(new ApiResponse<>(HttpStatus.NO_CONTENT, "NO CLOSED LOAN RECORDS FOUND", null));
 		}
 	}
 
@@ -423,11 +421,10 @@ public class LoanManagementController {
 
 		if (closures != null && !closures.isEmpty()) {
 			return ResponseEntity
-					.ok(new ApiResponse<>(HttpStatus.OK, "Loan closure records fetched successfully", closures));
+					.ok(new ApiResponse<>(HttpStatus.OK, "LOAN CLOSURE RECORDS FETCHED SUCCESSFULLY", closures));
 		} else {
-			return ResponseEntity.status(HttpStatus.NO_CONTENT)
-					.body(new ApiResponse<>(HttpStatus.NO_CONTENT, "No loan closure records found for this loan ID",
-							null));
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
+					new ApiResponse<>(HttpStatus.NO_CONTENT, "NO LOAN CLOSURE RECORDS FOUND FOR THIS LOAN ID", null));
 		}
 	}
 
@@ -437,40 +434,41 @@ public class LoanManagementController {
 		if (loan != null && !loan.isEmpty()) {
 
 			ApiResponse<List<LoanApplication>> response = new ApiResponse<>(HttpStatus.OK,
-					"UnApproved Loan Data fetched successfully.", loan);
+					"UNAPPROVED LOAN DATA FETCHED SUCCESSFULLY.", loan);
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<List<LoanApplication>> response = new ApiResponse<>(HttpStatus.NOT_FOUND,
-					"No Unapproved Loan Customer found.", null);
+					"NO UNAPPROVED LOAN CUSTOMER FOUND.", null);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 	}
 
 	// ── Penalty Preview API ───────────────────────────────────────────────────
 	/**
-	 * Returns penalty details for a given loanId + proposed paymentDate.
-	 * Used by the UI for real-time penalty display before submission.
-	 * GET /api/loanmanegment/calculatePenaltyPreview?loanId=LA00001&paymentDate=2026-09-20
+	 * Returns penalty details for a given loanId + proposed paymentDate. Used by
+	 * the UI for real-time penalty display before submission. GET
+	 * /api/loanmanegment/calculatePenaltyPreview?loanId=LA00001&paymentDate=2026-09-20
 	 */
 	@GetMapping("/calculatePenaltyPreview")
 	public ResponseEntity<ApiResponse<java.util.Map<String, Object>>> calculatePenaltyPreview(
-			@RequestParam String loanId,
-			@RequestParam String paymentDate) {
+			@RequestParam String loanId, @RequestParam String paymentDate) {
 		try {
 			if (loanId == null || loanId.trim().isEmpty() || paymentDate == null || paymentDate.trim().isEmpty()) {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-						.body(ApiResponse.error(HttpStatus.BAD_REQUEST, "loanId and paymentDate are required."));
+						.body(ApiResponse.error(HttpStatus.BAD_REQUEST, "LOANID AND PAYMENTDATE ARE REQUIRED."));
 			}
-			java.util.Map<String, Object> result = loanServices.calculatePenaltyPreview(loanId.trim(), paymentDate.trim());
-			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "Penalty preview calculated", result));
+			java.util.Map<String, Object> result = loanServices.calculatePenaltyPreview(loanId.trim(),
+					paymentDate.trim());
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "PENALTY PREVIEW CALCULATED", result));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "Error: " + e.getMessage()));
+					.body(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "ERROR: " + e.getMessage()));
 		}
 	}
 
 	@PostMapping("/payRegularInstallment")
-	public ResponseEntity<ApiResponse<java.util.Map<String, Object>>> payRegularInstallment(@RequestBody java.util.Map<String, Object> req) {
+	public ResponseEntity<ApiResponse<java.util.Map<String, Object>>> payRegularInstallment(
+			@RequestBody java.util.Map<String, Object> req) {
 		try {
 			java.util.Map<String, Object> result = loanServices.payRegularInstallment(req);
 			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, (String) result.get("message"), result));
@@ -481,7 +479,8 @@ public class LoanManagementController {
 	}
 
 	@PostMapping("/resetLoanInstallments")
-	public ResponseEntity<ApiResponse<java.util.Map<String, Object>>> resetLoanInstallments(@RequestParam String loanId) {
+	public ResponseEntity<ApiResponse<java.util.Map<String, Object>>> resetLoanInstallments(
+			@RequestParam String loanId) {
 		try {
 			java.util.Map<String, Object> result = loanServices.resetLoanInstallments(loanId);
 			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, (String) result.get("message"), result));

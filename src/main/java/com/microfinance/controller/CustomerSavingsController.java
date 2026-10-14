@@ -100,11 +100,11 @@ public class CustomerSavingsController {
 
 		if (isSaved) {
 			ApiResponse<SavingSchemeCatalog> response = ApiResponse.success(HttpStatus.OK,
-					"Saving Scheme saved successfully.", savingSchemeCatalog);
+					"SAVING SCHEME SAVED SUCCESSFULLY.", savingSchemeCatalog);
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<SavingSchemeCatalog> response = ApiResponse.error(HttpStatus.BAD_REQUEST,
-					"Failed to save scheme.");
+					"FAILED TO SAVE SCHEME.");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 		}
 	}
@@ -114,9 +114,9 @@ public class CustomerSavingsController {
 	public ApiResponse<List<addCustomer>> fetchByCustomerCode(@RequestBody addCustomer addcustomer) {
 		List<addCustomer> list = customersaving.fetchCustomerCode(addcustomer.getMemberCode());
 		if (list != null && !list.isEmpty()) {
-			return ApiResponse.success(HttpStatus.FOUND, "Fetching is Successfull", list);
+			return ApiResponse.success(HttpStatus.FOUND, "FETCHING IS SUCCESSFULL", list);
 		} else
-			return ApiResponse.error(HttpStatus.NOT_FOUND, "Not Found fetching Data");
+			return ApiResponse.error(HttpStatus.NOT_FOUND, "NOT FOUND FETCHING DATA");
 
 	}
 
@@ -128,16 +128,16 @@ public class CustomerSavingsController {
 	 * if(list!=null && !list.isEmpty()) { return
 	 * ApiResponse.success(HttpStatus.FOUND, "Fetching is Successfull", list); }else
 	 * return ApiResponse.error(HttpStatus.NOT_FOUND, "Not Found fetching Data");
-	 * 
+	 *
 	 * }
 	 */
 	@GetMapping("/fetchsavingchemecatalog")
 	public ApiResponse<List<String>> findBySchemeType() {
 		List<String> list = customersaving.findBySchemeType();
 		if (list != null && !list.isEmpty()) {
-			return ApiResponse.success(HttpStatus.FOUND, "Fetching is Successful", list);
+			return ApiResponse.success(HttpStatus.FOUND, "FETCHING IS SUCCESSFUL", list);
 		} else {
-			return ApiResponse.error(HttpStatus.NOT_FOUND, "No Data Found");
+			return ApiResponse.error(HttpStatus.NOT_FOUND, "NO DATA FOUND");
 		}
 	}
 
@@ -147,11 +147,11 @@ public class CustomerSavingsController {
 		Optional<SavingSchemeCatalog> savingscheme = customersaving.findSavingSchmeCatalogById(id);
 		if (savingscheme.isPresent()) {
 			ApiResponse<SavingSchemeCatalog> response = new ApiResponse<>(HttpStatus.FOUND,
-					"Saving Scheme Catalog Data fetched successfully", savingscheme.get());
+					"SAVING SCHEME CATALOG DATA FETCHED SUCCESSFULLY", savingscheme.get());
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<SavingSchemeCatalog> response = new ApiResponse<>(HttpStatus.NOT_FOUND,
-					"Saving Scheme Catalog Data not found for ID: " + id, null);
+					"SAVING SCHEME CATALOG DATA NOT FOUND FOR ID: " + id, null);
 			return ResponseEntity.status(404).body(response);
 		}
 	}
@@ -162,10 +162,10 @@ public class CustomerSavingsController {
 		boolean isDeleted = customersaving.deleteSavingSchemeCatalog(id);
 		if (isDeleted) {
 			ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK,
-					"Saving Scheme Catalog Data deleted successfully", "success");
+					"SAVING SCHEME CATALOG DATA DELETED SUCCESSFULLY", "success");
 			return ResponseEntity.ok(response);
 		} else {
-			ApiResponse<String> response = new ApiResponse<>(HttpStatus.NOT_FOUND, " deletion failed", "failure");
+			ApiResponse<String> response = new ApiResponse<>(HttpStatus.NOT_FOUND, " DELETION FAILED", "failure");
 			return ResponseEntity.badRequest().body(response);
 		}
 	}
@@ -175,9 +175,9 @@ public class CustomerSavingsController {
 	public ApiResponse<List<SavingSchemeCatalog>> findByPolicyName(@RequestParam String policyName) {
 		List<SavingSchemeCatalog> list = customersaving.findByPolicyName(policyName);
 		if (list != null && !list.isEmpty()) {
-			return ApiResponse.success(HttpStatus.FOUND, "Fetching is Successfull", list);
+			return ApiResponse.success(HttpStatus.FOUND, "FETCHING IS SUCCESSFULL", list);
 		} else {
-			return ApiResponse.error(HttpStatus.NOT_FOUND, "Not Found fetching Data");
+			return ApiResponse.error(HttpStatus.NOT_FOUND, "NOT FOUND FETCHING DATA");
 		}
 	}
 
@@ -186,14 +186,14 @@ public class CustomerSavingsController {
 	public ApiResponse<List<addFinancialConsultant>> findByFinancialCode(@RequestParam String financialCode) {
 		List<addFinancialConsultant> list = customersaving.findByFinancialCode(financialCode);
 		if (list != null && !list.isEmpty()) {
-			return ApiResponse.success(HttpStatus.FOUND, "Fetching is Successfull", list);
+			return ApiResponse.success(HttpStatus.FOUND, "FETCHING IS SUCCESSFULL", list);
 		} else {
-			return ApiResponse.error(HttpStatus.NOT_FOUND, "Not Found fetching Data");
+			return ApiResponse.error(HttpStatus.NOT_FOUND, "NOT FOUND FETCHING DATA");
 		}
 	}
 
 //  	//save saving account data
-//    @PostMapping("/saveandupdatesavingaccount") 
+//    @PostMapping("/saveandupdatesavingaccount")
 //	public ResponseEntity<ApiResponse<CreateSavingsAccount>> saveSavingAccountDetails(@RequestBody CreateSavingsAccount createSavingsAccount) {
 //    	CreateSavingsAccount savedEntity = customersaving.saveSavingAccountDetails(createSavingsAccount);
 //		String message = (createSavingsAccount.getId() == null) ? "Saving Account Details Save successfully"
@@ -219,7 +219,7 @@ public class CustomerSavingsController {
 		if (savingAccountDto.getId() == null) {
 			if (customersaving.existsByCustomerId(customerId)) {
 				return ResponseEntity.status(HttpStatus.CONFLICT).body(
-						new ApiResponse<>(HttpStatus.CONFLICT, "Customer already exists in saving account", null));
+						new ApiResponse<>(HttpStatus.CONFLICT, "CUSTOMER ALREADY EXISTS IN SAVING ACCOUNT", null));
 			}
 		}
 
@@ -227,7 +227,7 @@ public class CustomerSavingsController {
 				signature, jointPhoto, newPhoto, newSignature);
 		// return new ResponseEntity<>(response, response.getStatus());
 		return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK,
-				savingAccountDto.getId() != null ? "Data updated successfully" : "Data saved successfully",
+				savingAccountDto.getId() != null ? "DATA UPDATED SUCCESSFULLY" : "DATA SAVED SUCCESSFULLY",
 				response.getData()));
 	}
 
@@ -355,13 +355,13 @@ public class CustomerSavingsController {
 		}
 
 		ApiResponse<List<CreateSavingsAccount>> response = new ApiResponse<>(HttpStatus.FOUND,
-				"Saving Account Data fetched successfully", list);
+				"SAVING ACCOUNT DATA FETCHED SUCCESSFULLY", list);
 		return ResponseEntity.ok(response);
 	}
 
 	/*
 	 * //fetch all saving account data by account number
-	 * 
+	 *
 	 * @GetMapping("/getallbyaccountnumber") public
 	 * ResponseEntity<ApiResponse<List<CreateSavingsAccount>>>
 	 * findAllByAccountNumber(@RequestParam String accountNumber) {
@@ -388,7 +388,7 @@ public class CustomerSavingsController {
 
 		if (accounts == null || accounts.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse<>(HttpStatus.NOT_FOUND,
-					"No saving account found for account number: " + accountNumber, null));
+					"NO SAVING ACCOUNT FOUND FOR ACCOUNT NUMBER: " + accountNumber, null));
 		}
 
 		// Enrich each account with customer master details if fields are missing
@@ -421,7 +421,7 @@ public class CustomerSavingsController {
 			}
 		}
 
-		return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Fetch account details by account number", accounts));
+		return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "FETCH ACCOUNT DETAILS BY ACCOUNT NUMBER", accounts));
 	}
 
 	@GetMapping("/getSavingAccountDataById")
@@ -429,11 +429,11 @@ public class CustomerSavingsController {
 		Optional<CreateSavingsAccount> fyear = customersaving.findSavingAccountDataById(id);
 		if (fyear.isPresent()) {
 			ApiResponse<CreateSavingsAccount> response = new ApiResponse<>(HttpStatus.FOUND,
-					"Saving Account Data fetched successfully", fyear.get());
+					"SAVING ACCOUNT DATA FETCHED SUCCESSFULLY", fyear.get());
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<CreateSavingsAccount> response = new ApiResponse<>(HttpStatus.NOT_FOUND,
-					"Saving Account Data not found for ID: " + id, null);
+					"SAVING ACCOUNT DATA NOT FOUND FOR ID: " + id, null);
 			return ResponseEntity.status(404).body(response);
 		}
 	}
@@ -442,11 +442,11 @@ public class CustomerSavingsController {
 	public ResponseEntity<ApiResponse<String>> deleteFinancialYear(@RequestParam("id") Long id) {
 		boolean isDeleted = customersaving.deleteFinancialYear(id);
 		if (isDeleted) {
-			ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK, "Saving Account Data deleted successfully",
+			ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK, "SAVING ACCOUNT DATA DELETED SUCCESSFULLY",
 					"success");
 			return ResponseEntity.ok(response);
 		} else {
-			ApiResponse<String> response = new ApiResponse<>(HttpStatus.NOT_FOUND, " deletion failed", "failure");
+			ApiResponse<String> response = new ApiResponse<>(HttpStatus.NOT_FOUND, " DELETION FAILED", "failure");
 			return ResponseEntity.badRequest().body(response);
 		}
 	}
@@ -457,7 +457,7 @@ public class CustomerSavingsController {
 
 		SavingAccountActivity savedSavingActivity = customersaving.saveSavingAccountActivityData(savingAccountActivity);
 		ApiResponse<SavingAccountActivity> response = new ApiResponse<>(HttpStatus.CREATED,
-				"Saving Account Activit Data saved successfully", savedSavingActivity);
+				"SAVING ACCOUNT ACTIVIT DATA SAVED SUCCESSFULLY", savedSavingActivity);
 		return ResponseEntity.ok(response);
 	}
 
@@ -473,7 +473,7 @@ public class CustomerSavingsController {
 		}
 
 		ApiResponse<List<SavingAccountActivity>> response = ApiResponse.success(HttpStatus.OK,
-				"Saving Account Activity fetched successfully", members);
+				"SAVING ACCOUNT ACTIVITY FETCHED SUCCESSFULLY", members);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
@@ -487,106 +487,106 @@ public class CustomerSavingsController {
 		boolean isUpdated = customersaving.updateAverageBalance(accountNumber, newBalance);
 
 		if (isUpdated) {
-			ApiResponse<String> response = ApiResponse.success(HttpStatus.OK, "Average balance updated successfully.",
+			ApiResponse<String> response = ApiResponse.success(HttpStatus.OK, "AVERAGE BALANCE UPDATED SUCCESSFULLY.",
 					"Updated account: " + accountNumber);
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} else {
 			ApiResponse<String> response = ApiResponse.error(HttpStatus.NOT_FOUND,
-					"Account number not found or update failed.");
+					"ACCOUNT NUMBER NOT FOUND OR UPDATE FAILED.");
 			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 		}
 	}
 
 	/*
 	 * @PostMapping("/transferAmount")
-	 * 
+	 *
 	 * @Transactional public ResponseEntity<?> transferAmount(
-	 * 
+	 *
 	 * @RequestParam("debitAccountNo") String debitAccountNo,
-	 * 
+	 *
 	 * @RequestParam("creditAccountNo") String creditAccountNo,
-	 * 
+	 *
 	 * @RequestParam("amount") double amount,
-	 * 
+	 *
 	 * @RequestBody savingAccountFundTransfer savingAccFundTransfer) { try {
-	 * 
+	 *
 	 * CreateSavingsAccount debitAccount =
 	 * createSavingAccountRepo.findByAccountNumber(debitAccountNo) .orElseThrow(()
 	 * -> new RuntimeException("Debit account not found"));
-	 * 
+	 *
 	 * CreateSavingsAccount creditAccount =
 	 * createSavingAccountRepo.findByAccountNumber(creditAccountNo) .orElseThrow(()
 	 * -> new RuntimeException("Credit account not found"));
-	 * 
+	 *
 	 * double debitBalance = Double.parseDouble(debitAccount.getOpeningAmount());
 	 * System.out.println("debitBalance" +debitBalance); double creditBalance =
 	 * Double.parseDouble(creditAccount.getOpeningAmount());
 	 * System.out.println("-creditBalance" +creditBalance);
-	 * 
-	 * 
+	 *
+	 *
 	 * if (debitBalance < amount) { Map<String, String> response = new HashMap<>();
 	 * response.put("message", "Insufficient balance in debit account"); return
 	 * ResponseEntity.badRequest().body(response); }
-	 * 
+	 *
 	 * // Update balances debitAccount.setOpeningAmount(String.valueOf(debitBalance
 	 * - amount)); creditAccount.setOpeningAmount(String.valueOf(creditBalance +
 	 * amount));
-	 * 
+	 *
 	 * // Save changes createSavingAccountRepo.save(debitAccount);
 	 * createSavingAccountRepo.save(creditAccount); Map<String, String> response =
 	 * new HashMap<>(); response.put("message", "Amount transferred successfully");
 	 * return ResponseEntity.ok(response);
-	 * 
+	 *
 	 * } catch (Exception e) { Map<String, String> response = new HashMap<>();
 	 * response.put("message", "Transfer failed: " + e.getMessage()); return
 	 * ResponseEntity.badRequest().body(response); }
-	 * 
+	 *
 	 * // Save the intra-transfer record savingAccountFundTransfer savedEntry =
 	 * customersaving.saveSavingAccountFundTransfer(savingAccFundTransfer);
-	 * 
+	 *
 	 * return new ResponseEntity<>(savedEntry, HttpStatus.CREATED); }
 	 */
 
 	/*
 	 * @PostMapping("/transferAmount")
-	 * 
+	 *
 	 * @Transactional public ResponseEntity<?> transferAmount(
-	 * 
+	 *
 	 * @RequestParam("debitAccountNo") String debitAccountNo,
-	 * 
+	 *
 	 * @RequestParam("creditAccountNo") String creditAccountNo,
-	 * 
+	 *
 	 * @RequestParam("amount") double amount,
-	 * 
+	 *
 	 * @RequestBody savingAccountFundTransfer savingAccFundTransfer) {
-	 * 
+	 *
 	 * try { CreateSavingsAccount debitAccount =
 	 * createSavingAccountRepo.findByAccountNumber(debitAccountNo) .orElseThrow(()
 	 * -> new RuntimeException("Debit account not found"));
-	 * 
+	 *
 	 * CreateSavingsAccount creditAccount =
 	 * createSavingAccountRepo.findByAccountNumber(creditAccountNo) .orElseThrow(()
 	 * -> new RuntimeException("Credit account not found"));
-	 * 
+	 *
 	 * double debitBalance = Double.parseDouble(debitAccount.getOpeningAmount());
 	 * double creditBalance = Double.parseDouble(creditAccount.getOpeningAmount());
-	 * 
+	 *
 	 * if (debitBalance < amount) { Map<String, String> response = new HashMap<>();
 	 * response.put("message", "Insufficient balance in debit account"); return
 	 * ResponseEntity.badRequest().body(response); }
-	 * 
+	 *
 	 * // Update balances debitAccount.setOpeningAmount(String.valueOf(debitBalance
 	 * - amount)); creditAccount.setOpeningAmount(String.valueOf(creditBalance +
 	 * amount));
-	 * 
+	 *
 	 * // Save updated accounts createSavingAccountRepo.save(debitAccount);
 	 * createSavingAccountRepo.save(creditAccount);
-	 * 
+	 *
 	 * // Save the transfer record savingAccountFundTransfer savedEntry =
 	 * customersaving.saveSavingAccountFundTransfer(savingAccFundTransfer);
-	 * 
+	 *
 	 * // Send response return new ResponseEntity<>(savedEntry, HttpStatus.CREATED);
-	 * 
+	 *
 	 * } catch (Exception e) { Map<String, String> response = new HashMap<>();
 	 * response.put("message", "Transfer failed: " + e.getMessage()); return
 	 * ResponseEntity.badRequest().body(response); } }
@@ -608,22 +608,22 @@ public class CustomerSavingsController {
 
 			if (!unapprovedTransfers.isEmpty()) {
 				return new ResponseEntity<>(
-						"Previous transaction is pending approval. Complete approval before proceeding.",
+						"PREVIOUS TRANSACTION IS PENDING APPROVAL. COMPLETE APPROVAL BEFORE PROCEEDING.",
 						HttpStatus.FORBIDDEN);
 			}
 
 			CreateSavingsAccount debitAccount = createSavingAccountRepo.findByAccountNumber(debitAccountNo)
-					.orElseThrow(() -> new RuntimeException("Debit account not found"));
+					.orElseThrow(() -> new RuntimeException("DEBIT ACCOUNT NOT FOUND"));
 
 			CreateSavingsAccount creditAccount = createSavingAccountRepo.findByAccountNumber(creditAccountNo)
-					.orElseThrow(() -> new RuntimeException("Credit account not found"));
+					.orElseThrow(() -> new RuntimeException("CREDIT ACCOUNT NOT FOUND"));
 
 			double debitBalance = Double.parseDouble(debitAccount.getBalance());
 			double creditBalance = Double.parseDouble(creditAccount.getBalance());
 
 			if (debitBalance < amount) {
 				Map<String, String> response = new HashMap<>();
-				response.put("message", "Insufficient balance in debit account");
+				response.put("message", "INSUFFICIENT BALANCE IN DEBIT ACCOUNT");
 				return ResponseEntity.badRequest().body(response);
 			}
 
@@ -701,7 +701,7 @@ public class CustomerSavingsController {
 
 		} catch (Exception e) {
 			Map<String, String> response = new HashMap<>();
-			response.put("message", "Transfer failed: " + e.getMessage());
+			response.put("message", "TRANSFER FAILED: " + e.getMessage());
 			return ResponseEntity.badRequest().body(response);
 		}
 	}
@@ -713,12 +713,12 @@ public class CustomerSavingsController {
 		List<String> accountNumbers = customersaving.getAccountNumbersByType(accountType);
 
 		if (accountNumbers.isEmpty()) {
-			ApiResponse<List<String>> response = ApiResponse.success(HttpStatus.OK, "No account numbers found.",
+			ApiResponse<List<String>> response = ApiResponse.success(HttpStatus.OK, "NO ACCOUNT NUMBERS FOUND.",
 					new ArrayList<>());
 			return ResponseEntity.ok(response);
 		}
 
-		ApiResponse<List<String>> response = ApiResponse.success(HttpStatus.OK, "Account numbers fetched successfully.",
+		ApiResponse<List<String>> response = ApiResponse.success(HttpStatus.OK, "ACCOUNT NUMBERS FETCHED SUCCESSFULLY.",
 				accountNumbers);
 		return ResponseEntity.ok(response);
 	}
@@ -731,7 +731,7 @@ public class CustomerSavingsController {
 
 		// ✔️ Correct null check for Optional:
 		if (!account.isPresent()) {
-			ApiResponse<CreateSavingsAccount> response = ApiResponse.error(HttpStatus.NOT_FOUND, "Account not found.");
+			ApiResponse<CreateSavingsAccount> response = ApiResponse.error(HttpStatus.NOT_FOUND, "ACCOUNT NOT FOUND.");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 
@@ -770,7 +770,7 @@ public class CustomerSavingsController {
 			}
 		}
 
-		ApiResponse<CreateSavingsAccount> response = ApiResponse.success(HttpStatus.OK, "Account fetched successfully.",
+		ApiResponse<CreateSavingsAccount> response = ApiResponse.success(HttpStatus.OK, "ACCOUNT FETCHED SUCCESSFULLY.",
 				acc);
 		return ResponseEntity.ok(response);
 	}
@@ -778,7 +778,7 @@ public class CustomerSavingsController {
 	// Janvi : save fund transfer entry
 	/*
 	 * @PostMapping("/saveSavingAccountFundTransfer")
-	 * 
+	 *
 	 * @ResponseBody public ResponseEntity<String>
 	 * saveSavingAccountFundTransfer(@RequestBody savingAccountFundTransfer
 	 * savingAccFundTransfer) { savingAccountFundTransfer fund =
@@ -794,7 +794,7 @@ public class CustomerSavingsController {
 	 * savingsAccountCloser accountCloser) { // 1. Save the account close record
 	 * savingsAccountCloser savedAccCloseEntry =
 	 * customersaving.saveAccountCloseInfo(accountCloser);
-	 * 
+	 *
 	 * return new ResponseEntity<>(savedAccCloseEntry, HttpStatus.CREATED); }
 	 */
 
@@ -827,7 +827,7 @@ public class CustomerSavingsController {
 				request.getEndDate());
 
 		ApiResponse<List<CreateSavingsAccount>> response = ApiResponse.success(HttpStatus.OK,
-				"Data fetched successfully", list);
+				"DATA FETCHED SUCCESSFULLY", list);
 
 		return ResponseEntity.ok(response);
 	}
@@ -855,7 +855,7 @@ public class CustomerSavingsController {
 		System.out.println("API Response for customers " + selectByCustomer + ": " + accountNumbersMap);
 
 		ApiResponse<Map<String, List<String>>> response = new ApiResponse<>(HttpStatus.OK,
-				"Account numbers fetched successfully", accountNumbersMap);
+				"ACCOUNT NUMBERS FETCHED SUCCESSFULLY", accountNumbersMap);
 
 		return ResponseEntity.ok(response);
 	}
@@ -865,9 +865,9 @@ public class CustomerSavingsController {
 
 		List<CreateSavingsAccount> list = customersaving.getAccountNumbersByCustomerCode(selectByCustomer);
 		if (list != null && !list.isEmpty()) {
-			return ApiResponse.success(HttpStatus.FOUND, "Fetching is Successfull", list);
+			return ApiResponse.success(HttpStatus.FOUND, "FETCHING IS SUCCESSFULL", list);
 		} else {
-			return ApiResponse.error(HttpStatus.NOT_FOUND, "Not Found fetching Data");
+			return ApiResponse.error(HttpStatus.NOT_FOUND, "NOT FOUND FETCHING DATA");
 		}
 	}
 
@@ -875,9 +875,9 @@ public class CustomerSavingsController {
 	public ApiResponse<List<SavingSchemeCatalog>> fetchSavingSchemeCatalog() {
 		List<SavingSchemeCatalog> list = customersaving.fetchAllSavingSchemeCatalog();
 		if (list != null && !list.isEmpty()) {
-			return ApiResponse.success(HttpStatus.FOUND, "Fetching is Successful", list);
+			return ApiResponse.success(HttpStatus.FOUND, "FETCHING IS SUCCESSFUL", list);
 		} else {
-			return ApiResponse.error(HttpStatus.NOT_FOUND, "No Data Found");
+			return ApiResponse.error(HttpStatus.NOT_FOUND, "NO DATA FOUND");
 		}
 	}
 

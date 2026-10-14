@@ -572,7 +572,7 @@ public class PolicyManagementService {
 		addnewinvestmentPM.setAgent(policyManagementDto.getAgent());
 
 		addnewinvestmentPM.setSmsSend(policyManagementDto.getSmsSend());
-		
+
 		addnewinvestmentPM.setAmountDue(policyManagementDto.getAmountDue());
 
 		// =====================================================
@@ -624,12 +624,12 @@ public class PolicyManagementService {
 		if (isNew) {
 
 			return ApiResponse.success(HttpStatus.CREATED,
-					"Saved successfully. Director Name: " + saveaddinvestmentPM.getCustomerName(), saveaddinvestmentPM);
+					"SAVED SUCCESSFULLY DIRECTOR NAME: " + saveaddinvestmentPM.getCustomerName(), saveaddinvestmentPM);
 
 		} else {
 
 			return ApiResponse.success(HttpStatus.OK,
-					"Updated successfully. Director Name: " + saveaddinvestmentPM.getCustomerName(),
+					"UPDATED SUCCESSFULLY DIRECTOR NAME: " + saveaddinvestmentPM.getCustomerName(),
 					saveaddinvestmentPM);
 		}
 	}
@@ -693,12 +693,12 @@ public class PolicyManagementService {
 
 			if (dto.getPolicyCode() == null || dto.getPolicyCode().trim().isEmpty()) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Policy Code is required", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "POLICY CODE IS REQUIRED", null);
 			}
 
 			if (dto.getPaymentAmount() == null || dto.getPaymentAmount().trim().isEmpty()) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Payment Amount is required", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "PAYMENT AMOUNT IS REQUIRED", null);
 			}
 
 			double newPayment;
@@ -709,12 +709,12 @@ public class PolicyManagementService {
 
 			} catch (NumberFormatException e) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Invalid payment amount", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "INVALID PAYMENT AMOUNT", null);
 			}
 
 			if (newPayment <= 0) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Payment amount must be greater than zero", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "PAYMENT AMOUNT MUST BE GREATER THAN ZERO", null);
 			}
 
 			/*
@@ -732,13 +732,13 @@ public class PolicyManagementService {
 
 				} catch (NumberFormatException e) {
 
-					return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Invalid penalty amount", null);
+					return new ApiResponse<>(HttpStatus.BAD_REQUEST, "INVALID PENALTY AMOUNT", null);
 				}
 			}
 
 			if (penaltyAmount < 0) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Penalty amount cannot be negative", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "PENALTY AMOUNT CANNOT BE NEGATIVE", null);
 			}
 
 			AddnewinvestmentPM policy = addinvestmentrepo.findAll().stream()
@@ -747,7 +747,7 @@ public class PolicyManagementService {
 			if (policy == null) {
 
 				return new ApiResponse<>(HttpStatus.NOT_FOUND,
-						"Policy not found for Policy Code: " + dto.getPolicyCode(), null);
+						"POLICY NOT FOUND FOR POLICY CODE: " + dto.getPolicyCode(), null);
 			}
 
 			double depositAmount = parseAmount(policy.getDepositAmount());
@@ -758,13 +758,13 @@ public class PolicyManagementService {
 
 			if (oldBalance <= 0) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Policy is already fully paid", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "POLICY IS ALREADY FULLY PAID", null);
 			}
 
 			if (newPayment > oldBalance) {
 
 				return new ApiResponse<>(HttpStatus.BAD_REQUEST,
-						"Payment amount cannot be greater than balance. Remaining balance: "
+						"PAYMENT AMOUNT CANNOT BE GREATER THAN BALANCE. REMAINING BALANCE: "
 								+ String.format("%.2f", oldBalance),
 						null);
 			}
@@ -814,13 +814,13 @@ public class PolicyManagementService {
 
 			addinvestmentrepo.save(policy);
 
-			return new ApiResponse<>(HttpStatus.CREATED, "Payment saved successfully", savedPayment);
+			return new ApiResponse<>(HttpStatus.CREATED, "PAYMENT SAVED SUCCESSFULLY", savedPayment);
 
 		} catch (Exception e) {
 
 			e.printStackTrace();
 
-			return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to save policy payment", null);
+			return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, "FAILED TO SAVE POLICY PAYMENT", null);
 		}
 	}
 
@@ -832,17 +832,17 @@ public class PolicyManagementService {
 
 			if (payments.isEmpty()) {
 
-				return new ApiResponse<>(HttpStatus.NOT_FOUND, "No payment history found for policy: " + policyCode,
+				return new ApiResponse<>(HttpStatus.NOT_FOUND, "NO PAYMENT HISTORY FOUND FOR POLICY: " + policyCode,
 						null);
 			}
 
-			return new ApiResponse<>(HttpStatus.OK, "Payment history fetched successfully", payments);
+			return new ApiResponse<>(HttpStatus.OK, "PAYMENT HISTORY FETCHED SUCCESSFULLY", payments);
 
 		} catch (Exception e) {
 
 			e.printStackTrace();
 
-			return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to fetch payment history", null);
+			return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, "FAILED TO FETCH PAYMENT HISTORY", null);
 		}
 	}
 
@@ -851,15 +851,15 @@ public class PolicyManagementService {
 		String policyCode = (String) data.get("policyCode");
 
 		if (policyCode == null || policyCode.trim().isEmpty()) {
-			throw new RuntimeException("Policy Code is required.");
+			throw new RuntimeException("POLICY CODE IS REQUIRED.");
 		}
 
 		if (data.get("policyAmount") == null) {
-			throw new RuntimeException("Policy Amount is required.");
+			throw new RuntimeException("POLICY AMOUNT IS REQUIRED.");
 		}
 
 		if (data.get("noOfInstallments") == null) {
-			throw new RuntimeException("No. of Installments is required.");
+			throw new RuntimeException("NO. OF INSTALLMENTS IS REQUIRED.");
 		}
 
 		double policyAmount = Double.parseDouble(data.get("policyAmount").toString());
@@ -867,17 +867,17 @@ public class PolicyManagementService {
 		int noOfInstallments = Integer.parseInt(data.get("noOfInstallments").toString());
 
 		if (policyAmount <= 0) {
-			throw new RuntimeException("Policy Amount must be greater than zero.");
+			throw new RuntimeException("POLICY AMOUNT MUST BE GREATER THAN ZERO.");
 		}
 
 		if (noOfInstallments <= 0) {
-			throw new RuntimeException("No. of Installments must be greater than zero.");
+			throw new RuntimeException("NO. OF INSTALLMENTS MUST BE GREATER THAN ZERO.");
 		}
 
 		Optional<AddnewinvestmentPM> optional = addinvestmentrepo.findByPolicyCode(policyCode);
 
 		if (!optional.isPresent()) {
-			throw new RuntimeException("Policy not found.");
+			throw new RuntimeException("POLICY NOT FOUND.");
 		}
 
 		AddnewinvestmentPM investment = optional.get();
@@ -887,27 +887,27 @@ public class PolicyManagementService {
 		int currentPaid = parseIntSafe(investment.getLastInstPaid());
 
 		double currentPaidAmount = parseDoubleSafe(investment.getPaidAmount());
-		System.out.println("Current due : " + currentDue);
+		System.out.println("CURRENT DUE : " + currentDue);
 		if (currentDue <= 0) {
-			throw new RuntimeException("No payment needed. Policy is already settled or overpaid.");
+			throw new RuntimeException("NO PAYMENT NEEDED. POLICY IS ALREADY SETTLED OR OVERPAID.");
 		}
 
 		double totalPayment = policyAmount * noOfInstallments;
-		System.out.println("Total payment : " + totalPayment);
+		System.out.println("TOTAL PAYMENT : " + totalPayment);
 		if (totalPayment > currentDue) {
-			throw new RuntimeException("Payment amount cannot be greater than payment due.");
+			throw new RuntimeException("PAYMENT AMOUNT CANNOT BE GREATER THAN PAYMENT DUE.");
 		}
 
 		double updatedDue = currentDue - totalPayment;
-		System.out.println("Current Due : " + currentDue);
+		System.out.println("CURRENT DUE : " + currentDue);
 
 		int updatedPaid = currentPaid + noOfInstallments;
-		System.out.println("No of Installments : " + noOfInstallments);
+		System.out.println("NO OF INSTALLMENTS : " + noOfInstallments);
 
-		System.out.println("Current paid Amount : " + currentPaidAmount);
+		System.out.println("CURRENT PAID AMOUNT : " + currentPaidAmount);
 
 		double updatedPaidAmount = currentPaidAmount + totalPayment;
-		System.out.println("Updated Paid Amount : " + updatedPaidAmount);
+		System.out.println("UPDATED PAID AMOUNT : " + updatedPaidAmount);
 
 		if (Math.abs(updatedDue) < 0.01) {
 			updatedDue = 0;
@@ -995,11 +995,11 @@ public class PolicyManagementService {
 
 		if (updatedDue == 0) {
 
-			return "Policy payment saved successfully. Policy is ready for maturity.";
+			return "POLICY PAYMENT SAVED SUCCESSFULLY. POLICY IS READY FOR MATURITY.";
 
 		} else {
 
-			return "Installment updated, renewal saved and payment recorded successfully.";
+			return "INSTALLMENT UPDATED, RENEWAL SAVED AND PAYMENT RECORDED SUCCESSFULLY.";
 		}
 	}
 
@@ -1035,17 +1035,17 @@ public class PolicyManagementService {
 		try {
 
 			if (dto == null) {
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Payment data is required", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "PAYMENT DATA IS REQUIRED", null);
 			}
 
 			if (dto.getPolicyCode() == null || dto.getPolicyCode().trim().isEmpty()) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Policy Code is required", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "POLICY CODE IS REQUIRED", null);
 			}
 
 			if (dto.getPaymentAmount() == null || dto.getPaymentAmount().trim().isEmpty()) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Payment Amount is required", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "PAYMENT AMOUNT IS REQUIRED", null);
 			}
 
 			double newPayment;
@@ -1056,12 +1056,12 @@ public class PolicyManagementService {
 
 			} catch (NumberFormatException e) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Invalid payment amount", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "INVALID PAYMENT AMOUNT", null);
 			}
 
 			if (newPayment <= 0) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Payment amount must be greater than zero", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "PAYMENT AMOUNT MUST BE GREATER THAN ZERO", null);
 			}
 
 			/*
@@ -1079,13 +1079,13 @@ public class PolicyManagementService {
 
 				} catch (NumberFormatException e) {
 
-					return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Invalid penalty amount", null);
+					return new ApiResponse<>(HttpStatus.BAD_REQUEST, "INVALID PENALTY AMOUNT", null);
 				}
 			}
 
 			if (penaltyAmount < 0) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Penalty amount cannot be negative", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "PENALTY AMOUNT CANNOT BE NEGATIVE", null);
 			}
 
 			/*
@@ -1098,7 +1098,7 @@ public class PolicyManagementService {
 			if (investments == null || investments.isEmpty()) {
 
 				return new ApiResponse<>(HttpStatus.NOT_FOUND,
-						"Policy not found for Policy Code: " + dto.getPolicyCode(), null);
+						"POLICY NOT FOUND FOR POLICY CODE: " + dto.getPolicyCode(), null);
 			}
 
 			AddnewinvestmentPM policy = investments.get(0);
@@ -1130,7 +1130,7 @@ public class PolicyManagementService {
 			if (currentDue <= 0) {
 
 				return new ApiResponse<>(HttpStatus.BAD_REQUEST,
-						"No payment needed. Policy is already settled or overpaid.", null);
+						"NO PAYMENT NEEDED. POLICY IS ALREADY SETTLED OR OVERPAID.", null);
 			}
 
 			/*
@@ -1141,7 +1141,7 @@ public class PolicyManagementService {
 			if (newPayment > currentDue) {
 
 				return new ApiResponse<>(HttpStatus.BAD_REQUEST,
-						"Payment amount cannot be greater than balance. Remaining balance: "
+						"PAYMENT AMOUNT CANNOT BE GREATER THAN BALANCE. REMAINING BALANCE: "
 								+ String.format("%.2f", currentDue),
 						null);
 			}
@@ -1296,11 +1296,11 @@ public class PolicyManagementService {
 
 			if (newAmountDue == 0) {
 
-				message = "DD payment saved successfully. " + "Policy is ready for maturity.";
+				message = "DD PAYMENT SAVED SUCCESSFULLY. " + "POLICY IS READY FOR MATURITY.";
 
 			} else {
 
-				message = "DD payment, installment and renewal " + "saved successfully.";
+				message = "DD PAYMENT, INSTALLMENT AND RENEWAL " + "SAVED SUCCESSFULLY.";
 			}
 
 			return new ApiResponse<>(HttpStatus.CREATED, message, savedPayment);
@@ -1325,17 +1325,17 @@ public class PolicyManagementService {
 
 			if (dto == null) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Payment data is required", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "PAYMENT DATA IS REQUIRED", null);
 			}
 
 			if (dto.getPolicyCode() == null || dto.getPolicyCode().trim().isEmpty()) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Policy Code is required", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "POLICY CODE IS REQUIRED", null);
 			}
 
 			if (dto.getPaymentAmount() == null || dto.getPaymentAmount().trim().isEmpty()) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Payment Amount is required", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "PAYMENT AMOUNT IS REQUIRED", null);
 			}
 
 			double newPayment;
@@ -1346,12 +1346,12 @@ public class PolicyManagementService {
 
 			} catch (NumberFormatException e) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Invalid payment amount", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "INVALID PAYMENT AMOUNT", null);
 			}
 
 			if (newPayment <= 0) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Payment amount must be greater than zero", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "PAYMENT AMOUNT MUST BE GREATER THAN ZERO", null);
 			}
 
 			/*
@@ -1369,13 +1369,13 @@ public class PolicyManagementService {
 
 				} catch (NumberFormatException e) {
 
-					return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Invalid penalty amount", null);
+					return new ApiResponse<>(HttpStatus.BAD_REQUEST, "INVALID PENALTY AMOUNT", null);
 				}
 			}
 
 			if (penaltyAmount < 0) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Penalty amount cannot be negative", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "PENALTY AMOUNT CANNOT BE NEGATIVE", null);
 			}
 
 			/*
@@ -1388,7 +1388,7 @@ public class PolicyManagementService {
 			if (!optional.isPresent()) {
 
 				return new ApiResponse<>(HttpStatus.NOT_FOUND,
-						"Policy not found for Policy Code: " + dto.getPolicyCode(), null);
+						"POLICY NOT FOUND FOR POLICY CODE: " + dto.getPolicyCode(), null);
 			}
 
 			AddnewinvestmentPM policy = optional.get();
@@ -1404,7 +1404,7 @@ public class PolicyManagementService {
 
 				if (!schemeType.equalsIgnoreCase("RD")) {
 
-					return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Selected Policy is not an RD policy.", null);
+					return new ApiResponse<>(HttpStatus.BAD_REQUEST, "SELECTED POLICY IS NOT AN RD POLICY.", null);
 				}
 			}
 
@@ -1436,7 +1436,7 @@ public class PolicyManagementService {
 			if (currentDue <= 0) {
 
 				return new ApiResponse<>(HttpStatus.BAD_REQUEST,
-						"No payment needed. Policy is already settled or overpaid.", null);
+						"NO PAYMENT NEEDED. POLICY IS ALREADY SETTLED OR OVERPAID.", null);
 			}
 
 			/*
@@ -1447,7 +1447,7 @@ public class PolicyManagementService {
 			if (newPayment > currentDue) {
 
 				return new ApiResponse<>(HttpStatus.BAD_REQUEST,
-						"Payment amount cannot be greater than balance. Remaining balance: "
+						"PAYMENT AMOUNT CANNOT BE GREATER THAN BALANCE. REMAINING BALANCE: "
 								+ String.format("%.2f", currentDue),
 						null);
 			}
@@ -1594,11 +1594,11 @@ public class PolicyManagementService {
 
 			if (newAmountDue == 0) {
 
-				message = "RD payment saved successfully. " + "Policy is ready for maturity.";
+				message = "RD PAYMENT SAVED SUCCESSFULLY. " + "POLICY IS READY FOR MATURITY.";
 
 			} else {
 
-				message = "RD payment, installment and renewal " + "saved successfully.";
+				message = "RD PAYMENT, INSTALLMENT AND RENEWAL " + "SAVED SUCCESSFULLY.";
 			}
 
 			return new ApiResponse<>(HttpStatus.CREATED, message, savedPayment);
@@ -1626,17 +1626,17 @@ public class PolicyManagementService {
 			// =====================================================
 
 			if (dto == null) {
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Payment data is required", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "PAYMENT DATA IS REQUIRED", null);
 			}
 
 			if (dto.getPolicyCode() == null || dto.getPolicyCode().trim().isEmpty()) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Policy Code is required", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "POLICY CODE IS REQUIRED", null);
 			}
 
 			if (dto.getPaymentAmount() == null || dto.getPaymentAmount().trim().isEmpty()) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Payment Amount is required", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "PAYMENT AMOUNT IS REQUIRED", null);
 			}
 
 			// =====================================================
@@ -1651,12 +1651,12 @@ public class PolicyManagementService {
 
 			} catch (NumberFormatException e) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Invalid payment amount", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "INVALID PAYMENT AMOUNT", null);
 			}
 
 			if (newPayment <= 0) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Payment amount must be greater than zero", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "PAYMENT AMOUNT MUST BE GREATER THAN ZERO", null);
 			}
 
 			// =====================================================
@@ -1673,13 +1673,13 @@ public class PolicyManagementService {
 
 				} catch (NumberFormatException e) {
 
-					return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Invalid penalty amount", null);
+					return new ApiResponse<>(HttpStatus.BAD_REQUEST, "INVALID PENALTY AMOUNT", null);
 				}
 			}
 
 			if (penaltyAmount < 0) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Penalty amount cannot be negative", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "PENALTY AMOUNT CANNOT BE NEGATIVE", null);
 			}
 
 			// =====================================================
@@ -1691,7 +1691,7 @@ public class PolicyManagementService {
 			if (investments == null || investments.isEmpty()) {
 
 				return new ApiResponse<>(HttpStatus.NOT_FOUND,
-						"FD Policy not found for Policy Code: " + dto.getPolicyCode(), null);
+						"FD POLICY NOT FOUND FOR POLICY CODE: " + dto.getPolicyCode(), null);
 			}
 
 			AddnewinvestmentPM policy = investments.get(0);
@@ -1702,7 +1702,7 @@ public class PolicyManagementService {
 
 			if (policy.getSchemeType() == null || !"FD".equalsIgnoreCase(policy.getSchemeType().trim())) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Policy is not an FD policy.", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "POLICY IS NOT AN FD POLICY.", null);
 			}
 
 			// =====================================================
@@ -1713,7 +1713,7 @@ public class PolicyManagementService {
 
 			if (fdSplitAmountsJson == null || fdSplitAmountsJson.trim().isEmpty()) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "FD split amounts are not available for this policy.",
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "FD SPLIT AMOUNTS ARE NOT AVAILABLE FOR THIS POLICY.",
 						null);
 			}
 
@@ -1732,12 +1732,12 @@ public class PolicyManagementService {
 
 			} catch (Exception e) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Invalid FD split amounts format.", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "INVALID FD SPLIT AMOUNTS FORMAT.", null);
 			}
 
 			if (splitAmounts == null || splitAmounts.isEmpty()) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "FD split amounts cannot be empty.", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "FD SPLIT AMOUNTS CANNOT BE EMPTY.", null);
 			}
 
 			// =====================================================
@@ -1748,7 +1748,7 @@ public class PolicyManagementService {
 
 				if (splitAmount == null || splitAmount <= 0) {
 
-					return new ApiResponse<>(HttpStatus.BAD_REQUEST, "FD split amount must be greater than zero.",
+					return new ApiResponse<>(HttpStatus.BAD_REQUEST, "FD SPLIT AMOUNT MUST BE GREATER THAN ZERO.",
 							null);
 				}
 			}
@@ -1781,8 +1781,8 @@ public class PolicyManagementService {
 			if (Math.abs(totalSplitAmount - depositAmount) > 0.01) {
 
 				return new ApiResponse<>(HttpStatus.BAD_REQUEST,
-						"FD split total amount does not match total deposit amount. " + "Split Total: "
-								+ String.format("%.2f", totalSplitAmount) + ", Deposit Amount: "
+						"FD SPLIT TOTAL AMOUNT DOES NOT MATCH TOTAL DEPOSIT AMOUNT. " + "SPLIT TOTAL: "
+								+ String.format("%.2f", totalSplitAmount) + ", DEPOSIT AMOUNT: "
 								+ String.format("%.2f", depositAmount),
 						null);
 			}
@@ -1798,7 +1798,7 @@ public class PolicyManagementService {
 			if (oldPaidAmount > depositAmount + 0.01) {
 
 				return new ApiResponse<>(HttpStatus.BAD_REQUEST,
-						"Existing paid amount cannot be greater than FD deposit amount.", null);
+						"EXISTING PAID AMOUNT CANNOT BE GREATER THAN FD DEPOSIT AMOUNT.", null);
 			}
 
 			// =====================================================
@@ -1848,7 +1848,7 @@ public class PolicyManagementService {
 
 			if (completedInstallments >= splitAmounts.size()) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "All FD split payments are already completed.", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "ALL FD SPLIT PAYMENTS ARE ALREADY COMPLETED.", null);
 			}
 
 			// =====================================================
@@ -1871,8 +1871,8 @@ public class PolicyManagementService {
 
 			if (Math.abs(newPayment - currentSplitAmount) > 0.01) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Invalid FD payment amount for installment "
-						+ currentInstallmentNo + ". Required amount: " + String.format("%.2f", currentSplitAmount),
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "INVALID FD PAYMENT AMOUNT FOR INSTALLMENT "
+						+ currentInstallmentNo + ". REQUIRED AMOUNT: " + String.format("%.2f", currentSplitAmount),
 						null);
 			}
 
@@ -1888,7 +1888,7 @@ public class PolicyManagementService {
 
 			if (newPaidAmount > depositAmount + 0.01) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Payment exceeds total FD deposit amount.", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "PAYMENT EXCEEDS TOTAL FD DEPOSIT AMOUNT.", null);
 			}
 
 			// =====================================================
@@ -2148,13 +2148,13 @@ public class PolicyManagementService {
 
 			if (newAmountDue == 0 && updatedInstallmentsPaid >= splitAmounts.size()) {
 
-				message = "FD payment saved successfully. " + "All " + splitAmounts.size()
-						+ " FD split payments are completed " + "and FD is fully funded.";
+				message = "FD PAYMENT SAVED SUCCESSFULLY. " + "ALL " + splitAmounts.size()
+						+ " FD SPLIT PAYMENTS ARE COMPLETED " + "AND FD IS FULLY FUNDED.";
 
 			} else {
 
-				message = "FD payment " + currentInstallmentNo + " saved successfully. " + "Remaining FD balance: ₹"
-						+ String.format("%.2f", newBalance) + ". Next payment due: ₹"
+				message = "FD PAYMENT " + currentInstallmentNo + " SAVED SUCCESSFULLY. " + "REMAINING FD BALANCE: ₹"
+						+ String.format("%.2f", newBalance) + ". NEXT PAYMENT DUE: ₹"
 						+ String.format("%.2f", newAmountDue);
 			}
 
@@ -2177,14 +2177,14 @@ public class PolicyManagementService {
 		try {
 
 			if (policyCode == null || policyCode.trim().isEmpty()) {
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Policy Code is required", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "POLICY CODE IS REQUIRED", null);
 			}
 
 			List<AddnewinvestmentPM> investments = addinvestmentrepo.findAllByPolicyCode(policyCode);
 
 			if (investments == null || investments.isEmpty()) {
 
-				return new ApiResponse<>(HttpStatus.NOT_FOUND, "Policy not found for Policy Code: " + policyCode, null);
+				return new ApiResponse<>(HttpStatus.NOT_FOUND, "POLICY NOT FOUND FOR POLICY CODE: " + policyCode, null);
 			}
 
 			AddnewinvestmentPM policy = investments.get(0);
@@ -2195,7 +2195,7 @@ public class PolicyManagementService {
 
 			if (policy.getSchemeType() == null || !"FD".equalsIgnoreCase(policy.getSchemeType().trim())) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Selected policy is not an FD policy.", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "SELECTED POLICY IS NOT AN FD POLICY.", null);
 			}
 
 			// =====================================================
@@ -2234,7 +2234,7 @@ public class PolicyManagementService {
 
 			if (fdSplitAmounts == null || fdSplitAmounts.trim().isEmpty()) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "FD split amounts are not available for this policy.",
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "FD SPLIT AMOUNTS ARE NOT AVAILABLE FOR THIS POLICY.",
 						null);
 			}
 
@@ -2249,12 +2249,12 @@ public class PolicyManagementService {
 
 			} catch (Exception e) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "Invalid FD split amounts format.", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "INVALID FD SPLIT AMOUNTS FORMAT.", null);
 			}
 
 			if (splitAmounts == null || splitAmounts.isEmpty()) {
 
-				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "FD split amounts cannot be empty.", null);
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "FD SPLIT AMOUNTS CANNOT BE EMPTY.", null);
 			}
 
 			// =====================================================
@@ -2319,13 +2319,13 @@ public class PolicyManagementService {
 			// RETURN
 			// =====================================================
 
-			return new ApiResponse<>(HttpStatus.OK, "FD policy fetched successfully.", policy);
+			return new ApiResponse<>(HttpStatus.OK, "FD POLICY FETCHED SUCCESSFULLY.", policy);
 
 		} catch (Exception e) {
 
 			e.printStackTrace();
 
-			return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to fetch FD policy.", null);
+			return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, "FAILED TO FETCH FD POLICY.", null);
 		}
 	}
 

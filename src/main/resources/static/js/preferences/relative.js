@@ -11,7 +11,7 @@ $(document).ready(function() {
 		let isValid = true;
 
 		if (relation === '') {
-			$('#chkrelation').text('* This field is required');
+			$('#chkrelation').text('* THIS FIELD IS REQUIRED');
 			$('#relation').focus();
 			isValid = false;
 		}
@@ -34,12 +34,12 @@ $(document).ready(function() {
 					alert(response.message);
 					location.reload();
 				} else {
-					alert("Error: " + (response.message || "Unknown error occurred."));
+					alert("ERROR: " + (response.message || "UNKNOWN ERROR OCCURRED."));
 				}
 			},
 			error: function(xhr) {
 				console.error('Error:', xhr.responseText);
-				alert('Failed to save Relative data.');
+				alert('FAILED TO SAVE RELATIVE DATA.');
 			}
 		});
 	});
@@ -56,33 +56,33 @@ $(document).ready(function() {
 				tableBody.empty();
 				data.forEach((item, index) => {
 					let row = `<tr>
-			                        <td>${index + 1}</td>
-			                        <td>${(item.relation || '').toUpperCase()}</td>
-									<td>
-										<button type="button" class="iconbutton" onclick="viewData(${item.id})" title="View">
-										<i class="fa-solid fa-pen-to-square text-primary"></i>
-										</button>
-									</td>
-									<td>
-										<button type="button" class="iconbutton ms-2" onclick="deleteData(${item.id})" title="Delete">
-											<i class="fa-solid fa-trash text-danger"></i>
-										</button>
-									</td>				                    
-							</tr>`;
+		                        <td>${index + 1}</td>
+		                        <td>${(item.relation || '').toUpperCase()}</td>
+								<td>
+									<button type="button" class="iconbutton" onclick="viewData(${item.id})" title="VIEW">
+									<i class="fa-solid fa-pen-to-square text-primary"></i>
+									</button>
+								</td>
+								<td>
+									<button type="button" class="iconbutton ms-2" onclick="deleteData(${item.id})" title="DELETE">
+										<i class="fa-solid fa-trash text-danger"></i>
+									</button>
+								</td>				                   
+						</tr>`;
 					tableBody.append(row);
 				});
 			} else {
-				alert("Failed to fetch Relative data: " + response.message);
+				alert("FAILED TO FETCH RELATIVE DATA: " + response.message);
 			}
 		},
 		error: function() {
-			alert("Error while calling the API.");
+			alert("ERROR WHILE CALLING THE API.");
 		}
 	});
 });
 
 function deleteData(id) {
-	if (confirm("Are you sure you want to delete this Relation?")) {
+	if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS RELATION?")) {
 		$.ajax({
 			url: "api/preference/deleteRelativeModuleById",
 			type: "POST",
@@ -92,11 +92,11 @@ function deleteData(id) {
 					alert(response.message);
 					location.reload();
 				} else {
-					alert("Delete failed: " + response.message);
+					alert("DELETE FAILED: " + response.message);
 				}
 			},
 			error: function(xhr, status, error) {
-				alert("Failed to delete Relative.");
+				alert("FAILED TO DELETE RELATIVE.");
 				console.error("Error:", error);
 			}
 		});
@@ -118,11 +118,11 @@ function viewData(id) {
 				$("#id").val(branch.id);
 				$("#relation").val(branch.relation);
 			} else {
-				alert("Branch not found: " + response.message);
+				alert("BRANCH NOT FOUND: " + response.message);
 			}
 		},
 		error: function(xhr) {
-			alert("Request failed: " + xhr.responseText);
+			alert("REQUEST FAILED: " + xhr.responseText);
 		}
 	});
 
@@ -138,7 +138,7 @@ function updateRelative() {
 	let isValid = true;
 
 	if (relation === '') {
-		$('#chkrelation').text('* This field is required');
+		$('#chkrelation').text('* THIS FIELD IS REQUIRED');
 		$('#relation').focus();
 		isValid = false;
 	}
@@ -158,14 +158,14 @@ function updateRelative() {
 		data: JSON.stringify(payload),
 		success: function(response) {
 			if (response.status == "OK") {
-				alert("Relative Updated Successfully");
+				alert("RELATIVE UPDATED SUCCESSFULLY");
 				location.reload();
 			} else {
-				alert("Operation failed: " + response.message);
+				alert("OPERATION FAILED: " + response.message);
 			}
 		},
 		error: function(xhr) {
-			alert("Update failed: " + xhr.responseText);
+			alert("UPDATE FAILED: " + xhr.responseText);
 		}
 	});
 }

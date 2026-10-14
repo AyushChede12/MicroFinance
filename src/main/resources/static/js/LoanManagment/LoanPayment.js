@@ -23,11 +23,11 @@ function populateDropdown() {
 					$dropdown.append(`<option value="${id}">${id}</option>`);
 				});
 			} else {
-				console.warn("No Loan IDs found in response.");
+				console.warn("NO LOAN IDS FOUND IN RESPONSE.");
 			}
 		},
 		error: function(xhr, status, error) {
-			console.error("Error fetching Loan IDs:", error);
+			console.error("ERROR FETCHING LOAN IDS:", error);
 		}
 	});
 }
@@ -108,14 +108,15 @@ $(document).ready(function() {
 							const today = new Date().toISOString().split('T')[0];
 							$("#paymentDate").val(today);
 						}
+
 						// Automatically fetch and show penalty amount preview
 						fetchPenaltyPreview();
 					} else {
-						alert("Loan data not found.");
+						alert("LOAN DATA NOT FOUND.");
 					}
 				},
 				error: function(xhr) {
-					alert("Error fetching data: " + xhr.responseText);
+					alert("ERROR FETCHING DATA: " + xhr.responseText);
 				}
 			});
 		}
@@ -175,14 +176,14 @@ $('#paymentBtn').click(function(e) {
 
 	const loanId = $('#findByLoanId').val();
 	if (!loanId) {
-		alert("Please select a Loan ID first.");
+		alert("PLEASE SELECT A LOAN ID FIRST.");
 		$('#findByLoanId').focus();
 		return;
 	}
 
 	const paymentMode = $('#paymentMode').val();
 	if (!paymentMode) {
-		alert("Please select Mode of Disbursement (Cash or Saving Account).");
+		alert("PLEASE SELECT MODE OF DISBURSEMENT (CASH OR SAVING ACCOUNT).");
 		$('#paymentMode').focus();
 		return;
 	}
@@ -190,7 +191,7 @@ $('#paymentBtn').click(function(e) {
 	if (paymentMode === 'Saving Account') {
 		const accountNo = $('#accountNo').val();
 		if (!accountNo && !currentCustomerSavingAccount) {
-			alert("⚠️ No active Savings Account found for Member ID: " + $('#memberId').val() + ". Cannot disburse to Saving Account.");
+			alert("⚠️ NO ACTIVE SAVINGS ACCOUNT FOUND FOR MEMBER ID: " + $('#memberId').val() + ". CANNOT DISBURSE TO SAVING ACCOUNT.");
 			return;
 		}
 	}
@@ -232,21 +233,21 @@ $('#paymentBtn').click(function(e) {
 		data: JSON.stringify(paymentData),
 		success: function(response) {
 			if (response.status === "OK") {
-				alert(response.message);
+				alert(String(response.message).toUpperCase());
 
 				if (response.data && response.data.loanStatus === "CLOSED") {
-					alert("This was your last installment. The loan is now CLOSED.");
+					alert("THIS WAS YOUR LAST INSTALLMENT. THE LOAN IS NOW CLOSED.");
 					$('#paymentBtn').prop('disabled', true);
 				}
 
 				location.reload();
 			} else {
-				alert("❌ " + (response.message || "Something went wrong."));
+				alert("❌ " + (response.message ? String(response.message).toUpperCase() : "SOMETHING WENT WRONG."));
 			}
 		},
 		error: function(xhr) {
-			const errorMsg = xhr.responseJSON?.message || xhr.responseJSON?.data?.error || "Unknown error occurred";
-			alert("❌ Disbursement failed: " + errorMsg);
+			const errorMsg = xhr.responseJSON?.message || xhr.responseJSON?.data?.error || "UNKNOWN ERROR OCCURRED";
+			alert("❌ DISBURSEMENT FAILED: " + errorMsg);
 		}
 	});
 });
@@ -289,7 +290,7 @@ function fetchPenaltyPreview() {
 
 				const dueDateVal = d.dueDate || d.emiDueDate || '-';
 				$('#penaltyDueDate').val(dueDateVal);
-				$('#penaltyModeDisplay').val(d.penaltyMode || 'Flat');
+				$('#penaltyModeDisplay').val(d.penaltyMode || 'FLAT');
 				$('#penaltyAmountDisplay').val('₹ ' + penaltyAmt.toFixed(2));
 				$('#totalPayableDisplay').val('₹ ' + totalPayable.toFixed(2));
 
@@ -299,7 +300,7 @@ function fetchPenaltyPreview() {
 				if (daysLate > 0) {
 					$('#penaltyHeaderTitle').html('⚠ LATE PAYMENT PENALTY (' + daysLate + ' DAY' + (daysLate > 1 ? 'S' : '') + ' LATE)').css('color', '#e53935');
 					$('#penaltyBoxContainer').css({ 'background': '#fff8f8', 'border-color': '#ffcdd2' });
-					$('#penaltyDaysLate').val(daysLate + ' day(s) late').css({ 'color': '#c62828', 'background': '#ffebee' });
+					$('#penaltyDaysLate').val(daysLate + ' DAY(S) LATE').css({ 'color': '#c62828', 'background': '#ffebee' });
 					$('#penaltyAmountDisplay').css({ 'color': '#c62828', 'background': '#ffebee' });
 					// Flash effect for attention
 					setTimeout(function() {
@@ -311,7 +312,7 @@ function fetchPenaltyPreview() {
 				} else {
 					$('#penaltyHeaderTitle').html('✓ EMI & PENALTY STATUS (ON TIME - NO PENALTY)').css('color', '#2e7d32');
 					$('#penaltyBoxContainer').css({ 'background': '#f1f8e9', 'border-color': '#c8e6c9' });
-					$('#penaltyDaysLate').val('0 days (On Time)').css({ 'color': '#2e7d32', 'background': '#e8f5e9' });
+					$('#penaltyDaysLate').val('0 DAYS (ON TIME)').css({ 'color': '#2e7d32', 'background': '#e8f5e9' });
 					$('#penaltyAmountDisplay').css({ 'color': '#2e7d32', 'background': '#e8f5e9' });
 				}
 			} else {

@@ -62,7 +62,7 @@ public class CustomerManagementController {
 		} catch (Exception e) {
 			e.printStackTrace(); // Log to console
 			return new ResponseEntity<>(
-					ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "Error saving customer: " + e.getMessage()),
+					ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "ERROR SAVING CUSTOMER: " + e.getMessage()),
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -72,7 +72,7 @@ public class CustomerManagementController {
 
 		List<addCustomer> list = customerService.getAllCustomer();
 
-		return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Customer data fetched successfully", list));
+		return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "CUSTOMER DATA FETCHED SUCCESSFULLY", list));
 	}
 
 	// get Data by MemberCode
@@ -87,27 +87,27 @@ public class CustomerManagementController {
 	/*
 	 * @PostMapping("/saveOrUpdateCustomerKYC") public
 	 * ResponseEntity<ApiResponse<addCustomerKYC>> saveOrUpdateCustomerKYC(
-	 * 
+	 *
 	 * @ModelAttribute addCustomerKYC kyc,
-	 * 
+	 *
 	 * @RequestParam(value = "customerPhoto", required = false) MultipartFile
 	 * customerPhoto,
-	 * 
+	 *
 	 * @RequestParam(value = "customerSignature", required = false) MultipartFile
 	 * customerSignature,
-	 * 
+	 *
 	 * @RequestParam(value = "aadharFrontPhoto", required = false) MultipartFile
 	 * aadharFrontPhoto,
-	 * 
+	 *
 	 * @RequestParam(value = "aadharBackPhoto", required = false) MultipartFile
 	 * aadharBackPhoto,
-	 * 
+	 *
 	 * @RequestParam(value = "panPhoto", required = false) MultipartFile panPhoto) {
-	 * 
+	 *
 	 * ApiResponse<addCustomerKYC> response =
 	 * customerService.saveOrUpdateCustomerKYC( kyc, customerPhoto,
 	 * customerSignature, aadharFrontPhoto, aadharBackPhoto, panPhoto);
-	 * 
+	 *
 	 * return new ResponseEntity<>(response, response.getStatus()); }
 	 */
 
@@ -122,7 +122,7 @@ public class CustomerManagementController {
 
 		if (!optionalCustomer.isPresent()) {
 			response.put("isVerified", false);
-			response.put("message", "Customer not found!");
+			response.put("message", "CUSTOMER NOT FOUND!");
 			return ResponseEntity.ok(response);
 		}
 
@@ -130,7 +130,7 @@ public class CustomerManagementController {
 
 		if (customer.isVerified()) {
 			response.put("isVerified", true);
-			response.put("message", "This customer is already verified!");
+			response.put("message", "THIS CUSTOMER IS ALREADY VERIFIED!");
 			return ResponseEntity.ok(response);
 		}
 
@@ -151,13 +151,13 @@ public class CustomerManagementController {
 
 		if (!isVerified) {
 			response.put("isVerified", false);
-			response.put("message", "Verification failed. Missing fields: " + missingFields.toString());
+			response.put("message", "VERIFICATION FAILED. MISSING FIELDS: " + missingFields.toString());
 		} else {
 			customer.setVerified(true);
 			customerRepo.save(customer);
 
 			response.put("isVerified", true);
-			response.put("message", "Verification successful!");
+			response.put("message", "VERIFICATION SUCCESSFUL!");
 		}
 
 		return ResponseEntity.ok(response);
@@ -168,7 +168,7 @@ public class CustomerManagementController {
 		List<addCustomer> customers = customerService.getApprovedCustomers();
 
 		ApiResponse<List<addCustomer>> response = ApiResponse.success(HttpStatus.OK,
-				"Approved customers fetched successfully.", customers);
+				"APPROVED CUSTOMERS FETCHED SUCCESSFULLY.", customers);
 
 		return ResponseEntity.ok(response);
 	}
@@ -180,7 +180,7 @@ public class CustomerManagementController {
 		try {
 			return ResponseEntity.ok(customerService.saveOrUpdateCustomerImage(customerId, fieldName, file));
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Upload failed: " + e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("UPLOAD FAILED: " + e.getMessage());
 		}
 	}
 
@@ -195,9 +195,9 @@ public class CustomerManagementController {
 	public ResponseEntity<?> deleteCustomerImage(@PathVariable String id) {
 		boolean deleted = customerService.deleteCustomerImage(id);
 		if (!deleted) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Image not found");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("IMAGE NOT FOUND");
 		}
-		return ResponseEntity.ok("Image deleted successfully");
+		return ResponseEntity.ok("IMAGE DELETED SUCCESSFULLY");
 	}
 
 }

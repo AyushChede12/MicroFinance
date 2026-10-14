@@ -48,7 +48,7 @@ $(document).ready(function() {
 				}
 			},
 			error: function(err) {
-				alert("err");
+				alert("ERR");
 			}
 		});
 	}
@@ -64,11 +64,11 @@ $(document).ready(function() {
 
 					$("#relationToApplicant")
 						.empty()
-						.append("<option value=''>-- SELECT RELATIVE --</option>");
+						.append("<option value=''>-- SELECT RELATION --</option>");
 
 					$("#familyRelation")
 						.empty()
-						.append("<option value=''>-- SELECT RELATIVE --</option>");
+						.append("<option value=''>-- SELECT RELATION --</option>");
 
 					list.forEach(r => {
 						const option =
