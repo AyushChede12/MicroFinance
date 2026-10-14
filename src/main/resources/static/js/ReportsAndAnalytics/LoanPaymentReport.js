@@ -23,11 +23,11 @@ $(document).ready(function() {
 				// ✅ Render full table initially
 				renderTable(allPaymentData);
 			} else {
-				$(".datatable tbody").html("<tr><td colspan='10'>No LoanPayment found.</td></tr>");
+				$(".datatable tbody").html("<tr><td colspan='10'>NO LOAN PAYMENT FOUND.</td></tr>");
 			}
 		},
 		error: function() {
-			alert("Error while fetching loan payment.");
+			alert("ERROR WHILE FETCHING LOAN PAYMENT.");
 		}
 	});
 
@@ -40,7 +40,7 @@ $(document).ready(function() {
 		const toDate = $('#toDate').val();
 
 		if (!fromDate || !toDate) {
-			alert("Please select both From and To dates.");
+			alert("PLEASE SELECT BOTH FROM AND TO DATES.");
 			return;
 		}
 
@@ -62,7 +62,7 @@ $(document).ready(function() {
 		tableBody.empty();
 
 		if (!data.length) {
-			tableBody.append("<tr><td colspan='10'>No matching Loan Applications found.</td></tr>");
+			tableBody.append("<tr><td colspan='10'>NO MATCHING LOAN APPLICATIONS FOUND.</td></tr>");
 			return;
 		}
 
@@ -93,60 +93,60 @@ $(document).ready(function() {
 
 			if (selectedPolicy) {
 				let html = `
-					<h4 class="text-center mb-4">Loan Payment Full Details</h4>
+					<h4 class="text-center mb-4">LOAN PAYMENT FULL DETAILS</h4>
 
 					<table class="table table-bordered table-striped">
 						<tr>
-							<th>Field</th>
-							<th>Details</th>
+							<th>FIELD</th>
+							<th>DETAILS</th>
 						</tr>
 
-						<tr><td>Loan ID</td><td>${selectedPolicy.loanId || ''}</td></tr>
-						<tr><td>Loan Date</td><td>${selectedPolicy.loanDate || ''}</td></tr>
-						<tr><td>Member ID</td><td>${selectedPolicy.memberId || ''}</td></tr>
-						<tr><td>Relative Details</td><td>${selectedPolicy.relativeDetails || ''}</td></tr>
-						<tr><td>Date of Birth</td><td>${selectedPolicy.dateOfBirth || ''}</td></tr>
-						<tr><td>Age</td><td>${selectedPolicy.age || ''}</td></tr>
-						<tr><td>Contact No</td><td>${selectedPolicy.contactNo || ''}</td></tr>
-						<tr><td>Message Status</td><td>${selectedPolicy.messageStatus || ''}</td></tr>
-						<tr><td>Address</td><td>${selectedPolicy.address || ''}</td></tr>
-						<tr><td>Pin Code</td><td>${selectedPolicy.pinCode || ''}</td></tr>
-						<tr><td>Branch Name</td><td>${selectedPolicy.branchName || ''}</td></tr>
+						<tr><td>LOAN ID</td><td>${selectedPolicy.loanId || ''}</td></tr>
+						<tr><td>LOAN DATE</td><td>${selectedPolicy.loanDate || ''}</td></tr>
+						<tr><td>MEMBER ID</td><td>${selectedPolicy.memberId || ''}</td></tr>
+						<tr><td>RELATIVE DETAILS</td><td>${selectedPolicy.relativeDetails || ''}</td></tr>
+						<tr><td>DATE OF BIRTH</td><td>${selectedPolicy.dateOfBirth || ''}</td></tr>
+						<tr><td>AGE</td><td>${selectedPolicy.age || ''}</td></tr>
+						<tr><td>CONTACT NO</td><td>${selectedPolicy.contactNo || ''}</td></tr>
+						<tr><td>MESSAGE STATUS</td><td>${selectedPolicy.messageStatus || ''}</td></tr>
+						<tr><td>ADDRESS</td><td>${selectedPolicy.address || ''}</td></tr>
+						<tr><td>PIN CODE</td><td>${selectedPolicy.pinCode || ''}</td></tr>
+						<tr><td>BRANCH NAME</td><td>${selectedPolicy.branchName || ''}</td></tr>
 
-						<tr><td>Loan Plan Name</td><td>${selectedPolicy.loanPlanName || ''}</td></tr>
-						<tr><td>Type Of Loan</td><td>${selectedPolicy.typeOfLoan || ''}</td></tr>
-						<tr><td>Loan Mode</td><td>${selectedPolicy.loanMode || ''}</td></tr>
-						<tr><td>Loan Term</td><td>${selectedPolicy.loanTerm || ''}</td></tr>
-						<tr><td>Rate Of Interest</td><td>${selectedPolicy.rateOfInterest || ''}</td></tr>
-						<tr><td>Loan Amount</td><td>${selectedPolicy.loanAmount || ''}</td></tr>
-						<tr><td>Interest Type</td><td>${selectedPolicy.interestType || ''}</td></tr>
-						<tr><td>EMI Payment</td><td>${selectedPolicy.emiPayment || ''}</td></tr>
+						<tr><td>LOAN PLAN NAME</td><td>${selectedPolicy.loanPlanName || ''}</td></tr>
+						<tr><td>TYPE OF LOAN</td><td>${selectedPolicy.typeOfLoan || ''}</td></tr>
+						<tr><td>LOAN MODE</td><td>${selectedPolicy.loanMode || ''}</td></tr>
+						<tr><td>LOAN TERM</td><td>${selectedPolicy.loanTerm || ''}</td></tr>
+						<tr><td>RATE OF INTEREST</td><td>${selectedPolicy.rateOfInterest || ''}</td></tr>
+						<tr><td>LOAN AMOUNT</td><td>${selectedPolicy.loanAmount || ''}</td></tr>
+						<tr><td>INTEREST TYPE</td><td>${selectedPolicy.interestType || ''}</td></tr>
+						<tr><td>EMI PAYMENT</td><td>${selectedPolicy.emiPayment || ''}</td></tr>
 
-						<tr><td>Guarantor Member ID</td><td>${selectedPolicy.guarantorMemberId || ''}</td></tr>
-						<tr><td>Guarantor Identity</td><td>${selectedPolicy.guarantorIdentity || ''}</td></tr>
-						<tr><td>Guarantor Address</td><td>${selectedPolicy.guarantorAddress || ''}</td></tr>
-						<tr><td>Guarantor Contact</td><td>${selectedPolicy.guarantorContactNo || ''}</td></tr>
+						<tr><td>GUARANTOR MEMBER ID</td><td>${selectedPolicy.guarantorMemberId || ''}</td></tr>
+						<tr><td>GUARANTOR IDENTITY</td><td>${selectedPolicy.guarantorIdentity || ''}</td></tr>
+						<tr><td>GUARANTOR ADDRESS</td><td>${selectedPolicy.guarantorAddress || ''}</td></tr>
+						<tr><td>GUARANTOR CONTACT</td><td>${selectedPolicy.guarantorContactNo || ''}</td></tr>
 
-						<tr><td>Co-Applicant Member ID</td><td>${selectedPolicy.coApplicantMemberId || ''}</td></tr>
-						<tr><td>Co-Applicant Identity</td><td>${selectedPolicy.coApplicantIdentity || ''}</td></tr>
-						<tr><td>Co-Applicant Address</td><td>${selectedPolicy.coApplicantAddress || ''}</td></tr>
+						<tr><td>CO-APPLICANT MEMBER ID</td><td>${selectedPolicy.coApplicantMemberId || ''}</td></tr>
+						<tr><td>CO-APPLICANT IDENTITY</td><td>${selectedPolicy.coApplicantIdentity || ''}</td></tr>
+						<tr><td>CO-APPLICANT ADDRESS</td><td>${selectedPolicy.coApplicantAddress || ''}</td></tr>
 
-						<tr><td>Processing Fee</td><td>${selectedPolicy.processingFee || ''}</td></tr>
-						<tr><td>Legal Charges</td><td>${selectedPolicy.legalCharges || ''}</td></tr>
+						<tr><td>PROCESSING FEE</td><td>${selectedPolicy.processingFee || ''}</td></tr>
+						<tr><td>LEGAL CHARGES</td><td>${selectedPolicy.legalCharges || ''}</td></tr>
 						<tr><td>GST</td><td>${selectedPolicy.gst || ''}</td></tr>
 
-						<tr><td>Financial Consultant</td><td>${selectedPolicy.financialConsultantName || ''}</td></tr>
+						<tr><td>FINANCIAL CONSULTANT</td><td>${selectedPolicy.financialConsultantName || ''}</td></tr>
 
-						<tr><td>Payment Date</td><td>${selectedPolicy.paymentDate || ''}</td></tr>
-						<tr><td>Payment Status</td><td>${selectedPolicy.paymentStatus || ''}</td></tr>
-						<tr><td>Payment Mode</td><td>${selectedPolicy.paymentMode || ''}</td></tr>
+						<tr><td>PAYMENT DATE</td><td>${selectedPolicy.paymentDate || ''}</td></tr>
+						<tr><td>PAYMENT STATUS</td><td>${selectedPolicy.paymentStatus || ''}</td></tr>
+						<tr><td>PAYMENT MODE</td><td>${selectedPolicy.paymentMode || ''}</td></tr>
 
-						<tr><td>Account No</td><td>${selectedPolicy.accountNo || ''}</td></tr>
-						<tr><td>UPI Ref</td><td>${selectedPolicy.ref_UpiId || ''}</td></tr>
+						<tr><td>ACCOUNT NO</td><td>${selectedPolicy.accountNo || ''}</td></tr>
+						<tr><td>UPI REF</td><td>${selectedPolicy.ref_UpiId || ''}</td></tr>
 
-						<tr><td>Remarks</td><td>${selectedPolicy.remarks || ''}</td></tr>
-						<tr><td>Cheque Date</td><td>${selectedPolicy.chequeDate || ''}</td></tr>
-						<tr><td>Cheque No</td><td>${selectedPolicy.chequeNo || ''}</td></tr>
+						<tr><td>REMARKS</td><td>${selectedPolicy.remarks || ''}</td></tr>
+						<tr><td>CHEQUE DATE</td><td>${selectedPolicy.chequeDate || ''}</td></tr>
+						<tr><td>CHEQUE NO</td><td>${selectedPolicy.chequeNo || ''}</td></tr>
 
 					</table>
 				`;
@@ -165,7 +165,7 @@ $(document).ready(function() {
 	}
 
 	// ✅ 4. Print modal data
-	$(document).off("click", "#printBtn").on("click", "#printBtn", function () {
+	$(document).off("click", "#printBtn").on("click", "#printBtn", function() {
 
 		const content = document.getElementById("modalDataContainer").innerHTML;
 
@@ -174,7 +174,7 @@ $(document).ready(function() {
 		printWindow.document.write(`
 		<html>
 		<head>
-		<title>Loan Payment Report</title>
+		<title>LOAN PAYMENT REPORT</title>
 
 		<style>
 
@@ -248,16 +248,16 @@ $(document).ready(function() {
 			<h2>CO OPERATIVE SOCIETY LTD NAGPUR</h2>
 			<p>PLOT NO 497 NEW NANDANWAN</p>
 			<p>MAHARASHTRA - 440024</p>
-			<p>Helpline : 9566200223</p>
+			<p>HELPLINE : 9566200223</p>
 		</div>
 
-		<div class="title">Loan Payment Details</div>
+		<div class="title">LOAN PAYMENT DETAILS</div>
 
 		${content}
 
 		<div class="signArea">
-			<div class="sign">Customer Signature</div>
-			<div class="sign">Manager Signature</div>
+			<div class="sign">CUSTOMER SIGNATURE</div>
+			<div class="sign">MANAGER SIGNATURE</div>
 		</div>
 
 		</body>
@@ -269,4 +269,4 @@ $(document).ready(function() {
 		printWindow.print();
 
 	});
-	});
+});

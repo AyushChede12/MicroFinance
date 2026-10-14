@@ -1,11 +1,11 @@
-$(document).ready(function () {
+$(document).ready(function() {
 	let allApprovedData = [];
 
 	// ✅ 1. Fetch all approved loan applications on page load
 	$.ajax({
 		url: "api/datacorrection/fetchAllApprovedLoanApplications",
 		method: "GET",
-		success: function (response) {
+		success: function(response) {
 			console.log("API Response:", response);
 
 			if (response && response.data && Array.isArray(response.data)) {
@@ -23,16 +23,16 @@ $(document).ready(function () {
 				// ✅ Render full table initially
 				renderTable(allApprovedData);
 			} else {
-				$(".datatable tbody").html("<tr><td colspan='10'>No approved loans found.</td></tr>");
+				$(".datatable tbody").html("<tr><td colspan='10'>NO APPROVED LOANS FOUND.</td></tr>");
 			}
 		},
-		error: function () {
-			alert("Error while fetching loan data.");
+		error: function() {
+			alert("ERROR WHILE FETCHING LOAN DATA.");
 		}
 	});
 
 	// ✅ 2. Filter on Find button click
-	$('#findBtn').click(function (e) {
+	$('#findBtn').click(function(e) {
 		e.preventDefault();
 
 		const selectedBranch = $('#branchName1').val();
@@ -40,7 +40,7 @@ $(document).ready(function () {
 		const toDate = $('#toDate').val();
 
 		if (!fromDate || !toDate) {
-			alert("Please select both From and To dates.");
+			alert("PLEASE SELECT BOTH FROM AND TO DATES.");
 			return;
 		}
 
@@ -62,7 +62,7 @@ $(document).ready(function () {
 		tableBody.empty();
 
 		if (!data.length) {
-			tableBody.append("<tr><td colspan='10'>No matching Loan Applications found.</td></tr>");
+			tableBody.append("<tr><td colspan='10'>NO MATCHING LOAN APPLICATIONS FOUND.</td></tr>");
 			return;
 		}
 
@@ -77,7 +77,7 @@ $(document).ready(function () {
 					<td>${loan.loanAmount || ''}</td>
 					<td>${loan.contactNo || ''}</td>
 					<td>${loan.branchName || ''}</td>
-					<td>${loan.approvalStatus ? 'Yes' : 'No'}</td>
+					<td>${loan.approvalStatus ? 'YES' : 'NO'}</td>
 					<td>
 						<button class="iconbutton printPopupBtn" data-id="${loan.id}" data-bs-toggle="modal" data-bs-target="#printModal">
 							<i class="bi bi-printer" style="color: green;"></i>
@@ -89,47 +89,47 @@ $(document).ready(function () {
 		});
 
 		// ✅ Handle print popup
-		$(".printPopupBtn").click(function () {
+		$(".printPopupBtn").click(function() {
 			const id = $(this).data("id");
 			const selectedPolicy = allApprovedData.find(p => p.id === id);
 
 			if (selectedPolicy) {
 				let html = `
-					<h4 class="text-center mb-4">Loan Application Full Details</h4>
+					<h4 class="text-center mb-4">LOAN APPLICATION FULL DETAILS</h4>
 
 					<table class="table table-bordered">
-						<tr><th>Field</th><th>Details</th></tr>
+						<tr><th>FIELD</th><th>DETAILS</th></tr>
 
-						<tr><td>Loan ID</td><td>${selectedPolicy.loanId || ''}</td></tr>
-						<tr><td>Loan Date</td><td>${selectedPolicy.loanDate || ''}</td></tr>
-						<tr><td>Member ID</td><td>${selectedPolicy.memberId || ''}</td></tr>
-						<tr><td>Relative Details</td><td>${selectedPolicy.relativeDetails || ''}</td></tr>
-						<tr><td>Date of Birth</td><td>${selectedPolicy.dateOfBirth || ''}</td></tr>
-						<tr><td>Age</td><td>${selectedPolicy.age || ''}</td></tr>
-						<tr><td>Contact No</td><td>${selectedPolicy.contactNo || ''}</td></tr>
-						<tr><td>Address</td><td>${selectedPolicy.address || ''}</td></tr>
-						<tr><td>Pin Code</td><td>${selectedPolicy.pinCode || ''}</td></tr>
-						<tr><td>Branch Name</td><td>${selectedPolicy.branchName || ''}</td></tr>
+						<tr><td>LOAN ID</td><td>${selectedPolicy.loanId || ''}</td></tr>
+						<tr><td>LOAN DATE</td><td>${selectedPolicy.loanDate || ''}</td></tr>
+						<tr><td>MEMBER ID</td><td>${selectedPolicy.memberId || ''}</td></tr>
+						<tr><td>RELATIVE DETAILS</td><td>${selectedPolicy.relativeDetails || ''}</td></tr>
+						<tr><td>DATE OF BIRTH</td><td>${selectedPolicy.dateOfBirth || ''}</td></tr>
+						<tr><td>AGE</td><td>${selectedPolicy.age || ''}</td></tr>
+						<tr><td>CONTACT NO</td><td>${selectedPolicy.contactNo || ''}</td></tr>
+						<tr><td>ADDRESS</td><td>${selectedPolicy.address || ''}</td></tr>
+						<tr><td>PIN CODE</td><td>${selectedPolicy.pinCode || ''}</td></tr>
+						<tr><td>BRANCH NAME</td><td>${selectedPolicy.branchName || ''}</td></tr>
 
-						<tr><td>Loan Plan Name</td><td>${selectedPolicy.loanPlanName || ''}</td></tr>
-						<tr><td>Type Of Loan</td><td>${selectedPolicy.typeOfLoan || ''}</td></tr>
-						<tr><td>Loan Mode</td><td>${selectedPolicy.loanMode || ''}</td></tr>
-						<tr><td>Loan Term</td><td>${selectedPolicy.loanTerm || ''}</td></tr>
-						<tr><td>Rate Of Interest</td><td>${selectedPolicy.rateOfInterest || ''}</td></tr>
-						<tr><td>Loan Amount</td><td>${selectedPolicy.loanAmount || ''}</td></tr>
-						<tr><td>Interest Type</td><td>${selectedPolicy.interestType || ''}</td></tr>
-						<tr><td>EMI Payment</td><td>${selectedPolicy.emiPayment || ''}</td></tr>
+						<tr><td>LOAN PLAN NAME</td><td>${selectedPolicy.loanPlanName || ''}</td></tr>
+						<tr><td>TYPE OF LOAN</td><td>${selectedPolicy.typeOfLoan || ''}</td></tr>
+						<tr><td>LOAN MODE</td><td>${selectedPolicy.loanMode || ''}</td></tr>
+						<tr><td>LOAN TERM</td><td>${selectedPolicy.loanTerm || ''}</td></tr>
+						<tr><td>RATE OF INTEREST</td><td>${selectedPolicy.rateOfInterest || ''}</td></tr>
+						<tr><td>LOAN AMOUNT</td><td>${selectedPolicy.loanAmount || ''}</td></tr>
+						<tr><td>INTEREST TYPE</td><td>${selectedPolicy.interestType || ''}</td></tr>
+						<tr><td>EMI PAYMENT</td><td>${selectedPolicy.emiPayment || ''}</td></tr>
 
-						<tr><td>Approval Date</td><td>${selectedPolicy.approvalDate || ''}</td></tr>
-						<tr><td>Approval Status</td><td>${selectedPolicy.approvalStatus ? "Yes" : "No"}</td></tr>
+						<tr><td>APPROVAL DATE</td><td>${selectedPolicy.approvalDate || ''}</td></tr>
+						<tr><td>APPROVAL STATUS</td><td>${selectedPolicy.approvalStatus ? "YES" : "NO"}</td></tr>
 
-						<tr><td>Payment Mode</td><td>${selectedPolicy.paymentMode || ''}</td></tr>
-						<tr><td>Account No</td><td>${selectedPolicy.accountNo || ''}</td></tr>
-						<tr><td>Ref/UPI ID</td><td>${selectedPolicy.ref_UpiId || ''}</td></tr>
-						<tr><td>Remarks</td><td>${selectedPolicy.remarks || ''}</td></tr>
+						<tr><td>PAYMENT MODE</td><td>${selectedPolicy.paymentMode || ''}</td></tr>
+						<tr><td>ACCOUNT NO</td><td>${selectedPolicy.accountNo || ''}</td></tr>
+						<tr><td>REF/UPI ID</td><td>${selectedPolicy.ref_UpiId || ''}</td></tr>
+						<tr><td>REMARKS</td><td>${selectedPolicy.remarks || ''}</td></tr>
 
-						<tr><td>Cheque Date</td><td>${selectedPolicy.chequeDate || ''}</td></tr>
-						<tr><td>Cheque No</td><td>${selectedPolicy.chequeNo || ''}</td></tr>
+						<tr><td>CHEQUE DATE</td><td>${selectedPolicy.chequeDate || ''}</td></tr>
+						<tr><td>CHEQUE NO</td><td>${selectedPolicy.chequeNo || ''}</td></tr>
 
 					</table>
 				`;
@@ -148,14 +148,14 @@ $(document).ready(function () {
 	}
 
 	// ✅ 4. Print modal data
-	$("#printBtn").click(function () {
+	$("#printBtn").click(function() {
 		const content = document.getElementById("modalDataContainer").innerHTML;
 		const printWindow = window.open('', '', 'width=900,height=700');
 
 		printWindow.document.write(`
 			<html>
 			<head>
-				<title>Print</title>
+				<title>PRINT</title>
 				<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 				<style>
 					body { font-family: Arial; padding: 30px; background: #fff; color: #000; }
@@ -167,7 +167,7 @@ $(document).ready(function () {
 			</head>
 			<body>
 				<div class="print-container">
-					<div class="heading">Loan Application Full Details</div>
+					<div class="heading">LOAN APPLICATION FULL DETAILS</div>
 					${content}
 				</div>
 			</body>
@@ -180,7 +180,7 @@ $(document).ready(function () {
 	});
 
 	// ✅ 5. Download as PDF
-	$("#downloadBtn").click(function () {
+	$("#downloadBtn").click(function() {
 		const { jsPDF } = window.jspdf;
 		const doc = new jsPDF({
 			orientation: "portrait",
@@ -190,7 +190,7 @@ $(document).ready(function () {
 		const content = document.getElementById("modalDataContainer");
 
 		doc.html(content, {
-			callback: function (doc) {
+			callback: function(doc) {
 				doc.save("LoanApplicationDetails.pdf");
 			},
 			x: 10,
@@ -200,7 +200,7 @@ $(document).ready(function () {
 		});
 	});
 });
-$("#printBtn").click(function () {
+$("#printBtn").click(function() {
 
 	const selectedPolicyHTML = document.getElementById("modalDataContainer").innerHTML;
 
@@ -210,7 +210,7 @@ $("#printBtn").click(function () {
 
 <html>
 <head>
-<title>Loan Application Report</title>
+<title>LOAN APPLICATION REPORT</title>
 
 <style>
 
@@ -303,7 +303,7 @@ MAHARASHTRA - 440024
 </div>
 
 <div class="address">
-Helpline : 9566200223
+HELPLINE : 9566200223
 </div>
 
 </div>
@@ -315,7 +315,7 @@ LOAN APPLICATION REPORT
 </div>
 
 
-<div class="section">Application Details</div>
+<div class="section">APPLICATION DETAILS</div>
 
 ${selectedPolicyHTML}
 
@@ -323,13 +323,13 @@ ${selectedPolicyHTML}
 <div class="footer">
 
 <div class="sign">
-____________________  
-Branch Manager
+______________________ 
+BRANCH MANAGER
 </div>
 
 <div class="sign">
-____________________  
-Authorized Signatory
+______________________ 
+AUTHORIZED SIGNATORY
 </div>
 
 </div>

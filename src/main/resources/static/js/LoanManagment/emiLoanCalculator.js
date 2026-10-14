@@ -20,8 +20,8 @@ function calculateEMI() {
 	// ==============================
 	// ✅ REGEX PATTERNS
 	// ==============================
-	const numberPattern = /^[0-9]+(\.[0-9]{1,2})?$/;  // 100 or 100.50
-	const intPattern = /^[0-9]+$/; // only integer
+	const numberPattern = /^[0-9]+(\.[0-9]{1,2})?$/;  // 100 OR 100.50
+	const intPattern = /^[0-9]+$/; // ONLY INTEGER
 
 	// ==============================
 	// ✅ VALIDATIONS (FIELD BY FIELD)
@@ -29,67 +29,67 @@ function calculateEMI() {
 
 	// ✅ 1. INTEREST TYPE
 	if (roitype === "") {
-		$("#chkemiloandetails").text("* Please select Interest Type");
+		$("#chkemiloandetails").text("* PLEASE SELECT INTEREST TYPE");
 		$("#intrestType").focus();
 		isValid = false;
 	}
 
 	// ✅ 2. LOAN AMOUNT
 	if ($("#loanAmount").val().trim() === "") {
-		$("#chkloanamount").text("* Loan Amount is required");
+		$("#chkloanamount").text("* LOAN AMOUNT IS REQUIRED");
 		if (isValid) $("#loanAmount").focus();
 		isValid = false;
 	} else if (!numberPattern.test($("#loanAmount").val().trim())) {
-		$("#chkloanamount").text("* Loan Amount must be numeric (example: 50000)");
+		$("#chkloanamount").text("* LOAN AMOUNT MUST BE NUMERIC (EXAMPLE: 50000)");
 		if (isValid) $("#loanAmount").focus();
 		isValid = false;
 	} else if (loanamount <= 0) {
-		$("#chkloanamount").text("* Loan Amount must be greater than 0");
+		$("#chkloanamount").text("* LOAN AMOUNT MUST BE GREATER THAN 0");
 		if (isValid) $("#loanAmount").focus();
 		isValid = false;
 	}
 
 	// ✅ 3. YEARLY INTEREST
 	if ($("#yearlyIntrest").val().trim() === "") {
-		$("#chkyearlyinterest").text("* Yearly Interest is required");
+		$("#chkyearlyinterest").text("* YEARLY INTEREST IS REQUIRED");
 		if (isValid) $("#yearlyIntrest").focus();
 		isValid = false;
 	} else if (!numberPattern.test($("#yearlyIntrest").val().trim())) {
-		$("#chkyearlyinterest").text("* Yearly Interest must be numeric (example: 12)");
+		$("#chkyearlyinterest").text("* YEARLY INTEREST MUST BE NUMERIC (EXAMPLE: 12)");
 		if (isValid) $("#yearlyIntrest").focus();
 		isValid = false;
 	} else if (interestinyear <= 0) {
-		$("#chkyearlyinterest").text("* Interest must be greater than 0");
+		$("#chkyearlyinterest").text("* INTEREST MUST BE GREATER THAN 0");
 		if (isValid) $("#yearlyIntrest").focus();
 		isValid = false;
 	} else if (interestinyear > 36) {
-		$("#chkyearlyinterest").text("* Interest should be between 1% and 36%");
+		$("#chkyearlyinterest").text("* INTEREST SHOULD BE BETWEEN 1% AND 36%");
 		if (isValid) $("#yearlyIntrest").focus();
 		isValid = false;
 	}
 
 	// ✅ 4. INTEREST MODE
 	if (emicollection === "") {
-		$("#chkinterestmode").text("* Please select Interest Mode");
+		$("#chkinterestmode").text("* PLEASE SELECT INTEREST MODE");
 		if (isValid) $("#interestModeCalculater").focus();
 		isValid = false;
 	}
 
 	// ✅ 5. MONTHLY TERM
 	if ($("#monthlyTerm").val().trim() === "") {
-		$("#chkmonthlyterm").text("* Monthly Term is required");
+		$("#chkmonthlyterm").text("* MONTHLY TERM IS REQUIRED");
 		if (isValid) $("#monthlyTerm").focus();
 		isValid = false;
 	} else if (!intPattern.test($("#monthlyTerm").val().trim())) {
-		$("#chkmonthlyterm").text("* Monthly Term must be in number (example: 12)");
+		$("#chkmonthlyterm").text("* MONTHLY TERM MUST BE IN NUMBER (EXAMPLE: 12)");
 		if (isValid) $("#monthlyTerm").focus();
 		isValid = false;
 	} else if (tensure <= 0) {
-		$("#chkmonthlyterm").text("* Monthly Term must be greater than 0");
+		$("#chkmonthlyterm").text("* MONTHLY TERM MUST BE GREATER THAN 0");
 		if (isValid) $("#monthlyTerm").focus();
 		isValid = false;
 	} else if (tensure > 600) {
-		$("#chkmonthlyterm").text("* Monthly Term cannot be more than 600");
+		$("#chkmonthlyterm").text("* MONTHLY TERM CANNOT BE MORE THAN 600");
 		if (isValid) $("#monthlyTerm").focus();
 		isValid = false;
 	}
@@ -105,7 +105,7 @@ function calculateEMI() {
 	// ==============================
 	// ✅ EMI CALCULATION
 	// ==============================
-	//const periods = tensure; // ✅ term fixed
+	//const periods = tensure; // ✅ TERM FIXED
 	//let periodicRate;
 
 	//switch (emicollection) {
@@ -125,7 +125,7 @@ function calculateEMI() {
 	//  periodicRate = interestinyear / 4 / 100;
 	//break;
 	//default:
-	//  $("#chkinterestmode").text("* Invalid Interest Mode Selected");
+	//  $("#chkinterestmode").text("* INVALID INTEREST MODE SELECTED");
 	//return false;
 	// }
 	let periods;
@@ -134,17 +134,17 @@ function calculateEMI() {
 	switch (emicollection) {
 
 		case "Daily":
-			periods = tensure * 30; // months -> days approximation
+			periods = tensure * 30; // MONTHS -> DAYS APPROXIMATION
 			periodicRate = interestinyear / 365 / 100;
 			break;
 
 		case "Weekly":
-			periods = tensure * 4; // months -> weeks approximation
+			periods = tensure * 4; // MONTHS -> WEEKS APPROXIMATION
 			periodicRate = interestinyear / 52 / 100;
 			break;
 
 		case "Fortnightly":
-			periods = tensure * 2; // months -> fortnight
+			periods = tensure * 2; // MONTHS -> FORTNIGHT
 			periodicRate = interestinyear / 24 / 100;
 			break;
 
@@ -159,7 +159,7 @@ function calculateEMI() {
 			break;
 
 		default:
-			$("#chkinterestmode").text("* Invalid Interest Mode");
+			$("#chkinterestmode").text("* INVALID INTEREST MODE");
 			return false;
 	}
 
@@ -282,7 +282,7 @@ function calculateEMI() {
 }
 
 
-// ✅ Helper: Format row
+// ✅ HELPER: FORMAT ROW
 function buildRow(m, dateObj, installment, principalComponent, interestComponent, closingPrincipal) {
 	const day = String(dateObj.getDate()).padStart(2, '0');
 	const month = String(dateObj.getMonth() + 1).padStart(2, '0');
@@ -301,7 +301,7 @@ function buildRow(m, dateObj, installment, principalComponent, interestComponent
 }
 
 
-// ✅ Helper: Increment date
+// ✅ HELPER: INCREMENT DATE
 function incrementDate(date, mode) {
 	const newDate = new Date(date);
 	if (mode === "Daily") newDate.setDate(newDate.getDate() + 1);

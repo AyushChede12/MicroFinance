@@ -26,7 +26,7 @@ function loadBranchDropdown() {
 			$("#branchName").html(options);
 		},
 		error: function() {
-			alert("Failed to load branch names.");
+			alert("FAILED TO LOAD BRANCH NAMES.");
 		}
 	});
 }
@@ -35,10 +35,10 @@ function loadBranchDropdown() {
 // 🔹 Load Voucher Type Dropdown
 function loadVoucherTypeDropdown() {
 	const voucherTypes = [
-		"Payment",
-		"Receipt",
-		"Contra",
-		"Manual Journal"
+		"PAYMENT",
+		"RECEIPT",
+		"CONTRA",
+		"MANUAL JOURNAL"
 	];
 	let options = "<option value=''>--SELECT TYPE--</option>";
 	voucherTypes.forEach(type => {
@@ -57,7 +57,7 @@ function fetchJournalEntryReport() {
 
 	// ✅ Validation
 	if (!branch || !voucherType || !startDate || !endDate) {
-		alert("Please fill all required fields.");
+		alert("PLEASE FILL ALL REQUIRED FIELDS.");
 		return;
 	}
 
@@ -79,7 +79,7 @@ function fetchJournalEntryReport() {
 
 			// No records
 			if (entries.length === 0) {
-				tbody.append(`<tr><td colspan="6" class="text-center">No records found</td></tr>`);
+				tbody.append(`<tr><td colspan="6" class="text-center">NO RECORDS FOUND</td></tr>`);
 				return;
 			}
 
@@ -123,13 +123,13 @@ function fetchJournalEntryReport() {
 			}
 			$("#summaryInfo").html(`
                 <strong>BRANCH:</strong> ${branch} |
-                <strong>REPORT PERIOD:</strong> ${startDate} to ${endDate} |
+                <strong>REPORT PERIOD:</strong> ${startDate} TO ${endDate} |
                 <strong>TOTAL DEBIT:</strong> ₹${Number(totalDebit).toLocaleString('en-IN', { minimumFractionDigits: 2 })} |
                 <strong>TOTAL CREDIT:</strong> ₹${Number(totalCredit).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
             `);
 		},
 		error: function(xhr) {
-			alert("Failed to load Journal Entry Report.");
+			alert("FAILED TO LOAD JOURNAL ENTRY REPORT.");
 			console.error(xhr.responseText);
 		}
 	});

@@ -37,64 +37,64 @@ $(document).ready(function() {
 
 		// Validation: Financial Year Name
 		if (branchCode === '') {
-			$('#chkbranchcode').text('* This field is required');
+			$('#chkbranchcode').text('* THIS FIELD IS REQUIRED');
 			$('#branchCode').focus();
 			isValid = false;
 		}
 
 		if (branchName === '') {
-			$('#chkbranchName').text('* This field is required');
+			$('#chkbranchName').text('* THIS FIELD IS REQUIRED');
 			$('#branchName').focus();
 			isValid = false;
 		}
 
 		if (openingDate === '') {
-			$('#chkopeningdate').text('* This field is required');
+			$('#chkopeningdate').text('* THIS FIELD IS REQUIRED');
 			$('#openingDate').focus();
 			isValid = false;
 		}
 
 		if (address === '') {
-			$('#chkaddress').text('* This field is required');
+			$('#chkaddress').text('* THIS FIELD IS REQUIRED');
 			$('#address').focus();
 			isValid = false;
 		}
 
 		if (pin === '') {
-			$('#chkpin').text('* This field is required');
+			$('#chkpin').text('* THIS FIELD IS REQUIRED');
 			$('#pin').focus();
 			isValid = false;
 		}
 		else if (!pinPattern.test(pin)) {
-			alert("Please enter a valid 6-digit PIN code (first digit cannot be 0).");
+			alert("PLEASE ENTER A VALID 6-DIGIT PIN CODE (FIRST DIGIT CANNOT BE 0).");
 			pin.focus();
 			isValid = false;
 		}
 
 		if (state === '') {
-			$('#chkstate').text('* This field is required');
+			$('#chkstate').text('* THIS FIELD IS REQUIRED');
 			$('#state').focus();
 			isValid = false;
 		}
 
 		if (branchManagerContactNo === '') {
-			$('#chkbranchManager').text('* This field is required');
+			$('#chkbranchManager').text('* THIS FIELD IS REQUIRED');
 			$('#branchManagerContactNo').focus();
 			isValid = false;
 		}
 		else if (!contactPattern.test(branchManagerContactNo)) {
-			alert("Please enter a valid 10-digit Branch Manager Contact Number.");
+			alert("PLEASE ENTER A VALID 10-DIGIT BRANCH MANAGER CONTACT NUMBER.");
 			branchManagerContactNo.focus();
 			isValid = false;
 		}
 
 		if (accountDepartmentContactNo === '') {
-			$('#chkaccountDepartment').text('* This field is required');
+			$('#chkaccountDepartment').text('* THIS FIELD IS REQUIRED');
 			$('#accountDepartmentContactNo').focus();
 			isValid = false;
 		}
 		else if (!contactPattern.test(accountDepartmentContactNo)) {
-			alert("Please enter a valid 10-digit Account Department Contact Number.");
+			alert("PLEASE ENTER A VALID 10-DIGIT ACCOUNT DEPARTMENT CONTACT NUMBER.");
 			accountDepartmentContactNo.focus();
 			isValid = false;
 		}
@@ -121,18 +121,18 @@ $(document).ready(function() {
 			data: JSON.stringify(branchData),
 			success: function(response) {
 				if (response.status == 'CREATED') {
-					alert("Branch Saved Successfully");
+					alert("BRANCH SAVED SUCCESSFULLY");
 					location.reload();
 				}
 				else {
-					alert("Branch Not Saved");
+					alert("BRANCH NOT SAVED");
 					location.reload();
 				}
 
 			},
 			error: function(xhr) {
 				console.error('Error:', xhr.responseText);
-				alert('Failed to save branch data.');
+				alert('FAILED TO SAVE BRANCH DATA.');
 			}
 		});
 	});
@@ -165,7 +165,7 @@ function loadBranchData() {
 				totalDataBranch = response.data;
 			}
 			else {
-				alert("No Data Found from API");
+				alert("NO DATA FOUND FROM API");
 				return;
 			}
 
@@ -174,7 +174,7 @@ function loadBranchData() {
 			togglePageNavigationBranch();
 		},
 		error: function() {
-			alert("Error while calling the API.");
+			alert("ERROR WHILE CALLING THE API.");
 		}
 	});
 }
@@ -198,26 +198,31 @@ function renderBranchTable(page) {
 	for (let i = startIndex; i < endIndex; i++) {
 		let branch = totalDataBranch[i];
 		let row = `<tr>
-			<td>${i + 1}</td>
-		    <td>${(branch.branchCode || '').toUpperCase()}</td>
-		    <td>${(branch.branchName || '').toUpperCase()}</td>
-		    <td>${(branch.openingDate || '').toUpperCase()}</td>
-		    <td>${(branch.address || '').toUpperCase()}</td>
-		    <td>${(branch.pin || '').toUpperCase()}</td>
-		    <td>${(branch.state || '').toUpperCase()}</td>
-		    <td>${(branch.branchManagerContactNo || '').toUpperCase()}</td>
-		    <td>${(branch.accountDepartmentContactNo || '').toUpperCase()}</td>
-			<td>
-				<button class="iconbutton" onclick="viewData(${branch.id})" title="View">
-					<i class="fa-solid fa-pen-to-square text-primary"></i>
-				</button>
-			</td>
-		</tr>`;
+		<td>${i + 1}</td>
+	    <td>${(branch.branchCode || '').toUpperCase()}</td>
+	    <td>${(branch.branchName || '').toUpperCase()}</td>
+	    <td>${(branch.openingDate || '').toUpperCase()}</td>
+	    <td>${(branch.address || '').toUpperCase()}</td>
+	    <td>${(branch.pin || '').toUpperCase()}</td>
+	    <td>${(branch.state || '').toUpperCase()}</td>
+	    <td>${(branch.branchManagerContactNo || '').toUpperCase()}</td>
+	    <td>${(branch.accountDepartmentContactNo || '').toUpperCase()}</td>
+		<td>
+			<button class="iconbutton" onclick="viewData(${branch.id})" title="VIEW">
+				<i class="fa-solid fa-pen-to-square text-primary"></i>
+			</button>
+		</td>
+		<td>
+		    <button class="iconbutton" onclick="deleteData(${branch.id})" title="DELETE">
+		        <i class="fa-solid fa-trash text-danger"></i>
+		    </button>
+		</td>
+	</tr>`;
 		tableBody.append(row);
 	}
 
 	// Update page info
-	$("#pageInfo").text(`Page ${currentPageBranch} of ${Math.ceil(totalDataBranch.length / pageSizeBranch)}`);
+	$("#pageInfo").text(`PAGE ${currentPageBranch} OF ${Math.ceil(totalDataBranch.length / pageSizeBranch)}`);
 }
 
 // Toggle page navigation buttons
@@ -289,11 +294,11 @@ function viewData(id) {
 				$("#branchManagerContactNo").val(branch.branchManagerContactNo);
 				$("#accountDepartmentContactNo").val(branch.accountDepartmentContactNo);
 			} else {
-				alert("Branch not found: " + response.message);
+				alert("BRANCH NOT FOUND: " + response.message);
 			}
 		},
 		error: function(xhr) {
-			alert("Request failed: " + xhr.responseText);
+			alert("REQUEST FAILED: " + xhr.responseText);
 		}
 	});
 
@@ -301,7 +306,7 @@ function viewData(id) {
 }
 
 function deleteData(id) {
-	if (confirm("Are you sure you want to delete this branch?")) {
+	if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS BRANCH?")) {
 		$.ajax({
 			url: "api/preference/deleteBranchModuleById",
 			type: "POST",
@@ -311,11 +316,11 @@ function deleteData(id) {
 					alert(response.message);
 					location.reload();
 				} else {
-					alert("Delete failed: " + response.message);
+					alert("DELETE FAILED: " + response.message);
 				}
 			},
 			error: function(xhr, status, error) {
-				alert("Failed to delete branch.");
+				alert("FAILED TO DELETE BRANCH.");
 				console.error("Error:", error);
 			}
 		});
@@ -352,64 +357,64 @@ function updateBranch() {
 
 	// Validation: Financial Year Name
 	if (branchCode === '') {
-		$('#chkbranchcode').text('* This field is required');
+		$('#chkbranchcode').text('* THIS FIELD IS REQUIRED');
 		$('#branchCode').focus();
 		isValid = false;
 	}
 
 	if (branchName === '') {
-		$('#chkbranchName').text('* This field is required');
+		$('#chkbranchName').text('* THIS FIELD IS REQUIRED');
 		$('#branchName').focus();
 		isValid = false;
 	}
 
 	if (openingDate === '') {
-		$('#chkopeningdate').text('* This field is required');
+		$('#chkopeningdate').text('* THIS FIELD IS REQUIRED');
 		$('#openingDate').focus();
 		isValid = false;
 	}
 
 	if (address === '') {
-		$('#chkaddress').text('* This field is required');
+		$('#chkaddress').text('* THIS FIELD IS REQUIRED');
 		$('#address').focus();
 		isValid = false;
 	}
 
 	if (pin === '') {
-		$('#chkpin').text('* This field is required');
+		$('#chkpin').text('* THIS FIELD IS REQUIRED');
 		$('#pin').focus();
 		isValid = false;
 	}
 	else if (!pinPattern.test(pin)) {
-		alert("Please enter a valid 6-digit PIN code (first digit cannot be 0).");
+		alert("PLEASE ENTER A VALID 6-DIGIT PIN CODE (FIRST DIGIT CANNOT BE 0).");
 		pin.focus();
 		isValid = false;
 	}
 
 	if (state === '') {
-		$('#chkstate').text('* This field is required');
+		$('#chkstate').text('* THIS FIELD IS REQUIRED');
 		$('#state').focus();
 		isValid = false;
 	}
 
 	if (branchManagerContactNo === '') {
-		$('#chkbranchManager').text('* This field is required');
+		$('#chkbranchManager').text('* THIS FIELD IS REQUIRED');
 		$('#branchManagerContactNo').focus();
 		isValid = false;
 	}
 	else if (!contactPattern.test(branchManagerContactNo)) {
-		alert("Please enter a valid 10-digit Branch Manager Contact Number.");
+		alert("PLEASE ENTER A VALID 10-DIGIT BRANCH MANAGER CONTACT NUMBER.");
 		branchManagerContactNo.focus();
 		isValid = false;
 	}
 
 	if (accountDepartmentContactNo === '') {
-		$('#chkaccountDepartment').text('* This field is required');
+		$('#chkaccountDepartment').text('* THIS FIELD IS REQUIRED');
 		$('#accountDepartmentContactNo').focus();
 		isValid = false;
 	}
 	else if (!contactPattern.test(accountDepartmentContactNo)) {
-		alert("Please enter a valid 10-digit Account Department Contact Number.");
+		alert("PLEASE ENTER A VALID 10-DIGIT ACCOUNT DEPARTMENT CONTACT NUMBER.");
 		accountDepartmentContactNo.focus();
 		isValid = false;
 	}
@@ -440,11 +445,11 @@ function updateBranch() {
 				alert(response.message);
 				location.reload();
 			} else {
-				alert("Operation failed: " + response.message);
+				alert("OPERATION FAILED: " + response.message);
 			}
 		},
 		error: function(xhr) {
-			alert("Update failed: " + xhr.responseText);
+			alert("UPDATE FAILED: " + xhr.responseText);
 		}
 	});
 }
@@ -467,7 +472,7 @@ $(document).ready(function() {
 			});
 		},
 		error: function(err) {
-			console.error("Error fetching branches:", err);
+			console.error("ERROR FETCHING BRANCHES:", err);
 		}
 	});
 });
@@ -480,5 +485,3 @@ function convertFormToUpperCase() {
 		}
 	});
 }
-
-

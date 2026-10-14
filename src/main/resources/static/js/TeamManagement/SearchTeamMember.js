@@ -49,7 +49,7 @@ function searchTeamMember() {
 		},
 
 		error: function() {
-			alert("Unable to fetch data");
+			alert("UNABLE TO FETCH DATA");
 		}
 
 	});
@@ -64,14 +64,14 @@ $(document).ready(function() {
 		async: true, // Correct spelling
 		success: function(data) {
 			console.log(data); // Debug the response
-			var appenddata1 = "<option value=''>Select</option>";
+			var appenddata1 = "<option value=''>SELECT</option>";
 			for (var i = 0; i < data.length; i++) {
 				appenddata1 += "<option value='" + data[i].designationName + "'>" + data[i].designationName + "</option>";
 			}
 			$("#designation").html(appenddata1); // Clear and populate
 		},
 		error: function() {
-			alert("Failed to load designations");
+			alert("FAILED TO LOAD DESIGNATIONS");
 		}
 	});
 
@@ -82,14 +82,14 @@ $(document).ready(function() {
 		async: true, // Correct spelling
 		success: function(data) {
 			console.log(data); // Debug the response
-			var appenddata1 = "<option value=''>Select</option>";
+			var appenddata1 = "<option value=''>SELECT</option>";
 			for (var i = 0; i < data.length; i++) {
 				appenddata1 += "<option value='" + data[i].departmentName + "'>" + data[i].departmentName + "</option>";
 			}
 			$("#department").html(appenddata1); // Clear and populate
 		},
 		error: function() {
-			alert("Failed to load departments");
+			alert("FAILED TO LOAD DEPARTMENTS");
 		}
 	});
 })

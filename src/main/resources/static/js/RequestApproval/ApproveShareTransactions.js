@@ -25,19 +25,19 @@ function loadTransferShareData() {
 				//populateMemberCodeDropdown(allKYCData);
 				renderTable(allTransferShareData); // Initially show all
 			} else {
-				alert("No member data found.");
+				alert("NO MEMBER DATA FOUND.");
 			}
 		},
 		error: function(xhr, status, error) {
 			console.error("Error fetching data:", error);
-			alert("Failed to load data.");
+			alert("FAILED TO LOAD DATA.");
 		}
 	});
 }
 
 function populateMemberCodeDropdown(data) {
 	const dropdown = $('#branchName');
-	dropdown.empty().append('<option value="">Select Branch</option>');
+	dropdown.empty().append('<option value="">SELECT BRANCH</option>');
 	const uniqueCodes = [...new Set(data.map(item => item.branch))];
 	uniqueCodes.forEach(code => {
 		dropdown.append(`<option value="${code}">${code}</option>`);
@@ -52,7 +52,7 @@ function renderTable(data) {
 		const noDataRow = `
             <tr>
                 <td colspan="12" style="text-align:center; font-family: 'Poppins', sans-serif;">
-                    No data found
+                    NO DATA FOUND
                 </td>
             </tr>
         `;
@@ -66,19 +66,19 @@ function renderTable(data) {
                 <td>
                     <input type="checkbox" class="approval-checkbox"
                         data-id="${item.id}" ${item.isApproved ? 'checked' : ''} />
-                </td>   
-				<td>${index + 1}</td>
-				                  
-				                   <td>${item.customerName || '-'}</td>
-				                   <td>${item.branch || '-'}</td>
-								   <td>${item.startDate || '-'}</td>
-								   <td>${item.shareIssuedBy || '-'}</td>
-								   <td>${item.noOfShare || '-'}</td>
-								   <td>${item.dateOfTransfer || '-'}</td>
-								   <td>${item.modeOfPayment || '-'}</td>
-								  
-								   
-								   
+                </td>  
+			<td>${index + 1}</td>
+
+			                   <td>${item.customerName || '-'}</td>
+			                   <td>${item.branch || '-'}</td>
+							   <td>${item.startDate || '-'}</td>
+							   <td>${item.shareIssuedBy || '-'}</td>
+							   <td>${item.noOfShare || '-'}</td>
+							   <td>${item.dateOfTransfer || '-'}</td>
+							   <td>${item.modeOfPayment || '-'}</td>
+
+
+
             </tr>
         `;
 		tbody.append(row);
@@ -100,7 +100,7 @@ $(document).ready(function() {
 		});
 
 		if (selectedIds.length === 0) {
-			alert("Please select at least one row to approve.");
+			alert("PLEASE SELECT AT LEAST ONE ROW TO APPROVE.");
 			return;
 		}
 
@@ -115,12 +115,12 @@ $(document).ready(function() {
 				},
 				success: function(response) {
 					if (response.status === "OK") {
-						alert("Approved Successfully!");
+						alert("APPROVED SUCCESSFULLY!");
 						location.reload();
 					}
 				},
 				error: function(xhr) {
-					alert("Error approving ID " + id);
+					alert("ERROR APPROVING ID " + id);
 					console.error(xhr);
 				}
 			});

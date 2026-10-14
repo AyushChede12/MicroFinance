@@ -11,7 +11,7 @@ function approvedLoanIdDropdown() {
 			if (response.status === "OK" && Array.isArray(response.data)) {
 				const $dropdown = $("#loanID");
 				$dropdown.empty();
-				$dropdown.append('<option value="" disabled selected>Select Loan ID</option>');
+				$dropdown.append('<option value="" disabled selected>SELECT LOAN ID</option>');
 				response.data.forEach(function(id) {
 					$dropdown.append(`<option value="${id}">${id}</option>`);
 				});
@@ -28,16 +28,16 @@ function approvedLoanIdDropdown() {
 function loadSavingsAccounts(memberId) {
 	customerSavingsAccounts = [];
 	const $accDropdown = $("#savingAccountNo");
-	$accDropdown.empty().append('<option value="">Loading accounts...</option>');
-	$("#savingBalance").val("Fetching balance...").css({ "background": "#f9f9f9", "color": "#555" });
+	$accDropdown.empty().append('<option value="">LOADING ACCOUNTS...</option>');
+	$("#savingBalance").val("FETCHING BALANCE...").css({ "background": "#f9f9f9", "color": "#555" });
 
 	if (!memberId) {
 		memberId = $("#customercode").val();
 	}
 
 	if (!memberId) {
-		$accDropdown.empty().append('<option value="">Please select Loan ID first</option>');
-		$("#savingBalance").val("No Customer Selected").css({ "background": "#f9f9f9", "color": "#757575" });
+		$accDropdown.empty().append('<option value="">PLEASE SELECT LOAN ID FIRST</option>');
+		$("#savingBalance").val("NO CUSTOMER SELECTED").css({ "background": "#f9f9f9", "color": "#757575" });
 		return;
 	}
 
@@ -50,7 +50,7 @@ function loadSavingsAccounts(memberId) {
 			$accDropdown.empty();
 			if (response.status === "FOUND" && Array.isArray(response.data) && response.data.length > 0) {
 				customerSavingsAccounts = response.data;
-				$accDropdown.append('<option value="" disabled>Select Account</option>');
+				$accDropdown.append('<option value="" disabled>SELECT ACCOUNT</option>');
 				customerSavingsAccounts.forEach(function(acc) {
 					$accDropdown.append(`<option value="${acc.accountNumber}">${acc.accountNumber}</option>`);
 				});
@@ -60,14 +60,14 @@ function loadSavingsAccounts(memberId) {
 				$accDropdown.val(firstAcc.accountNumber);
 				updateBalanceDisplay(firstAcc);
 			} else {
-				$accDropdown.append('<option value="">No Savings Account Found</option>');
-				$("#savingBalance").val("No Account Found").css({ "background": "#f9f9f9", "color": "#757575" });
+				$accDropdown.append('<option value="">NO SAVINGS ACCOUNT FOUND</option>');
+				$("#savingBalance").val("NO ACCOUNT FOUND").css({ "background": "#f9f9f9", "color": "#757575" });
 			}
 		},
 		error: function(xhr, status, error) {
 			console.error("Error fetching savings accounts:", error);
-			$accDropdown.empty().append('<option value="">Error Loading Accounts</option>');
-			$("#savingBalance").val("Error Fetching Balance").css({ "background": "#ffebee", "color": "#c62828" });
+			$accDropdown.empty().append('<option value="">ERROR LOADING ACCOUNTS</option>');
+			$("#savingBalance").val("ERROR FETCHING BALANCE").css({ "background": "#ffebee", "color": "#c62828" });
 		}
 	});
 }
@@ -139,25 +139,25 @@ function calculateDenomination() {
 		$alertBox.show();
 		const diff = Math.round((grandTotal - expectedAmt) * 100) / 100;
 		if (Math.abs(diff) < 0.01) {
-			$badge.text("✓ Exact Match").css({ "background": "#d1fae5", "color": "#065f46" });
-			$alertBox.html('<i class="bi bi-check-circle-fill" style="margin-right: 6px;"></i> Cash Note Denomination Total (Rs. ' + grandTotal.toFixed(2) + ') matches Payment Amount successfully!')
+			$badge.text("✓ EXACT MATCH").css({ "background": "#d1fae5", "color": "#065f46" });
+			$alertBox.html('<i class="bi bi-check-circle-fill" style="margin-right: 6px;"></i> CASH NOTE DENOMINATION TOTAL (Rs. ' + grandTotal.toFixed(2) + ') MATCHES PAYMENT AMOUNT SUCCESSFULLY!')
 				.css({ "background": "#d1fae5", "color": "#065f46", "border": "1px solid #6ee7b7" });
 
 			if (!hasAlertedMatch) {
 				hasAlertedMatch = true;
 				setTimeout(function() {
-					alert("✓ Cash Note Denomination Total (Rs. " + grandTotal.toFixed(2) + ") matches Payment Amount successfully!");
+					alert("✓ CASH NOTE DENOMINATION TOTAL (Rs. " + grandTotal.toFixed(2) + ") MATCHES PAYMENT AMOUNT SUCCESSFULLY!");
 				}, 80);
 			}
 		} else {
 			hasAlertedMatch = false;
 			if (diff > 0) {
-				$badge.text("+ Rs. " + diff.toFixed(2) + " Extra").css({ "background": "#fef3c7", "color": "#92400e" });
-				$alertBox.html('<i class="bi bi-exclamation-triangle-fill" style="margin-right: 6px;"></i> Cash Denomination (Rs. ' + grandTotal.toFixed(2) + ') exceeds Payment Amount (Rs. ' + expectedAmt.toFixed(2) + ') by Rs. ' + diff.toFixed(2))
+				$badge.text("+ Rs. " + diff.toFixed(2) + " EXTRA").css({ "background": "#fef3c7", "color": "#92400e" });
+				$alertBox.html('<i class="bi bi-exclamation-triangle-fill" style="margin-right: 6px;"></i> CASH DENOMINATION (Rs. ' + grandTotal.toFixed(2) + ') EXCEEDS PAYMENT AMOUNT (Rs. ' + expectedAmt.toFixed(2) + ') BY Rs. ' + diff.toFixed(2))
 					.css({ "background": "#fef3c7", "color": "#92400e", "border": "1px solid #fcd34d" });
 			} else {
-				$badge.text("- Rs. " + Math.abs(diff).toFixed(2) + " Short").css({ "background": "#fee2e2", "color": "#991b1b" });
-				$alertBox.html('<i class="bi bi-exclamation-circle-fill" style="margin-right: 6px;"></i> Cash Denomination (Rs. ' + grandTotal.toFixed(2) + ') is short by Rs. ' + Math.abs(diff).toFixed(2) + ' (Payment Amount: Rs. ' + expectedAmt.toFixed(2) + ')')
+				$badge.text("- Rs. " + Math.abs(diff).toFixed(2) + " SHORT").css({ "background": "#fee2e2", "color": "#991b1b" });
+				$alertBox.html('<i class="bi bi-exclamation-circle-fill" style="margin-right: 6px;"></i> CASH DENOMINATION (Rs. ' + grandTotal.toFixed(2) + ') IS SHORT BY Rs. ' + Math.abs(diff).toFixed(2) + ' (PAYMENT AMOUNT: Rs. ' + expectedAmt.toFixed(2) + ')')
 					.css({ "background": "#fee2e2", "color": "#991b1b", "border": "1px solid #fca5a5" });
 			}
 		}
@@ -381,7 +381,7 @@ $(document).ready(function() {
 						const paidCount = currentLoanPayments.length;
 						const totalTerm = parseInt(loanInfo.loanTerm) || 12;
 
-						dropdown.append('<option value="" disabled>Select Installment</option>');
+						dropdown.append('<option value="" disabled>SELECT INSTALLMENT</option>');
 
 						// Add already paid installments
 						currentLoanPayments.forEach((p, idx) => {
@@ -393,13 +393,13 @@ $(document).ready(function() {
 						// Add next due installment (auto-selected!)
 						const nextInstNum = paidCount + 1;
 						if (nextInstNum <= totalTerm) {
-							const nextLabel = `Installment ${nextInstNum} (DUE FOR PAYMENT)`;
+							const nextLabel = `INSTALLMENT ${nextInstNum} (DUE FOR PAYMENT)`;
 							dropdown.append(`<option value="Installment ${nextInstNum}" data-paid="false" data-instnum="${nextInstNum}" selected>${nextLabel}</option>`);
 						}
 
 						// Add remaining future installments
 						for (let i = nextInstNum + 1; i <= totalTerm; i++) {
-							dropdown.append(`<option value="Installment ${i}" data-paid="false" data-instnum="${i}">Installment ${i}</option>`);
+							dropdown.append(`<option value="Installment ${i}" data-paid="false" data-instnum="${i}">INSTALLMENT ${i}</option>`);
 						}
 
 						// Trigger change on installment to populate payment fields
@@ -421,11 +421,11 @@ $(document).ready(function() {
 						}
 					});
 				} else {
-					alert("Loan data not found.");
+					alert("LOAN DATA NOT FOUND.");
 				}
 			},
 			error: function(xhr) {
-				alert("Error fetching loan data: " + xhr.responseText);
+				alert("ERROR FETCHING LOAN DATA: " + xhr.responseText);
 			}
 		});
 	});
@@ -506,34 +506,34 @@ $(document).ready(function() {
 
 		const loanId = $("#loanID").val();
 		if (!loanId) {
-			alert("⚠️ Please select a Loan ID first.");
+			alert("⚠️ PLEASE SELECT A LOAN ID FIRST.");
 			$("#loanID").focus();
 			return;
 		}
 
 		const installment = $("#installment").val();
 		if (!installment) {
-			alert("⚠️ Please select an installment to pay.");
+			alert("⚠️ PLEASE SELECT AN INSTALLMENT TO PAY.");
 			$("#installment").focus();
 			return;
 		}
 
 		const isPaid = $("#installment").find("option:selected").data("paid");
 		if (isPaid === true) {
-			alert("⚠️ This installment is already paid. Please select the next due installment.");
+			alert("⚠️ THIS INSTALLMENT IS ALREADY PAID. PLEASE SELECT THE NEXT DUE INSTALLMENT.");
 			return;
 		}
 
 		const paymentMode = $("#sourcePayment").val();
 		if (!paymentMode) {
-			alert("⚠️ Please select Mode of Payment (Cash or Saving Account).");
+			alert("⚠️ PLEASE SELECT MODE OF PAYMENT (CASH OR SAVING ACCOUNT).");
 			$("#sourcePayment").focus();
 			return;
 		}
 
 		const paymentAmt = parseFloat($("#paymentAmount").val()) || 0;
 		if (paymentAmt <= 0) {
-			alert("⚠️ Invalid Payment Amount.");
+			alert("⚠️ INVALID PAYMENT AMOUNT.");
 			return;
 		}
 
@@ -553,7 +553,7 @@ $(document).ready(function() {
 			if (denomTotal > 0) {
 				const diff = Math.abs(denomTotal - paymentAmt);
 				if (diff > 0.01) {
-					alert(`⚠️ Cash Denomination Total (Rs. ${denomTotal.toFixed(2)}) does not match Payment Amount (Rs. ${paymentAmt.toFixed(2)}). Please adjust note/coin counts.`);
+					alert(`⚠️ CASH DENOMINATION TOTAL (Rs. ${denomTotal.toFixed(2)}) DOES NOT MATCH PAYMENT AMOUNT (Rs. ${paymentAmt.toFixed(2)}). PLEASE ADJUST NOTE/COIN COUNTS.`);
 					return;
 				}
 			}
@@ -563,7 +563,7 @@ $(document).ready(function() {
 		let accountNo = $("#savingAccountNo").val();
 		if (paymentMode === "Saving Account") {
 			if (!accountNo) {
-				alert("⚠️ Please select customer's Savings Account.");
+				alert("⚠️ PLEASE SELECT CUSTOMER'S SAVINGS ACCOUNT.");
 				$("#savingAccountNo").focus();
 				return;
 			}
@@ -571,13 +571,13 @@ $(document).ready(function() {
 			const rawBalText = $("#savingBalance").val() || "";
 			const currentBal = parseFloat(rawBalText.replace(/[^0-9.]/g, '')) || 0;
 			if (currentBal < totalPayable) {
-				alert(`❌ Insufficient Savings Account Balance!\nRequired: Rs. ${totalPayable.toFixed(2)}\nAvailable: Rs. ${currentBal.toFixed(2)}`);
+				alert(`❌ INSUFFICIENT SAVINGS ACCOUNT BALANCE!\nREQUIRED: Rs. ${totalPayable.toFixed(2)}\nAVAILABLE: Rs. ${currentBal.toFixed(2)}`);
 				return;
 			}
 		}
 
 		// Confirm before submitting
-		const confirmMsg = `Are you sure you want to process EMI Payment?\n\nLoan ID: ${loanId}\nInstallment: ${installment}\nEMI Amount: Rs. ${paymentAmt.toFixed(2)}\nPenalty: Rs. ${penaltyAmt.toFixed(2)}\nTotal: Rs. ${totalPayable.toFixed(2)}\nMode: ${paymentMode}`;
+		const confirmMsg = `ARE YOU SURE YOU WANT TO PROCESS EMI PAYMENT?\n\nLOAN ID: ${loanId}\nINSTALLMENT: ${installment}\nEMI AMOUNT: Rs. ${paymentAmt.toFixed(2)}\nPENALTY: Rs. ${penaltyAmt.toFixed(2)}\nTOTAL: Rs. ${totalPayable.toFixed(2)}\nMODE: ${paymentMode}`;
 		if (!confirm(confirmMsg)) {
 			return;
 		}
@@ -609,25 +609,25 @@ $(document).ready(function() {
 				if (res.status === "OK") {
 					alert("✓ " + res.message);
 					if (res.data && res.data.isLoanClosed) {
-						alert("🎉 Congratulations! This loan is now completely CLOSED.");
+						alert("🎉 CONGRATULATIONS! THIS LOAN IS NOW COMPLETELY CLOSED.");
 					}
 					// Re-trigger loan change to refresh the installment list and select next due installment
 					$("#loanID").trigger("change");
 				} else {
-					alert("❌ " + (res.message || "Failed to process payment."));
+					alert("❌ " + (res.message || "FAILED TO PROCESS PAYMENT."));
 				}
 			},
 			error: function(xhr) {
 				$btn.prop("disabled", false).html('<i class="bi bi-credit-card-2-front"></i> PAY EMI');
 				const errMsg = xhr.responseJSON?.message || xhr.responseText || "Server error";
-				alert("❌ Payment Failed: " + errMsg);
+				alert("❌ PAYMENT FAILED: " + errMsg);
 			}
 		});
 	});
 
 	// Reset button handler
 	$("#resetBtn").on("click", function() {
-		if (confirm("Reset the payment form?")) {
+		if (confirm("RESET THE PAYMENT FORM?")) {
 			$("#formid")[0].reset();
 			resetDenominations();
 			$("#savingAccountWrapper").hide();

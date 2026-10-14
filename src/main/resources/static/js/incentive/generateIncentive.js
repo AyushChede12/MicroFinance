@@ -12,8 +12,8 @@ $(document).ready(function() {
 		url: "api/incentive/getAllTeamMember",
 		method: "GET",
 		success: function(data) {
-			console.log("Fetched Team Members:", data);
-			$('#teamValue').empty().append('<option value="">Select</option>');
+			console.log("FETCHED TEAM MEMBERS:", data);
+			$('#teamValue').empty().append('<option value="">SELECT</option>');
 
 			data.forEach(function(member) {
 				const combinedValue = member.teamMemberCode + ' - ' + member.teamMemberName;
@@ -27,7 +27,7 @@ $(document).ready(function() {
 			});
 		},
 		error: function(err) {
-			console.error("Error fetching team members:", err);
+			console.error("ERROR FETCHING TEAM MEMBERS:", err);
 		}
 	});
 
@@ -47,23 +47,18 @@ function handleTeamMemberSelection(code, name) {
 	var c = $("#teamCode").val(code);
 	var n = $("#teamName").val(name);
 
-	console.log("Team Member Code:", code);
-	console.log("Team Member Name:", name);
-
-
+	console.log("TEAM MEMBER CODE:", code);
+	console.log("TEAM MEMBER NAME:", name);
 }
 
-
-
-
-$(document).ready(function () {
+$(document).ready(function() {
 	const months = [
-		"January", "February", "March", "April", "May", "June",
-		"July", "August", "September", "October", "November", "December"
+		"JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE",
+		"JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"
 	];
 
 	const monthDropdown = $('#incentiveMonth');
-	monthDropdown.empty().append('<option value="">Select</option>');
+	monthDropdown.empty().append('<option value="">SELECT</option>');
 
 	months.forEach((month) => {
 		// Set both value and display as the month name
@@ -71,8 +66,8 @@ $(document).ready(function () {
 	});
 
 	// Set Date From and Date To when month is selected
-	monthDropdown.on('change', function () {
-		const selectedMonthName = $(this).val(); // e.g., "January"
+	monthDropdown.on('change', function() {
+		const selectedMonthName = $(this).val(); // e.g., "JANUARY"
 		const selectedMonth = months.indexOf(selectedMonthName); // 0 for Jan, 1 for Feb, etc.
 		const currentYear = new Date().getFullYear();
 
@@ -91,12 +86,8 @@ $(document).ready(function () {
 	});
 });
 
-
-
-
 $(document).ready(function() {
 	// Set today's date
-
 
 	// Save button click
 	$("#saveBtn").click(function(e) {
@@ -118,16 +109,16 @@ $(document).ready(function() {
 			data: JSON.stringify(data),
 			success: function(response) {
 				if (response.status === "OK") {
-					alert("Generate successfully!");
+					alert("GENERATED SUCCESSFULLY!");
 					location.reload();
 					$("#incentiveForm")[0].reset();
 				} else {
-					alert("Failed to save data.");
+					alert("FAILED TO SAVE DATA.");
 				}
 			},
 			error: function(xhr) {
-				console.error("Error response:", xhr.responseText);
-				alert("Error while saving data.");
+				console.error("ERROR RESPONSE:", xhr.responseText);
+				alert("ERROR WHILE SAVING DATA.");
 			}
 		});
 	});

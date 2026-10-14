@@ -24,7 +24,7 @@ function initLoanIdDropdown() {
 			}
 		},
 		error: function(xhr) {
-			console.warn("Could not load printable loan IDs, trying fallback...", xhr);
+			console.warn("COULD NOT LOAD PRINTABLE LOAN IDS, TRYING FALLBACK...", xhr);
 			fallbackLoadLoanIds();
 		}
 	});
@@ -56,7 +56,7 @@ function initEventHandlers() {
 
 		$("#previewDocBtn").prop("disabled", true);
 		$("#generateDocBtn").prop("disabled", true);
-		$("#loanDocument").prop("disabled", true).html('<option value="" disabled selected>Loading available documents...</option>');
+		$("#loanDocument").prop("disabled", true).html('<option value="" disabled selected>LOADING AVAILABLE DOCUMENTS...</option>');
 
 		loadLoanDetails(selectedLoanId);
 		loadAvailableDocuments(selectedLoanId);
@@ -83,11 +83,11 @@ function initEventHandlers() {
 		const docType = $("#loanDocument").val();
 
 		if (!loanId) {
-			alert("Please select a Loan ID first.");
+			alert("PLEASE SELECT A LOAN ID FIRST.");
 			return;
 		}
 		if (!docType) {
-			alert("Please select a Document Type to preview.");
+			alert("PLEASE SELECT A DOCUMENT TYPE TO PREVIEW.");
 			return;
 		}
 
@@ -101,11 +101,11 @@ function initEventHandlers() {
 		const docType = $("#loanDocument").val();
 
 		if (!loanId) {
-			alert("Please select a Loan ID first.");
+			alert("PLEASE SELECT A LOAN ID FIRST.");
 			return;
 		}
 		if (!docType) {
-			alert("Please select a Document Type to generate.");
+			alert("PLEASE SELECT A DOCUMENT TYPE TO GENERATE.");
 			return;
 		}
 
@@ -116,11 +116,11 @@ function initEventHandlers() {
 	$("#resetBtn").on("click", function(e) {
 		e.preventDefault();
 		$("#loanDocForm")[0].reset();
-		$("#loanDocument").prop("disabled", true).html('<option value="" disabled selected>-- Select Loan ID First --</option>');
+		$("#loanDocument").prop("disabled", true).html('<option value="" disabled selected>-- SELECT LOAN ID FIRST --</option>');
 		$("#previewDocBtn").prop("disabled", true);
 		$("#generateDocBtn").prop("disabled", true);
-		$("#docLogsBody").html('<tr><td colspan="6" class="text-center py-4 text-muted">Please select a Loan ID to view generated document history.</td></tr>');
-		$("#auditCountBadge").text("0 Documents");
+		$("#docLogsBody").html('<tr><td colspan="6" class="text-center py-4 text-muted">PLEASE SELECT A LOAN ID TO VIEW GENERATED DOCUMENT HISTORY.</td></tr>');
+		$("#auditCountBadge").text("0 DOCUMENTS");
 	});
 }
 
@@ -139,8 +139,8 @@ function loadLoanDetails(loanId) {
 				$("#relativeDetails").val(d.relativeDetails || "--");
 				$("#contactNo").val(d.contactNo || "--");
 				$("#loanAmount").val(d.loanAmount ? formatCurrency(d.loanAmount) : "--");
-				$("#rateOfInterest").val(d.rateOfInterest ? d.rateOfInterest + "% p.a." : "--");
-				$("#loanTerm").val(d.loanTerm ? d.loanTerm + " Months" : "--");
+				$("#rateOfInterest").val(d.rateOfInterest ? d.rateOfInterest + "% P.A." : "--");
+				$("#loanTerm").val(d.loanTerm ? d.loanTerm + " MONTHS" : "--");
 				$("#interestType").val(d.interestType || "--");
 				$("#loanMode").val(d.loanMode || "--");
 				$("#emiPayment").val(d.emiPayment ? formatCurrency(d.emiPayment) : "--");
@@ -152,14 +152,14 @@ function loadLoanDetails(loanId) {
 				if (d.guarantorIdentity) {
 					gInfo = d.guarantorIdentity + (d.guarantorMemberId ? " (" + d.guarantorMemberId + ")" : "");
 				} else if (d.coApplicantIdentity) {
-					gInfo = "Co-App: " + d.coApplicantIdentity;
+					gInfo = "CO-APP: " + d.coApplicantIdentity;
 				}
 				$("#guarantorName").val(gInfo);
 			}
 		},
 		error: function(xhr) {
 			console.error("Error fetching loan details:", xhr);
-			alert("Error loading loan details: " + (xhr.responseJSON?.message || xhr.statusText));
+			alert("ERROR LOADING LOAN DETAILS: " + (xhr.responseJSON?.message || xhr.statusText));
 		}
 	});
 }
@@ -179,7 +179,7 @@ function loadAvailableDocuments(loanId) {
 					if (doc.available) {
 						$dropdown.append(`<option value="${doc.docType}">✓ ${doc.name}</option>`);
 					} else {
-						$dropdown.append(`<option value="${doc.docType}" disabled style="color:#888;">✕ ${doc.name} (Gated: ${doc.reason})</option>`);
+						$dropdown.append(`<option value="${doc.docType}" disabled style="color:#888;">✕ ${doc.name} (GATED: ${doc.reason})</option>`);
 					}
 				});
 				$dropdown.prop("disabled", false);
@@ -187,7 +187,7 @@ function loadAvailableDocuments(loanId) {
 		},
 		error: function(xhr) {
 			console.error("Error loading available documents:", xhr);
-			$("#loanDocument").html('<option value="" disabled selected>Error loading documents</option>');
+			$("#loanDocument").html('<option value="" disabled selected>ERROR LOADING DOCUMENTS</option>');
 		}
 	});
 }
@@ -202,28 +202,28 @@ function loadDocumentLogs(loanId) {
 			$tbody.empty();
 
 			if (response && response.data && response.data.length > 0) {
-				$("#auditCountBadge").text(response.data.length + " Documents");
+				$("#auditCountBadge").text(response.data.length + " DOCUMENTS");
 				response.data.forEach(function(log, idx) {
 					const row = `
-                        <tr>
-                            <td class="ps-3 font-weight-bold text-muted">${idx + 1}</td>
-                            <td><i class="bi bi-calendar3 mr-1 text-muted"></i> ${log.generatedAt || '--'}</td>
-                            <td><span class="badge badge-light border text-primary">${log.documentName || log.documentType}</span></td>
-                            <td><i class="bi bi-person mr-1 text-muted"></i> ${log.generatedByUserId || 'ADMIN'}</td>
-                            <td><code>${log.fileReference || '--'}</code></td>
-                            <td class="text-center">
-                                <button type="button" class="btn btn-sm btn-outline-primary py-0 px-2" 
-                                    onclick="generateAndDownloadPdf('${log.loanId}', '${log.documentType}')" title="Re-download PDF">
-                                    <i class="bi bi-download mr-1"></i> Download
-                                </button>
-                            </td>
-                        </tr>
-                    `;
+                       <tr>
+                           <td class="ps-3 font-weight-bold text-muted">${idx + 1}</td>
+                           <td><i class="bi bi-calendar3 mr-1 text-muted"></i> ${log.generatedAt || '--'}</td>
+                           <td><span class="badge badge-light border text-primary">${log.documentName || log.documentType}</span></td>
+                           <td><i class="bi bi-person mr-1 text-muted"></i> ${log.generatedByUserId || 'ADMIN'}</td>
+                           <td><code>${log.fileReference || '--'}</code></td>
+                           <td class="text-center">
+                               <button type="button" class="btn btn-sm btn-outline-primary py-0 px-2"
+                                   onclick="generateAndDownloadPdf('${log.loanId}', '${log.documentType}')" title="RE-DOWNLOAD PDF">
+                                   <i class="bi bi-download mr-1"></i> DOWNLOAD
+                               </button>
+                           </td>
+                       </tr>
+                   `;
 					$tbody.append(row);
 				});
 			} else {
-				$("#auditCountBadge").text("0 Documents");
-				$tbody.html('<tr><td colspan="6" class="text-center py-4 text-muted">No documents have been generated yet for this loan.</td></tr>');
+				$("#auditCountBadge").text("0 DOCUMENTS");
+				$tbody.html('<tr><td colspan="6" class="text-center py-4 text-muted">NO DOCUMENTS HAVE BEEN GENERATED YET FOR THIS LOAN.</td></tr>');
 			}
 		},
 		error: function(xhr) {
@@ -259,11 +259,11 @@ function openDocumentPreview(loanId, docType) {
 	const $container = $("#previewContainer");
 
 	$container.html(`
-        <div class="text-center p-5">
-            <div class="spinner-border text-primary" role="status" style="width: 2.5rem; height: 2.5rem;"></div>
-            <p class="mt-3 text-muted">Rendering document preview...</p>
-        </div>
-    `);
+       <div class="text-center p-5">
+           <div class="spinner-border text-primary" role="status" style="width: 2.5rem; height: 2.5rem;"></div>
+           <p class="mt-3 text-muted">RENDERING DOCUMENT PREVIEW...</p>
+       </div>
+   `);
 
 	// Show modal safely for Bootstrap 4 and Bootstrap 5
 	showModalCompat();
@@ -278,11 +278,11 @@ function openDocumentPreview(loanId, docType) {
 		},
 		error: function(xhr) {
 			$container.html(`
-                <div class="alert alert-danger m-4">
-                    <h5 class="font-weight-bold"><i class="bi bi-exclamation-triangle-fill mr-2"></i> Preview Error</h5>
-                    <p>${xhr.responseText || "Unable to render document preview."}</p>
-                </div>
-            `);
+               <div class="alert alert-danger m-4">
+                   <h5 class="font-weight-bold"><i class="bi bi-exclamation-triangle-fill mr-2"></i> PREVIEW ERROR</h5>
+                   <p>${xhr.responseText || "UNABLE TO RENDER DOCUMENT PREVIEW."}</p>
+               </div>
+           `);
 		}
 	});
 }
@@ -304,7 +304,7 @@ function generateAndDownloadPdf(loanId, docType) {
 		.then(function(response) {
 			if (!response.ok) {
 				return response.text().then(function(text) {
-					throw new Error(text || "Failed to generate document");
+					throw new Error(text || "FAILED TO GENERATE DOCUMENT");
 				});
 			}
 			return response.blob();
@@ -328,11 +328,11 @@ function generateAndDownloadPdf(loanId, docType) {
 			loadDocumentLogs(loanId);
 
 			// Feedback alert
-			showToastAlert("PDF document generated and downloaded successfully!", "success");
+			showToastAlert("PDF DOCUMENT GENERATED AND DOWNLOADED SUCCESSFULLY!", "success");
 		})
 		.catch(function(err) {
 			console.error("PDF generation failed:", err);
-			alert("Error generating document: " + err.message);
+			alert("ERROR GENERATING DOCUMENT: " + err.message);
 		})
 		.finally(function() {
 			$spinner.addClass("d-none");
@@ -348,14 +348,14 @@ function formatCurrency(val) {
 
 function showToastAlert(msg, type) {
 	const alertDiv = $(`
-        <div class="alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show shadow position-fixed" 
-             style="top: 20px; right: 20px; z-index: 99999; min-width: 300px;" role="alert">
-            <i class="bi bi-check-circle-fill mr-2"></i> ${msg}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    `);
+       <div class="alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show shadow position-fixed"
+            style="top: 20px; right: 20px; z-index: 99999; min-width: 300px;" role="alert">
+           <i class="bi bi-check-circle-fill mr-2"></i> ${msg}
+           <button type="button" class="close" data-dismiss="alert" aria-label="CLOSE">
+               <span aria-hidden="true">&times;</span>
+           </button>
+       </div>
+   `);
 	$("body").append(alertDiv);
 	setTimeout(function() {
 		alertDiv.alert('close');

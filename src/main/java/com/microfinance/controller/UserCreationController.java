@@ -50,9 +50,9 @@ public class UserCreationController {
 	public ResponseEntity<?> saveUser(@RequestBody UserCreation userCreation) {
 		if (userCreation != null) {
 			userCreationService.save(userCreation); // ✅ use instance here
-			return ResponseEntity.ok("User saved successfully!");
+			return ResponseEntity.ok("USER SAVED SUCCESSFULLY!");
 		} else {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to save user!");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("FAILED TO SAVE USER!");
 		}
 	}
 
@@ -120,9 +120,9 @@ public class UserCreationController {
 	public ResponseEntity<String> deleteUserManageById(@RequestBody UserCreation userCreation) {
 		try {
 			userCreationService.deleteUserManageById(userCreation.getId());
-			return ResponseEntity.status(HttpStatus.OK).body("Data Deleted Successfully..!!");
+			return ResponseEntity.status(HttpStatus.OK).body("DATA DELETED SUCCESSFULLY..!!");
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error Deleting Data");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("ERROR DELETING DATA");
 		}
 	}
 
@@ -133,7 +133,7 @@ public class UserCreationController {
 		if (user.isPresent()) {
 			return ResponseEntity.ok(user.get());
 		} else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("USER NOT FOUND");
 		}
 	}
 
@@ -141,9 +141,9 @@ public class UserCreationController {
 	public ResponseEntity<String> updateUser(@PathVariable Long id, @RequestBody UserCreation user) {
 		boolean isUpdated = userCreationService.updateUser(id, user);
 		if (isUpdated) {
-			return ResponseEntity.ok("User updated successfully!");
+			return ResponseEntity.ok("USER UPDATED SUCCESSFULLY!");
 		} else {
-			return ResponseEntity.status(500).body("Error updating user");
+			return ResponseEntity.status(500).body("ERROR UPDATING USER");
 		}
 	}
 

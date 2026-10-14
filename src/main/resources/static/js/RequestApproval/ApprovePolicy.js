@@ -15,7 +15,7 @@ $(document).ready(function() {
 //
 
 function loadCustomerKYCData() {
-	$.ajax({	
+	$.ajax({
 		url: "api/requestapproval/unapprovedAddNewInvestment",
 		type: "GET",
 		contentType: "application/json",
@@ -25,19 +25,19 @@ function loadCustomerKYCData() {
 				//populateMemberCodeDropdown(allKYCData);
 				renderTable(allKYCData); // Initially show all
 			} else {
-				alert("No member data found.");
+				alert("NO MEMBER DATA FOUND.");
 			}
 		},
 		error: function(xhr, status, error) {
 			console.error("Error fetching data:", error);
-			alert("Failed to load data.");
+			alert("FAILED TO LOAD DATA.");
 		}
 	});
 }
 
 function populateMemberCodeDropdown(data) {
 	const dropdown = $('#branchName');
-	dropdown.empty().append('<option value="">Select Branch</option>');
+	dropdown.empty().append('<option value="">SELECT BRANCH</option>');
 	const uniqueCodes = [...new Set(data.map(item => item.branchName))];
 	uniqueCodes.forEach(code => {
 		dropdown.append(`<option value="${code}">${code}</option>`);
@@ -45,33 +45,33 @@ function populateMemberCodeDropdown(data) {
 }
 
 function renderTable(data) {
-    const tbody = $(".datatable tbody");
-    tbody.empty();
+	const tbody = $(".datatable tbody");
+	tbody.empty();
 
-    if (!data || data.length === 0) {
-        const noDataRow = `
+	if (!data || data.length === 0) {
+		const noDataRow = `
             <tr>
                 <td colspan="12" style="text-align:center; font-family: 'Poppins', sans-serif;">
-                    No data found
+                    NO DATA FOUND
                 </td>
             </tr>
         `;
-        tbody.append(noDataRow);
-        return;
-    }
+		tbody.append(noDataRow);
+		return;
+	}
 
-    data.forEach((item, index) => {
+	data.forEach((item, index) => {
 
-        // 🔹 Build customer full name using array
+		// 🔹 Build customer full name using array
 		const customerFullName =
-		    item.customerName ||
-		    [item.firstName, item.middleName, item.lastName]
-		        .filter(Boolean)
-		        .join(' ') ||
-		    '-';
+			item.customerName ||
+			[item.firstName, item.middleName, item.lastName]
+				.filter(Boolean)
+				.join(' ') ||
+			'-';
 
 
-        const row = `
+		const row = `
             <tr style="font-family: 'Poppins', sans-serif;">
                 <td>
                     <input type="checkbox" class="approval-checkbox"
@@ -89,54 +89,54 @@ function renderTable(data) {
             </tr>
         `;
 
-        tbody.append(row);
-    });
+		tbody.append(row);
+	});
 }
 
 
 //approve data anjali
 
-$(document).ready(function () {
-    // Handle Approve button click
-    $('#approvedBtn').on('click', function () {
-        // Collect all checked checkboxes
-        const selectedIds = [];
+$(document).ready(function() {
+	// Handle Approve button click
+	$('#approvedBtn').on('click', function() {
+		// Collect all checked checkboxes
+		const selectedIds = [];
 
-        $('.approval-checkbox:checked').each(function () {
-            const id = $(this).data('id');
-            selectedIds.push(id);
-        });
+		$('.approval-checkbox:checked').each(function() {
+			const id = $(this).data('id');
+			selectedIds.push(id);
+		});
 
-        if (selectedIds.length === 0) {
-            alert("Please select at least one row to approve.");
-            return;
-        }
+		if (selectedIds.length === 0) {
+			alert("PLEASE SELECT AT LEAST ONE ROW TO APPROVE.");
+			return;
+		}
 
-        // Approve each selected investment
-        selectedIds.forEach(function (id) {
-            $.ajax({
-                url: "api/requestapproval/approveInvestmentData",
-                type: "POST",
-                data: {
-                    id: id,
-                    isApproved: true // Sends 1 to the DB
-                },
+		// Approve each selected investment
+		selectedIds.forEach(function(id) {
+			$.ajax({
+				url: "api/requestapproval/approveInvestmentData",
+				type: "POST",
+				data: {
+					id: id,
+					isApproved: true // Sends 1 to the DB
+				},
 				success: function(response) {
-								if (response.status === "OK") {
-									alert("Approved Successfully!");
-									location.reload();
-								}
-							},
-							error: function(xhr) {
-								alert("Error approving ID " + id);
-								console.error(xhr);
-							}
-            });
-        });
-    });
+					if (response.status === "OK") {
+						alert("APPROVED SUCCESSFULLY!");
+						location.reload();
+					}
+				},
+				error: function(xhr) {
+					alert("ERROR APPROVING ID " + id);
+					console.error(xhr);
+				}
+			});
+		});
+	});
 
-    // Optional: reload after approval
-    
+	// Optional: reload after approval
+
 });
 
 //filter Data
@@ -156,7 +156,7 @@ function filterKYCData() {
 		const matchesCode = selectedCode ? branchName === selectedCode : true;
 		const matchesFrom = fromDate && dob ? dob >= fromDate : true;
 		const matchesTo = toDate && dob ? dob <= toDate : true;
-		
+
 
 
 		return matchesCode && matchesFrom && matchesTo;

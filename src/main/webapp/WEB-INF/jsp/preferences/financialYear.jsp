@@ -107,6 +107,7 @@
 													<th scope="col">DATE FROM</th>
 													<th scope="col">DATE TO</th>
 													<th scope="col">EDIT</th>
+													<th scope="col">DELETE</th>
 												</tr>
 											</thead>
 											<tbody id="tableBody">

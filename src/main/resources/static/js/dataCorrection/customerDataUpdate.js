@@ -7,7 +7,7 @@ $(document).ready(function() {
 
 			if (response.status === 'FOUND') {
 
-				console.log("Fetched Category:", response.data);
+				console.log("FETCHED CATEGORY:", response.data);
 
 				$('#category').empty().append('<option value="">--SELECT CATEGORY--</option>');
 
@@ -31,11 +31,11 @@ $(document).ready(function() {
 				});
 
 			} else {
-				console.warn("No Category data available.");
+				console.warn("NO CATEGORY DATA AVAILABLE.");
 			}
 		},
 		error: function(err) {
-			console.error("Error fetching Categories:", err);
+			console.error("ERROR FETCHING CATEGORIES:", err);
 		}
 	});
 
@@ -66,12 +66,12 @@ $(document).ready(function() {
 					}
 				});
 			} else {
-				alert("No approved customers found.");
+				alert("NO APPROVED CUSTOMERS FOUND.");
 			}
 		},
 		error: function(xhr, status, error) {
-			console.error("Error fetching customers:", error);
-			alert("Failed to load customer codes.");
+			console.error("ERROR FETCHING CUSTOMERS:", error);
+			alert("FAILED TO LOAD CUSTOMER CODES.");
 		}
 	});
 
@@ -264,11 +264,11 @@ $(document).ready(function() {
 						$("#remarks").val(data.remarks);
 
 					} else {
-						alert("No customer found for this member code.");
+						alert("NO CUSTOMER FOUND FOR THIS MEMBER CODE.");
 					}
 				},
 				error: function() {
-					alert("Member not found or server error.");
+					alert("MEMBER NOT FOUND OR SERVER ERROR.");
 				}
 			});
 		}
@@ -281,7 +281,7 @@ $(document).ready(function() {
 			if (response.status == "FOUND") {
 				const relativeList = response.data;
 				$("#nomineeRelationToApplicant").empty(); // Clear existing options
-				$("#nomineeRelationToApplicant").append("<option value=''>-- Select Relative --</option>");
+				$("#nomineeRelationToApplicant").append("<option value=''>-- SELECT RELATIVE --</option>");
 
 				for (let i = 0; i < relativeList.length; i++) {
 					let relative = relativeList[i];
@@ -289,12 +289,12 @@ $(document).ready(function() {
 					$("#nomineeRelationToApplicant").append(option);
 				}
 			} else {
-				alert("Error: " + response.message);
+				alert("ERROR: " + response.message);
 			}
 		},
 		error: function(xhr) {
-			console.error("Error loading branches:", xhr.responseText);
-			alert("Failed to load dropdown data.");
+			console.error("ERROR LOADING BRANCHES:", xhr.responseText);
+			alert("FAILED TO LOAD DROPDOWN DATA.");
 		}
 	});
 
@@ -304,7 +304,7 @@ $(document).ready(function() {
 		event.preventDefault();
 		const customerCode = $('#customerCode').val();
 		if (!customerCode) {
-			alert("First select the data, then proceed to update.");
+			alert("FIRST SELECT THE DATA, THEN PROCEED TO UPDATE.");
 			return;
 		}
 		var customerData = new FormData();
@@ -316,24 +316,24 @@ $(document).ready(function() {
 		var lastName = "";
 
 		if (customerName) {
-		    var nameParts = customerName.split(/\s+/);
+			var nameParts = customerName.split(/\s+/);
 
-		    if (nameParts.length === 1) {
-		        // Example: Niraj
-		        firstName = nameParts[0];
+			if (nameParts.length === 1) {
+				// Example: Niraj
+				firstName = nameParts[0];
 
-		    } else if (nameParts.length === 2) {
-		        // Example: Niraj Sharma
-		        firstName = nameParts[0];
-		        lastName = nameParts[1];
+			} else if (nameParts.length === 2) {
+				// Example: Niraj Sharma
+				firstName = nameParts[0];
+				lastName = nameParts[1];
 
-		    } else {
-		        // Example: Niraj Kumar Sharma
-		        firstName = nameParts[0];
-		        lastName = nameParts[nameParts.length - 1];
+			} else {
+				// Example: Niraj Kumar Sharma
+				firstName = nameParts[0];
+				lastName = nameParts[nameParts.length - 1];
 
-		        middleName = nameParts.slice(1, -1).join(" ");
-		    }
+				middleName = nameParts.slice(1, -1).join(" ");
+			}
 		}
 
 		customerData.append("id", id);
@@ -435,14 +435,14 @@ $(document).ready(function() {
 			cache: false,
 			success: function(response) {
 				if (response.status === "OK") {
-					alert("Customer Data Updated Successfully");
+					alert("CUSTOMER DATA UPDATED SUCCESSFULLY");
 					location.reload();
 				} else {
-					alert("Something went wrong: " + response.message);
+					alert("SOMETHING WENT WRONG: " + response.message);
 				}
 			},
 			error: function(xhr) {
-				alert("Error while saving data: " + xhr.responseText);
+				alert("ERROR WHILE SAVING DATA: " + xhr.responseText);
 			}
 		});
 	});
@@ -451,28 +451,28 @@ $(document).ready(function() {
 		var id = $("#id").val();
 		let customerCode = $("#customerCode").val();
 		if (customerCode !== "") {
-			if (confirm("Are you sure you want to delete this Customer Data?")) {
+			if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS CUSTOMER DATA?")) {
 				$.ajax({
 					url: "api/datacorrection/deleteCustomerDataByForm",
 					type: "POST",
 					data: { id: id },
 					success: function(response) {
 						if (response.status == "OK") {
-							alert("Customer Data Deleted Successfully");
+							alert("CUSTOMER DATA DELETED SUCCESSFULLY");
 							location.reload();
 						} else {
-							alert("Delete failed: " + response.message);
+							alert("DELETE FAILED: " + response.message);
 						}
 					},
 					error: function(xhr, status, error) {
-						alert("Failed to delete Customer.");
-						console.error("Error:", error);
+						alert("FAILED TO DELETE CUSTOMER.");
+						console.error("ERROR:", error);
 					}
 				});
 			}
 		}
 		else {
-			alert("First Select Any One Data Then Proceed To Delete!");
+			alert("FIRST SELECT ANY ONE DATA THEN PROCEED TO DELETE!");
 		}
 
 	});
@@ -481,7 +481,7 @@ $(document).ready(function() {
 
 		const customerCode = $("#customerCode").val();
 		if (!customerCode) {
-			alert("Please select atleast one data then proceed to print!");
+			alert("PLEASE SELECT ATLEAST ONE DATA THEN PROCEED TO PRINT!");
 			return;
 		}
 
@@ -492,7 +492,7 @@ $(document).ready(function() {
 	        <h3 style="text-align:center; margin-top:5px;">(${c.shortName})</h3>
 	        <p style="text-align:center;">
 	            ${c.address}, ${c.city}, ${c.state} - ${c.pinCode}<br>
-	            CIN: ${c.cinNo} | Email: ${c.emailId.toLowerCase()} | Helpline: ${c.helplineNo}
+	            CIN: ${c.cinNo} | EMAIL: ${c.emailId.toLowerCase()} | HELPLINE: ${c.helplineNo}
 	        </p>
 	        <hr>
 	    `;
@@ -519,51 +519,51 @@ $(document).ready(function() {
 		const printContent = `
 	        ${companyHeader}
 
-	        <h2 style="text-align:center;margin-bottom:20px;">Customer Details</h2>
+	        <h2 style="text-align:center;margin-bottom:20px;">CUSTOMER DETAILS</h2>
 
 	        <table class="print-table">
 
-	            <tr><th>Customer Code</th><td>${getVal("customerCode")}</td></tr>
-	            <tr><th>Customer Name</th><td>${getVal("customerName")}</td></tr>
-	            <tr><th>Gender</th><td>${getVal("customerGender")}</td></tr>
-	            <tr><th>Date of Birth</th><td>${getVal("dob")}</td></tr>
-	            <tr><th>Age</th><td>${getVal("customerAge")}</td></tr>
-	            <tr><th>Relationship Status</th><td>${getVal("relationshipStatus")}</td></tr>
-	            <tr><th>Address</th><td>${getVal("customerAddress")}</td></tr>
-	            <tr><th>District</th><td>${getVal("district")}</td></tr>
-	            <tr><th>State</th><td>${getVal("state")}</td></tr>
-	            <tr><th>Branch</th><td>${getVal("branchName")}</td></tr>
-	            <tr><th>Pin Code</th><td>${getVal("pinCode")}</td></tr>
-	            <tr><th>Aadhar No</th><td>${getVal("aadharNo")}</td></tr>
-	            <tr><th>PAN No</th><td>${getVal("panNo")}</td></tr>
-	            <tr><th>Voter ID</th><td>${getVal("voterNo")}</td></tr>
-	            <tr><th>Contact No</th><td>${getVal("contactNo")}</td></tr>
-	            <tr><th>Email ID</th><td>${getVal("emailId")}</td></tr>
-	            <tr><th>Profession</th><td>${getVal("profession")}</td></tr>
-	            <tr><th>Academic Background</th><td>${getVal("academicBackground")}</td></tr>
-	            <tr><th>Referral Code</th><td>${getVal("referralCode")}</td></tr>
-	            <tr><th>Referral Name</th><td>${getVal("referralName")}</td></tr>
+	            <tr><th>CUSTOMER CODE</th><td>${getVal("customerCode")}</td></tr>
+	            <tr><th>CUSTOMER NAME</th><td>${getVal("customerName")}</td></tr>
+	            <tr><th>GENDER</th><td>${getVal("customerGender")}</td></tr>
+	            <tr><th>DATE OF BIRTH</th><td>${getVal("dob")}</td></tr>
+	            <tr><th>AGE</th><td>${getVal("customerAge")}</td></tr>
+	            <tr><th>RELATIONSHIP STATUS</th><td>${getVal("relationshipStatus")}</td></tr>
+	            <tr><th>ADDRESS</th><td>${getVal("customerAddress")}</td></tr>
+	            <tr><th>DISTRICT</th><td>${getVal("district")}</td></tr>
+	            <tr><th>STATE</th><td>${getVal("state")}</td></tr>
+	            <tr><th>BRANCH</th><td>${getVal("branchName")}</td></tr>
+	            <tr><th>PIN CODE</th><td>${getVal("pinCode")}</td></tr>
+	            <tr><th>AADHAR NO</th><td>${getVal("aadharNo")}</td></tr>
+	            <tr><th>PAN NO</th><td>${getVal("panNo")}</td></tr>
+	            <tr><th>VOTER ID</th><td>${getVal("voterNo")}</td></tr>
+	            <tr><th>CONTACT NO</th><td>${getVal("contactNo")}</td></tr>
+	            <tr><th>EMAIL ID</th><td>${getVal("emailId")}</td></tr>
+	            <tr><th>PROFESSION</th><td>${getVal("profession")}</td></tr>
+	            <tr><th>ACADEMIC BACKGROUND</th><td>${getVal("academicBackground")}</td></tr>
+	            <tr><th>REFERRAL CODE</th><td>${getVal("referralCode")}</td></tr>
+	            <tr><th>REFERRAL NAME</th><td>${getVal("referralName")}</td></tr>
 
-				<tr><th colspan="2" style="background:#f1f1f1;text-align:center;">Customer Images</th></tr>
+				<tr><th colspan="2" style="background:#f1f1f1;text-align:center;">CUSTOMER IMAGES</th></tr>
 	            <tr>
-	                <th>Customer Photo</th>
+	                <th>CUSTOMER PHOTO</th>
 	                <td><img src="${photo}" style="width:120px;height:120px;object-fit:cover;border-radius:10px;"></td>
 	            </tr>
 
 	            <tr>
-	                <th>Customer Signature</th>
+	                <th>CUSTOMER SIGNATURE</th>
 	                <td><img src="${sign}" style="width:150px;height:70px;object-fit:contain;"></td>
 	            </tr>
 
-	            <tr><th colspan="2" style="background:#f1f1f1;text-align:center;">Nominee Details</th></tr>
-	            <tr><th>Nominee Name</th><td>${getVal("nomineeName")}</td></tr>
-	            <tr><th>Relation</th><td>${getVal("nomineeRelationToApplicant")}</td></tr>
-	            <tr><th>Address</th><td>${getVal("nomineeAddress")}</td></tr>
-	            <tr><th>KYC No</th><td>${getVal("nomineeKycNo")}</td></tr>
-	            <tr><th>Nominee Mobile</th><td>${getVal("nomineeMobileNo")}</td></tr>
-	            <tr><th>Nominee Age</th><td>${getVal("nomineeAge")}</td></tr>
-	            <tr><th>Nominee PAN</th><td>${getVal("nomineePanNo")}</td></tr>
-	            <tr><th>KYC Type</th><td>${getVal("nomineeKycType")}</td></tr>
+	            <tr><th colspan="2" style="background:#f1f1f1;text-align:center;">NOMINEE DETAILS</th></tr>
+	            <tr><th>NOMINEE NAME</th><td>${getVal("nomineeName")}</td></tr>
+	            <tr><th>RELATION</th><td>${getVal("nomineeRelationToApplicant")}</td></tr>
+	            <tr><th>ADDRESS</th><td>${getVal("nomineeAddress")}</td></tr>
+	            <tr><th>KYC NO</th><td>${getVal("nomineeKycNo")}</td></tr>
+	            <tr><th>NOMINEE MOBILE</th><td>${getVal("nomineeMobileNo")}</td></tr>
+	            <tr><th>NOMINEE AGE</th><td>${getVal("nomineeAge")}</td></tr>
+	            <tr><th>NOMINEE PAN</th><td>${getVal("nomineePanNo")}</td></tr>
+	            <tr><th>KYC TYPE</th><td>${getVal("nomineeKycType")}</td></tr>
 
 	        </table>
 	    `;
@@ -573,7 +573,7 @@ $(document).ready(function() {
 		printWindow.document.write(`
 	        <html>
 	        <head>
-	            <title>Customer Details</title>
+	            <title>CUSTOMER DETAILS</title>
 	            <style>
 	                body { font-family: Arial; padding: 25px; }
 	                .print-table { width: 100%; border-collapse: collapse; }
@@ -608,7 +608,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		toggle.addEventListener('change', () => {
 			updateToggleColor(toggle);
-			console.log(`${toggle.dataset.toggleType} is now ${toggle.checked}`);
+			console.log(`${toggle.dataset.toggleType} IS NOW ${toggle.checked}`);
 		});
 	});
 
@@ -653,7 +653,7 @@ function photoUpload() {
 		};
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for photo.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR PHOTO.");
 	}
 }
 
@@ -669,7 +669,7 @@ function signatureUpload() {
 		};
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for signature.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR SIGNATURE.");
 	}
 }
 
@@ -683,7 +683,7 @@ function voterUpload() {
 		};
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for Voter.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR VOTER.");
 	}
 }
 
@@ -697,7 +697,7 @@ function drivingUpload() {
 		};
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for Driving License.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR DRIVING LICENSE.");
 	}
 }
 
@@ -711,7 +711,7 @@ function newlyAddedUpload() {
 		};
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for this image.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR THIS IMAGE.");
 	}
 }
 
@@ -725,7 +725,7 @@ function nomineAadharUpload() {
 		};
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for nominee aadhar.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR NOMINEE AADHAR.");
 	}
 }
 
@@ -739,7 +739,7 @@ function nomineSignatureUpload() {
 		};
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for nominee aadhar.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR NOMINEE AADHAR.");
 	}
 }
 
@@ -753,7 +753,7 @@ function nomineSignatureUpload() {
 		};
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for nominee signature.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR NOMINEE SIGNATURE.");
 	}
 }
 
@@ -842,12 +842,12 @@ function loadCompanyAdministration() {
 				// Show on screen (add your own div in JSP)
 				$("#companyNameHeading").text(c.companyName + " (" + c.shortName + ")");
 				$("#companyDetails").html(`
-                        <b>Sign Up Date:</b> ${c.signUpDate} <br>
-                        <b>CIN No:</b> ${c.cinNo} <br>
-                        <b>Address:</b> ${c.address}, ${c.city}, ${c.state} - ${c.pinCode} <br>
-                        <b>Email:</b> ${c.emailId} <br>
-                        <b>Helpline:</b> ${c.helplineNo} <br>
-                        <b>Branch Manager No:</b> ${c.branchManagerContactNo}
+                        <b>SIGN UP DATE:</b> ${c.signUpDate} <br>
+                        <b>CIN NO:</b> ${c.cinNo} <br>
+                        <b>ADDRESS:</b> ${c.address}, ${c.city}, ${c.state} - ${c.pinCode} <br>
+                        <b>EMAIL:</b> ${c.emailId} <br>
+                        <b>HELPLINE:</b> ${c.helplineNo} <br>
+                        <b>BRANCH MANAGER NO:</b> ${c.branchManagerContactNo}
                     `);
 			}
 		}

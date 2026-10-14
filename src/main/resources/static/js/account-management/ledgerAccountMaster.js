@@ -47,15 +47,15 @@ function showTableData() {
 	if (tableBody.children().length === 0) {
 		// No data loaded yet — load and show
 		loadLedgerData(); // Will populate #tableBody
-		toggleBtn.html('Hide');
+		toggleBtn.html('HIDE');
 	} else {
 		// Data exists — toggle visibility
 		if (tableBody.is(":visible")) {
 			tableBody.hide();
-			toggleBtn.html('Show');
+			toggleBtn.html('SHOW');
 		} else {
 			tableBody.show();
-			toggleBtn.html('Hide');
+			toggleBtn.html('HIDE');
 		}
 	}
 }
@@ -74,27 +74,27 @@ function validateLedgerForm() {
 	clearErrorMessages();
 
 	if (accountCode === "") {
-		$('#accountCodeError').text("* This field is required");
+		$('#accountCodeError').text("* THIS FIELD IS REQUIRED");
 		isValid = false;
 	}
 	if (accountTitle === "") {
-		$('#accountTitleError').text("* This field is required");
+		$('#accountTitleError').text("* THIS FIELD IS REQUIRED");
 		isValid = false;
 	}
 	if (groupName === "") {
-		$('#groupNameError').text("* This field is required");
+		$('#groupNameError').text("* THIS FIELD IS REQUIRED");
 		isValid = false;
 	}
 	if (accountType === "") {
-		$('#accountTypeError').text("* This field is required");
+		$('#accountTypeError').text("* THIS FIELD IS REQUIRED");
 		isValid = false;
 	}
 	if (status === "") {
-		$('#statusError').text("* This field is required");
+		$('#statusError').text("* THIS FIELD IS REQUIRED");
 		isValid = false;
 	}
 	if (branchName === "") {
-		$('#branchNameError').text("* This field is required");
+		$('#branchNameError').text("* THIS FIELD IS REQUIRED");
 		isValid = false;
 	}
 
@@ -134,17 +134,17 @@ function saveLedger() {
 		data: JSON.stringify(ledgerData),
 		success: function(response, status, xhr) {
 			if (xhr.status === 201) {
-				alert(response.message);
+				alert((response.message || "").toUpperCase());
 				$("#formid")[0].reset();
 				$("#accountId").val("");
 				loadLedgerData();
 			} else {
-				alert("Unexpected response: " + response.message);
+				alert("UNEXPECTED RESPONSE: " + (response.message || "").toUpperCase());
 			}
 		},
 		error: function(xhr) {
 			const err = xhr.responseJSON;
-			const message = err && err.message ? err.message : "Error saving ledger account";
+			const message = err && err.message ? err.message.toUpperCase() : "ERROR SAVING LEDGER ACCOUNT";
 			alert(message);
 		}
 	});
@@ -194,100 +194,100 @@ function loadLedgerData() {
 					const serialNumber = index + 1;
 
 					const row = `
-						<tr>
+                        <tr>
 
-							<!-- Serial Number -->
-							<td>
-								${serialNumber}
-							</td>
+                            <!-- Serial Number -->
+                            <td>
+                                ${serialNumber}
+                            </td>
 
-							<!-- Account Code -->
-							<td>
-								${ledger.accountCode || ''}
-							</td>
+                            <!-- Account Code -->
+                            <td>
+                                ${ledger.accountCode || ''}
+                            </td>
 
-							<!-- Account Title -->
-							<td>
-								${ledger.accountTitle
+                            <!-- Account Title -->
+                            <td>
+                                ${ledger.accountTitle
 							? ledger.accountTitle.toUpperCase()
 							: ''}
-							</td>
+                            </td>
 
-							<!-- Account Group -->
-							<td>
-								${ledger.groupName
+                            <!-- Account Group -->
+                            <td>
+                                ${ledger.groupName
 							? ledger.groupName.toUpperCase()
 							: ''}
-							</td>
+                            </td>
 
-							<!-- Account Type -->
-							<td>
-								${ledger.accountType
+                            <!-- Account Type -->
+                            <td>
+                                ${ledger.accountType
 							? ledger.accountType.toUpperCase()
 							: ''}
-							</td>
+                            </td>
 
-							<!-- Opening Balance -->
-							<td>
-								${ledger.openingBalance != null
+                            <!-- Opening Balance -->
+                            <td>
+                                ${ledger.openingBalance != null
 							? Number(ledger.openingBalance).toFixed(2)
 							: ''}
-							</td>
+                            </td>
 
-							<!-- Opening Balance Type -->
-							<td>
-								${ledger.openingBalanceType
+                            <!-- Opening Balance Type -->
+                            <td>
+                                ${ledger.openingBalanceType
 							? ledger.openingBalanceType.toUpperCase()
 							: ''}
-							</td>
+                            </td>
 
-							<!-- Current Balance -->
-							<td>
-								${ledger.currentBalance != null
+                            <!-- Current Balance -->
+                            <td>
+                                ${ledger.currentBalance != null
 							? Number(ledger.currentBalance).toFixed(2)
 							: ''}
-							</td>
+                            </td>
 
-							<!-- Status -->
-							<td>
-								${ledger.status
+                            <!-- Status -->
+                            <td>
+                                ${ledger.status
 							? ledger.status.toUpperCase()
 							: ''}
-							</td>
+                            </td>
 
-							<!-- Branch Name -->
-							<td>
-								${ledger.branchName
+                            <!-- Branch Name -->
+                            <td>
+                                ${ledger.branchName
 							? ledger.branchName.toUpperCase()
 							: ''}
-							</td>
+                            </td>
 
-							<!-- View -->
-							<td>
-								<button
-									class="iconbutton"
-									onclick="viewLedger(${ledger.accountId})"
-									title="View">
+                            <!-- View -->
+                            <td>
+                                <button
+                                    class="iconbutton"
+                                    onclick="viewLedger(${ledger.accountId})"
+                                    title="VIEW">
 
-									<i class="fa-solid fa-eye text-primary"></i>
+                                    <i class="fa-solid fa-eye text-primary"></i>
 
-								</button>
-							</td>
+                                </button>
+                            </td>
 
-							<!-- Delete -->
-							<td>
-								<button
-									class="iconbutton"
-									onclick="deleteLedger(${ledger.accountId})"
-									title="Delete">
+                            <!-- Delete -->
+                            <td>
+                                <button
+                                    class="iconbutton"
+                                    onclick="deleteLedger(${ledger.accountId})"
+                                    title="DELETE">
 
-									<i class="fa-solid fa-trash text-danger"></i>
+                                    <i class="fa-solid fa-trash text-danger"></i>
 
-								</button>
-							</td>
+                                </button>
+                            </td>
 
-						</tr>
-					`;
+                        </tr>
+                    `;
 
 					tbody.append(row);
 
@@ -296,12 +296,12 @@ function loadLedgerData() {
 			} else {
 
 				tbody.append(`
-					<tr>
-						<td colspan="12" class="text-center">
-							No ledgers found.
-						</td>
-					</tr>
-				`);
+                    <tr>
+                        <td colspan="12" class="text-center">
+                            NO LEDGERS FOUND.
+                        </td>
+                    </tr>
+                `);
 
 			}
 
@@ -312,18 +312,18 @@ function loadLedgerData() {
 			const err = xhr.responseJSON;
 
 			const message = err && err.message
-				? err.message
-				: "Failed to load ledger account list.";
+				? err.message.toUpperCase()
+				: "FAILED TO LOAD LEDGER ACCOUNT LIST.";
 
 			alert(message);
 
 			$("#tableBody").html(`
-				<tr>
-					<td colspan="12" class="text-center">
-						${message}
-					</td>
-				</tr>
-			`);
+                <tr>
+                    <td colspan="12" class="text-center">
+                        ${message}
+                    </td>
+                </tr>
+            `);
 
 		}
 
@@ -434,7 +434,7 @@ function viewLedger(id) {
 		},
 		error: function(xhr) {
 			const err = xhr.responseJSON;
-			const message = err && err.message ? err.message : "Error fetching ledger account.";
+			const message = err && err.message ? err.message.toUpperCase() : "ERROR FETCHING LEDGER ACCOUNT.";
 			alert(message);
 		}
 	});
@@ -450,13 +450,13 @@ function BranchNameDropdown() {
 			let options = "<option value=''>--SELECT BRANCH NAME--</option>";
 			if (response && Array.isArray(response.data)) {
 				response.data.forEach(branch => {
-					options += `<option value='${branch.branchName}'>${branch.branchName}</option>`;
+					options += `<option value='${branch.branchName}'>${branch.branchName.toUpperCase()}</option>`;
 				});
 			}
 			$("#branchName").html(options);
 		},
 		error: function() {
-			alert("Failed to load branch names.");
+			alert("FAILED TO LOAD BRANCH NAMES.");
 		}
 	});
 }
@@ -471,12 +471,12 @@ function GroupNameDropdown() {
 			const groupNames = response.data;
 			let options = "<option value=''>--SELECT GROUP NAME--</option>";
 			groupNames.forEach(group => {
-				options += `<option value='${group}'>${group}</option>`;
+				options += `<option value='${group}'>${group.toUpperCase()}</option>`;
 			});
 			$("#groupName").html(options);
 		},
 		error: function() {
-			alert("Failed to load group names.");
+			alert("FAILED TO LOAD GROUP NAMES.");
 		}
 	});
 }
@@ -490,22 +490,22 @@ function GroupNameDropdown() {
 };*/
 
 function deleteLedger(id) {
-	if (confirm("Are you sure you want to delete this Ledger?")) {
+	if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS LEDGER?")) {
 		$.ajax({
 			url: "accountManagement/deleteLedgerById",
 			type: "POST",
 			data: { id: id },
 			success: function(response) {
 				if (response.status == "OK") {
-					alert(response.message);
+					alert((response.message || "").toUpperCase());
 					location.reload();
 				} else {
-					alert("Delete failed: " + response.message);
+					alert("DELETE FAILED: " + (response.message || "").toUpperCase());
 				}
 			},
 			error: function(xhr, status, error) {
-				alert("Failed to delete branch.");
-				console.error("Error:", error);
+				alert("FAILED TO DELETE BRANCH.");
+				console.error("ERROR:", error);
 			}
 		});
 	}

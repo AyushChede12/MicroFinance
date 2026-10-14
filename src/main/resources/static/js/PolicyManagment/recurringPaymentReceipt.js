@@ -57,7 +57,7 @@ $(document).ready(function() {
 				error
 			);
 
-			alert("Failed to load policies.");
+			alert("FAILED TO LOAD POLICIES.");
 		}
 	});
 
@@ -86,7 +86,7 @@ $(document).ready(function() {
 			tbody.html(`
                 <tr>
                     <td colspan="13" class="text-center">
-                        No data available
+                        NO DATA AVAILABLE
                     </td>
                 </tr>
             `);
@@ -229,7 +229,7 @@ $(document).ready(function() {
                     <tr>
                         <td colspan="13"
                             class="text-center">
-                            No data available
+                            NO DATA AVAILABLE
                         </td>
                     </tr>
                 `);
@@ -245,7 +245,7 @@ $(document).ready(function() {
 				error
 			);
 
-			alert("Failed to load policy data.");
+			alert("FAILED TO LOAD POLICY DATA.");
 		}
 	});
 
@@ -264,7 +264,7 @@ $(document).ready(function() {
 		if (!policyCode) {
 
 			alert(
-				"Please select Policy Code."
+				"PLEASE SELECT POLICY CODE."
 			);
 
 			$("#policyTableBody").empty();
@@ -299,7 +299,7 @@ $(document).ready(function() {
 				) {
 
 					alert(
-						"No policy data found."
+						"NO POLICY DATA FOUND."
 					);
 
 					$("#policyTableBody").empty();
@@ -327,7 +327,7 @@ $(document).ready(function() {
 				if (filteredPolicy.length === 0) {
 
 					alert(
-						"No data found for selected policy."
+						"NO DATA FOUND FOR SELECTED POLICY."
 					);
 
 					$("#policyTableBody").empty();
@@ -354,7 +354,7 @@ $(document).ready(function() {
 				);
 
 				alert(
-					"Error while fetching policy data."
+					"ERROR WHILE FETCHING POLICY DATA."
 				);
 			}
 		});
@@ -378,7 +378,7 @@ $(document).ready(function() {
 
 			if (!policyCode) {
 
-				alert("Policy Code not found!");
+				alert("POLICY CODE NOT FOUND!");
 
 				return;
 			}
@@ -420,7 +420,7 @@ $(document).ready(function() {
 					) {
 
 						alert(
-							"Policy data not found!"
+							"POLICY DATA NOT FOUND!"
 						);
 
 						return;
@@ -461,7 +461,7 @@ $(document).ready(function() {
 							if (!company) {
 
 								alert(
-									"Company details not found!"
+									"COMPANY DETAILS NOT FOUND!"
 								);
 
 								return;
@@ -900,7 +900,7 @@ $(document).ready(function() {
 							if (!printWindow) {
 
 								alert(
-									"Please allow pop-ups for this website."
+									"PLEASE ALLOW POP-UPS FOR THIS WEBSITE."
 								);
 
 								return;
@@ -922,7 +922,7 @@ $(document).ready(function() {
 	<meta charset="UTF-8">
 
 	<title>
-	RD Payment Receipt - ${escapeHtml(policyCode)}
+	RD PAYMENT RECEIPT - ${escapeHtml(policyCode)}
 	</title>
 
 
@@ -1566,7 +1566,7 @@ $(document).ready(function() {
 	        </div>
 
 	        <div class="receipt-subtitle">
-	            Payment acknowledgement / customer copy
+	            PAYMENT ACKNOWLEDGEMENT / CUSTOMER COPY
 	        </div>
 
 	    </div>
@@ -1628,7 +1628,7 @@ $(document).ready(function() {
 	    <div class="section">
 
 	        <div class="section-header">
-	            Customer Details
+	            CUSTOMER DETAILS
 	        </div>
 
 
@@ -1638,7 +1638,7 @@ $(document).ready(function() {
 	            <tr>
 
 	                <td class="info-label">
-	                    Customer Name
+	                    CUSTOMER NAME
 	                </td>
 
 	                <td class="info-value">
@@ -1647,7 +1647,7 @@ $(document).ready(function() {
 
 
 	                <td class="info-label">
-	                    Customer ID
+	                    CUSTOMER ID
 	                </td>
 
 	                <td class="info-value">
@@ -1660,7 +1660,7 @@ $(document).ready(function() {
 	            <tr>
 
 	                <td class="info-label">
-	                    Contact No.
+	                    CONTACT NO.
 	                </td>
 
 	                <td class="info-value">
@@ -1669,7 +1669,7 @@ $(document).ready(function() {
 
 
 	                <td class="info-label">
-	                    RD Account / Policy No.
+	                    RD ACCOUNT / POLICY NO.
 	                </td>
 
 	                <td class="info-value">
@@ -1682,7 +1682,7 @@ $(document).ready(function() {
 	            <tr>
 
 	                <td class="info-label">
-	                    Address
+	                    ADDRESS
 	                </td>
 
 	                <td class="info-value" colspan="3">
@@ -1704,7 +1704,7 @@ $(document).ready(function() {
 	    <div class="section">
 
 	        <div class="section-header">
-	            RD Account Details
+	            RD ACCOUNT DETAILS
 	        </div>
 
 
@@ -1714,7 +1714,7 @@ $(document).ready(function() {
 	            <tr>
 
 	                <td class="info-label">
-	                    Scheme Name
+	                    SCHEME NAME
 	                </td>
 
 	                <td class="info-value">
@@ -1723,7 +1723,7 @@ $(document).ready(function() {
 
 
 	                <td class="info-label">
-	                    Scheme Code
+	                    SCHEME CODE
 	                </td>
 
 	                <td class="info-value">
@@ -1736,7 +1736,7 @@ $(document).ready(function() {
 	            <tr>
 
 	                <td class="info-label">
-	                    Deposit Frequency
+	                    DEPOSIT FREQUENCY
 	                </td>
 
 	                <td class="info-value">
@@ -1745,7 +1745,7 @@ $(document).ready(function() {
 
 
 	                <td class="info-label">
-	                    Interest Rate
+	                    INTEREST RATE
 	                </td>
 
 	                <td class="info-value">
@@ -1758,7 +1758,7 @@ $(document).ready(function() {
 	            <tr>
 
 	                <td class="info-label">
-	                    Deposit Start Date
+	                    DEPOSIT START DATE
 	                </td>
 
 	                <td class="info-value">
@@ -1767,7 +1767,7 @@ $(document).ready(function() {
 
 
 	                <td class="info-label">
-	                    Maturity Date
+	                    MATURITY DATE
 	                </td>
 
 	                <td class="info-value">
@@ -1780,7 +1780,7 @@ $(document).ready(function() {
 	            <tr>
 
 	                <td class="info-label">
-	                    RD Term
+	                    RD TERM
 	                </td>
 
 	                <td class="info-value">
@@ -1789,7 +1789,7 @@ $(document).ready(function() {
 
 
 	                <td class="info-label">
-	                    Installment
+	                    INSTALLMENT
 	                </td>
 
 	                <td class="info-value">
@@ -1819,7 +1819,7 @@ $(document).ready(function() {
 	        </div>
 
 	        <div class="payment-word">
-	            Amount received towards the above RD account
+	            AMOUNT RECEIVED TOWARDS THE ABOVE RD ACCOUNT
 	        </div>
 
 	    </div>
@@ -1832,7 +1832,7 @@ $(document).ready(function() {
 	    <div class="section">
 
 	        <div class="section-header">
-	            Payment Details
+	            PAYMENT DETAILS
 	        </div>
 
 
@@ -1843,23 +1843,23 @@ $(document).ready(function() {
 	                <tr>
 
 	                    <th>
-	                        Payment Date
+	                        PAYMENT DATE
 	                    </th>
 
 	                    <th>
-	                        Installment No.
+	                        INSTALLMENT NO.
 	                    </th>
 
 	                    <th>
-	                        Payment Mode
+	                        PAYMENT MODE
 	                    </th>
 
 	                    <th>
-	                        Payment By
+	                        PAYMENT BY
 	                    </th>
 
 	                    <th style="text-align:right;">
-	                        Amount Received
+	                        AMOUNT RECEIVED
 	                    </th>
 
 	                </tr>
@@ -1956,7 +1956,7 @@ $(document).ready(function() {
 	    <div class="section">
 
 	        <div class="section-header">
-	            Next Payment / Account Information
+	            NEXT PAYMENT / ACCOUNT INFORMATION
 	        </div>
 
 
@@ -1966,7 +1966,7 @@ $(document).ready(function() {
 	            <tr>
 
 	                <td class="info-label">
-	                    Next Due Date
+	                    NEXT DUE DATE
 	                </td>
 
 	                <td class="info-value">
@@ -1975,7 +1975,7 @@ $(document).ready(function() {
 
 
 	                <td class="info-label">
-	                    Next Installment
+	                    NEXT INSTALLMENT
 	                </td>
 
 	                <td class="info-value">
@@ -1988,7 +1988,7 @@ $(document).ready(function() {
 	            <tr>
 
 	                <td class="info-label">
-	                    Branch
+	                    BRANCH
 	                </td>
 
 	                <td class="info-value">
@@ -1997,7 +1997,7 @@ $(document).ready(function() {
 
 
 	                <td class="info-label">
-	                    Agent / Collector
+	                    AGENT / COLLECTOR
 	                </td>
 
 	                <td class="info-value">
@@ -2010,7 +2010,7 @@ $(document).ready(function() {
 	            <tr>
 
 	                <td class="info-label">
-	                    Remarks
+	                    REMARKS
 	                </td>
 
 	                <td class="info-value" colspan="3">
@@ -2035,7 +2035,7 @@ $(document).ready(function() {
 	        <div class="footer-left">
 
 	            <strong>
-	                Policy Status:
+	                POLICY STATUS:
 	            </strong>
 
 	            ${policy.isApproved === true
@@ -2046,7 +2046,7 @@ $(document).ready(function() {
 	            <br>
 
 	            <strong>
-	                Receipt Type:
+	                RECEIPT TYPE:
 	            </strong>
 
 	            RD INSTALLMENT PAYMENT
@@ -2054,7 +2054,7 @@ $(document).ready(function() {
 	            <br>
 
 	            <strong>
-	                Branch:
+	                BRANCH:
 	            </strong>
 
 	            ${escapeHtml(branchName)}
@@ -2081,8 +2081,8 @@ $(document).ready(function() {
 
 	    <div class="note">
 
-	        This is a system-generated receipt.
-	        Please preserve this receipt for your records.
+	        THIS IS A SYSTEM-GENERATED RECEIPT.
+	        PLEASE PRESERVE THIS RECEIPT FOR YOUR RECORDS.
 
 	    </div>
 
@@ -2152,7 +2152,7 @@ $(document).ready(function() {
 							);
 
 							alert(
-								"Unable to fetch company details."
+								"UNABLE TO FETCH COMPANY DETAILS."
 							);
 						}
 
@@ -2175,7 +2175,7 @@ $(document).ready(function() {
 					);
 
 					alert(
-						"Unable to fetch policy details."
+						"UNABLE TO FETCH POLICY DETAILS."
 					);
 				}
 

@@ -18,7 +18,7 @@ $(document).ready(function() {
 		},
 		error: function(xhr, status, error) {
 			console.error('AJAX Error:', status, error);
-			alert('Failed to fetch consultant data.');
+			alert('FAILED TO FETCH CONSULTANT DATA.');
 		}
 	});
 	$.ajax({
@@ -98,13 +98,13 @@ $(document).ready(function() {
 		var cust = customers.find(c => c.memberCode === selectedCode);
 
 		if (gold && cust) {
-			
+
 			const fullName = [
 				cust.firstName || "",
 				cust.middleName || "",
 				cust.lastName || ""
 			].filter(Boolean).join(" ");
-			
+
 			// Populate fields from addCustomer
 			$("#customerName").val(fullName.toUpperCase() || "");
 			$("#dateOfBirth").val(cust.dob.toUpperCase() || "");
@@ -165,7 +165,7 @@ $(document).ready(function() {
 
 
 		} else {
-			alert("No matching data found!");
+			alert("NO MATCHING DATA FOUND!");
 		}
 	});
 
@@ -195,7 +195,7 @@ $(document).ready(function() {
 				console.error("Error fetching members", err);
 			},
 		});
-		
+
 		$("#guarantorcustomerCode").on("change", function() {
 					var memberCode = $(this).val();
 					if (memberCode) {
@@ -211,8 +211,8 @@ $(document).ready(function() {
 									$("#guarantorAddress").val(code.customerAddress || "");
 									$("#guarantorPinCode").val(code.pinCode || "");
 									$("#guarantorContactNo").val(code.contactNo || "");
-									
-									
+
+
 
 								} else {
 									alert("No details found for this member");
@@ -237,7 +237,7 @@ $(document).ready(function() {
 		success: function(response) {
 			var select = $('#financialConsultantId');
 			select.empty(); // Clear existing options
-			select.append('<option value="">Select Financial Consultant</option>');
+			select.append('<option value="">SELECT FINANCIAL CONSULTANT</option>');
 
 			if (response && response.data && response.data.length > 0) {
 				response.data.forEach(function(fc) {
@@ -267,7 +267,7 @@ $(document).ready(function() {
 						// Populate form fields
 						$("#financialConsultantName").val(code.financialName || "");
 					} else {
-						alert("No details found for this member");
+						alert("NO DETAILS FOUND FOR THIS MEMBER");
 					}
 				},
 				error: function(err) {
@@ -334,102 +334,102 @@ function saveGoldapplication() {
 
 
 	if (memberCode === "") {
-		$('#vmemberCode').text('*please select customer code');
+		$('#vmemberCode').text('*PLEASE SELECT CUSTOMER CODE');
 		$('#memberCode').focus();
 		isValid = false;
 	}
 	if (purposeOfLoan === "") {
-		$('#vpurposeOfLoan').text('*this field is required');
+		$('#vpurposeOfLoan').text('*THIS FIELD IS REQUIRED');
 		$('#purposeOfLoan').focus();
 		isValid = false;
 	}
 	if (itemQty === "") {
-		$('#vitemQty').text('*this field is required');
+		$('#vitemQty').text('*THIS FIELD IS REQUIRED');
 		$('#itemQty').focus();
 		isValid = false;
 	}
 	if (itemWt === "") {
-		$('#vitemWt').text('*this field is required');
+		$('#vitemWt').text('*THIS FIELD IS REQUIRED');
 		$('#itemWt').focus();
 		isValid = false;
 	}
 	if (stoneWt === "") {
-		$('#vstoneWt').text('*this field is required');
+		$('#vstoneWt').text('*THIS FIELD IS REQUIRED');
 		$('#stoneWt').focus();
 		isValid = false;
 	}
 	if (gurantorIdentity === "") {
-		$('#vgurantorIdentity').text('*please select guarantor identity');
+		$('#vgurantorIdentity').text('*PLEASE SELECT GUARANTOR IDENTITY');
 		$('#gurantorIdentity').focus();
 		isValid = false;
 	}
 	if (coApplicantIdentity === "") {
-		$('#vcoApplicantIdentity').text('*please select coapplicant identity');
+		$('#vcoApplicantIdentity').text('*PLEASE SELECT COAPPLICANT IDENTITY');
 		$('#coApplicantIdentity').focus();
 		isValid = false;
 	}
 	if (processingFee === "") {
-		$('#vprocessingFee').text('*this field is required');
+		$('#vprocessingFee').text('*THIS FIELD IS REQUIRED');
 		$('#processingFee').focus();
 		isValid = false;
 	}
 	if (legalCharges === "") {
-		$('#vlegalCharges').text('*this field is required');
+		$('#vlegalCharges').text('*THIS FIELD IS REQUIRED');
 		$('#legalCharges').focus();
 		isValid = false;
 	}
 	if (stampDuty === "") {
-		$('#vstampDuty').text('*this field is required');
+		$('#vstampDuty').text('*THIS FIELD IS REQUIRED');
 		$('#stampDuty').focus();
 		isValid = false;
 	}
 	if (smsCharges === "") {
-		$('#vsmsCharges').text('*this field is required');
+		$('#vsmsCharges').text('*THIS FIELD IS REQUIRED');
 		$('#smsCharges').focus();
 		isValid = false;
 	}
 	if (mainCharges === "") {
-		$('#vmainCharges').text('*this field is required');
+		$('#vmainCharges').text('*THIS FIELD IS REQUIRED');
 		$('#mainCharges').focus();
 		isValid = false;
 	}
 	if (stationaryFee === "") {
-		$('#vstationaryFee').text('*this field is required');
+		$('#vstationaryFee').text('*THIS FIELD IS REQUIRED');
 		$('#stationaryFee').focus();
 		isValid = false;
 	}
 	if (gst === "") {
-		$('#vgst').text('*this field is required');
+		$('#vgst').text('*THIS FIELD IS REQUIRED');
 		$('#gst').focus();
 		isValid = false;
 	}
 	if (insuFee === "") {
-		$('#vinsuFee').text('*this field is required');
+		$('#vinsuFee').text('*THIS FIELD IS REQUIRED');
 		$('#insuFee').focus();
 		isValid = false;
 	}
 	if (penaltyCharge === "") {
-		$('#vpenaltyCharge').text('*this field is required');
+		$('#vpenaltyCharge').text('*THIS FIELD IS REQUIRED');
 		$('#penaltyCharge').focus();
 		isValid = false;
 	}
 	if (valuationFees === "") {
-		$('#vvaluationFees').text('*this field is required');
+		$('#vvaluationFees').text('*THIS FIELD IS REQUIRED');
 		$('#valuationFees').focus();
 		isValid = false;
 	}
 	if (overCharge === "") {
-		$('#voverCharge').text('*this field is required');
+		$('#voverCharge').text('*THIS FIELD IS REQUIRED');
 		$('#overCharge').focus();
 		isValid = false;
 	}
 	if (collectionCharge === "") {
-		$('#vcollectionCharge').text('*this field is required');
+		$('#vcollectionCharge').text('*THIS FIELD IS REQUIRED');
 		$('#collectionCharge').focus();
 		isValid = false;
 	}
 	if (financialConsultantId === "") {
-		$('#vfinancialConsultantId').text('*please select financial consultant id');
+		$('#vfinancialConsultantId').text('*PLEASE SELECT FINANCIAL CONSULTANT ID');
 		$('#financialConsultantId').focus();
 		isValid = false;
 	}
@@ -520,15 +520,15 @@ function saveGoldapplication() {
 		data: JSON.stringify(applyForGold),
 		success: function(response) {
 			if (response.status === 'CREATED') {
-				alert("Gold Application Saved Successfully! " + "\n" + "GoldID : " + applyForGold.goldID);
+				alert("GOLD APPLICATION SAVED SUCCESSFULLY! " + "\n" + "GOLDID : " + applyForGold.goldID);
 				location.reload();
 			} else {
-				alert('❌ Failed: ' + response.message);
+				alert('❌ FAILED: ' + response.message);
 			}
 		},
 		error: function(xhr, status, error) {
 			console.error('Error:', error);
-			alert('⚠️ Error while saving Gold Loan Application.');
+			alert('⚠️ ERROR WHILE SAVING GOLD LOAN APPLICATION.');
 		}
 	});
 
@@ -598,7 +598,7 @@ function photoUpload() {
 		};
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for photo.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR PHOTO.");
 	}
 }
 
@@ -614,7 +614,7 @@ function signatureUpload() {
 		};
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for signature.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR SIGNATURE.");
 	}
 }
 

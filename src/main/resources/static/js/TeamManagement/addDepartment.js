@@ -9,11 +9,11 @@ function saveDepartment() {
 		contentType: "application/json",
 		data: JSON.stringify(formData),
 		success: function(response) {
-			alert("Department Saved Successfully");
+			alert("DEPARTMENT SAVED SUCCESSFULLY");
 			location.reload();
 		},
 		error: function(xhr, status, error) {
-			$('#responseMessage').text("Error: " + xhr.responseText);
+			$('#responseMessage').text("ERROR: " + xhr.responseText);
 		}
 	});
 }
@@ -30,15 +30,15 @@ $(document).ready(function() {
 
 			$.each(data, function(index, item) {
 				var row = `<tr style="font-family: 'Poppins', sans-serif;">
-              <th scope="row"><a href="#">${index + 1}</a></th>
-              <td>${item.departmentName || ''}</td>
-            </tr>`;
+             <th scope="row"><a href="#">${index + 1}</a></th>
+             <td>${item.departmentName.toUpperCase() || ''}</td>
+           </tr>`;
 				tbody.append(row);
 			});
 		},
 		error: function(xhr, status, error) {
 			console.error("Error fetching data:", error);
-			alert("Failed to load Designation module data.");
+			alert("FAILED TO LOAD DESIGNATION MODULE DATA.");
 		}
 	});
 });

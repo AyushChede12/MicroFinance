@@ -97,102 +97,102 @@ function validateLoanSchemeForm() {
 
 	// 1) Loan Plan Name
 	if (loanPlaneName === "") {
-		$("#chkloanplanname").text("* Loan Plan Name is required");
+		$("#chkloanplanname").text("* LOAN PLAN NAME IS REQUIRED");
 		$("#loanPlaneName").focus();
 		return false;
 	}
 
 	// 2) Type of Loan
 	if (typeLoan === "" || typeLoan === "SELECT TYPE OF LOAN") {
-		$("#chkloantype").text("* Please select Type of Loan");
+		$("#chkloantype").text("* PLEASE SELECT TYPE OF LOAN");
 		$("#typeLoan").focus();
 		return false;
 	}
 
 	// 3) Age
 	if (age === "") {
-		$("#chkage").text("* Age is required");
+		$("#chkage").text("* AGE IS REQUIRED");
 		$("#age").focus();
 		return false;
 	} else if (!intPattern.test(age)) {
-		$("#chkage").text("* Age must be a number");
+		$("#chkage").text("* AGE MUST BE A NUMBER");
 		$("#age").focus();
 		return false;
 	} else if (parseInt(age) < 18 || parseInt(age) > 70) {
-		$("#chkage").text("* Age must be between 18 to 70");
+		$("#chkage").text("* AGE MUST BE BETWEEN 18 TO 70");
 		$("#age").focus();
 		return false;
 	}
 
 	// 4) Interest Type
 	if (typeIntrest === "" || typeIntrest === "SELECT ROI TYPE") {
-		$("#chkinteresttype").text("* Please select Interest Type");
+		$("#chkinteresttype").text("* PLEASE SELECT INTEREST TYPE");
 		$("#typeIntrest").focus();
 		return false;
 	}
 
 	// 5) Loan Term
 	if (loanTerm === "") {
-		$("#chkloanterm").text("* Loan Term is required");
+		$("#chkloanterm").text("* LOAN TERM IS REQUIRED");
 		$("#loanTerm").focus();
 		return false;
 	} else if (!intPattern.test(loanTerm)) {
-		$("#chkloanterm").text("* Loan Term must be a number");
+		$("#chkloanterm").text("* LOAN TERM MUST BE A NUMBER");
 		$("#loanTerm").focus();
 		return false;
 	} else if (parseInt(loanTerm) <= 0) {
-		$("#chkloanterm").text("* Loan Term must be greater than 0");
+		$("#chkloanterm").text("* LOAN TERM MUST BE GREATER THAN 0");
 		$("#loanTerm").focus();
 		return false;
 	}
 
 	// 6) Loan Amount
 	if (loanAmount === "") {
-		$("#chkloanamount").text("* Loan Amount is required");
+		$("#chkloanamount").text("* LOAN AMOUNT IS REQUIRED");
 		$("#loanAmount").focus();
 		return false;
 	} else if (!numberPattern.test(loanAmount)) {
-		$("#chkloanamount").text("* Enter valid Loan Amount");
+		$("#chkloanamount").text("* ENTER VALID LOAN AMOUNT");
 		$("#loanAmount").focus();
 		return false;
 	} else if (parseFloat(loanAmount) < 100000) {
-		$("#chkloanamount").text("* Amount must be >= 100000");
+		$("#chkloanamount").text("* AMOUNT MUST BE >= 100000");
 		$("#loanAmount").focus();
 		return false;
 	}
 
 	// 7) Loan Mode
 	if (loanMode === "" || loanMode === "SELECT LOAN MODE") {
-		$("#chkloanmode").text("* Please select Loan Mode");
+		$("#chkloanmode").text("* PLEASE SELECT LOAN MODE");
 		$("#loanMode").focus();
 		return false;
 	}
 
 	// 8) Rate of Interest Type
 	if (rateIntrestType === "") {
-		$("#chkroi").text("* Rate of Interest is required");
+		$("#chkroi").text("* RATE OF INTEREST IS REQUIRED");
 		$("#rateIntrestType").focus();
 		return false;
 	} else if (!numberPattern.test(rateIntrestType)) {
-		$("#chkroi").text("* Enter valid ROI");
+		$("#chkroi").text("* ENTER VALID ROI");
 		$("#rateIntrestType").focus();
 		return false;
 	} else if (parseFloat(rateIntrestType) <= 0 || parseFloat(rateIntrestType) > 60) {
-		$("#chkroi").text("* ROI must be between 1 to 60");
+		$("#chkroi").text("* ROI MUST BE BETWEEN 1 TO 60");
 		$("#rateIntrestType").focus();
 		return false;
 	}
 
 	// 9) Security Type
 	if (typesecurity === "" || typesecurity === "SELECT SECURITY") {
-		$("#chksecuritytype").text("* Please select Security Type");
+		$("#chksecuritytype").text("* PLEASE SELECT SECURITY TYPE");
 		$("#typesecurity").focus();
 		return false;
 	}
 
 	// 10) EMI Type
 	if (emiType === "" || emiType === "SELECT EMI TYPE") {
-		$("#chkemitype").text("* Please select EMI Type");
+		$("#chkemitype").text("* PLEASE SELECT EMI TYPE");
 		$("#emiType").focus();
 		return false;
 	}
@@ -203,55 +203,55 @@ function validateLoanSchemeForm() {
 
 	// Processing Fee
 	if (feeProcessing === "") {
-		$("#chkprocessingfee").text("* Processing Fee is required");
+		$("#chkprocessingfee").text("* PROCESSING FEE IS REQUIRED");
 		$("#feeProcessing").focus();
 		return false;
 	} else if (!numberPattern.test(feeProcessing) || parseFloat(feeProcessing) < 0 || parseFloat(feeProcessing) > 100) {
-		$("#chkprocessingfee").text("* Enter valid Processing Fee (0 - 100)");
+		$("#chkprocessingfee").text("* ENTER VALID PROCESSING FEE (0 - 100)");
 		$("#feeProcessing").focus();
 		return false;
 	}
 
 	// Legal Charges
 	if (chargesLegal === "") {
-		$("#chklegalcharges").text("* Legal Charges is required");
+		$("#chklegalcharges").text("* LEGAL CHARGES IS REQUIRED");
 		$("#chargesLegal").focus();
 		return false;
 	} else if (!numberPattern.test(chargesLegal) || parseFloat(chargesLegal) < 0 || parseFloat(chargesLegal) > 100) {
-		$("#chklegalcharges").text("* Enter valid Legal Charges (0 - 100)");
+		$("#chklegalcharges").text("* ENTER VALID LEGAL CHARGES (0 - 100)");
 		$("#chargesLegal").focus();
 		return false;
 	}
 
 	// GST
 	if (gst === "") {
-		$("#chkgst").text("* GST is required");
+		$("#chkgst").text("* GST IS REQUIRED");
 		$("#gst").focus();
 		return false;
 	} else if (!numberPattern.test(gst) || parseFloat(gst) < 0 || parseFloat(gst) > 28) {
-		$("#chkgst").text("* GST must be between 0 to 28");
+		$("#chkgst").text("* GST MUST BE BETWEEN 0 TO 28");
 		$("#gst").focus();
 		return false;
 	}
 
 	// Insurance Fee
 	if (feeInsurence === "") {
-		$("#chkinsurancefee").text("* Insurance Fee is required");
+		$("#chkinsurancefee").text("* INSURANCE FEE IS REQUIRED");
 		$("#feeInsurence").focus();
 		return false;
 	} else if (!numberPattern.test(feeInsurence) || parseFloat(feeInsurence) < 0 || parseFloat(feeInsurence) > 100) {
-		$("#chkinsurancefee").text("* Enter valid Insurance Fee (0 - 100)");
+		$("#chkinsurancefee").text("* ENTER VALID INSURANCE FEE (0 - 100)");
 		$("#feeInsurence").focus();
 		return false;
 	}
 
 	// Valuation Fee
 	if (feeValuation === "") {
-		$("#chkvaluationfee").text("* Valuation Fee is required");
+		$("#chkvaluationfee").text("* VALUATION FEE IS REQUIRED");
 		$("#feeValuation").focus();
 		return false;
 	} else if (!numberPattern.test(feeValuation) || parseFloat(feeValuation) < 0 || parseFloat(feeValuation) > 100) {
-		$("#chkvaluationfee").text("* Enter valid Valuation Fee (0 - 100)");
+		$("#chkvaluationfee").text("* ENTER VALID VALUATION FEE (0 - 100)");
 		$("#feeValuation").focus();
 		return false;
 	}
@@ -262,29 +262,29 @@ function validateLoanSchemeForm() {
 
 	// Late Allowance Day
 	if (lateAllowanceday === "") {
-		$("#chklateallowanceday").text("* Late Allowance Day is required");
+		$("#chklateallowanceday").text("* LATE ALLOWANCE DAY IS REQUIRED");
 		$("#lateAllowanceday").focus();
 		return false;
 	} else if (!intPattern.test(lateAllowanceday) || parseInt(lateAllowanceday) < 0) {
-		$("#chklateallowanceday").text("* Enter valid Late Allowance Days");
+		$("#chklateallowanceday").text("* ENTER VALID LATE ALLOWANCE DAYS");
 		$("#lateAllowanceday").focus();
 		return false;
 	}
 
 	// Penalty Mode (no small id given in html for this select)
 	if (modePanalty === "" || modePanalty === "SELECT PENALTY TYPE") {
-		alert("Please select Penalty Mode");
+		alert("PLEASE SELECT PENALTY MODE");
 		$("#modePanalty").focus();
 		return false;
 	}
 
 	// Monthly Penalty
 	if (pennaltyMonthly === "") {
-		$("#chkmonthlypenalty").text("* Monthly Penalty is required");
+		$("#chkmonthlypenalty").text("* MONTHLY PENALTY IS REQUIRED");
 		$("#pennaltyMonthly").focus();
 		return false;
 	} else if (!numberPattern.test(pennaltyMonthly) || parseFloat(pennaltyMonthly) < 0) {
-		$("#chkmonthlypenalty").text("* Enter valid Monthly Penalty");
+		$("#chkmonthlypenalty").text("* ENTER VALID MONTHLY PENALTY");
 		$("#pennaltyMonthly").focus();
 		return false;
 	}
@@ -343,9 +343,9 @@ function submitLoanForm(type) {
 			if (response.status === "OK") {
 
 				if (type === "save") {
-					alert("Data Saved Successfully ");
+					alert("DATA SAVED SUCCESSFULLY ");
 				} else {
-					alert("Data Updated Successfully ");
+					alert("DATA UPDATED SUCCESSFULLY ");
 				}
 
 				// ✅ Reset buttons
@@ -366,11 +366,11 @@ function submitLoanForm(type) {
 				loadLoanTable();
 
 			} else {
-				alert("Failed: " + response.message);
+				alert("FAILED: " + response.message);
 			}
 		},
 		error: function(xhr) {
-			alert("Error occurred: " + xhr.responseText);
+			alert("ERROR OCCURRED: " + xhr.responseText);
 		}
 	});
 }
@@ -450,14 +450,14 @@ function loadLoanTable() {
                     `;
 				});
 			} else {
-				rows = "<tr><td colspan='8'>No data found</td></tr>";
+				rows = "<tr><td colspan='8'>NO DATA FOUND</td></tr>";
 			}
 
 			$("#loanTableBody").html(rows);
 		},
 		error: function(xhr) {
 			console.error("Error loading table:", xhr.statusText);
-			$("#loanTableBody").html("<tr><td colspan='8'>Error loading data</td></tr>");
+			$("#loanTableBody").html("<tr><td colspan='8'>ERROR LOADING DATA</td></tr>");
 		}
 	});
 }
@@ -512,11 +512,11 @@ function editLoanById(id) {
 				updateToggleColor(document.getElementById('planStatus'));
 
 			} else {
-				alert("Loan not found: " + response.message);
+				alert("LOAN NOT FOUND: " + response.message);
 			}
 		},
 		error: function(xhr) {
-			alert("Error fetching loan details: " + xhr.responseText);
+			alert("ERROR FETCHING LOAN DETAILS: " + xhr.responseText);
 		}
 	});
 }
@@ -541,7 +541,7 @@ function updateToggleColor(input) {
 // ✅ DELETE FUNCTION
 // ============================================
 function deleteLoan(id) {
-	if (confirm("Are you sure you want to delete this loan?")) {
+	if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS LOAN?")) {
 
 		$.ajax({
 			url: "api/loanmanegment/deleteLoanById",
@@ -550,14 +550,14 @@ function deleteLoan(id) {
 			success: function(response) {
 
 				if (response.status === "OK") {
-					alert("Loan deleted successfully ✅");
+					alert("LOAN DELETED SUCCESSFULLY ✅");
 					loadLoanTable();
 				} else {
-					alert("Failed: " + response.message);
+					alert("FAILED: " + response.message);
 				}
 			},
 			error: function(xhr) {
-				alert("Error while deleting loan ❌");
+				alert("ERROR WHILE DELETING LOAN ❌");
 				console.log("Status:", xhr.status);
 				console.log("Response:", xhr.responseText);
 			}

@@ -6,16 +6,16 @@ $(document).ready(function() {
 		type: "POST",
 		success: function(response) {
 			if (response.status === "OK") {
-				$("#financialCode").empty().append("<option value=''>-- Select Code --</option>");
+				$("#financialCode").empty().append("<option value=''>-- SELECT CODE --</option>");
 				response.data.forEach(function(item) {
 					$("#financialCode").append(`<option value='${item.financialCode}'>${item.financialCode}-${item.customerName}</option>`);
 				});
 			} else {
-				alert("No Financial codes found.");
+				alert("NO FINANCIAL CODES FOUND.");
 			}
 		},
 		error: function() {
-			alert("Failed to load Financial codes.");
+			alert("FAILED TO LOAD FINANCIAL CODES.");
 		}
 	});*/
 
@@ -34,7 +34,7 @@ $(document).ready(function() {
 
 				// Initialize Select2 with full data and custom search matcher
 				$('#financialCode').select2({
-					placeholder: '-- Search Financial Code or Name --',
+					placeholder: '-- SEARCH FINANCIAL CODE OR NAME --',
 					data: financialOptions,
 					matcher: function(params, data) {
 						// If no search term, return all
@@ -59,11 +59,11 @@ $(document).ready(function() {
 				});
 
 			} else {
-				alert("No Financial codes found.");
+				alert("NO FINANCIAL CODES FOUND.");
 			}
 		},
 		error: function() {
-			alert("Failed to load Financial codes.");
+			alert("FAILED TO LOAD FINANCIAL CODES.");
 		}
 	});
 
@@ -72,16 +72,16 @@ $(document).ready(function() {
 		type: "POST",
 		success: function(response) {
 			if (response.status === "OK") {
-				$("#memberCode").empty().append("<option value=''>-- Select Code --</option>");
+				$("#memberCode").empty().append("<option value=''>-- SELECT CODE --</option>");
 				response.data.forEach(function(item) {
 					$("#memberCode").append(`<option value='${item.memberCode}'>${item.memberCode}</option>`);
 				});
 			} else {
-				alert("No customer codes found.");
+				alert("NO CUSTOMER CODES FOUND.");
 			}
 		},
 		error: function() {
-			alert("Failed to load customer codes.");
+			alert("FAILED TO LOAD CUSTOMER CODES.");
 		}
 	});
 
@@ -92,7 +92,7 @@ $(document).ready(function() {
 			if (response.status == "FOUND") {
 				const relativeList = response.data;
 				$("#relationToApplicant").empty(); // Clear existing options
-				$("#relationToApplicant").append("<option value=''>-- Select Relative To Applicant --</option>");
+				$("#relationToApplicant").append("<option value=''>-- SELECT RELATIVE TO APPLICANT --</option>");
 
 				for (let i = 0; i < relativeList.length; i++) {
 					let relative = relativeList[i];
@@ -100,12 +100,12 @@ $(document).ready(function() {
 					$("#relationToApplicant").append(option);
 				}
 			} else {
-				alert("Error: " + response.message);
+				alert("ERROR: " + response.message);
 			}
 		},
 		error: function(xhr) {
-			console.error("Error loading branches:", xhr.responseText);
-			alert("Failed to load dropdown data.");
+			console.error("ERROR LOADING BRANCHES:", xhr.responseText);
+			alert("FAILED TO LOAD DROPDOWN DATA.");
 		}
 	});
 
@@ -178,13 +178,12 @@ $(document).ready(function() {
 					updateToggleColor(document.getElementById('toggle-financial-status'));
 					updateToggleColor(document.getElementById('toggle-sms-send'));
 
-
 				} else {
-					alert("Transfer Share Details Not Found For Customer");
+					alert("TRANSFER SHARE DETAILS NOT FOUND FOR CUSTOMER");
 				}
 			},
 			error: function() {
-				alert("Shares not found or server error");
+				alert("SHARES NOT FOUND OR SERVER ERROR");
 			}
 		});
 
@@ -195,7 +194,7 @@ $(document).ready(function() {
 
 		const financialCode = $('#financialCode').val();
 		if (!financialCode) {
-			alert("First select the data, then proceed to update.");
+			alert("FIRST SELECT THE DATA, THEN PROCEED TO UPDATE.");
 			return;
 		}
 
@@ -250,21 +249,18 @@ $(document).ready(function() {
 			cache: false,
 			success: function(response) {
 				if (response.status === "OK" || response.status === "success") {
-					alert("Financial data updated successfully.");
+					alert("FINANCIAL DATA UPDATED SUCCESSFULLY.");
 					location.reload();
 				} else {
-					alert("Something went wrong: " + response.message);
+					alert("SOMETHING WENT WRONG: " + response.message);
 				}
 			},
 			error: function(xhr) {
-				const message = xhr.responseJSON?.message || xhr.responseText || "Unknown error";
-				alert("Error while saving data: " + message);
+				const message = xhr.responseJSON?.message || xhr.responseText || "UNKNOWN ERROR";
+				alert("ERROR WHILE SAVING DATA: " + message);
 			}
 		});
 	});
-
-
-
 
 	/*$("#printBtn").on("click", function(e) {
 		e.preventDefault();
@@ -323,7 +319,7 @@ $(document).ready(function() {
 				printWindow.document.write(`
 					<html>
 					<head>
-						<title>Print - Financial Consultant Form</title>
+						<title>PRINT - FINANCIAL CONSULTANT FORM</title>
 						<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
 						<style>
 							body {
@@ -371,7 +367,7 @@ $(document).ready(function() {
 						</style>
 					</head>
 					<body onload="window.print(); window.close();">
-						<h3>Financial Information</h3>
+						<h3>FINANCIAL INFORMATION</h3>
 						<div class="container">
 							${$formClone[0].outerHTML}
 						</div>
@@ -380,11 +376,11 @@ $(document).ready(function() {
 				`);
 				printWindow.document.close();
 			} else {
-				alert("Popup blocked. Please allow popups for this website.");
+				alert("POPUP BLOCKED. PLEASE ALLOW POPUPS FOR THIS WEBSITE.");
 			}
 		}
 		else {
-			alert("First Select Any One Data Then Proceed to Print");
+			alert("FIRST SELECT ANY ONE DATA THEN PROCEED TO PRINT");
 		}
 	});*/
 
@@ -392,7 +388,7 @@ $(document).ready(function() {
 
 		const financialCode = $("#financialCode").val();
 		if (!financialCode) {
-			alert("Please select atleast one data then proceed to print!");
+			alert("PLEASE SELECT AT LEAST ONE DATA THEN PROCEED TO PRINT!");
 			return;
 		}
 
@@ -403,7 +399,7 @@ $(document).ready(function() {
 		        <h3 style="text-align:center; margin-top:5px;">(${c.shortName})</h3>
 		        <p style="text-align:center;">
 		            ${c.address}, ${c.city}, ${c.state} - ${c.pinCode}<br>
-		            CIN: ${c.cinNo} | Email: ${c.emailId.toLowerCase()} | Helpline: ${c.helplineNo}
+		            CIN: ${c.cinNo} | EMAIL: ${c.emailId.toLowerCase()} | HELPLINE: ${c.helplineNo}
 		        </p>
 		        <hr>
 		    `;
@@ -430,44 +426,44 @@ $(document).ready(function() {
 		const printContent = `
 		        ${companyHeader}
 
-		        <h2 style="text-align:center;margin-bottom:20px;">Customer Details</h2>
+		        <h2 style="text-align:center;margin-bottom:20px;">CUSTOMER DETAILS</h2>
 
 		        <table class="print-table">
 
-		            <tr><th>Financial Code</th><td>${getVal("financialCode")}</td></tr>
-		            <tr><th>Joining Date</th><td>${getVal("joiningDate")}</td></tr>
-		            <tr><th>Financial Name</th><td>${getVal("financialName")}</td></tr>
-		            <tr><th>Date of Birth</th><td>${getVal("dob")}</td></tr>
-		            <tr><th>Age</th><td>${getVal("age")}</td></tr>
-		            <tr><th>Contact No</th><td>${getVal("contactNo")}</td></tr>
-		            <tr><th>Branch</th><td>${getVal("branchName")}</td></tr>
-		            <tr><th>Address</th><td>${getVal("address")}</td></tr>
-		            <tr><th>District</th><td>${getVal("district")}</td></tr>
-		            <tr><th>State</th><td>${getVal("state")}</td></tr>
-		            <tr><th>Pin Code</th><td>${getVal("pinCode")}</td></tr>
-		            <tr><th>Profession</th><td>${getVal("profession")}</td></tr>
-		            <tr><th>Academic Background</th><td>${getVal("academicBackground")}</td></tr>
-					<tr><th colspan="2" style="background:#f1f1f1;text-align:center;">Financial Images</th></tr>
+		            <tr><th>FINANCIAL CODE</th><td>${getVal("financialCode")}</td></tr>
+		            <tr><th>JOINING DATE</th><td>${getVal("joiningDate")}</td></tr>
+		            <tr><th>FINANCIAL NAME</th><td>${getVal("financialName")}</td></tr>
+		            <tr><th>DATE OF BIRTH</th><td>${getVal("dob")}</td></tr>
+		            <tr><th>AGE</th><td>${getVal("age")}</td></tr>
+		            <tr><th>CONTACT NO</th><td>${getVal("contactNo")}</td></tr>
+		            <tr><th>BRANCH</th><td>${getVal("branchName")}</td></tr>
+		            <tr><th>ADDRESS</th><td>${getVal("address")}</td></tr>
+		            <tr><th>DISTRICT</th><td>${getVal("district")}</td></tr>
+		            <tr><th>STATE</th><td>${getVal("state")}</td></tr>
+		            <tr><th>PIN CODE</th><td>${getVal("pinCode")}</td></tr>
+		            <tr><th>PROFESSION</th><td>${getVal("profession")}</td></tr>
+		            <tr><th>ACADEMIC BACKGROUND</th><td>${getVal("academicBackground")}</td></tr>
+					<tr><th colspan="2" style="background:#f1f1f1;text-align:center;">FINANCIAL IMAGES</th></tr>
 
-							            <tr>
-							                <th>Customer Photo</th>
-							                <td><img src="${photo}" style="width:120px;height:120px;object-fit:cover;border-radius:10px;"></td>
-							            </tr>
+						            <tr>
+						                <th>CUSTOMER PHOTO</th>
+						                <td><img src="${photo}" style="width:120px;height:120px;object-fit:cover;border-radius:10px;"></td>
+						            </tr>
 
-							            <tr>
-							                <th>Customer Signature</th>
-							                <td><img src="${sign}" style="width:150px;height:70px;object-fit:contain;"></td>
-							            </tr>
-										
-										<tr><th colspan="2" style="background:#f1f1f1;text-align:center;">Introducer Details</th></tr>
-		            <tr><th>Position</th><td>${getVal("selectPosition")}</td></tr>
-		            <tr><th>FReferral Code</th><td>${getVal("referralCode")}</td></tr>
-		            <tr><th>Referral Name</th><td>${getVal("referralName")}</td></tr>
-					
-					<tr><th colspan="2" style="background:#f1f1f1;text-align:center;">Payment Details</th></tr>
-		            <tr><th>Fees</th><td>${getVal("fees")}</td></tr>
-		            <tr><th>Payment Mode</th><td>${getVal("modeofPayment")}</td></tr>
-		            <tr><th>Comments</th><td>${getVal("comments")}</td></tr>
+						            <tr>
+						                <th>CUSTOMER SIGNATURE</th>
+						                <td><img src="${sign}" style="width:150px;height:70px;object-fit:contain;"></td>
+						            </tr>
+
+									<tr><th colspan="2" style="background:#f1f1f1;text-align:center;">INTRODUCER DETAILS</th></tr>
+		            <tr><th>POSITION</th><td>${getVal("selectPosition")}</td></tr>
+		            <tr><th>FREFERRAL CODE</th><td>${getVal("referralCode")}</td></tr>
+		            <tr><th>REFERRAL NAME</th><td>${getVal("referralName")}</td></tr>
+
+					<tr><th colspan="2" style="background:#f1f1f1;text-align:center;">PAYMENT DETAILS</th></tr>
+		            <tr><th>FEES</th><td>${getVal("fees")}</td></tr>
+		            <tr><th>PAYMENT MODE</th><td>${getVal("modeofPayment")}</td></tr>
+		            <tr><th>COMMENTS</th><td>${getVal("comments")}</td></tr>
 
 		        </table>
 		    `;
@@ -477,7 +473,7 @@ $(document).ready(function() {
 		printWindow.document.write(`
 		        <html>
 		        <head>
-		            <title>Customer Details</title>
+		            <title>CUSTOMER DETAILS</title>
 		            <style>
 		                body { font-family: Arial; padding: 25px; }
 		                .print-table { width: 100%; border-collapse: collapse; }
@@ -505,28 +501,28 @@ $(document).ready(function() {
 		var id = $("#id").val();
 		let financialCode = $("#financialCode").val();
 		if (financialCode !== "") {
-			if (confirm("Are you sure you want to delete this Financial Data?")) {
+			if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS FINANCIAL DATA?")) {
 				$.ajax({
 					url: "api/financialconsultant/deleteFinancialConsultantById",
 					type: "POST",
 					data: { id: id },
 					success: function(response) {
 						if (response.status == "OK") {
-							alert("Financial Data Deleted Successfully");
+							alert("FINANCIAL DATA DELETED SUCCESSFULLY");
 							location.reload();
 						} else {
-							alert("Delete failed: " + response.message);
+							alert("DELETE FAILED: " + response.message);
 						}
 					},
 					error: function(xhr, status, error) {
-						alert("Failed to delete Financial Data.");
-						console.error("Error:", error);
+						alert("FAILED TO DELETE FINANCIAL DATA.");
+						console.error("ERROR:", error);
 					}
 				});
 			}
 		}
 		else {
-			alert("First Select Any One Data Then Proceed To Delete!");
+			alert("FIRST SELECT ANY ONE DATA THEN PROCEED TO DELETE!");
 		}
 
 	});
@@ -555,7 +551,7 @@ function photoUpload() {
 		};
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for photo.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR PHOTO.");
 	}
 }
 
@@ -571,7 +567,7 @@ function signatureUpload() {
 		};
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for signature.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR SIGNATURE.");
 	}
 }
 
@@ -632,13 +628,13 @@ function loadCompanyAdministration() {
 				// Show on screen (add your own div in JSP)
 				$("#companyNameHeading").text(c.companyName + " (" + c.shortName + ")");
 				$("#companyDetails").html(`
-                        <b>Sign Up Date:</b> ${c.signUpDate} <br>
-                        <b>CIN No:</b> ${c.cinNo} <br>
-                        <b>Address:</b> ${c.address}, ${c.city}, ${c.state} - ${c.pinCode} <br>
-                        <b>Email:</b> ${c.emailId} <br>
-                        <b>Helpline:</b> ${c.helplineNo} <br>
-                        <b>Branch Manager No:</b> ${c.branchManagerContactNo}
-                    `);
+                       <b>SIGN UP DATE:</b> ${c.signUpDate} <br>
+                       <b>CIN NO:</b> ${c.cinNo} <br>
+                       <b>ADDRESS:</b> ${c.address}, ${c.city}, ${c.state} - ${c.pinCode} <br>
+                       <b>EMAIL:</b> ${c.emailId} <br>
+                       <b>HELPLINE:</b> ${c.helplineNo} <br>
+                       <b>BRANCH MANAGER NO:</b> ${c.branchManagerContactNo}
+                   `);
 			}
 		}
 	});

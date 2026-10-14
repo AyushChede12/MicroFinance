@@ -1,12 +1,11 @@
 $(document).ready(function() {
-
 	$.ajax({
 		url: 'api/securedGoldLoan/getAllNotApprovedGoldCustomer',
 		type: 'GET',
 		success: function(response) {
 			// Check data
 			if (!(response && response.data && Array.isArray(response.data))) {
-				alert("No Gold Data found.");
+				alert("NO GOLD DATA FOUND.");
 				return;
 			}
 
@@ -32,7 +31,7 @@ $(document).ready(function() {
 
 			// 👉 Step 3: Select2 Initialize (distinct data)
 			$('#findByGoldLoanId').select2({
-				placeholder: '-- Search Gold ID or Name --',
+				placeholder: '-- SEARCH GOLD ID OR NAME --',
 				data: customerOptions,
 				matcher: function(params, data) {
 					if ($.trim(params.term) === '') return data;
@@ -130,45 +129,45 @@ $(document).ready(function() {
 						$("#financialConsultantName").val(data.financialConsultantName);
 
 						if (data.approvalStatus === true || data.approvalStatus === 1 || data.approvalStatus === "1") {
-							$('#approvalStatus').val("Approved").css('color', 'green');
+							$('#approvalStatus').val("APPROVED").css('color', 'green');
 						} else {
-							$('#approvalStatus').val("Not Approved").css('color', 'red');
+							$('#approvalStatus').val("NOT APPROVED").css('color', 'red');
 						}
 
 					} else {
-						alert("No customer found for this member code.");
+						alert("NO CUSTOMER FOUND FOR THIS MEMBER CODE.");
 					}
 				},
 				error: function() {
-					alert("Member not found or server error.");
+					alert("MEMBER NOT FOUND OR SERVER ERROR.");
 				}
 			});
 		}
 	});
 
 	$('#approveBtn').click(function(event) {
-	    event.preventDefault(); // Prevent the form from submitting
-	    const findByGoldLoanId = $('#findByGoldLoanId').val();
-	    const approvalDate = $('#approvalDate').val();
+		event.preventDefault(); // Prevent the form from submitting
+		const findByGoldLoanId = $('#findByGoldLoanId').val();
+		const approvalDate = $('#approvalDate').val();
 
-	    const requestData = {
-	        goldID: findByGoldLoanId,
-	        approvalStatus: true,
-	        approvalDate: approvalDate
-	    };
+		const requestData = {
+			goldID: findByGoldLoanId,
+			approvalStatus: true,
+			approvalDate: approvalDate
+		};
 
-	    $.ajax({
-	        type: "POST",
-	        url: "api/securedGoldLoan/approveGold",
-	        contentType: "application/json",
-	        data: JSON.stringify(requestData),
-	        success: function(response) {
-	            alert(response.message);
-	            location.reload();
-	        },
-	        error: function(xhr) {
-	            alert("Error: " + xhr.responseText);
-	        }
-	    });
+		$.ajax({
+			type: "POST",
+			url: "api/securedGoldLoan/approveGold",
+			contentType: "application/json",
+			data: JSON.stringify(requestData),
+			success: function(response) {
+				alert(response.message);
+				location.reload();
+			},
+			error: function(xhr) {
+				alert("ERROR: " + xhr.responseText);
+			}
+		});
 	});
 });

@@ -24,7 +24,7 @@ function populateDropdown() {
 					$dropdown.append(`<option value="${id}">${id}</option>`);
 				});
 			} else {
-				$dropdown.append('<option value="" disabled selected>No closed loans available</option>');
+				$dropdown.append('<option value="" disabled selected>NO CLOSED LOANS AVAILABLE</option>');
 				console.warn("No closed loan IDs found.");
 			}
 		},
@@ -32,7 +32,7 @@ function populateDropdown() {
 			console.error("Error fetching closed loan IDs:", error);
 			const $dropdown = $("#closedLoanIds");
 			$dropdown.empty();
-			$dropdown.append('<option value="" disabled selected>Error loading loan IDs</option>');
+			$dropdown.append('<option value="" disabled selected>ERROR LOADING LOAN IDS</option>');
 		}
 	});
 }
@@ -41,7 +41,7 @@ function fetchLoanClosureDetails() {
 	const loanId = $('#closedLoanIds').val(); // Get the loan ID from input
 
 	if (!loanId) {
-		alert("Please enter a Loan ID");
+		alert("PLEASE ENTER A LOAN ID");
 		return;
 	}
 
@@ -60,47 +60,47 @@ function fetchLoanClosureDetails() {
 				let serial = 1;
 				response.data.forEach(function(closure) {
 					const row = `
-                        <tr style="white-space: nowrap;">
-                            <td>${serial++}</td>
-                            <td>${closure.loanId || ''}</td>
-                            <td>${closure.loanDate || ''}</td>
-                            <td>${closure.memberId || ''}</td>
-                            <td>${closure.memberName || ''}</td>
-                            <td>${closure.contactNo || ''}</td>
-                            <td>${closure.address || ''}</td>
-                            <td>${closure.branchName || ''}</td>
-                            <td>${closure.loanPlanName || ''}</td>
-                            <td>${closure.typeOfLoan || ''}</td>
-                            <td>${closure.loanMode || ''}</td>
-                            <td>${closure.loanTerm || ''}</td>
-                            <td>${closure.rateOfInterest || ''}</td>
-                            <td>${closure.loanAmount || ''}</td>
-                            <td>${closure.interestType || ''}</td>
-                            <td>${closure.emiPayment || ''}</td>
-                            <td>${closure.totalinterestofLoan || ''}</td>
-                            <td>${closure.sanctionedAmount || ''}</td>
-                            <td>${closure.totalPayableofLoan || ''}</td>
-                            <td>${closure.interestDue || ''}</td>
-                            <td>${closure.principaldue || ''}</td>
-                            <td>${closure.amountPaid || ''}</td>
-                            <td>${closure.balanceLoanAmount || ''}</td>
-                            <td>${closure.noOfInst || ''}</td>
-                            <td>${closure.paymentDate || ''}</td>
-                            <td>${closure.financialConsultantName || ''}</td>
-                            <td>${closure.loanStatus || ''}</td>
-                        </tr>
-                    `;
+                       <tr style="white-space: nowrap;">
+                           <td>${serial++}</td>
+                           <td>${closure.loanId || ''}</td>
+                           <td>${closure.loanDate || ''}</td>
+                           <td>${closure.memberId || ''}</td>
+                           <td>${closure.memberName || ''}</td>
+                           <td>${closure.contactNo || ''}</td>
+                           <td>${closure.address || ''}</td>
+                           <td>${closure.branchName || ''}</td>
+                           <td>${closure.loanPlanName || ''}</td>
+                           <td>${closure.typeOfLoan || ''}</td>
+                           <td>${closure.loanMode || ''}</td>
+                           <td>${closure.loanTerm || ''}</td>
+                           <td>${closure.rateOfInterest || ''}</td>
+                           <td>${closure.loanAmount || ''}</td>
+                           <td>${closure.interestType || ''}</td>
+                           <td>${closure.emiPayment || ''}</td>
+                           <td>${closure.totalinterestofLoan || ''}</td>
+                           <td>${closure.sanctionedAmount || ''}</td>
+                           <td>${closure.totalPayableofLoan || ''}</td>
+                           <td>${closure.interestDue || ''}</td>
+                           <td>${closure.principaldue || ''}</td>
+                           <td>${closure.amountPaid || ''}</td>
+                           <td>${closure.balanceLoanAmount || ''}</td>
+                           <td>${closure.noOfInst || ''}</td>
+                           <td>${closure.paymentDate || ''}</td>
+                           <td>${closure.financialConsultantName || ''}</td>
+                           <td>${closure.loanStatus || ''}</td>
+                       </tr>
+                   `;
 					$tbody.append(row);
 				});
 			} else {
-				$tbody.append('<tr><td colspan="41" class="text-center">No loan closure records found for this Loan ID.</td></tr>');
+				$tbody.append('<tr><td colspan="41" class="text-center">NO LOAN CLOSURE RECORDS FOUND FOR THIS LOAN ID.</td></tr>');
 			}
 		},
 		error: function(xhr, status, error) {
 			console.error("Error fetching loan closure data:", error);
 			const $tbody = $("#loanClosureTableBody");
 			$tbody.empty();
-			$tbody.append('<tr><td colspan="41" class="text-center text-danger">Error loading data.</td></tr>');
+			$tbody.append('<tr><td colspan="41" class="text-center text-danger">ERROR LOADING DATA.</td></tr>');
 		}
 	});
 }
@@ -110,7 +110,7 @@ function fetchLoanClosureDetails() {
 	const loanId = $('#closedLoanIds').val();
 
 	if (!loanId) {
-		alert("Please enter a Loan ID");
+		alert("PLEASE ENTER A LOAN ID");
 		return;
 	}
 
@@ -120,7 +120,7 @@ function fetchLoanClosureDetails() {
 		data: { loanId: loanId },
 		dataType: "json",
 		success: function(response) {
-			
+
 			const $section = $("#loanClosureDetailsSection");
 			const $tbody = $("#loanClosureDetailsBody");
 			$tbody.empty();
@@ -130,43 +130,43 @@ function fetchLoanClosureDetails() {
 				$section.removeClass("d-none");
 
 				const details = {
-					"Loan ID": closure.loanId || '',
-					"Loan Date": closure.loanDate || '',
-					"Member ID": closure.memberId || '',
-					"Member Name": closure.memberName || '',
-					"Relative Details": closure.relativeDetails || '',
-					"Contact No": closure.contactNo || '',
-					"Branch Name": closure.branchName || '',
-					"Loan Plan Name": closure.loanPlanName || '',
-					"Type of Loan": closure.typeOfLoan || '',
-					"Loan Mode": closure.loanMode || '',
-					"Loan Term": closure.loanTerm || '',
-					"Rate of Interest": closure.rateOfInterest || '',
-					"Loan Amount": closure.loanAmount || '',
-					"Interest Type": closure.interestType || '',
-					"EMI Payment": closure.emiPayment || '',
-					"Total Interest of Loan": closure.totalinterestofLoan || '',
-					"Sanctioned Amount": closure.sanctionedAmount || '',
-					"Total Payable of Loan": closure.totalPayableofLoan || '',
-					"Interest Due": closure.interestDue || '',
-					"Principal Due": closure.principaldue || '',
-					"Amount Paid": closure.amountPaid || '',
-					"Balance Loan Amount": closure.balanceLoanAmount || '',
-					"Due Date": closure.dueDate || '',
-					"Payment Branch": closure.paymentBranch || '',
-					"Fine": closure.fine || '',
-					"Net Amount": closure.netAmount || '',
-					"No of Installments": closure.noOfInst || '',
-					"Payment Date": closure.paymentDate || '',
-					"Payment Mode": closure.paymentMode || '',
-					"Ref UPI ID": closure.ref_UpiId || '',
-					"Charges": closure.charges || '',
-					"Remarks": closure.remarks || '',
-					"Cheque Date": closure.chequeDate || '',
-					"Cheque No": closure.chequeNo || '',
-					"Financial Consultant ID": closure.financialConsultantId || '',
-					"Financial Consultant Name": closure.financialConsultantName || '',
-					"Loan Status": closure.loanStatus || ''
+					"LOAN ID": closure.loanId || '',
+					"LOAN DATE": closure.loanDate || '',
+					"MEMBER ID": closure.memberId || '',
+					"MEMBER NAME": closure.memberName || '',
+					"RELATIVE DETAILS": closure.relativeDetails || '',
+					"CONTACT NO": closure.contactNo || '',
+					"BRANCH NAME": closure.branchName || '',
+					"LOAN PLAN NAME": closure.loanPlanName || '',
+					"TYPE OF LOAN": closure.typeOfLoan || '',
+					"LOAN MODE": closure.loanMode || '',
+					"LOAN TERM": closure.loanTerm || '',
+					"RATE OF INTEREST": closure.rateOfInterest || '',
+					"LOAN AMOUNT": closure.loanAmount || '',
+					"INTEREST TYPE": closure.interestType || '',
+					"EMI PAYMENT": closure.emiPayment || '',
+					"TOTAL INTEREST OF LOAN": closure.totalinterestofLoan || '',
+					"SANCTIONED AMOUNT": closure.sanctionedAmount || '',
+					"TOTAL PAYABLE OF LOAN": closure.totalPayableofLoan || '',
+					"INTEREST DUE": closure.interestDue || '',
+					"PRINCIPAL DUE": closure.principaldue || '',
+					"AMOUNT PAID": closure.amountPaid || '',
+					"BALANCE LOAN AMOUNT": closure.balanceLoanAmount || '',
+					"DUE DATE": closure.dueDate || '',
+					"PAYMENT BRANCH": closure.paymentBranch || '',
+					"FINE": closure.fine || '',
+					"NET AMOUNT": closure.netAmount || '',
+					"NO OF INSTALLMENTS": closure.noOfInst || '',
+					"PAYMENT DATE": closure.paymentDate || '',
+					"PAYMENT MODE": closure.paymentMode || '',
+					"REF UPI ID": closure.ref_UpiId || '',
+					"CHARGES": closure.charges || '',
+					"REMARKS": closure.remarks || '',
+					"CHEQUE DATE": closure.chequeDate || '',
+					"CHEQUE NO": closure.chequeNo || '',
+					"FINANCIAL CONSULTANT ID": closure.financialConsultantId || '',
+					"FINANCIAL CONSULTANT NAME": closure.financialConsultantName || '',
+					"LOAN STATUS": closure.loanStatus || ''
 				};
 
 				// Generate table rows (4 columns)
@@ -188,7 +188,7 @@ function fetchLoanClosureDetails() {
 
 			} else {
 				$section.addClass("d-none");
-				alert("No loan closure record found.");
+				alert("NO LOAN CLOSURE RECORD FOUND.");
 			}
 		},
 		error: function(xhr, status, error) {
@@ -197,7 +197,7 @@ function fetchLoanClosureDetails() {
 			const $tbody = $("#loanClosureDetailsBody");
 			$tbody.empty();
 			$section.addClass("d-none");
-			alert("Error loading data.");
+			alert("ERROR LOADING DATA.");
 		}
 	});
 }

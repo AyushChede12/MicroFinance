@@ -24,12 +24,12 @@ $(document).ready(function() {
 					fillTable(allPolicies); // ✅ INITIAL LOAD (LIKE FIRST TABLE)
 				} else {
 					$("table tbody").html(
-						"<tr><td colspan='10'>No approved policies found</td></tr>"
+						"<tr><td colspan='10'>NO APPROVED POLICIES FOUND</td></tr>"
 					);
 				}
 			},
 			error: function() {
-				alert("Error while fetching policy data");
+				alert("ERROR WHILE FETCHING POLICY DATA");
 			}
 		});
 	}
@@ -124,7 +124,7 @@ $(document).ready(function() {
 			$tbody.append(`
                 <tr>
                     <td colspan="10" class="text-center text-danger">
-                        No matching data found
+                        NO MATCHING DATA FOUND
                     </td>
                 </tr>
             `);
@@ -174,35 +174,35 @@ $(document).ready(function() {
 
 function openPrintModal(id) {
 
-    if (!id) {
-        alert("Invalid policy ID");
-        return;
-    }
+	if (!id) {
+		alert("INVALID POLICY ID");
+		return;
+	}
 
-    $.ajax({
-        url: "api/reports/getPolicyForPrint/" + id,
-        type: "GET",
-        success: function(data) {
+	$.ajax({
+		url: "api/reports/getPolicyForPrint/" + id,
+		type: "GET",
+		success: function(data) {
 
-            // ================= HEADER =================
-            $("#bankName").text("MICROFINANCE BANK");
-            $("#reportTitle").text("Investment Statement");
-            $("#accountNumber").text(data.policyCode || "-");
-            $("#periodCovered").text(data.policyStartDate || "-");
+			// ================= HEADER =================
+			$("#bankName").text("MICROFINANCE BANK");
+			$("#reportTitle").text("INVESTMENT STATEMENT");
+			$("#accountNumber").text(data.policyCode || "-");
+			$("#periodCovered").text(data.policyStartDate || "-");
 
-            // ================= CUSTOMER =================
-            $("#customerName").text(data.customerName || "-");
-            $("#customerAddress1").text(data.address || "-");
-            $("#customerAddress2").text(data.city || "-");
+			// ================= CUSTOMER =================
+			$("#customerName").text(data.customerName || "-");
+			$("#customerAddress1").text(data.address || "-");
+			$("#customerAddress2").text(data.city || "-");
 
-            // ================= SUMMARY =================
-            $("#startingBalance").text("0");
-            $("#incomeAmount").text(data.policyAmount || "0");
-            $("#expensesAmount").text("0");
-            $("#closingBalance").text(data.policyAmount || "0");
+			// ================= SUMMARY =================
+			$("#startingBalance").text("0");
+			$("#incomeAmount").text(data.policyAmount || "0");
+			$("#expensesAmount").text("0");
+			$("#closingBalance").text(data.policyAmount || "0");
 
-            // ================= TABLE =================
-            let row = `
+			// ================= TABLE =================
+			let row = `
                 <tr>
                     <td>${data.policyCode || "-"}</td>
                     <td>${data.policyStartDate || "-"}</td>
@@ -211,39 +211,39 @@ function openPrintModal(id) {
                     <td>${data.paymentMode || "-"}</td>
                 </tr>
             `;
-            $("#transactionTableBody").html(row);
+			$("#transactionTableBody").html(row);
 
-            // ================= OPEN MODAL (BOOTSTRAP 5) =================
-            const modal = new bootstrap.Modal(
-                document.getElementById('bankReportModal')
-            );
-            modal.show();
-        },
-        error: function() {
-            alert("Failed to load print data");
-        }
-    });
+			// ================= OPEN MODAL (BOOTSTRAP 5) =================
+			const modal = new bootstrap.Modal(
+				document.getElementById('bankReportModal')
+			);
+			modal.show();
+		},
+		error: function() {
+			alert("FAILED TO LOAD PRINT DATA");
+		}
+	});
 }
 
 function openPrintModal(id) {
 
-    if (!id) {
-        alert("Invalid policy ID");
-        return;
-    }
+	if (!id) {
+		alert("INVALID POLICY ID");
+		return;
+	}
 
-    $.ajax({
-        url: "api/reports/getPolicyForPrint/" + id,
-        type: "GET",
-        success: function (data) {
+	$.ajax({
+		url: "api/reports/getPolicyForPrint/" + id,
+		type: "GET",
+		success: function(data) {
 
-            let printWindow = window.open('', '', 'width=900,height=700');
+			let printWindow = window.open('', '', 'width=900,height=700');
 
-            printWindow.document.write(`
+			printWindow.document.write(`
 
 <html>
 <head>
-<title>Policy Report</title>
+<title>POLICY REPORT</title>
 
 <style>
 
@@ -335,7 +335,7 @@ MAHARASHTRA - 440024
 </div>
 
 <div class="address">
-CIN : ASJ#567 | Email : example@gmail.com | Helpline : 9566200223
+CIN : ASJ#567 | EMAIL : example@gmail.com | HELPLINE : 9566200223
 </div>
 
 </div>
@@ -347,27 +347,27 @@ POLICY INVESTMENT REPORT
 </div>
 
 
-<div class="section">Customer Details</div>
+<div class="section">CUSTOMER DETAILS</div>
 
 <table>
 
 <tr>
-<td class="label">Customer Name</td>
+<td class="label">CUSTOMER NAME</td>
 <td>${data.customerName || "-"}</td>
 </tr>
 
 <tr>
-<td class="label">Contact Number</td>
+<td class="label">CONTACT NUMBER</td>
 <td>${data.contactNo || "-"}</td>
 </tr>
 
 <tr>
-<td class="label">Address</td>
+<td class="label">ADDRESS</td>
 <td>${data.address || "-"}</td>
 </tr>
 
 <tr>
-<td class="label">City</td>
+<td class="label">CITY</td>
 <td>${data.city || "-"}</td>
 </tr>
 
@@ -375,32 +375,32 @@ POLICY INVESTMENT REPORT
 
 
 
-<div class="section">Policy Details</div>
+<div class="section">POLICY DETAILS</div>
 
 <table>
 
 <tr>
-<td class="label">Policy Code</td>
+<td class="label">POLICY CODE</td>
 <td>${data.policyCode || "-"}</td>
 </tr>
 
 <tr>
-<td class="label">Policy Date</td>
+<td class="label">POLICY DATE</td>
 <td>${data.policyStartDate || "-"}</td>
 </tr>
 
 <tr>
-<td class="label">Scheme Type</td>
+<td class="label">SCHEME TYPE</td>
 <td>${data.schemeType || "-"}</td>
 </tr>
 
 <tr>
-<td class="label">Policy Amount</td>
+<td class="label">POLICY AMOUNT</td>
 <td>₹ ${data.policyAmount || "0"}</td>
 </tr>
 
 <tr>
-<td class="label">Payment Mode</td>
+<td class="label">PAYMENT MODE</td>
 <td>${data.paymentMode || "-"}</td>
 </tr>
 
@@ -408,17 +408,17 @@ POLICY INVESTMENT REPORT
 
 
 
-<div class="section">Transaction Summary</div>
+<div class="section">TRANSACTION SUMMARY</div>
 
 <table>
 
 <thead>
 <tr>
-<th>Policy Code</th>
-<th>Date</th>
-<th>Amount</th>
-<th>Scheme</th>
-<th>Payment Mode</th>
+<th>POLICY CODE</th>
+<th>DATE</th>
+<th>AMOUNT</th>
+<th>SCHEME</th>
+<th>PAYMENT MODE</th>
 </tr>
 </thead>
 
@@ -441,13 +441,13 @@ POLICY INVESTMENT REPORT
 <div class="footer">
 
 <div class="sign">
-____________________  
-Branch Manager
+______________________  
+BRANCH MANAGER
 </div>
 
 <div class="sign">
-____________________  
-Authorized Signatory
+______________________  
+AUTHORIZED SIGNATORY
 </div>
 
 </div>
@@ -461,10 +461,10 @@ window.print();
 
             `);
 
-            printWindow.document.close();
-        },
-        error: function () {
-            alert("Failed to load print data");
-        }
-    });
+			printWindow.document.close();
+		},
+		error: function() {
+			alert("FAILED TO LOAD PRINT DATA");
+		}
+	});
 }

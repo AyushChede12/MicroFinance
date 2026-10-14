@@ -39,7 +39,7 @@ public class TeamManagementController {
 		if (designation != null)
 			return ResponseEntity.ok("success");
 		else
-			return ResponseEntity.badRequest().body("Failure");
+			return ResponseEntity.badRequest().body("FAILURE");
 	}
 
 	// Get Designation List - Janvi
@@ -56,7 +56,7 @@ public class TeamManagementController {
 		if (department != null)
 			return ResponseEntity.ok("success");
 		else
-			return ResponseEntity.badRequest().body("Failure");
+			return ResponseEntity.badRequest().body("FAILURE");
 	}
 
 	// Get Department List - Janvi
@@ -90,7 +90,7 @@ public class TeamManagementController {
 	@GetMapping("/getAllteamMember") // Janvi
 	public ResponseEntity<ApiResponse<List<TeamMember>>> fetchAllteamMember() {
 		List<TeamMember> list = teamService.fetchAllteamMember();
-		ApiResponse<List<TeamMember>> response = new ApiResponse<>(HttpStatus.FOUND, "Team Member fetched successfully",
+		ApiResponse<List<TeamMember>> response = new ApiResponse<>(HttpStatus.FOUND, "TEAM MEMBER FETCHED SUCCESSFULLY",
 				list);
 		return ResponseEntity.ok(response);
 	}

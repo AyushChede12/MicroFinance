@@ -1,4 +1,3 @@
-
 function fetchBySelectedCustomer() {
 	const memberCode = $("#selectByCode").val();
 
@@ -101,12 +100,12 @@ function fetchBySelectedCustomer() {
 				}  // ← THIS CLOSING BRACE WAS MISSING!!
 
 			} else {
-				alert("No data found for the selected member.");
+				alert("NO DATA FOUND FOR THE SELECTED MEMBER.");
 				clearCustomerFields();
 			}
 		},
 		error: function(jqXHR, textStatus, errorThrown) {
-			alert("Failed to fetch data: " + textStatus + ", " + errorThrown);
+			alert(("FAILED TO FETCH DATA: " + textStatus + ", " + errorThrown).toUpperCase());
 		}
 	});
 }
@@ -160,7 +159,7 @@ function verifyFetchedData() {
 		.then(data => {
 
 			if (data.isVerified) {
-				alert(data.message);
+				alert((data.message || "").toUpperCase());
 
 				$("#saveBtn").css({
 					"background-color": "green",
@@ -172,12 +171,12 @@ function verifyFetchedData() {
 					"border-radius": "6px",
 					"cursor": "not-allowed"
 				})
-					.text("Verified")
+					.text("VERIFIED")
 					.prop("disabled", true);
 
 			} else {
 
-				alert(data.message);
+				alert((data.message || "").toUpperCase());
 
 				$("#saveBtn").css({
 					"background-color": "red",
@@ -189,14 +188,14 @@ function verifyFetchedData() {
 					"border-radius": "6px",
 					"cursor": "pointer"
 				})
-					.text("Not Verified")
+					.text("NOT VERIFIED")
 					.prop("disabled", false);
 			}
 
 		})
 		.catch(error => {
 			console.error("Error verifying data:", error);
-			alert("Something went wrong while verifying.");
+			alert("SOMETHING WENT WRONG WHILE VERIFYING.");
 		});
 }
 
@@ -219,10 +218,10 @@ $(document).ready(function() {
 					].filter(Boolean).join(" ");
 
 					let optionHtml = `
-	                    <option value="${item.memberCode}">
-	                        ${item.memberCode} - ${(fullName).toUpperCase()}
-	                    </option>
-	                `;
+                    <option value="${item.memberCode}">
+                        ${item.memberCode} - ${(fullName).toUpperCase()}
+                    </option>
+                `;
 
 					dropdown.append(optionHtml);
 				});
@@ -246,7 +245,7 @@ function photoUpload() {
 		};
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for photo.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR PHOTO.");
 	}
 }
 
@@ -262,7 +261,7 @@ function signatureUpload() {
 		};
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for signature.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR SIGNATURE.");
 	}
 }
 

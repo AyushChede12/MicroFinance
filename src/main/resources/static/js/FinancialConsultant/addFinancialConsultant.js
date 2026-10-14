@@ -6,16 +6,16 @@ $(document).ready(function() {
 		type: "POST",
 		success: function (response) {
 			if (response.status === "FOUND" && response.data) {
-				$("#memberCode").empty().append("<option value=''>-- Select Code --</option>");
+				$("#memberCode").empty().append("<option value=''>-- SELECT CODE --</option>");
 				response.data.forEach(function (item) {
 					$("#memberCode").append(`<option value='${item.memberCode}'>${item.memberCode}</option>`);
 				});
 			} else {
-				alert("No customer codes found.");
+				alert("NO CUSTOMER CODES FOUND.");
 			}
 		},
 		error: function () {
-			alert("Failed to load customer codes.");
+			alert("FAILED TO LOAD CUSTOMER CODES.");
 		}
 	});*/
 
@@ -25,16 +25,16 @@ $(document).ready(function() {
 		type: "POST",
 		success: function(response) {
 			if (response.status === "OK" && response.data) {
-				$("#branchName").empty().append("<option value=''>-- Select Branch --</option>");
+				$("#branchName").empty().append("<option value=''>-- SELECT BRANCH --</option>");
 				response.data.forEach(function(item) {
 					$("#branchName").append(`<option value='${item.branchName}'>${item.branchName}</option>`);
 				});
 			} else {
-				alert("No branches found.");
+				alert("NO BRANCHES FOUND.");
 			}
 		},
 		error: function() {
-			alert("Failed to load branch names.");
+			alert("FAILED TO LOAD BRANCH NAMES.");
 		}
 	});
 
@@ -43,16 +43,16 @@ $(document).ready(function() {
 		type: "GET",
 		success: function(response) {
 			if (response.status === "FOUND") {
-				$("#teamMemberCode").empty().append("<option value=''>-- Select Team Member Code --</option>");
+				$("#teamMemberCode").empty().append("<option value=''>-- SELECT TEAM MEMBER CODE --</option>");
 				response.data.forEach(function(item) {
 					$("#teamMemberCode").append(`<option value='${item.teamMemberCode}'>${item.teamMemberCode}</option>`);
 				});
 			} else {
-				alert("No Team Member found.");
+				alert("NO TEAM MEMBER FOUND.");
 			}
 		},
 		error: function() {
-			alert("Failed to load Team Member names.");
+			alert("FAILED TO LOAD TEAM MEMBER NAMES.");
 		}
 	});
 
@@ -62,16 +62,16 @@ $(document).ready(function() {
 		type: "POST",
 		success: function(response) {
 			if (response.status === "OK" && response.data) {
-				$("#relationToApplicant").empty().append("<option value=''>-- Select Relation --</option>");
+				$("#relationToApplicant").empty().append("<option value=''>-- SELECT RELATION --</option>");
 				response.data.forEach(function(item) {
 					$("#relationToApplicant").append(`<option value='${item.relationToApplicant}'>${item.relationToApplicant}</option>`);
 				});
 			} else {
-				alert("No relations found.");
+				alert("NO RELATIONS FOUND.");
 			}
 		},
 		error: function() {
-			alert("Failed to load relation.");
+			alert("FAILED TO LOAD RELATION.");
 		}
 	});
 
@@ -110,11 +110,11 @@ $(document).ready(function() {
 						$("#financialPhotoPreview").attr("src", data.customerPhoto ? `Uploads/${data.customerPhoto}` : "Uploads/default-placeholder.jpg");
 						$("#financialSignaturePreview").attr("src", data.customerSignature ? `Uploads/${data.customerSignature}` : "Uploads/default-signature.jpg");
 					} else {
-						alert("No customer found for this member code.");
+						alert("NO CUSTOMER FOUND FOR THIS MEMBER CODE.");
 					}
 				},
 				error: function() {
-					alert("Member not found or server error.");
+					alert("MEMBER NOT FOUND OR SERVER ERROR.");
 				}
 			});
 		}
@@ -132,30 +132,28 @@ $(document).ready(function() {
 				tbody.empty();
 				$.each(response.data, function(index, item) {
 					var row = `
-						<tr style="font-family: 'Poppins', sans-serif;">
-							<td>${index + 1}</td>
-							<td>${item.financialCode || ''}</td>
-							<td>${item.financialName || ''}</td>
-							<td>${item.contactNo || ''}</td>
-							<td>${item.branchName || ''}</td>
-							<td>${item.address || ''}</td>
-							<td>${item.district || ''}</td>
-							<td>${item.state || ''}</td>
-							<td>${item.pinCode || ''}</td>
-							<td>${item.profession || ''}</td>
-							<td>${item.financialStatus || ''}</td>
-							
-							
-						</tr>`;
+                        <tr style="font-family: 'Poppins', sans-serif;">
+                            <td>${index + 1}</td>
+                            <td>${item.financialCode || ''}</td>
+                            <td>${item.financialName || ''}</td>
+                            <td>${item.contactNo || ''}</td>
+                            <td>${item.branchName || ''}</td>
+                            <td>${item.address || ''}</td>
+                            <td>${item.district || ''}</td>
+                            <td>${item.state || ''}</td>
+                            <td>${item.pinCode || ''}</td>
+                            <td>${item.profession || ''}</td>
+                            <td>${item.financialStatus || ''}</td>
+                        </tr>`;
 					tbody.append(row);
 				});
 			} else {
-				$(".datatable tbody").html(`<tr><td colspan="11" class="text-center">No data available</td></tr>`);
+				$(".datatable tbody").html(`<tr><td colspan="11" class="text-center">NO DATA AVAILABLE</td></tr>`);
 			}
 		},
 		error: function(xhr, status, error) {
-			console.error("Error fetching financial consultants:", error);
-			alert("Failed to load financial consultant data.");
+			console.error("ERROR FETCHING FINANCIAL CONSULTANTS:", error);
+			alert("FAILED TO LOAD FINANCIAL CONSULTANT DATA.");
 		}
 	});
 
@@ -186,8 +184,6 @@ $(document).ready(function() {
 		$('#chkmodeofPayment').text('');
 		$('#chkteammembercode').text('');
 
-
-
 		// Fetch input values
 		var joiningDate = $('#joiningDate').val().trim();
 		var financialName = $('#financialName').val().trim();
@@ -210,126 +206,123 @@ $(document).ready(function() {
 		const photo = $('#photo')[0].files[0];
 		const signature = $('#signature')[0].files[0];
 
-
 		if (joiningDate === '') {
-			$('#chkjoiningDate').text('* This field is required');
+			$('#chkjoiningDate').text('* THIS FIELD IS REQUIRED');
 			$('#joiningDate').focus();
 			isValid = false;
 		}
 
 		if (financialName === '') {
-			$('#chkfinancialName').text('* This field is required');
+			$('#chkfinancialName').text('* THIS FIELD IS REQUIRED');
 			$('#financialName').focus();
 			isValid = false;
 		}
 
 		if (dob === '') {
-			$('#chkdob').text('* This field is required');
+			$('#chkdob').text('* THIS FIELD IS REQUIRED');
 			$('#dob').focus();
 			isValid = false;
 		}
 
 		if (age === '') {
-			$('#chkage').text('* This field is required');
+			$('#chkage').text('* THIS FIELD IS REQUIRED');
 			$('#age').focus();
 			isValid = false;
 		}
 
 		if (contactNo === '') {
-			$('#chkcontactNo').text('* This field is required');
+			$('#chkcontactNo').text('* THIS FIELD IS REQUIRED');
 			$('#contactNo').focus();
 			isValid = false;
 		}
 
 		if (branchName === '') {
-			$('#chkbranchName').text('* This field is required');
+			$('#chkbranchName').text('* THIS FIELD IS REQUIRED');
 			$('#branchName').focus();
 			isValid = false;
 		}
 
 		if (address === '') {
-			$('#chkaddress').text('* This field is required');
+			$('#chkaddress').text('* THIS FIELD IS REQUIRED');
 			$('#address').focus();
 			isValid = false;
 		}
 
 		if (district === '') {
-			$('#chkdistict').text('* This field is required');
+			$('#chkdistict').text('* THIS FIELD IS REQUIRED');
 			$('#district').focus();
 			isValid = false;
 		}
 
 		if (state === '') {
-			$('#chkstate').text('* This field is required');
+			$('#chkstate').text('* THIS FIELD IS REQUIRED');
 			$('#state').focus();
 			isValid = false;
 		}
 
 		if (pinCode === '') {
-			$('#chkpinCode').text('* This field is required');
+			$('#chkpinCode').text('* THIS FIELD IS REQUIRED');
 			$('#pinCode').focus();
 			isValid = false;
 		}
 
 		if (profession === '') {
-			$('#chkprofession').text('* This field is required');
+			$('#chkprofession').text('* THIS FIELD IS REQUIRED');
 			$('#profession').focus();
 			isValid = false;
 		}
 
 		if (academicBackground === '') {
-			$('#chkacademicBackground').text('* This field is required');
+			$('#chkacademicBackground').text('* THIS FIELD IS REQUIRED');
 			$('#academicBackground').focus();
 			isValid = false;
 		}
 
 		if (!photo) {
-			$('#chkphoto').text('* Photo is required');
+			$('#chkphoto').text('* PHOTO IS REQUIRED');
 			$('#photo').focus();
 			isValid = false;
 		}
+
 		if (!signature) {
-			$('#chksignature').text('* Signature is required');
+			$('#chksignature').text('* SIGNATURE IS REQUIRED');
 			$('#signature').focus();
 			isValid = false;
 		}
 
 		if (selectPosition === '') {
-			$('#chkposition').text('* This field is required');
+			$('#chkposition').text('* THIS FIELD IS REQUIRED');
 			$('#selectPosition').focus();
 			isValid = false;
 		}
 
 		if (referralCode === '') {
-			$('#chkreferralCode').text('* This field is required');
+			$('#chkreferralCode').text('* THIS FIELD IS REQUIRED');
 			$('#referralCode').focus();
 			isValid = false;
 		}
 
 		if (referralName === '') {
-			$('#chkrefferalName').text('* This field is required');
+			$('#chkrefferalName').text('* THIS FIELD IS REQUIRED');
 			$('#referralName').focus();
 			isValid = false;
 		}
 
 		if (modeofPayment === '') {
-			$('#chkmodeofPayment').text('* This field is required');
+			$('#chkmodeofPayment').text('* THIS FIELD IS REQUIRED');
 			$('#modeofPayment').focus();
 			isValid = false;
 		}
 
 		if (teamMemberCode === '') {
-			$('#chkteammembercode').text('* This field is required');
+			$('#chkteammembercode').text('* THIS FIELD IS REQUIRED');
 			$('#teamMemberCode').focus();
 			isValid = false;
 		}
 
-
-
 		if (!isValid) {
 			return false; // Stop AJAX call
 		}
-
 
 		var financialCode = $('#financialCode').val();
 
@@ -337,7 +330,7 @@ $(document).ready(function() {
 		const financialSignatureSrc = $('#signatureHidden').attr('src') || '';
 		const photo = financialPhotoSrc.split('/').pop();
 		const signature = financialSignatureSrc.split('/').pop();
-*/
+		*/
 		const formData = new FormData();
 		formData.append("joiningDate", $('#joiningDate').val());
 		formData.append("financialCode", financialCode);
@@ -376,7 +369,6 @@ $(document).ready(function() {
 			formData.append("finnacialSignature", signature);
 		}
 
-
 		$.ajax({
 			type: 'POST',
 			url: 'api/financialconsultant/saveOrUpdateFinancialConsultant',
@@ -385,15 +377,15 @@ $(document).ready(function() {
 			contentType: false,
 			success: function(response) {
 				if (response.status === "OK" || response.status === "CREATED") {
-					alert("Saved Successfully \n Financial Code : " + financialCode);
+					alert("SAVED SUCCESSFULLY \n FINANCIAL CODE : " + financialCode);
 					location.reload();
 				} else {
-					alert("Error: " + response.message);
+					alert("ERROR: " + response.message);
 				}
 			},
 			error: function(xhr) {
-				console.error("Error:", xhr.responseText);
-				alert("❌ An error occurred while saving the data.");
+				console.error("ERROR:", xhr.responseText);
+				alert("❌ AN ERROR OCCURRED WHILE SAVING THE DATA.");
 			}
 		});
 	});
@@ -427,13 +419,13 @@ $(document).ready(function() {
 	// ✅ UPI ID verification
 	$('#verifyUpiBtn').click(function() {
 		const upi = $('#refNo').val().trim();
-		const upiPattern = /^[\w.\-]{2,256}@[a-zA-Z]{2,64}$/;
+		const upiPattern = /^[\w.\\-]{2,256}@[a-zA-Z]{2,64}$/;
 		if (upiPattern.test(upi)) {
 			$('#refNo').css('border', '2px solid green');
-			$('#upiStatus').text('✅ Valid UPI ID').css('color', 'green');
+			$('#upiStatus').text('✅ VALID UPI ID').css('color', 'green');
 		} else {
 			$('#refNo').css('border', '2px solid red');
-			$('#upiStatus').text('❌ Invalid UPI ID format').css('color', 'red');
+			$('#upiStatus').text('❌ INVALID UPI ID FORMAT').css('color', 'red');
 		}
 	});
 
@@ -446,6 +438,7 @@ $(document).ready(function() {
 			console.log(`${toggle.dataset.toggleType} is now ${toggle.checked}`);
 		});
 	});
+
 	function updateToggleColor(input) {
 		const label = input.nextElementSibling;
 		label.style.backgroundColor = input.checked ? '#28a745' : '#ccc';
@@ -507,16 +500,14 @@ $(document).ready(function() {
 						scrollTop: $("#yourFormId").offset().top
 					}, 500);
 				} else {
-					alert("No data found for the selected financial consultant.");
+					alert("NO DATA FOUND FOR THE SELECTED FINANCIAL CONSULTANT.");
 				}
 			},
 			error: function () {
-				alert("Failed to fetch data for editing.");
+				alert("FAILED TO FETCH DATA FOR EDITING.");
 			}
 		});
 	});
-
-
 
 	$('#updateBtn').click(function (e) {
 		e.preventDefault();
@@ -570,43 +561,43 @@ $(document).ready(function() {
 			cache: false,
 			success: function (response) {
 				if (response.status === "OK") {
-					alert("Updated Successfully");
+					alert("UPDATED SUCCESSFULLY");
 					location.reload();
 					// Optionally refresh the table or UI
 				} else {
-					alert("Something went wrong: " + response.message);
+					alert("SOMETHING WENT WRONG: " + response.message);
 				}
 			},
 			error: function (xhr) {
-				alert("Error while saving data: " + xhr.responseText);
+				alert("ERROR WHILE SAVING DATA: " + xhr.responseText);
 			}
 		});
 	});
-	
-	$(document).on('click', '.deleteBtn', function () {
-			var id = $(this).data('id');
 
-			// Optional: Confirmation prompt
-			if (confirm("Are you sure you want to delete this Financial Consultant?")) {
-				$.ajax({
-					url: 'api/financialconsultant/deleteFinancialConsultantById',
-					type: 'POST',
-					data: { id: id },
-					success: function (response) {
-						if (response.status === 'OK') {
-							alert(response.message);
-							// Reload or update the table after deletion
-							location.reload(); // or call a function to refresh table via AJAX
-						} else {
-							alert("Error: " + response.message);
-						}
-					},
-					error: function (xhr) {
-						alert("Deletion failed. Please try again.");
+	$(document).on('click', '.deleteBtn', function () {
+		var id = $(this).data('id');
+
+		// Optional: Confirmation prompt
+		if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS FINANCIAL CONSULTANT?")) {
+			$.ajax({
+				url: 'api/financialconsultant/deleteFinancialConsultantById',
+				type: 'POST',
+				data: { id: id },
+				success: function (response) {
+					if (response.status === 'OK') {
+						alert(response.message);
+						// Reload or update the table after deletion
+						location.reload(); // or call a function to refresh table via AJAX
+					} else {
+						alert("ERROR: " + response.message);
 					}
-				});
-			}
-		});*/
+				},
+				error: function (xhr) {
+					alert("DELETION FAILED. PLEASE TRY AGAIN.");
+				}
+			});
+		}
+	});*/
 
 });
 
@@ -615,7 +606,7 @@ function printTable() {
 	const printWindow = window.open('', '', 'height=500,width=800');
 
 	printWindow.document
-		.write('<html><head><title>Print Details</title></head><body>');
+		.write('<html><head><title>PRINT DETAILS</title></head><body>');
 	printWindow.document.write(printContent);
 	printWindow.document.write('</body></html>');
 
@@ -624,11 +615,8 @@ function printTable() {
 	printWindow.print();
 }
 
-
-
-
 /*function photoUpload() {
-	alert("function called");
+	alert("FUNCTION CALLED");
 	const file = document.getElementById("financialPhoto").files[0];
 	if (file && file.type.startsWith("image/")) {
 		const reader = new FileReader();
@@ -643,13 +631,12 @@ function printTable() {
 		};
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for photo.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR PHOTO.");
 	}
 }
 
-
 function signatureUpload() {
-	alert("function called");
+	alert("FUNCTION CALLED");
 	const file = document.getElementById("finnacialSignature").files[0];
 	if (file && file.type.startsWith("image/")) {
 		const reader = new FileReader();
@@ -664,9 +651,8 @@ function signatureUpload() {
 		};
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for photo.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR PHOTO.");
 	}
-}
-*/
+}*/
 
 // End of document.ready

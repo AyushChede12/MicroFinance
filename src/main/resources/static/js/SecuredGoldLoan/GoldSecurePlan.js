@@ -48,22 +48,22 @@ $(document).ready(function() {
 			dataType: "json",
 			data: JSON.stringify(goldLoanData),
 			success: function(response) {
-				alert("success");
+				alert("SUCCESS");
 				// ✅ Check numeric status code instead of "OK"
 				if ((response.status === 200 || response.status === "OK")) {
-					if(mode=="save"){
-						alert("Gold Data Saved Successfully");
+					if (mode == "save") {
+						alert("GOLD DATA SAVED SUCCESSFULLY");
 					}
-					else{
-						alert("Gold Data Updated Successfully");
+					else {
+						alert("GOLD DATA UPDATED SUCCESSFULLY");
 					}
 					loadLoanTable(); // refresh the table
 				} else {
-					alert("Failed: " + response.message);
+					alert("FAILED: " + response.message);
 				}
 			},
 			error: function(xhr) {
-				alert("Error occurred: " + xhr.responseText);
+				alert("ERROR OCCURRED: " + xhr.responseText);
 			}
 		});
 	}
@@ -84,35 +84,35 @@ function loadLoanTable() {
 			if ((response.status === 200 || response.status === "OK") && Array.isArray(response.data)) {
 				response.data.forEach(function(loan) {
 					rows += `
-                        <tr>
-                            <td>${loan.id}</td>
-                            <td>${loan.loanPlanName || "-"}</td>
-                            <td>${loan.typeOfLoan || "-"}</td>
-                            <td>${loan.minAge || "-"}</td>
-                            <td>${loan.maxAge || "-"}</td>
-                            <td>${loan.emiType || "-"}</td>
-                            <td>
-                                <button class="btn btn-sm btn-warning" onclick="editLoanById(${loan.id})">
-                                    <i class="fa fa-edit"></i>
-                                </button>
-                            </td>
-                            <td>
-                                <button class="btn btn-sm btn-danger" onclick="deleteLoan(${loan.id})">
-                                    <i class="fa fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    `;
+                       <tr>
+                           <td>${loan.id}</td>
+                           <td>${loan.loanPlanName || "-"}</td>
+                           <td>${loan.typeOfLoan || "-"}</td>
+                           <td>${loan.minAge || "-"}</td>
+                           <td>${loan.maxAge || "-"}</td>
+                           <td>${loan.emiType || "-"}</td>
+                           <td>
+                               <button class="btn btn-sm btn-warning" onclick="editLoanById(${loan.id})">
+                                   <i class="fa fa-edit"></i>
+                               </button>
+                           </td>
+                           <td>
+                               <button class="btn btn-sm btn-danger" onclick="deleteLoan(${loan.id})">
+                                   <i class="fa fa-trash"></i>
+                               </button>
+                           </td>
+                       </tr>
+                   `;
 				});
 			} else {
-				rows = "<tr><td colspan='9'>No data found</td></tr>";
+				rows = "<tr><td colspan='9'>NO DATA FOUND</td></tr>";
 			}
 
 			$("#loanTableBody").html(rows);
 		},
 		error: function(xhr) {
 			console.error("Error loading table:", xhr.statusText);
-			$("#loanTableBody").html("<tr><td colspan='9'>Error loading data</td></tr>");
+			$("#loanTableBody").html("<tr><td colspan='9'>ERROR LOADING DATA</td></tr>");
 		}
 	});
 }
@@ -153,11 +153,11 @@ function editLoanById(id) {
 				$('#toggle-plan-status').prop('checked', parseInt(loan.planStatus) === 1);
 				updateToggleColor(document.getElementById('planStatus'));
 			} else {
-				alert("Gold Loan not found: " + response.message);
+				alert("GOLD LOAN NOT FOUND: " + response.message);
 			}
 		},
 		error: function(xhr) {
-			alert("Error fetching loan details: " + xhr.responseText);
+			alert("ERROR FETCHING LOAN DETAILS: " + xhr.responseText);
 		}
 	});
 }
@@ -174,22 +174,21 @@ function updateToggleColor(input) {
 }
 
 function deleteLoan(id) {
-    if (confirm("Are you sure you want to delete this Goldloan?")) {
-        $.ajax({
-            url: "api/securedGoldLoan/deleteGoldLoanById?id=" + id, // pass id as query param
-            type: "POST", // must remain POST because backend uses @PostMapping
-            success: function(response) {
-                if (response.status === "OK" || response.status === 200) {
-                    alert("Loan deleted successfully");
-                    loadLoanTable();
-                } else {
-                    alert("Failed to delete: " + response.message);
-                }
-            },
-            error: function(xhr, status, error) {
-                alert("Error while deleting loan: " + error);
-            }
-        });
-    }
+	if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS GOLDLOAN?")) {
+		$.ajax({
+			url: "api/securedGoldLoan/deleteGoldLoanById?id=" + id, // pass id as query param
+			type: "POST", // must remain POST because backend uses @PostMapping
+			success: function(response) {
+				if (response.status === "OK" || response.status === 200) {
+					alert("LOAN DELETED SUCCESSFULLY");
+					loadLoanTable();
+				} else {
+					alert("FAILED TO DELETE: " + response.message);
+				}
+			},
+			error: function(xhr, status, error) {
+				alert("ERROR WHILE DELETING LOAN: " + error);
+			}
+		});
+	}
 }
-

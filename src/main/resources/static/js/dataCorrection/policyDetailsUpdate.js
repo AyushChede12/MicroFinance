@@ -15,7 +15,7 @@ $(document).ready(function() {
 
 				// Initialize Select2 with full data and custom search matcher
 				$('#policyCode').select2({
-					placeholder: '-- Search Policy Code or Name --',
+					placeholder: '-- SEARCH POLICY CODE OR NAME --',
 					data: policyOptions,
 					matcher: function(params, data) {
 						// If no search term, return all
@@ -40,11 +40,11 @@ $(document).ready(function() {
 				});
 
 			} else {
-				alert("No Policy codes found.");
+				alert("NO POLICY CODES FOUND.");
 			}
 		},
 		error: function() {
-			alert("Failed to load Policy codes.");
+			alert("FAILED TO LOAD POLICY CODES.");
 		}
 	});
 
@@ -53,23 +53,23 @@ $(document).ready(function() {
 		type: "GET",
 		success: function(response) {
 			if (response.status === "OK") {
-				$("#memberSelection").empty().append("<option value=''>-- Select Code --</option>");
+				$("#memberSelection").empty().append("<option value=''>-- SELECT CODE --</option>");
 				response.data.forEach(function(item) {
 					$("#memberSelection").append(`<option value='${item.memberSelection}'>${item.memberSelection}</option>`);
 				});
 			} else {
-				alert("No customer codes found.");
+				alert("NO CUSTOMER CODES FOUND.");
 			}
 		},
 		error: function() {
-			alert("Failed to load customer codes.");
+			alert("FAILED TO LOAD CUSTOMER CODES.");
 		}
 	});
 
 	$("#policyCode").change(function() {
 		let policyCode = $("#policyCode").val();
 		if (!policyCode) {
-			alert("Please enter/select a Policy Code.");
+			alert("PLEASE ENTER/SELECT A POLICY CODE.");
 			return;
 		}
 
@@ -116,11 +116,11 @@ $(document).ready(function() {
 					updateToggleColor(document.getElementById('toggle-sms-send'));
 
 				} else {
-					alert("Policy Details Not Found For Customer");
+					alert("POLICY DETAILS NOT FOUND FOR CUSTOMER");
 				}
 			},
 			error: function() {
-				alert("Policy not found or server error");
+				alert("POLICY NOT FOUND OR SERVER ERROR");
 			}
 		});
 	});
@@ -129,7 +129,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		const policyCode = $("#policyCode").val();
 		if (!policyCode) {
-			alert("First select the data, then proceed to update.");
+			alert("FIRST SELECT THE DATA, THEN PROCEED TO UPDATE.");
 			return;
 		}
 
@@ -169,14 +169,14 @@ $(document).ready(function() {
 			contentType: "application/json",
 			success: function(response) {
 				if (response.status === "OK") {
-					alert("Policy Details Updated Successfully");
+					alert("POLICY DETAILS UPDATED SUCCESSFULLY");
 					location.reload();
 				} else {
-					alert("Something went wrong: " + response.message);
+					alert("SOMETHING WENT WRONG: " + response.message);
 				}
 			},
 			error: function(xhr) {
-				alert("Error while saving data: " + xhr.responseText);
+				alert("ERROR WHILE SAVING DATA: " + xhr.responseText);
 			}
 		});
 	});
@@ -186,28 +186,28 @@ $(document).ready(function() {
 		var id = $("#id").val();
 		let policyCode = $("#policyCode").val();
 		if (policyCode !== "") {
-			if (confirm("Are you sure you want to delete this Policy Data?")) {
+			if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS POLICY DATA?")) {
 				$.ajax({
 					url: "api/datacorrection/deletePolicyDataByForm",
 					type: "POST",
 					data: { id: id },
 					success: function(response) {
 						if (response.status == "OK") {
-							alert("Policy Data Deleted Successfully");
+							alert("POLICY DATA DELETED SUCCESSFULLY");
 							location.reload();
 						} else {
-							alert("Delete failed: " + response.message);
+							alert("DELETE FAILED: " + response.message);
 						}
 					},
 					error: function(xhr, status, error) {
-						alert("Failed to delete Policy Data.");
+						alert("FAILED TO DELETE POLICY DATA.");
 						console.error("Error:", error);
 					}
 				});
 			}
 		}
 		else {
-			alert("First Select Any One Data Then Proceed To Delete!");
+			alert("FIRST SELECT ANY ONE DATA THEN PROCEED TO DELETE!");
 		}
 
 	});
@@ -267,70 +267,70 @@ $(document).ready(function() {
 			if (printWindow) {
 				printWindow.document.open();
 				printWindow.document.write(`
-						<html>
-						<head>
-							<title>Print - Policy Form</title>
-							<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
-							<style>
+					<html>
+					<head>
+						<title>PRINT - POLICY FORM</title>
+						<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+						<style>
+							body {
+								font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+								padding: 30px;
+								background: #fff;
+								color: #333;
+							}
+							h3 {
+								text-align: center;
+								margin-bottom: 30px;
+								border-bottom: 2px solid #444;
+								padding-bottom: 10px;
+							}
+							.form-group, .form-row {
+								margin-bottom: 20px;
+								display: flex;
+								flex-wrap: wrap;
+								align-items: center;
+							}
+							label {
+								width: 200px;
+								font-weight: 600;
+								margin-bottom: 5px;
+								color: #000;
+							}
+							.form-value {
+								flex: 1;
+								padding: 8px 12px;
+								border: 1px solid #ccc;
+								border-radius: 5px;
+								background-color: #f9f9f9;
+								font-weight: 500;
+								color: #222;
+							}
+							img {
+								display: block;
+								margin-top: 10px;
+							}
+							@media print {
 								body {
-									font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-									padding: 30px;
-									background: #fff;
-									color: #333;
+									zoom: 95%;
 								}
-								h3 {
-									text-align: center;
-									margin-bottom: 30px;
-									border-bottom: 2px solid #444;
-									padding-bottom: 10px;
-								}
-								.form-group, .form-row {
-									margin-bottom: 20px;
-									display: flex;
-									flex-wrap: wrap;
-									align-items: center;
-								}
-								label {
-									width: 200px;
-									font-weight: 600;
-									margin-bottom: 5px;
-									color: #000;
-								}
-								.form-value {
-									flex: 1;
-									padding: 8px 12px;
-									border: 1px solid #ccc;
-									border-radius: 5px;
-									background-color: #f9f9f9;
-									font-weight: 500;
-									color: #222;
-								}
-								img {
-									display: block;
-									margin-top: 10px;
-								}
-								@media print {
-									body {
-										zoom: 95%;
-									}
-								}
-							</style>
-						</head>
-						<body onload="window.print(); window.close();">
-							<h3>Policy Information</h3>
-							<div class="container">
-								${$formClone[0].outerHTML}
-							</div>
-						</body>
-						</html>
-					`);
+							}
+						</style>
+					</head>
+					<body onload="window.print(); window.close();">
+						<h3>POLICY INFORMATION</h3>
+						<div class="container">
+							${$formClone[0].outerHTML}
+						</div>
+					</body>
+					</html>
+				`);
 				printWindow.document.close();
 			} else {
-				alert("Popup blocked. Please allow popups for this website.");
+				alert("POPUP BLOCKED. PLEASE ALLOW POPUPS FOR THIS WEBSITE.");
 			}
 		}
 		else {
-			alert("First Select Any One Data Then Proceed to Print");
+			alert("FIRST SELECT ANY ONE DATA THEN PROCEED TO PRINT");
 		}
 	});*/
 
@@ -338,21 +338,21 @@ $(document).ready(function() {
 
 		const policyCode = $("#policyCode").val();
 		if (!policyCode) {
-			alert("Please select atleast one data then proceed to print!");
+			alert("PLEASE SELECT ATLEAST ONE DATA THEN PROCEED TO PRINT!");
 			return;
 		}
 
 		const c = window.companyData;
 
 		let companyHeader = `
-		        <h1 style="text-align:center; margin-bottom:0;">${c.companyName}</h1>
-		        <h3 style="text-align:center; margin-top:5px;">(${c.shortName})</h3>
-		        <p style="text-align:center;">
-		            ${c.address}, ${c.city}, ${c.state} - ${c.pinCode}<br>
-		            CIN: ${c.cinNo} | Email: ${c.emailId.toLowerCase()} | Helpline: ${c.helplineNo}
-		        </p>
-		        <hr>
-		    `;
+	        <h1 style="text-align:center; margin-bottom:0;">${c.companyName}</h1>
+	        <h3 style="text-align:center; margin-top:5px;">(${c.shortName})</h3>
+	        <p style="text-align:center;">
+	            ${c.address}, ${c.city}, ${c.state} - ${c.pinCode}<br>
+	            CIN: ${c.cinNo} | EMAIL: ${c.emailId.toLowerCase()} | HELPLINE: ${c.helplineNo}
+	        </p>
+	        <hr>
+	    `;
 
 		function getVal(id) {
 			let el = $("#" + id);
@@ -374,81 +374,81 @@ $(document).ready(function() {
 		const sign = $("#signaturePreview").attr("src");
 
 		const printContent = `
-		        ${companyHeader}
+	        ${companyHeader}
 
-		        <h2 style="text-align:center;margin-bottom:20px;">Customer Details</h2>
+	        <h2 style="text-align:center;margin-bottom:20px;">CUSTOMER DETAILS</h2>
 
-		        <table class="print-table">
+	        <table class="print-table">
 
-		            <tr><th>Customer Code</th><td>${getVal("policyCode")}</td></tr>
-		            <tr><th>Customer Name</th><td>${getVal("policyStartDate")}</td></tr>
-		            <tr><th>Gender</th><td>${getVal("memberSelection")}</td></tr>
-		            <tr><th>Date of Birth</th><td>${getVal("customerName")}</td></tr>
-		            <tr><th>Age</th><td>${getVal("dateofBirth")}</td></tr>
-		            <tr><th>Relationship Status</th><td>${getVal("relationDetails")}</td></tr>
-		            <tr><th>Address</th><td>${getVal("contactNo")}</td></tr>
-		            <tr><th>District</th><td>${getVal("suggestedNominee")}</td></tr>
-		            <tr><th>State</th><td>${getVal("relationToApplicant")}</td></tr>
-		            <tr><th>Branch</th><td>${getVal("address")}</td></tr>
-		            <tr><th>Pin Code</th><td>${getVal("district")}</td></tr>
-		            <tr><th>Aadhar No</th><td>${getVal("state")}</td></tr>
-		            <tr><th>PAN No</th><td>${getVal("pinCode")}</td></tr>
-		            <tr><th>Voter ID</th><td>${getVal("branchName")}</td></tr>
-		            <tr><th>Contact No</th><td>${getVal("ModeOfOperation")}</td></tr>
-		            <tr><th>Email ID</th><td>${getVal("maturityDate")}</td></tr>
-		            <tr><th>Profession</th><td>${getVal("schemeType")}</td></tr>
-		            <tr><th>Academic Background</th><td>${getVal("schemeTerm")}</td></tr>
-		            <tr><th>Referral Code</th><td>${getVal("schemeMode")}</td></tr>
-		            <tr><th>Referral Name</th><td>${getVal("policyAmount")}</td></tr>
-					<tr><th>Referral Name</th><td>${getVal("depositAmount")}</td></tr>
-					<tr><th>Referral Name</th><td>${getVal("maturityAmount")}</td></tr>
-					<tr><th>Referral Name</th><td>${getVal("paymentBy")}</td></tr>
-					<tr><th>Referral Name</th><td>${getVal("remark")}</td></tr>
+	            <tr><th>CUSTOMER CODE</th><td>${getVal("policyCode")}</td></tr>
+	            <tr><th>CUSTOMER NAME</th><td>${getVal("policyStartDate")}</td></tr>
+	            <tr><th>GENDER</th><td>${getVal("memberSelection")}</td></tr>
+	            <tr><th>DATE OF BIRTH</th><td>${getVal("customerName")}</td></tr>
+	            <tr><th>AGE</th><td>${getVal("dateofBirth")}</td></tr>
+	            <tr><th>RELATIONSHIP STATUS</th><td>${getVal("relationDetails")}</td></tr>
+	            <tr><th>ADDRESS</th><td>${getVal("contactNo")}</td></tr>
+	            <tr><th>DISTRICT</th><td>${getVal("suggestedNominee")}</td></tr>
+	            <tr><th>STATE</th><td>${getVal("relationToApplicant")}</td></tr>
+	            <tr><th>BRANCH</th><td>${getVal("address")}</td></tr>
+	            <tr><th>PIN CODE</th><td>${getVal("district")}</td></tr>
+	            <tr><th>AADHAR NO</th><td>${getVal("state")}</td></tr>
+	            <tr><th>PAN NO</th><td>${getVal("pinCode")}</td></tr>
+	            <tr><th>VOTER ID</th><td>${getVal("branchName")}</td></tr>
+	            <tr><th>CONTACT NO</th><td>${getVal("ModeOfOperation")}</td></tr>
+	            <tr><th>EMAIL ID</th><td>${getVal("maturityDate")}</td></tr>
+	            <tr><th>PROFESSION</th><td>${getVal("schemeType")}</td></tr>
+	            <tr><th>ACADEMIC BACKGROUND</th><td>${getVal("schemeTerm")}</td></tr>
+	            <tr><th>REFERRAL CODE</th><td>${getVal("schemeMode")}</td></tr>
+	            <tr><th>REFERRAL NAME</th><td>${getVal("policyAmount")}</td></tr>
+				<tr><th>REFERRAL NAME</th><td>${getVal("depositAmount")}</td></tr>
+				<tr><th>REFERRAL NAME</th><td>${getVal("maturityAmount")}</td></tr>
+				<tr><th>REFERRAL NAME</th><td>${getVal("paymentBy")}</td></tr>
+				<tr><th>REFERRAL NAME</th><td>${getVal("remark")}</td></tr>
 
-					<tr><th colspan="2" style="background:#f1f1f1;text-align:center;">Customer Images</th></tr>
-		            <tr>
-		                <th>Customer Photo</th>
-		                <td><img src="${photo}" style="width:120px;height:120px;object-fit:cover;border-radius:10px;"></td>
-		            </tr>
+				<tr><th colspan="2" style="background:#f1f1f1;text-align:center;">CUSTOMER IMAGES</th></tr>
+	            <tr>
+	                <th>CUSTOMER PHOTO</th>
+	                <td><img src="${photo}" style="width:120px;height:120px;object-fit:cover;border-radius:10px;"></td>
+	            </tr>
 
-		            <tr>
-		                <th>Customer Signature</th>
-		                <td><img src="${sign}" style="width:150px;height:70px;object-fit:contain;"></td>
-		            </tr>
+	            <tr>
+	                <th>CUSTOMER SIGNATURE</th>
+	                <td><img src="${sign}" style="width:150px;height:70px;object-fit:contain;"></td>
+	            </tr>
 
-		            <tr><th colspan="2" style="background:#f1f1f1;text-align:center;">Nominee Details</th></tr>
-		            <tr><th>Nominee Name</th><td>${getVal("nomineeName")}</td></tr>
-		            <tr><th>Relation</th><td>${getVal("nomineeRelationToApplicant")}</td></tr>
-		            <tr><th>Address</th><td>${getVal("nomineeAddress")}</td></tr>
-		            <tr><th>KYC No</th><td>${getVal("nomineeKycNo")}</td></tr>
-		            <tr><th>Nominee Mobile</th><td>${getVal("nomineeMobileNo")}</td></tr>
-		            <tr><th>Nominee Age</th><td>${getVal("nomineeAge")}</td></tr>
-		            <tr><th>Nominee PAN</th><td>${getVal("nomineePanNo")}</td></tr>
-		            <tr><th>KYC Type</th><td>${getVal("nomineeKycType")}</td></tr>
+	            <tr><th colspan="2" style="background:#f1f1f1;text-align:center;">NOMINEE DETAILS</th></tr>
+	            <tr><th>NOMINEE NAME</th><td>${getVal("nomineeName")}</td></tr>
+	            <tr><th>RELATION</th><td>${getVal("nomineeRelationToApplicant")}</td></tr>
+	            <tr><th>ADDRESS</th><td>${getVal("nomineeAddress")}</td></tr>
+	            <tr><th>KYC NO</th><td>${getVal("nomineeKycNo")}</td></tr>
+	            <tr><th>NOMINEE MOBILE</th><td>${getVal("nomineeMobileNo")}</td></tr>
+	            <tr><th>NOMINEE AGE</th><td>${getVal("nomineeAge")}</td></tr>
+	            <tr><th>NOMINEE PAN</th><td>${getVal("nomineePanNo")}</td></tr>
+	            <tr><th>KYC TYPE</th><td>${getVal("nomineeKycType")}</td></tr>
 
-		        </table>
-		    `;
+	        </table>
+	    `;
 
 		const printWindow = window.open("", "_blank");
 
 		printWindow.document.write(`
-		        <html>
-		        <head>
-		            <title>Customer Details</title>
-		            <style>
-		                body { font-family: Arial; padding: 25px; }
-		                .print-table { width: 100%; border-collapse: collapse; }
-		                .print-table th, .print-table td {
-		                    padding: 8px; border: 1px solid #ccc; font-size: 14px;
-		                }
-		                .print-table th { background: #f2f2f2; width:30%; }
-		            </style>
-		        </head>
-		        <body>
-		            ${printContent}
-		        </body>
-		        </html>
-		    `);
+	        <html>
+	        <head>
+	            <title>CUSTOMER DETAILS</title>
+	            <style>
+	                body { font-family: Arial; padding: 25px; }
+	                .print-table { width: 100%; border-collapse: collapse; }
+	                .print-table th, .print-table td {
+	                    padding: 8px; border: 1px solid #ccc; font-size: 14px;
+	                }
+	                .print-table th { background: #f2f2f2; width:30%; }
+	            </style>
+	        </head>
+	        <body>
+	            ${printContent}
+	        </body>
+	        </html>
+	    `);
 
 		printWindow.document.close();
 
@@ -505,7 +505,7 @@ function photoUpload() {
 		};
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for photo.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR PHOTO.");
 	}
 }
 
@@ -521,7 +521,7 @@ function signatureUpload() {
 		};
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for signature.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR SIGNATURE.");
 	}
 }
 
@@ -561,13 +561,13 @@ function loadCompanyAdministration() {
 				// Show on screen (add your own div in JSP)
 				$("#companyNameHeading").text(c.companyName + " (" + c.shortName + ")");
 				$("#companyDetails").html(`
-                        <b>Sign Up Date:</b> ${c.signUpDate} <br>
-                        <b>CIN No:</b> ${c.cinNo} <br>
-                        <b>Address:</b> ${c.address}, ${c.city}, ${c.state} - ${c.pinCode} <br>
-                        <b>Email:</b> ${c.emailId} <br>
-                        <b>Helpline:</b> ${c.helplineNo} <br>
-                        <b>Branch Manager No:</b> ${c.branchManagerContactNo}
-                    `);
+                       <b>SIGN UP DATE:</b> ${c.signUpDate} <br>
+                       <b>CIN NO:</b> ${c.cinNo} <br>
+                       <b>ADDRESS:</b> ${c.address}, ${c.city}, ${c.state} - ${c.pinCode} <br>
+                       <b>EMAIL:</b> ${c.emailId} <br>
+                       <b>HELPLINE:</b> ${c.helplineNo} <br>
+                       <b>BRANCH MANAGER NO:</b> ${c.branchManagerContactNo}
+                   `);
 			}
 		}
 	});

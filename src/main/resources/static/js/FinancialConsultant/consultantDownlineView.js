@@ -14,12 +14,12 @@ $(document).ready(function() {
 					allData = response.data;
 					renderTable(allData); // Initial full load
 				} else {
-					$(".datatable tbody").html(`<tr><td colspan="11" class="text-center">No data available</td></tr>`);
+					$(".datatable tbody").html(`<tr><td colspan="11" class="text-center">NO DATA AVAILABLE</td></tr>`);
 				}
 			},
 			error: function(xhr, status, error) {
-				console.error("Error fetching financial consultants:", error);
-				alert("Failed to load financial consultant data.");
+				console.error("ERROR FETCHING FINANCIAL CONSULTANTS:", error);
+				alert("FAILED TO LOAD FINANCIAL CONSULTANT DATA.");
 			}
 		});
 
@@ -29,7 +29,7 @@ $(document).ready(function() {
 			tbody.empty();
 
 			if (data.length === 0) {
-				tbody.html(`<tr><td colspan="11" class="text-center">No matching data found</td></tr>`);
+				tbody.html(`<tr><td colspan="11" class="text-center">NO MATCHING DATA FOUND</td></tr>`);
 				return;
 			}
 
@@ -43,15 +43,15 @@ $(document).ready(function() {
                         <td>${item.joiningDate || ''}</td>
                         <td>${item.address || ''}</td>
                         <td>${item.branchName || ''}</td>
-						<td>${item.financialStatus == 0 ? 'Active' : 'Inactive'}</td>
+                        <td>${item.financialStatus == 0 ? 'ACTIVE' : 'INACTIVE'}</td>
 
                         <td>
-                            <button class="iconbutton editBtn" data-id="${item.id}" title="Edit">
+                            <button class="iconbutton editBtn" data-id="${item.id}" title="EDIT">
                                 <i class="fa-solid fa-pen-to-square text-primary"></i>
                             </button>
                         </td>
                         <td>
-                            <button class="iconbutton deleteBtn" data-id="${item.id}" title="Delete">
+                            <button class="iconbutton deleteBtn" data-id="${item.id}" title="DELETE">
                                 <i class="fa-solid fa-trash text-danger"></i>
                             </button>
                         </td>
@@ -148,15 +148,15 @@ $(document).ready(function() {
 							}, 500);
 						}
 					} else {
-						alert("No data found for the selected financial consultant.");
+						alert("NO DATA FOUND FOR THE SELECTED FINANCIAL CONSULTANT.");
 					}
 				},
 				error: function() {
-					alert("Failed to fetch data for editing.");
+					alert("FAILED TO FETCH DATA FOR EDITING.");
 				}
 			});
 		} else {
-			alert("No ID found in URL.");
+			alert("NO ID FOUND IN URL.");
 		}
 	}
 
@@ -218,38 +218,37 @@ $(document).ready(function() {
 			cache: false,
 			success: function(response) {
 				if (response.status === "OK") {
-					alert("Updated Successfully");
+					alert("UPDATED SUCCESSFULLY");
 					location.reload();
 					location.assign('consultantDownlineView');
 					// Optionally refresh the table or UI
 				} else {
-					alert("Something went wrong: " + response.message);
+					alert("SOMETHING WENT WRONG: " + response.message);
 				}
 			},
 			error: function(xhr) {
-				alert("Error while saving data: " + xhr.responseText);
+				alert("ERROR WHILE SAVING DATA: " + xhr.responseText);
 			}
 		});
 	});
 
 	$('#verifyUpiBtn').click(function() {
 		const upi = $('#refNo').val().trim();
-		const upiPattern = /^[\w.\-]{2,256}@[a-zA-Z]{2,64}$/;
+		const upiPattern = /^[\w.\\-]{2,256}@[a-zA-Z]{2,64}$/;
 		if (upiPattern.test(upi)) {
 			$('#refNo').css('border', '2px solid green');
-			$('#upiStatus').text('✅ Valid UPI ID').css('color', 'green');
+			$('#upiStatus').text('✅ VALID UPI ID').css('color', 'green');
 		} else {
 			$('#refNo').css('border', '2px solid red');
-			$('#upiStatus').text('❌ Invalid UPI ID format').css('color', 'red');
+			$('#upiStatus').text('❌ INVALID UPI ID FORMAT').css('color', 'red');
 		}
 	});
-
 
 	$(document).on('click', '.deleteBtn', function() {
 		var id = $(this).data('id');
 
 		// Optional: Confirmation prompt
-		if (confirm("Are you sure you want to delete this Financial Consultant?")) {
+		if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS FINANCIAL CONSULTANT?")) {
 			$.ajax({
 				url: 'api/financialconsultant/deleteFinancialConsultantById',
 				type: 'POST',
@@ -260,17 +259,18 @@ $(document).ready(function() {
 						// Reload or update the table after deletion
 						location.reload(); // or call a function to refresh table via AJAX
 					} else {
-						alert("Error: " + response.message);
+						alert("ERROR: " + response.message);
 					}
 				},
 				error: function(xhr) {
-					alert("Deletion failed. Please try again.");
+					alert("DELETION FAILED. PLEASE TRY AGAIN.");
 				}
 			});
 		}
 	});
 
 });
+
 function hideShowPayment(modeofPayment) {
 	if (modeofPayment === 'Cash') {
 		$('#displayCheque').hide();
@@ -291,7 +291,7 @@ function hideShowPayment(modeofPayment) {
 }
 
 function displayDetails() {
-	var modeofPayment=$('#modeofPayment').val();
+	var modeofPayment = $('#modeofPayment').val();
 	if (modeofPayment === 'Cash') {
 		$('#displayCheque').hide();
 		$('#displaycheqdate').hide();

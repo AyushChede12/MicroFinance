@@ -34,10 +34,10 @@ public class ReportsAndAnalyticsController {
 	public ResponseEntity<ApiResponse<List<addFinancialConsultant>>> getApprovedFinancialConsultant() {
 		List<addFinancialConsultant> list = reportsAndAnalyticsService.getApprovedFinancialConsultant();
 		if (!list.isEmpty()) {
-			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "approved customers fetched", list));
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "APPROVED CUSTOMERS FETCHED", list));
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "No approved customers found"));
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "NO APPROVED CUSTOMERS FOUND"));
 		}
 	}
 
@@ -46,10 +46,10 @@ public class ReportsAndAnalyticsController {
 		List<CreateSavingsAccount> list = reportsAndAnalyticsService.getApprovedSavingAccount();
 		if (!list.isEmpty()) {
 			return ResponseEntity
-					.ok(ApiResponse.success(HttpStatus.OK, "approved Saving Account customers fetched", list));
+					.ok(ApiResponse.success(HttpStatus.OK, "APPROVED SAVING ACCOUNT CUSTOMERS FETCHED", list));
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "No approved customers found"));
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "NO APPROVED CUSTOMERS FOUND"));
 		}
 	}
 
@@ -58,10 +58,10 @@ public class ReportsAndAnalyticsController {
 		List<LoanApplication> list = reportsAndAnalyticsService.getUnapprovedLoanApplication();
 
 		if (!list.isEmpty()) {
-			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "Unapproved loan fetched", list));
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "UNAPPROVED LOAN FETCHED", list));
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "No unapproved investments found"));
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "NO UNAPPROVED INVESTMENTS FOUND"));
 		}
 	}
 
@@ -69,10 +69,10 @@ public class ReportsAndAnalyticsController {
 	public ResponseEntity<ApiResponse<List<LoanPayment>>> getLoanPaymentReport() {
 		List<LoanPayment> list = reportsAndAnalyticsService.getLoanPaymentReport();
 		if (!list.isEmpty()) {
-			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "Loan Payment Fetched Succesfully", list));
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "LOAN PAYMENT FETCHED SUCCESFULLY", list));
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "No Loan Payment Found"));
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "NO LOAN PAYMENT FOUND"));
 		}
 	}
 
@@ -81,10 +81,10 @@ public class ReportsAndAnalyticsController {
 		List<LoanApplication> list = reportsAndAnalyticsService.getLoanConfirmationDocument();
 		if (!list.isEmpty()) {
 			return ResponseEntity
-					.ok(ApiResponse.success(HttpStatus.OK, "Loan Confirmation Document Fetch Succesfully", list));
+					.ok(ApiResponse.success(HttpStatus.OK, "LOAN CONFIRMATION DOCUMENT FETCH SUCCESFULLY", list));
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "No Loan Confirmation Document Found"));
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "NO LOAN CONFIRMATION DOCUMENT FOUND"));
 		}
 	}
 
@@ -92,10 +92,10 @@ public class ReportsAndAnalyticsController {
 	public ResponseEntity<ApiResponse<List<SavingAccountActivity>>> getPayByFromSavingAccountActivity() {
 		List<SavingAccountActivity> list = reportsAndAnalyticsService.fetchPayByFromSavingAccountActivity();
 		if (!list.isEmpty()) {
-			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "Cheque Data fetched Successfully", list));
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "CHEQUE DATA FETCHED SUCCESSFULLY", list));
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "Cheque Data Not found"));
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "CHEQUE DATA NOT FOUND"));
 		}
 	}
 
@@ -103,10 +103,10 @@ public class ReportsAndAnalyticsController {
 	public ResponseEntity<ApiResponse<List<LoanPayment>>> getCheckDataFromLoanPayment() {
 		List<LoanPayment> list = reportsAndAnalyticsService.fetchCheckDataFromLoanPayment();
 		if (!list.isEmpty()) {
-			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "Loan Cheque Data fetched Successfully", list));
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "LOAN CHEQUE DATA FETCHED SUCCESSFULLY", list));
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "Loan Cheque Data Not found"));
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "LOAN CHEQUE DATA NOT FOUND"));
 		}
 	}
 
@@ -116,10 +116,10 @@ public class ReportsAndAnalyticsController {
 
 		if (!list.isEmpty()) {
 			return ResponseEntity
-					.ok(ApiResponse.success(HttpStatus.OK, "Saving Cheque Data fetched Successfully", list));
+					.ok(ApiResponse.success(HttpStatus.OK, "SAVING CHEQUE DATA FETCHED SUCCESSFULLY", list));
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "Saving Cheque Data Not Found"));
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "SAVING CHEQUE DATA NOT FOUND"));
 		}
 	}
 
@@ -129,49 +129,49 @@ public class ReportsAndAnalyticsController {
 
 		if (!list.isEmpty()) {
 			return ResponseEntity
-					.ok(ApiResponse.success(HttpStatus.OK, "Financial Cheque Data fetched Successfully", list));
+					.ok(ApiResponse.success(HttpStatus.OK, "FINANCIAL CHEQUE DATA FETCHED SUCCESSFULLY", list));
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "Financial Cheque Data Not Found"));
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "FINANCIAL CHEQUE DATA NOT FOUND"));
 		}
 	}
-	
+
 	@GetMapping("/getCheckDataFromTeamMember")
 	public ResponseEntity<ApiResponse<List<TeamMember>>> getCheckDataFromTeamMember() {
 		List<TeamMember> list = reportsAndAnalyticsService.fetchCheckDataFromTeamMember();
 
 		if (!list.isEmpty()) {
 			return ResponseEntity
-					.ok(ApiResponse.success(HttpStatus.OK, "Team Member Cheque Data fetched Successfully", list));
+					.ok(ApiResponse.success(HttpStatus.OK, "TEAM MEMBER CHEQUE DATA FETCHED SUCCESSFULLY", list));
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "Team Member Cheque Data Not Found"));
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "TEAM MEMBER CHEQUE DATA NOT FOUND"));
 		}
 	}
-	
+
 	@GetMapping("/getAllLoanApplication")
 	public ResponseEntity<ApiResponse<List<LoanApplication>>> fetchAllLoanApplication() {
 		List<LoanApplication> list = reportsAndAnalyticsService.getAllLoanApplication();
 
 		if (!list.isEmpty()) {
 			return ResponseEntity
-					.ok(ApiResponse.success(HttpStatus.OK, "Loan Application Data fetched Successfully", list));
+					.ok(ApiResponse.success(HttpStatus.OK, "LOAN APPLICATION DATA FETCHED SUCCESSFULLY", list));
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "Loan Application Data Not Found"));
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "LOAN APPLICATION DATA NOT FOUND"));
 		}
 	}
-	
+
 	@GetMapping("/getPolicyForPrint/{id}")
 	public ResponseEntity<?> getPolicyForPrint(@PathVariable Long id) {
 
-	    Optional<AddnewinvestmentPM> policy = reportsAndAnalyticsService.getPolicyById(id);
+		Optional<AddnewinvestmentPM> policy = reportsAndAnalyticsService.getPolicyById(id);
 
-	    if (policy != null) {
-	        return ResponseEntity.ok(policy);
-	    } else {
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Policy not found");
-	    }
+		if (policy != null) {
+			return ResponseEntity.ok(policy);
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("POLICY NOT FOUND");
+		}
 	}
 
 }

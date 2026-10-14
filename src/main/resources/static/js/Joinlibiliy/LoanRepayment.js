@@ -1,4 +1,4 @@
-// ✅ Js for populating the approved loanid in the dropdown (Vaibhav)
+// ✅ JS FOR POPULATING THE APPROVED LOANID IN THE DROPDOWN (Vaibhav)
 $(document).ready(function() {
 	populateDropdown();
 });
@@ -17,22 +17,22 @@ function populateDropdown() {
 				$dropdown.empty(); // Clear existing options
 
 				// ✅ Wrap your <option> in quotes!
-				$dropdown.append('<option value="" disabled selected>Select Loan ID</option>');
+				$dropdown.append('<option value="" disabled selected>SELECT LOAN ID</option>');
 
 				response.data.forEach(function(id) {
 					$dropdown.append(`<option value="${id}">${id}</option>`);
 				});
 			} else {
-				console.warn("No Loan IDs found in response.");
+				console.warn("NO LOAN IDS FOUND IN RESPONSE.");
 			}
 		},
 		error: function(xhr, status, error) {
-			console.error("Error fetching Loan IDs:", error);
+			console.error("ERROR FETCHING LOAN IDS:", error);
 		}
 	});
 }
 
-// Js for binding the data in the textfileds (Vaibhav)
+// JS FOR BINDING THE DATA IN THE TEXTFIELDS (Vaibhav)
 $('#groupid').on('change', function() {
 	let selectedCode = $(this).val(); // selected group code from dropdown
 
@@ -66,41 +66,26 @@ $('#groupid').on('change', function() {
 					const loanAmount = parseFloat($("#loanAmount").val()) || 0;
 					const totalPayable = loanAmount + loanEmi;
 					$("#totalPayable").val(totalPayable.toFixed(2));
-					
+
 					$('#financialConsultantName').val(loan.financialConsultantName);
 					$('#financialConsultantId').val(loan.financialConsultantId);
-					console.log("Percentages Stored:", deductionPercents);
+					console.log("PERCENTAGES STORED:", deductionPercents);
 
 				} else {
-					alert("❌ " + response.message);
+					alert("❌ " + response.message.toUpperCase());
 					clearFields();
 				}
 			},
 			error: function(xhr, status, error) {
-				console.error("Error fetching group loan data:", error);
-				alert("Something went wrong.");
+				console.error("ERROR FETCHING GROUP LOAN DATA:", error);
+				alert("SOMETHING WENT WRONG.");
 				clearFields();
 			}
 		});
 	}
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// js for hiding the fields (Vaibhav)
+// JS FOR HIDING THE FIELDS (Vaibhav)
 $(document).ready(function() {
 	// Hide all fields initially
 	$('#displayCheque, #displaycheqdate, #displaydeposit, #displayRef').hide();
@@ -127,5 +112,3 @@ $(document).ready(function() {
 		}
 	});
 });
-
-

@@ -1,10 +1,6 @@
 package com.microfinance.service;
 
-
-
-
 import java.util.List;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,16 +18,16 @@ import com.microfinance.repository.PartialMaturitypaymentRepo;
 
 @Service
 public class MaturitySchemeMasterService {
-	
+
 	@Autowired
 	MaturitySchemeMasterRepo maturityschemerepo;
-	
+
 	@Autowired
 	ApplyForMaturityRepo Applymaturityrepo;
-	
+
 	@Autowired
 	PartialMaturitypaymentRepo partialmaturityrepo;
-	
+
 	@Autowired
 	FullMaturityRepo fullmaturityrepo;
 
@@ -49,22 +45,21 @@ public class MaturitySchemeMasterService {
 		// TODO Auto-generated method stub
 		return Applymaturityrepo.findAll();
 	}
-	
 
 	public Page<ApplyForMaturity> getApplyMaturityDetailsWithPage(int page, int size) {
-	    PageRequest pageable = PageRequest.of(page, size);
-	    return Applymaturityrepo.findWithPage(pageable);
+		PageRequest pageable = PageRequest.of(page, size);
+		return Applymaturityrepo.findWithPage(pageable);
 	}
 
 	public List<ApplyForMaturity> getMaturityDetailsByBranchAndDate(String branchName, String fromDate, String toDate) {
 		// TODO Auto-generated method stub
-		return Applymaturityrepo.findByBranchToDateFromDate(branchName,fromDate,toDate);
+		return Applymaturityrepo.findByBranchToDateFromDate(branchName, fromDate, toDate);
 	}
 
 	public partialMaturityPayment savePartialmaturity(partialMaturityPayment partialmaturity) {
 		// TODO Auto-generated method stub
-		return partialmaturityrepo.save(partialmaturity) ;
-		
+		return partialmaturityrepo.save(partialmaturity);
+
 	}
 
 	public FullMaturity saveFullmaturity(FullMaturity fullmaturity) {
@@ -82,12 +77,4 @@ public class MaturitySchemeMasterService {
 		return fullmaturityrepo.findAll();
 	}
 
-	
-
-	
-	
-
-	
-	}
-
-
+}

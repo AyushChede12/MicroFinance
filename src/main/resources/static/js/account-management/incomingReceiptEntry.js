@@ -7,7 +7,6 @@ $(document).ready(function() {
 		toggleTransferFields(this.value);
 	});
 
-
 	$("#formid").submit(function(e) {
 		e.preventDefault();
 		saveIncomingReceipt();
@@ -31,18 +30,19 @@ function showTableData() {
 	if (tableBody.children().length === 0) {
 		// No data loaded yet — load and show
 		loadIncomingReceipts(); // Will populate #tableBody
-		toggleBtn.html('Hide');
+		toggleBtn.html('HIDE');
 	} else {
 		// Data exists — toggle visibility
 		if (tableBody.is(":visible")) {
 			tableBody.hide();
-			toggleBtn.html('Show');
+			toggleBtn.html('SHOW');
 		} else {
 			tableBody.show();
-			toggleBtn.html('Hide');
+			toggleBtn.html('HIDE');
 		}
 	}
 }
+
 function toggleTransferFields(mode) {
 	const m = (mode || '').toLowerCase().trim();
 
@@ -84,20 +84,20 @@ function saveIncomingReceipt() {
 	// Client-side validation
 	if (!receiptData.branchName || !receiptData.dateOfEntry || !receiptData.transferMode ||
 		!receiptData.creditLedger || !receiptData.debitLedger || !receiptData.transactionAmount) {
-		alert("Please fill in all required fields.");
+		alert("PLEASE FILL IN ALL REQUIRED FIELDS.");
 		return;
 	}
 
 	// Conditional validation
 	if (receiptData.transferMode.toLowerCase() === "cheque") {
 		if (!receiptData.chequeNo || !receiptData.chequeDate || !receiptData.bankName) {
-			alert("Cheque No, Date and Bank Name are required for Cheque payments.");
+			alert("CHEQUE NO, DATE AND BANK NAME ARE REQUIRED FOR CHEQUE PAYMENTS.");
 			return;
 		}
 	}
 	if (receiptData.transferMode.toLowerCase() === "online transfer") {
 		if (!receiptData.transactionRef) {
-			alert("Transaction Ref is required for Online Transfer.");
+			alert("TRANSACTION REF IS REQUIRED FOR ONLINE TRANSFER.");
 			return;
 		}
 	}
@@ -109,22 +109,22 @@ function saveIncomingReceipt() {
 		data: JSON.stringify(receiptData),
 		success: function(response) {
 			if (response?.status === "CREATED") {
-				alert(response.message || "Incoming Receipt saved successfully!");
+				alert((response.message || "INCOMING RECEIPT SAVED SUCCESSFULLY!").toUpperCase());
 				$("#formid")[0].reset();
 				$('.chequeFields').addClass('d-none');
 				$('.onlineFields').addClass('d-none');
 				loadIncomingReceipts();
 			} else {
-				alert(response.message || "Unexpected response.");
+				alert((response.message || "UNEXPECTED RESPONSE.").toUpperCase());
 			}
 		},
 		error: function(xhr) {
-			let errorMsg = "Error saving outgoing payment.";
+			let errorMsg = "ERROR SAVING OUTGOING PAYMENT.";
 			try {
 				const res = JSON.parse(xhr.responseText);
-				if (res?.message) errorMsg = res.message;
+				if (res?.message) errorMsg = res.message.toUpperCase();
 			} catch (e) {
-				console.error("Error parsing save response:", e);
+				console.error("ERROR PARSING SAVE RESPONSE:", e);
 			}
 			alert(errorMsg);
 		}
@@ -145,43 +145,44 @@ function loadIncomingReceipts() {
 			const receipts = response?.data || [];
 
 			if (receipts.length === 0) {
-				tbody.append(`<tr><td colspan="8">No Incoming Receipt Entry found</td></tr>`);
+				tbody.append(`<tr><td colspan="8">NO INCOMING RECEIPT ENTRY FOUND</td></tr>`);
 				return;
 			}
 
 			// ✅ Safely render all outgoing payments
 			receipts.forEach(receipt => {
 				const row = `
-				<tr> 
-					<td>${receipt.id ?? ''}</td>
-					<td>${receipt.branchName ?? ''}</td>
-					<td>${receipt.voucherID ?? ''}</td>
-					<td>${(receipt.dateOfEntry).toUpperCase() ?? ''}</td>
-					<td>${(receipt.creditLedger).toUpperCase() ?? ''}</td>
-					<td>${(receipt.debitLedger).toUpperCase() ?? ''}</td>
-					<td>${(receipt.transferMode).toUpperCase() ?? ''}</td>
-					<td>${(receipt.transactionAmount).toUpperCase() ?? ''}</td>
-					<td>${(receipt.remarks).toUpperCase() ?? ''}</td>
-					<td>
-						<button class="iconbutton" onclick="viewIncomingReceipt(${receipt.id})" title="View">
-							<i class="fa-solid fa-eye text-primary"></i>
-						</button>
-					</td>
-					<td>
-						<button class="iconbutton" onclick="deleteIncomingPayment(${receipt.id})" title="Delete">
-							<i class="fa-solid fa-trash text-danger"></i>
-						</button>
-					</td>
-				</tr>
-			`;
+                <tr> 
+                    <td>${receipt.id ?? ''}</td>
+                    <td>${receipt.branchName.toUpperCase() ?? ''}</td>
+                    <td>${receipt.voucherID ?? ''}</td>
+                    <td>${(receipt.dateOfEntry).toUpperCase() ?? ''}</td>
+                    <td>${(receipt.creditLedger).toUpperCase() ?? ''}</td>
+                    <td>${(receipt.debitLedger).toUpperCase() ?? ''}</td>
+                    <td>${(receipt.transferMode).toUpperCase() ?? ''}</td>
+                    <td>${(receipt.transactionAmount).toUpperCase() ?? ''}</td>
+                    <td>${(receipt.remarks).toUpperCase() ?? ''}</td>
+                    <td>
+                        <button class="iconbutton" onclick="viewIncomingReceipt(${receipt.id})" title="VIEW">
+                            <i class="fa-solid fa-eye text-primary"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <button class="iconbutton" onclick="deleteIncomingPayment(${receipt.id})" title="DELETE">
+                            <i class="fa-solid fa-trash text-danger"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
 				tbody.append(row);
 			});
 		},
 		error: function() {
-			alert("Failed to load Incoming payments.");
+			alert("FAILED TO LOAD INCOMING PAYMENTS.");
 		}
 	});
 }
+
 // View a single Incoming Receipt
 function viewIncomingReceipt(id) {
 	$.ajax({
@@ -197,7 +198,6 @@ function viewIncomingReceipt(id) {
 					return false;
 				}
 			});
-
 
 			$("#voucherID").val(data.voucherID);
 			$("#dateOfEntry").val(data.dateOfEntry);
@@ -215,7 +215,7 @@ function viewIncomingReceipt(id) {
 			LedgerDropdown(data.branchName, data.creditLedger, data.debitLedger);
 		},
 		error: function() {
-			alert("Failed to load incoming receipt data");
+			alert("FAILED TO LOAD INCOMING RECEIPT DATA");
 		}
 	});
 }
@@ -228,7 +228,7 @@ function searchIncomingReceipts() {
 	const endDate = $('#endDate').val();
 
 	if (!branchName || !startDate || !endDate) {
-		alert("Please fill in Branch Name, Start Date, and End Date.");
+		alert("PLEASE FILL IN BRANCH NAME, START DATE, AND END DATE.");
 		return;
 	}
 
@@ -248,39 +248,39 @@ function searchIncomingReceipts() {
 			const receipts = response.data || [];;
 
 			if (receipts.length === 0) {
-				tbody.append(`<tr><td colspan="7">No results found</td></tr>`);
+				tbody.append(`<tr><td colspan="7">NO RESULTS FOUND</td></tr>`);
 				return;
 			}
 
 			$.each(receipts, function(index, receipt) {
 				const row = `
                     <tr>
-					<td>${receipt.id || ''}</td>
-					<td>${receipt.branchName || ''}</td>
-					<td>${receipt.voucherID || ''}</td>
-					<td>${receipt.dateOfEntry || ''}</td>
-					<td>${receipt.creditLedger || ''}</td>
-					<td>${receipt.debitLedger || ''}</td>
-					<td>${receipt.transferMode || ''}</td>
-					<td>${receipt.transactionAmount || ''}</td>
-					<td>${receipt.remarks || ''}</td>
-					<td>
-						<button class="iconbutton" onclick="viewIncomingReceipt(${receipt.id})" title="View">
-							<i class="fa-solid fa-eye text-primary"></i>
-						</button>
-					</td>
-					<td>
-						<button class="iconbutton" onclick="deleteIncomingPayment(${receipt.id})" title="Delete">
-							<i class="fa-solid fa-trash text-danger"></i>
-						</button>
-					</td>
+                        <td>${receipt.id || ''}</td>
+                        <td>${receipt.branchName.toUpperCase() || ''}</td>
+                        <td>${receipt.voucherID.toUpperCase() || ''}</td>
+                        <td>${receipt.dateOfEntry.toUpperCase() || ''}</td>
+                        <td>${receipt.creditLedger.toUpperCase() || ''}</td>
+                        <td>${receipt.debitLedger.toUpperCase() || ''}</td>
+                        <td>${receipt.transferMode.toUpperCase() || ''}</td>
+                        <td>${receipt.transactionAmount || ''}</td>
+                        <td>${receipt.remarks.toUpperCase() || ''}</td>
+                        <td>
+                            <button class="iconbutton" onclick="viewIncomingReceipt(${receipt.id})" title="VIEW">
+                                <i class="fa-solid fa-eye text-primary"></i>
+                            </button>
+                        </td>
+                        <td>
+                            <button class="iconbutton" onclick="deleteIncomingPayment(${receipt.id})" title="DELETE">
+                                <i class="fa-solid fa-trash text-danger"></i>
+                            </button>
+                        </td>
                     </tr>
                 `;
 				tbody.append(row);
 			});
 		},
 		error: function() {
-			alert("Search failed");
+			alert("SEARCH FAILED");
 		}
 	});
 
@@ -304,16 +304,18 @@ function BranchNameDropdown() {
 			$("#entryBranchName").html(options);
 		},
 		error: function() {
-			alert("Failed to load branch names.");
+			alert("FAILED TO LOAD BRANCH NAMES.");
 		}
 	});
 }
+
 // Load Credit & Debit Ledgers by branch
 function LedgerDropdown(branchName, selectedCr = "", selectedDr = "") {
 	if (!branchName || branchName.trim() === "") {
-		console.warn("Branch name is missing. Skipping ledger dropdown load.");
+		console.warn("BRANCH NAME IS MISSING. SKIPPING LEDGER DROPDOWN LOAD.");
 		return;
 	}
+
 	$.ajax({
 		type: "GET",
 		url: `accountManagement/ledgerByBranch/${branchName}`,
@@ -348,32 +350,32 @@ function LedgerDropdown(branchName, selectedCr = "", selectedDr = "") {
 				$("#creditLedger").html(crOptions);
 				$("#debitLedger").html(drOptions);
 			} else {
-				alert("Data Not Found");
+				alert("DATA NOT FOUND");
 			}
 		},
 		error: function() {
-			alert("Failed to load ledger accounts for selected branch");
+			alert("FAILED TO LOAD LEDGER ACCOUNTS FOR SELECTED BRANCH");
 		}
 	});
 }
 
 function deleteIncomingPayment(id) {
-	if (confirm("Are you sure you want to delete this Incoming Payment?")) {
+	if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS INCOMING PAYMENT?")) {
 		$.ajax({
 			url: "accountManagement/deleteIncomingPaymentById",
 			type: "POST",
 			data: { id: id },
 			success: function(response) {
 				if (response.status == "OK") {
-					alert(response.message);
+					alert((response.message || "").toUpperCase());
 					location.reload();
 				} else {
-					alert("Delete failed: " + response.message);
+					alert("DELETE FAILED: " + (response.message || "").toUpperCase());
 				}
 			},
 			error: function(xhr, status, error) {
-				alert("Failed to delete payment.");
-				console.error("Error:", error);
+				alert("FAILED TO DELETE PAYMENT.");
+				console.error("ERROR:", error);
 			}
 		});
 	}

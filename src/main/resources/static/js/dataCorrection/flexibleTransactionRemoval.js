@@ -4,16 +4,16 @@ $(document).ready(function() {
 		type: "GET",
 		success: function(response) {
 			if (response.status === "FOUND") {
-				$("#policyCode").empty().append("<option value=''>-- Select Policy Code --</option>");
+				$("#policyCode").empty().append("<option value=''>-- SELECT POLICY CODE --</option>");
 				response.data.forEach(function(item) {
 					$("#policyCode").append(`<option value='${item.policyCode}'>${item.clientName}-${item.policyCode}</option>`);
 				});
 			} else {
-				alert("No Policy codes found.");
+				alert("NO POLICY CODES FOUND.");
 			}
 		},
 		error: function() {
-			alert("Failed to load Policy codes.");
+			alert("FAILED TO LOAD POLICY CODES.");
 		}
 	});
 
@@ -26,7 +26,7 @@ $(document).ready(function() {
 				url: "api/datacorrection/getFlexibleRenewalByPolicyCode",
 				data: { policyCode: policyCode },
 				success: function(response) {
-					alert("Success");
+					alert("SUCCESS");
 					if (response.status == "FOUND") {
 						let data = response.data[0];
 						$("#id").val(data.id);
@@ -49,11 +49,11 @@ $(document).ready(function() {
 						$("#noOfInstPaid").val(data.noOfInstPaid);
 						$("#modeOfPayment").val(data.modeOfPayment);
 					} else {
-						alert("No Data for this Policy code.");
+						alert("NO DATA FOR THIS POLICY CODE.");
 					}
 				},
 				error: function() {
-					alert("Data not found or server error.");
+					alert("DATA NOT FOUND OR SERVER ERROR.");
 				}
 			});
 		}
@@ -63,28 +63,28 @@ $(document).ready(function() {
 		var id = $("#id").val();
 		let policyCode = $("#policyCode").val();
 		if (policyCode !== "") {
-			if (confirm("Are you sure you want to delete this Flexible Renewal Data?")) {
+			if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS FLEXIBLE RENEWAL DATA?")) {
 				$.ajax({
 					url: "api/datacorrection/deleteFlexibleRenewalDataById",
 					type: "POST",
 					data: { id: id },
 					success: function(response) {
 						if (response.status == "OK") {
-							alert("Flexible Renewal Data Deleted Successfully");
+							alert("FLEXIBLE RENEWAL DATA DELETED SUCCESSFULLY");
 							location.reload();
 						} else {
-							alert("Delete failed: " + response.message);
+							alert("DELETE FAILED: " + response.message);
 						}
 					},
 					error: function(xhr, status, error) {
-						alert("Failed to delete Flexible Renewal.");
-						console.error("Error:", error);
+						alert("FAILED TO DELETE FLEXIBLE RENEWAL.");
+						console.error("ERROR:", error);
 					}
 				});
 			}
 		}
 		else {
-			alert("First Select Any One Data Then Proceed To Delete!");
+			alert("FIRST SELECT ANY ONE DATA THEN PROCEED TO DELETE!");
 		}
 
 	});

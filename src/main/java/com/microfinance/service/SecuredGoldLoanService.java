@@ -293,13 +293,13 @@ public class SecuredGoldLoanService {
 		// Step 1: Get Loan
 		ApplyForGold goldApp = applyForGoldRepo.findSingleByGoldID(goldID);
 		if (goldApp == null) {
-			throw new RuntimeException("Gold Loan ID not found: " + goldID);
+			throw new RuntimeException("GOLD LOAN ID NOT FOUND: " + goldID);
 		}
 
 		// Step 2: Check if member has savings account
 		List<CreateSavingsAccount> accounts = createSavingRepo.findBySelectByCustomer(request.getCustomerCode());
 		if (accounts.isEmpty()) {
-			throw new RuntimeException("Saving account not found for Customer: " + request.getCustomerCode());
+			throw new RuntimeException("SAVING ACCOUNT NOT FOUND FOR CUSTOMER: " + request.getCustomerCode());
 		}
 
 		CreateSavingsAccount savingAcc = accounts.get(0);
@@ -310,7 +310,7 @@ public class SecuredGoldLoanService {
 		// Check balance for all installments
 		if (accountBalance < (emiAmount * noOfInst)) {
 			throw new RuntimeException(
-					"Insufficient balance! Available: " + accountBalance + ", Required: " + (emiAmount * noOfInst));
+					"INSUFFICIENT BALANCE! AVAILABLE: " + accountBalance + ", REQUIRED: " + (emiAmount * noOfInst));
 		}
 
 		// Deduct balance
@@ -485,7 +485,7 @@ public class SecuredGoldLoanService {
 		List<CreateSavingsAccount> optionalAcc = createSavingRepo.findBySelectByCustomer(emi.getCustomerCode());
 		System.out.println(optionalAcc);
 		if (optionalAcc == null || optionalAcc.isEmpty()) {
-			return new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR, "FAILED", "Savings Account Not Found!");
+			return new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR, "FAILED", "SAVINGS ACCOUNT NOT FOUND!");
 		}
 
 		// Extract actual entity
@@ -495,7 +495,7 @@ public class SecuredGoldLoanService {
 		double payAmount = Double.parseDouble(emi.getPaymentAmount());
 
 		if (oldBalance < payAmount) {
-			return new ApiResponse(HttpStatus.BAD_REQUEST, "FAILED", "Insufficient Balance in Savings Account!");
+			return new ApiResponse(HttpStatus.BAD_REQUEST, "FAILED", "INSUFFICIENT BALANCE IN SAVINGS ACCOUNT!");
 		}
 
 		double newBalance = oldBalance - payAmount;
@@ -503,7 +503,7 @@ public class SecuredGoldLoanService {
 
 		createSavingRepo.save(acc);
 
-		return new ApiResponse(HttpStatus.OK, "SUCCESS", "Installment Saved & Balance Updated");
+		return new ApiResponse(HttpStatus.OK, "SUCCESS", "INSTALLMENT SAVED & BALANCE UPDATED");
 	}
 
 	public List<EmiInstallmentPaymentGold> getEMIInstallmentGoldByID(String goldID) {

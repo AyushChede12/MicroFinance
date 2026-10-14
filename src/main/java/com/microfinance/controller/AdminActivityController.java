@@ -30,7 +30,7 @@ public class AdminActivityController {
     public ResponseEntity<Map<String, String>> clearActivities() {
         activityLogRepository.deleteAll();
         Map<String, String> response = new HashMap<>();
-        response.put("message", "Activity log cleared successfully");
+        response.put("message", "ACTIVITY LOG CLEARED SUCCESSFULLY");
         return ResponseEntity.ok(response);
     }
     

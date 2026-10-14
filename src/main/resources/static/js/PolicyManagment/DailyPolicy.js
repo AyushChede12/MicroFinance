@@ -16,10 +16,10 @@ $(document).ready(function() {
 		// ❌ VALIDATION: user cannot pay more than remaining installments
 		if (alreadyPaid + noOfInst > totalTerm) {
 			alert(
-				`❌ Installment limit exceeded!\n\n` +
-				`Total Term : ${totalTerm}\n` +
-				`Already Paid : ${alreadyPaid}\n` +
-				`Remaining : ${totalTerm - alreadyPaid}`
+				`❌ INSTALLMENT LIMIT EXCEEDED!\n\n` +
+				`TOTAL TERM : ${totalTerm}\n` +
+				`ALREADY PAID : ${alreadyPaid}\n` +
+				`REMAINING : ${totalTerm - alreadyPaid}`
 			);
 
 			$("#noOfInst").val("");       // reset input
@@ -46,7 +46,7 @@ $(document).ready(function() {
 			}
 		},
 		error: function() {
-			alert("Failed to load policies.");
+			alert("FAILED TO LOAD POLICIES.");
 		}
 	});
 
@@ -279,7 +279,7 @@ $(document).ready(function() {
 
 			error: function() {
 
-				alert("Policy not found!");
+				alert("POLICY NOT FOUND!");
 			}
 		});
 	});
@@ -331,7 +331,7 @@ $(document).ready(function() {
 		if (!policyCode) {
 
 			alert(
-				"Please select a Policy Code."
+				"PLEASE SELECT A POLICY CODE."
 			);
 
 			return;
@@ -340,7 +340,7 @@ $(document).ready(function() {
 		if (policyAmount <= 0) {
 
 			alert(
-				"Invalid Policy Amount."
+				"INVALID POLICY AMOUNT."
 			);
 
 			return;
@@ -349,7 +349,7 @@ $(document).ready(function() {
 		if (noOfInstallments <= 0) {
 
 			alert(
-				"Please enter No. of Installments."
+				"PLEASE ENTER NO. OF INSTALLMENTS."
 			);
 
 			$("#noOfInst").focus();
@@ -363,14 +363,14 @@ $(document).ready(function() {
 		) {
 
 			alert(
-				"Installment limit exceeded!\n\n" +
-				"Total Term : " +
+				"INSTALLMENT LIMIT EXCEEDED!\n\n" +
+				"TOTAL TERM : " +
 				totalTerm +
 				"\n" +
-				"Already Paid : " +
+				"ALREADY PAID : " +
 				alreadyPaid +
 				"\n" +
-				"Remaining : " +
+				"REMAINING : " +
 				(totalTerm - alreadyPaid)
 			);
 
@@ -383,7 +383,7 @@ $(document).ready(function() {
 		if (paymentDue <= 0) {
 
 			alert(
-				"No payment is due for this policy."
+				"NO PAYMENT IS DUE FOR THIS POLICY."
 			);
 
 			return;
@@ -392,11 +392,11 @@ $(document).ready(function() {
 		if (totalPayment > paymentDue) {
 
 			alert(
-				"Payment amount cannot be greater than payment due.\n\n" +
-				"Payment Amount : ₹" +
+				"PAYMENT AMOUNT CANNOT BE GREATER THAN PAYMENT DUE.\n\n" +
+				"PAYMENT AMOUNT : ₹" +
 				totalPayment.toFixed(2) +
 				"\n" +
-				"Payment Due : ₹" +
+				"PAYMENT DUE : ₹" +
 				paymentDue.toFixed(2)
 			);
 
@@ -462,22 +462,22 @@ $(document).ready(function() {
 
 		const confirmPayment =
 			confirm(
-				"Please confirm payment details:\n\n" +
-				"Policy Code : " +
+				"PLEASE CONFIRM PAYMENT DETAILS:\n\n" +
+				"POLICY CODE : " +
 				policyCode +
-				"\nPolicy Amount : ₹" +
+				"\nPOLICY AMOUNT : ₹" +
 				policyAmount.toFixed(2) +
-				"\nNo. of Installments : " +
+				"\nNO. OF INSTALLMENTS : " +
 				noOfInstallments +
-				"\nPayment Amount : ₹" +
+				"\nPAYMENT AMOUNT : ₹" +
 				totalPayment.toFixed(2) +
-				"\nPayment Due : ₹" +
+				"\nPAYMENT DUE : ₹" +
 				paymentDue.toFixed(2) +
-				"\nLate Days : " +
+				"\nLATE DAYS : " +
 				lateDays +
-				"\nPenalty Amount : ₹" +
+				"\nPENALTY AMOUNT : ₹" +
 				penaltyAmount.toFixed(2) +
-				"\n\nDo you want to save this payment?"
+				"\n\nDO YOU WANT TO SAVE THIS PAYMENT?"
 			);
 
 		if (!confirmPayment) {
@@ -689,7 +689,7 @@ $(document).ready(function() {
 										"✅ " +
 										(
 											response.message ||
-											"Payment saved successfully."
+											"PAYMENT SAVED SUCCESSFULLY."
 										)
 									);
 
@@ -710,7 +710,7 @@ $(document).ready(function() {
 									 */
 
 									let message =
-										"Payment saved, but Cash Book transaction could not be saved.";
+										"PAYMENT SAVED, BUT CASH BOOK TRANSACTION COULD NOT BE SAVED.";
 
 									if (
 										xhr.responseJSON &&
@@ -718,7 +718,7 @@ $(document).ready(function() {
 									) {
 
 										message =
-											"Payment saved, but Cash Book transaction failed: " +
+											"PAYMENT SAVED, BUT CASH BOOK TRANSACTION FAILED: " +
 											xhr.responseJSON.message;
 									}
 
@@ -749,7 +749,7 @@ $(document).ready(function() {
 								?
 								response.message
 								:
-								"Payment could not be saved."
+								"PAYMENT COULD NOT BE SAVED."
 						)
 					);
 
@@ -768,7 +768,7 @@ $(document).ready(function() {
 					);
 
 					let message =
-						"Payment could not be saved.";
+						"PAYMENT COULD NOT BE SAVED.";
 
 					if (
 						xhr.responseJSON &&
@@ -801,7 +801,7 @@ $("#viewBtn").on("click", function() {
 
 	if (!selectedPolicyCode) {
 
-		alert("Please select a policy code first!");
+		alert("PLEASE SELECT A POLICY CODE FIRST!");
 
 		$("#installmentModal").modal("hide");
 		$("#installmentModal").removeClass("show");
@@ -956,7 +956,7 @@ $("#viewBtn").on("click", function() {
 						<td colspan="6"
 							class="text-center text-danger">
 
-							No payment transaction found for this policy.
+							NO PAYMENT TRANSACTION FOUND FOR THIS POLICY.
 
 						</td>
 
@@ -986,7 +986,7 @@ $("#viewBtn").on("click", function() {
 			);
 
 			let message =
-				"Failed to fetch installment data.";
+				"FAILED TO FETCH INSTALLMENT DATA.";
 
 			if (
 				xhr.responseJSON &&

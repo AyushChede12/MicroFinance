@@ -10,24 +10,24 @@ function populateDropdown() {
 		type: "GET",
 		dataType: "json",
 		success: function(response) {
-			console.log("Loan ID response:", response); // for debugging
+			console.log("LOAN ID RESPONSE:", response); // for debugging
 
 			if (response.status === "OK" && Array.isArray(response.data)) {
 				const $dropdown = $("#groupid"); // Make sure this matches your HTML ID exactly
 				$dropdown.empty(); // Clear existing options
 
 				// ✅ Wrap your <option> in quotes!
-				$dropdown.append('<option value="" disabled selected>Select Loan ID</option>');
+				$dropdown.append('<option value="" disabled selected>SELECT LOAN ID</option>');
 
 				response.data.forEach(function(id) {
 					$dropdown.append(`<option value="${id}">${id}</option>`);
 				});
 			} else {
-				console.warn("No Loan IDs found in response.");
+				console.warn("NO LOAN IDS FOUND IN RESPONSE.");
 			}
 		},
 		error: function(xhr, status, error) {
-			console.error("Error fetching Loan IDs:", error);
+			console.error("ERROR FETCHING LOAN IDS:", error);
 		}
 	});
 }
@@ -44,7 +44,7 @@ $('#groupid').on('change', function() {
 			type: 'GET',
 			dataType: 'json',
 			success: function(response) {
-				console.log("Response:", response);
+				console.log("RESPONSE:", response);
 
 				if (response.status === "FOUND") {
 					let loan = response.data[0]; // assuming you want the first record
@@ -110,7 +110,7 @@ $('#groupid').on('change', function() {
 					$('#insuranceFee').val('');
 					$('#valuationFee').val('');
 
-					console.log("Percentages Stored:", deductionPercents);
+					console.log("PERCENTAGES STORED:", deductionPercents);
 
 				} else {
 					alert("❌ " + response.message);
@@ -118,8 +118,8 @@ $('#groupid').on('change', function() {
 				}
 			},
 			error: function(xhr, status, error) {
-				console.error("Error fetching group loan data:", error);
-				alert("Something went wrong.");
+				console.error("ERROR FETCHING GROUP LOAN DATA:", error);
+				alert("SOMETHING WENT WRONG.");
 				clearFields();
 			}
 		});
@@ -182,11 +182,11 @@ $(document).ready(function() {
 		url: 'api/financialconsultant/getAllFinancialConsultantDetails',
 		type: 'POST',
 		success: function(response) {
-			console.log("API Response:", response); // ✅ Debug to check!
+			console.log("API RESPONSE:", response); // ✅ Debug to check!
 
 			const consultantDropdown = $('#financialConsultantId');
 			consultantDropdown.empty();
-			consultantDropdown.append('<option value="">Select Consultant</option>');
+			consultantDropdown.append('<option value="">SELECT CONSULTANT</option>');
 
 			response.data.forEach(function(customer) {
 				// ✅ Only the code
@@ -195,8 +195,8 @@ $(document).ready(function() {
 			});
 		},
 		error: function(xhr, status, error) {
-			console.error('AJAX Error:', status, error);
-			alert('Failed to fetch consultant data.');
+			console.error('AJAX ERROR:', status, error);
+			alert('FAILED TO FETCH CONSULTANT DATA.');
 		}
 	});
 });
@@ -205,7 +205,7 @@ $(document).ready(function() {
 $(document).ready(function() {
 	$('#financialConsultantId').on('change', function() {
 		const selectedCode = $(this).val();
-		console.log("Selected Financial Code:", selectedCode);
+		console.log("SELECTED FINANCIAL CODE:", selectedCode);
 
 		if (selectedCode) {
 			$.ajax({
@@ -213,7 +213,7 @@ $(document).ready(function() {
 				type: 'GET',
 				data: { financialCode: selectedCode },
 				success: function(response) {
-					console.log("API Response:", response);
+					console.log("API RESPONSE:", response);
 
 					// ✅ If your API returns an ARRAY
 					const consultant = Array.isArray(response.data) ? response.data[0] : response.data;
@@ -222,12 +222,12 @@ $(document).ready(function() {
 						$('#financialConsultantName').val(consultant.financialName);
 					} else {
 						$('#financialConsultantName').val('');
-						alert('No consultant name found for this code.');
+						alert('NO CONSULTANT NAME FOUND FOR THIS CODE.');
 					}
 				},
 				error: function(xhr, status, error) {
-					console.error('AJAX Error:', status, error);
-					alert('Error fetching consultant name.');
+					console.error('AJAX ERROR:', status, error);
+					alert('ERROR FETCHING CONSULTANT NAME.');
 				}
 			});
 		} else {
@@ -344,7 +344,7 @@ function calculateCharges() {
 	$('#insuranceFee').val(insuranceAmount.toFixed(2));
 	$('#valuationFee').val(valuationAmount.toFixed(2));
 
-	console.log("✅ Calculated Deductions Updated!");
+	console.log("✅ CALCULATED DEDUCTIONS UPDATED!");
 }
 
 // Js for paying the loan payment to the members
@@ -383,8 +383,8 @@ $(document).ready(function() {
 			chequeNo: $("#chequeNo").val(),
 			photo: $('#photoHidden').val(),
 			signature: $('#signatureHidden').val(),
-			communityAddress:$('#communityAddress').val(),
-			branchName:$('#branchname').val()
+			communityAddress: $('#communityAddress').val(),
+			branchName: $('#branchname').val()
 		};
 
 		$.ajax({
@@ -393,21 +393,13 @@ $(document).ready(function() {
 			data: JSON.stringify(groupLoanData),
 			contentType: "application/json",
 			success: function(response) {
-				alert("Loan Payment processed and distributed to members successfully!");
+				alert("LOAN PAYMENT PROCESSED AND DISTRIBUTED TO MEMBERS SUCCESSFULLY!");
 				location.reload(true);
 			},
 			error: function(xhr, status, error) {
-				alert("❌ Failed to process Loan Payment.");
-				console.error("Error:", xhr.responseText);
+				alert("❌ FAILED TO PROCESS LOAN PAYMENT.");
+				console.error("ERROR:", xhr.responseText);
 			}
 		});
 	});
 });
-
-
-
-
-
-
-
-

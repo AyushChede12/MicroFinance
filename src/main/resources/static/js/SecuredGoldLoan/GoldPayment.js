@@ -6,7 +6,7 @@ $(document).ready(function() {
 		success: function(response) {
 			// Check data
 			if (!(response && response.data && Array.isArray(response.data))) {
-				alert("No Gold Data found.");
+				alert("NO GOLD DATA FOUND.");
 				return;
 			}
 
@@ -32,7 +32,7 @@ $(document).ready(function() {
 
 			// 👉 Step 3: Select2 Initialize (distinct data)
 			$('#findByGoldLoanId').select2({
-				placeholder: '-- Search Gold ID or Name --',
+				placeholder: '-- SEARCH GOLD ID OR NAME --',
 				data: goldOptions,
 				matcher: function(params, data) {
 					if ($.trim(params.term) === '') return data;
@@ -46,7 +46,7 @@ $(document).ready(function() {
 		},
 		error: function(xhr, status, error) {
 			console.error("Error fetching Gold Data:", error);
-			alert("Failed to load Gold ID.");
+			alert("FAILED TO LOAD GOLD ID.");
 		}
 	});
 
@@ -131,19 +131,19 @@ $(document).ready(function() {
 						$("#financialConsultantName").val(data.financialConsultantName);
 
 						if (data.approvalStatus === true || data.approvalStatus === 1 || data.approvalStatus === "1") {
-							$('#approvalStatus').val("Approved").css('color', 'green');
+							$('#approvalStatus').val("APPROVED").css('color', 'green');
 						} else {
-							$('#approvalStatus').val("Not Approved").css('color', 'red');
+							$('#approvalStatus').val("NOT APPROVED").css('color', 'red');
 						}
 
 						fetchEMIValues();
 
 					} else {
-						alert("No customer found for this member code.");
+						alert("NO CUSTOMER FOUND FOR THIS MEMBER CODE.");
 					}
 				},
 				error: function() {
-					alert("Member not found or server error.");
+					alert("MEMBER NOT FOUND OR SERVER ERROR.");
 				}
 			});
 		}
@@ -239,7 +239,7 @@ $(document).ready(function() {
 
 		// ---- VALIDATION ----
 		if (requestData.goldID === "" || requestData.customerCode === "" || requestData.emiPayment === "") {
-			alert("Please fill required fields!");
+			alert("PLEASE FILL REQUIRED FIELDS!");
 			return;
 		}
 
@@ -252,12 +252,12 @@ $(document).ready(function() {
 				if (response.status === "OK") {
 					alert(response.message);   // ✔ Normal alert
 				} else {
-					alert("Warning: " + response.message);  // ✔ Warning message
+					alert("WARNING: " + response.message);  // ✔ Warning message
 				}
 			},
 
 			error: function() {
-				alert("Warning: " + response.message);  // ✔ Error message
+				alert("WARNING: " + response.message);  // ✔ Error message
 			}
 		});
 	});
@@ -301,14 +301,14 @@ function fetchEMIValues() {
 				var paymentAmount = loanAmount + monthlyInterest;
 
 				$("#paymentAmount").val(paymentAmount);
-				
+
 
 			}
 
 		},
 
 		error: function() {
-			alert("Error");
+			alert("ERROR");
 
 			/*// API error आला तरी run होईल
 			var paymentAmount = loanAmount + monthlyInterest;

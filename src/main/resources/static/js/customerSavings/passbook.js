@@ -7,7 +7,7 @@ $(document).ready(function() {
 			fetchAccountNumbers(selectedType);
 		} else {
 			// Clear dropdown if no type is selected
-			$("#accountNumber").empty().append('<option value="">-- Select Account Number --</option>');
+			$("#accountNumber").empty().append('<option value="">-- SELECT ACCOUNT NUMBER --</option>');
 		}
 	});
 });
@@ -27,11 +27,11 @@ function fetchAccountNumbers(accountType) {
 					$dropdown.append(`<option value="${accNo}">${accNo}</option>`);
 				});
 			} else {
-				alert("No account numbers found for selected type.");
+				alert("NO ACCOUNT NUMBERS FOUND FOR SELECTED TYPE.");
 			}
 		},
 		error: function(xhr) {
-			alert("Error fetching account numbers: " + xhr.responseText);
+			alert("ERROR FETCHING ACCOUNT NUMBERS: " + xhr.responseText.toUpperCase());
 		}
 	});
 }
@@ -61,12 +61,12 @@ $(document).ready(function() {
 
 							data.forEach((item, index) => {
 								let row = `<tr>
-                                <td>${item.transactionDate || ''}</td>
-                                <td>${item.accountNumber || ''}</td>
-                                <td>${item.transactionType || ''}</td>
-                                <td>${item.transactionAmount || ''}</td>
-                                <td>${item.averageBalance || ''}</td>                                   
-                                </tr>`;
+                               <td>${item.transactionDate || ''}</td>
+                               <td>${item.accountNumber || ''}</td>
+                               <td>${(item.transactionType || '').toUpperCase()}</td>
+                               <td>${item.transactionAmount || ''}</td>
+                               <td>${item.averageBalance || ''}</td>                                  
+                               </tr>`;
 								tableBody.append(row);
 							});
 							$("#tableSection").hide();
@@ -75,18 +75,18 @@ $(document).ready(function() {
 							$("#headingSection").hide();
 							$("#TransactionSection").show();
 						} else {
-							alert("No transactions found.");
+							alert("NO TRANSACTIONS FOUND.");
 							$('#TransactionSection').hide();
 						}
 					} else {
-						alert("No transactions found.");
+						alert("NO TRANSACTIONS FOUND.");
 						$('#TransactionSection').hide();
 					}
 				},
 
 			});
 		} else {
-			alert("Please select an Account Number.");
+			alert("PLEASE SELECT AN ACCOUNT NUMBER.");
 			$('#TransactionSection').hide();
 		}
 	});
@@ -99,7 +99,7 @@ function displayTransactionDataList() {
 	let accountNumber = document.getElementById("accountNumber").value; // Get the selected Account No.
 	// $("#tabl").show();
 	if (!accountNumber) {
-		alert("Please select an Account Number.");
+		alert("PLEASE SELECT AN ACCOUNT NUMBER.");
 		return;
 	}
 	if (accountNumber !== "") {
@@ -118,31 +118,31 @@ function displayTransactionDataList() {
 
 					// Inject table row dynamically
 					$("#customerDetails").html(`
-                            <tr>
-                                <td>${data.id || ''}</td>
-                                <td>${branch || ''}</td>
-                                <td>${data.accountNumber || ''}</td>
-                                <td>${(data.enterCustomerName || '').toUpperCase()}</td>
-                                <td>${data.selectByCustomer || ''}</td>
-                                <td>${data.contactNumber || ''}</td>
-                                <td>${(data.address || '').toUpperCase()}</td>
-                                <td>${data.openingDate || ''}</td>
-                                <td>${data.balance || ''}</td>
-                                <td></td>
-                            </tr>
-                        `);
+                           <tr>
+                               <td>${data.id || ''}</td>
+                               <td>${(branch || '').toUpperCase()}</td>
+                               <td>${data.accountNumber || ''}</td>
+                               <td>${(data.enterCustomerName || '').toUpperCase()}</td>
+                               <td>${(data.selectByCustomer || '').toUpperCase()}</td>
+                               <td>${(data.contactNumber || '').toUpperCase()}</td>
+                               <td>${(data.address || '').toUpperCase()}</td>
+                               <td>${data.openingDate || ''}</td>
+                               <td>${data.balance || ''}</td>
+                               <td></td>
+                           </tr>
+                       `);
 					$("#tableSection").show();
 					$('#printbtnSection').hide();
 					$('#passbookSection').hide();
 					$("#headingSection").hide();
 					$("#TransactionSection").hide();
 				} else {
-					alert("No data found for this account.");
+					alert("NO DATA FOUND FOR THIS ACCOUNT.");
 					$("#customerDetails").empty();
 				}
 			},
 			error: function(xhr) {
-				alert("Error: " + xhr.responseText);
+				alert("ERROR: " + xhr.responseText.toUpperCase());
 				$("#customerDetails").empty();
 			}
 		});
@@ -156,7 +156,7 @@ function displaySavingfrontPage() {
 	let accountNumber = document.getElementById("accountNumber").value;
 
 	if (!accountNumber) {
-		alert("Please select an account number!");
+		alert("PLEASE SELECT AN ACCOUNT NUMBER!");
 		return;
 	}
 
@@ -174,13 +174,13 @@ function displaySavingfrontPage() {
 				}
 				let fullAddress = `${data.address}, ${data.state}, ${data.pinCode}`;
 
-				$("#customerNo").text(data.selectByCustomer);
+				$("#customerNo").text((data.selectByCustomer || '').toUpperCase());
 				$("#accountNo").text(data.accountNumber);
 				$("#customerName").text(data.enterCustomerName.toUpperCase());
-				$("#familyDetails").text(data.familyDetails);
+				$("#familyDetails").text((data.familyDetails || '').toUpperCase());
 				$("#dateOfBirth").text(data.dateOfBirth);
 				$("#contactNo").text(data.contactNumber);
-				$("#emailId").text(data.emailId.toUpperCase());
+				$("#emailId").text((data.emailId || '').toUpperCase());
 				$("#operationType").text(data.operationType.toUpperCase());
 				$("#aadharNo").text(data.aadharNo);
 				$("#address").text(fullAddress.toUpperCase());
@@ -189,11 +189,11 @@ function displaySavingfrontPage() {
 				$("#branchName").text(branch.toUpperCase());
 
 				// If you have these fields in your data, else remove
-				$("#IFSCCode").text(data.ifscCode || '');
+				$("#IFSCCode").text((data.ifscCode || '').toUpperCase());
 				//$("#dateOfIssue").text(data.dateOfIssue || '');
-				$("#nominationStatus").text(data.nominationStatus || '');
-				$("#nominationName").text(data.nominationName || '');
-				$("#upi").text(data.upi || '');
+				$("#nominationStatus").text((data.nominationStatus || '').toUpperCase());
+				$("#nominationName").text((data.nominationName || '').toUpperCase());
+				$("#upi").text((data.upi || '').toUpperCase());
 				$("#tableSection").hide();
 				$('#printbtnSection').show();
 				$('#passbookSection').show();
@@ -201,11 +201,11 @@ function displaySavingfrontPage() {
 				$("#TransactionSection").hide();
 
 			} else {
-				alert("No account data found.");
+				alert("NO ACCOUNT DATA FOUND.");
 			}
 		},
 		error: function(xhr) {
-			alert("Error fetching data: " + (xhr.responseJSON?.error || xhr.statusText));
+			alert("ERROR FETCHING DATA: " + (xhr.responseJSON?.error || xhr.statusText).toUpperCase());
 		}
 	});
 }
@@ -213,61 +213,61 @@ function displaySavingfrontPage() {
 //Janvi : Print Button
 // print Code
 /*$("#printBtn").on("click", function (e) {
-		e.preventDefault();
+	e.preventDefault();
 
-		// Clone the form
-		const $formClone = $("#passbookId").clone();
+	// Clone the form
+	const $formClone = $("#passbookId").clone();
 
-		// Optional: remove any row that holds the buttons
-		$formClone.find(".text-center").each(function () {
-			if ($(this).find("button").length > 0) {
-				$(this).remove();
-			}
-		});
-
-		// Open print window
-		const printWindow = window.open("", "_blank");
-
-		if (printWindow) {
-			printWindow.document.open();
-			printWindow.document.write(`
-				<html>
-				<head>
-					<title>Print - Customer Form</title>
-					<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
-					<style>
-						body {
-							font-family: Arial, sans-serif;
-							padding: 20px;
-						}
-						.formFields {
-							margin-bottom: 15px;
-						}
-						label {
-							font-weight: bold;
-						}
-						input, select, textarea {
-							border: 1px solid #ccc;
-							border-radius: 5px;
-							padding: 5px;
-							width: 100%;
-						}
-						.toggle {
-							pointer-events: none;
-						}
-					</style>
-				</head>
-				<body onload="window.print(); window.close();">
-					<h3 class="text-center mb-4">Customer Information</h3>
-					${$formClone[0].outerHTML}
-				</body>
-				</html>
-			`);
-			printWindow.document.close();
-		} else {
-			alert("Popup blocked. Please allow popups for this website.");
+	// Optional: remove any row that holds the buttons
+	$formClone.find(".text-center").each(function () {
+		if ($(this).find("button").length > 0) {
+			$(this).remove();
 		}
-	});*/
+	});
+
+	// Open print window
+	const printWindow = window.open("", "_blank");
+
+	if (printWindow) {
+		printWindow.document.open();
+		printWindow.document.write(`
+			<html>
+			<head>
+				<title>PRINT - CUSTOMER FORM</title>
+				<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+				<style>
+					body {
+						font-family: Arial, sans-serif;
+						padding: 20px;
+					}
+					.formFields {
+						margin-bottom: 15px;
+					}
+					label {
+						font-weight: bold;
+					}
+					input, select, textarea {
+						border: 1px solid #ccc;
+						border-radius: 5px;
+						padding: 5px;
+						width: 100%;
+					}
+					.toggle {
+						pointer-events: none;
+					}
+				</style>
+			</head>
+			<body onload="window.print(); window.close();">
+				<h3 class="text-center mb-4">CUSTOMER INFORMATION</h3>
+				${$formClone[0].outerHTML}
+			</body>
+			</html>
+		`);
+		printWindow.document.close();
+	} else {
+		alert("POPUP BLOCKED. PLEASE ALLOW POPUPS FOR THIS WEBSITE.");
+	}
+});*/
 
 function displayHeadingSA() {
 	$("#tableSection").hide();
@@ -289,43 +289,43 @@ function printTransactionSection1() {
 	else if ($("#headingSection").is(":visible")) {
 		visibleSection = document.getElementById("headingSection");
 	} else {
-		alert("No section visible to print.");
+		alert("NO SECTION VISIBLE TO PRINT.");
 		return;
 	}
 
 	const printWindow = window.open('', '', 'width=1000,height=800');
 
 	printWindow.document.write(`
-        <html>
-        <head>
-            <title>Print Page</title>
-            <!-- Include your main CSS and Bootstrap -->
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-            <style>
-                body {
-                    margin: 20px;
-                    font-family: Arial, sans-serif;
-                }
-                .card {
-                    box-shadow: none !important;
-                    border: 1px solid #ccc;
-                }
-                table {
-                    width: 100%;
-                    border-collapse: collapse;
-                }
-                th, td {
-                    border: 1px solid #000;
-                    padding: 6px;
-                    text-align: center;
-                }
-            </style>
-        </head>
-        <body>
-            ${visibleSection.outerHTML}
-        </body>
-        </html>
-    `);
+       <html>
+       <head>
+           <title>PRINT PAGE</title>
+           <!-- Include your main CSS and Bootstrap -->
+           <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+           <style>
+               body {
+                   margin: 20px;
+                   font-family: Arial, sans-serif;
+               }
+               .card {
+                   box-shadow: none !important;
+                   border: 1px solid #ccc;
+               }
+               table {
+                   width: 100%;
+                   border-collapse: collapse;
+               }
+               th, td {
+                   border: 1px solid #000;
+                   padding: 6px;
+                   text-align: center;
+               }
+           </style>
+       </head>
+       <body>
+           ${visibleSection.outerHTML}
+       </body>
+       </html>
+   `);
 
 	printWindow.document.close();
 
@@ -336,4 +336,3 @@ function printTransactionSection1() {
 		}, 500); // wait for styles to apply
 	};
 }
-

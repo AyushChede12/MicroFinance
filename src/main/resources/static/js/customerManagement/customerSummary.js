@@ -4,8 +4,8 @@ $(document).ready(function() {
 		url: 'api/customermanagement/approved',
 		type: 'GET',
 		success: function(response) {
-			alert("success");
-			// response is a list of addCustomer objects
+			alert("SUCCESS");
+			// RESPONSE IS A LIST OF ADDCUSTOMER OBJECTS
 			let customerOptions = response.data.map(function(item) {
 				let fullName = [
 					item.firstName,
@@ -15,12 +15,12 @@ $(document).ready(function() {
 
 				return {
 					id: item.memberCode,
-					text: item.memberCode + " - " + fullName
+					text: item.memberCode + " - " + fullName.toUpperCase()
 				};
 			});
 
 			$('#selectMember').select2({
-				placeholder: '-- Search Customer Code or Name --',
+				placeholder: '-- SEARCH CUSTOMER CODE OR NAME --',
 				data: customerOptions,
 				matcher: function(params, data) {
 					if ($.trim(params.term) === '') return data;
@@ -33,8 +33,8 @@ $(document).ready(function() {
 			});
 		},
 		error: function(xhr, status, error) {
-			console.error("Error fetching customers:", error);
-			alert("Failed to load customer codes.");
+			console.error("ERROR FETCHING CUSTOMERS:", error);
+			alert("FAILED TO LOAD CUSTOMER CODES.");
 		}
 	});*/
 
@@ -44,27 +44,28 @@ $(document).ready(function() {
 		success: function(response) {
 			if (response.status === "OK") {
 				const customerList = response.data;
-				$("#selectMember").empty(); // Clear existing options
+				$("#selectMember").empty(); // CLEAR EXISTING OPTIONS
 				$("#selectMember").append("<option value=''>-- SELECT CODE --</option>");
 
-				// Bind approved customers to dropdown
+				// BIND APPROVED CUSTOMERS TO DROPDOWN
 				customerList.forEach(function(customer) {
 					let fullName = [
 						customer.firstName || '',
 						customer.middleName || '',
 						customer.lastName || ''
 					].filter(Boolean).join(" ");
+
 					let displayText = customer.memberCode + " - " + fullName.toUpperCase();
 					let option = `<option value="${customer.memberCode}">${displayText}</option>`;
 					$("#selectMember").append(option);
 				});
 			} else {
-				alert("Error: " + (response.message || "No customers found"));
+				alert(("ERROR: " + (response.message || "NO CUSTOMERS FOUND")).toUpperCase());
 			}
 		},
 		error: function(xhr) {
-			console.error("Error loading approved customers:", xhr.responseText);
-			alert("Failed to load approved customers.");
+			console.error("ERROR LOADING APPROVED CUSTOMERS:", xhr.responseText);
+			alert("FAILED TO LOAD APPROVED CUSTOMERS.");
 		}
 	});
 
@@ -83,6 +84,7 @@ $(document).ready(function() {
 							data.middleName || '',
 							data.lastName || ''
 						].filter(Boolean).join(" ");
+
 						$("#id").val(data.id);
 						$("#customerCode").val(data.memberCode);
 						$("#customerName").val(fullName.toUpperCase());
@@ -129,11 +131,11 @@ $(document).ready(function() {
 						loadCustomerImages(currentCustomerId);
 
 					} else {
-						alert("No customer found for this member code.");
+						alert("NO CUSTOMER FOUND FOR THIS MEMBER CODE.");
 					}
 				},
 				error: function() {
-					alert("Member not found or server error.");
+					alert("MEMBER NOT FOUND OR SERVER ERROR.");
 				}
 			});
 		} else {
@@ -152,10 +154,10 @@ $(document).ready(function() {
 
 	function createNewField() {
 		const fieldHtml = `
-            <div class="textUploadSet mb-4">
-                <input style="text-transform: uppercase;" type="text" class="form-control nameField" placeholder="ENTER IMAGE NAME...">
-                <div class="uploadContainer"></div>
-            </div>`;
+           <div class="textUploadSet mb-4">
+               <input style="text-transform: uppercase;" type="text" class="form-control nameField" placeholder="ENTER IMAGE NAME...">
+               <div class="uploadContainer"></div>
+           </div>`;
 		$("#fieldContainer").append(fieldHtml);
 	}
 
@@ -168,30 +170,30 @@ $(document).ready(function() {
 		const uniqueId = "file-" + Date.now();
 
 		const html = `
-            <div class="uploadField mt-2">
-                <label>${val.toUpperCase()} *</label>
-                <label for="${uniqueId}">
-                    <input type="file" id="${uniqueId}" hidden accept="image/*" onchange="previewImage('${uniqueId}')">
-                    <div>
-                        <img src="Uploads/upload.png" id="preview-${uniqueId}" style="width:120px;">
-                    </div>
-                </label>
-            </div>
-        `;
+           <div class="uploadField mt-2">
+               <label>${val.toUpperCase()} *</label>
+               <label for="${uniqueId}">
+                   <input type="file" id="${uniqueId}" hidden accept="image/*" onchange="previewImage('${uniqueId}')">
+                   <div>
+                       <img src="Uploads/upload.png" id="preview-${uniqueId}" style="width:120px;">
+                   </div>
+               </label>
+           </div>
+       `;
 
 		box.html(html);
 	});
 
 	$("#uploadAllBtn").click(function() {
 		if (!currentCustomerId) {
-			alert("Please select a customer first.");
+			alert("PLEASE SELECT A CUSTOMER FIRST.");
 			return;
 		}
 
 		let uploadFields = $(".uploadField");
 		let uploadCount = uploadFields.length;
 		if (uploadCount === 0) {
-			alert("No fields added to upload.");
+			alert("NO FIELDS ADDED TO UPLOAD.");
 			return;
 		}
 
@@ -202,7 +204,7 @@ $(document).ready(function() {
 			const file = input.files[0];
 
 			if (!file) {
-				alert("Select file for " + fieldName);
+				alert(("SELECT FILE FOR " + fieldName).toUpperCase());
 				return;
 			}
 
@@ -220,13 +222,13 @@ $(document).ready(function() {
 					$(input).closest(".uploadField").css("border", "2px solid green");
 					completed++;
 					if (completed === uploadCount) {
-						alert("All images uploaded successfully!");
+						alert("ALL IMAGES UPLOADED SUCCESSFULLY!");
 						loadCustomerImages(currentCustomerId);
 					}
 				},
 				error: function() {
 					$(input).closest(".uploadField").css("border", "2px solid red");
-					alert("Failed to upload " + fieldName);
+					alert(("FAILED TO UPLOAD " + fieldName).toUpperCase());
 				}
 			});
 		});
@@ -239,7 +241,7 @@ $(document).ready(function() {
 	});
 
 	function loadCustomerImages(customerId) {
-		$("#storedImages").html(`<h5>Loading...</h5>`);
+		$("#storedImages").html(`<h5>LOADING...</h5>`);
 
 		$.ajax({
 			url: "api/customermanagement/images/" + customerId,
@@ -247,7 +249,7 @@ $(document).ready(function() {
 			success: function(data) {
 				let html = "<h4>STORED IMAGES</h4><div class='row'>";
 				if (data.length === 0) {
-					html += "<p class='col-12 text-muted'>No stored images for this customer.</p>";
+					html += "<p class='col-12 text-muted'>NO STORED IMAGES FOR THIS CUSTOMER.</p>";
 				} else {
 					data.forEach(img => {
 						html += `
@@ -259,8 +261,8 @@ $(document).ready(function() {
 									<button type="button" class="deleteImg btn btn-danger btn-sm" data-id="${customerId}-${img.id}" 
 										style="position:absolute; top:5px; right:5px; border-radius:50%; width:24px; height:24px; padding:0; line-height:20px;">&times;</button>
 								</div>
-								<p class="mt-1 font-weight-bold">${(img.name).toUpperCase()}</p>
-								<p class="text-muted small" style="font-size: 11px;">Uploaded: ${img.uploadDate || 'N/A'}</p>
+								<p class="mt-1 font-weight-bold">${(img.name || "").toUpperCase()}</p>
+								<p class="text-muted small" style="font-size: 11px;">UPLOADED: ${img.uploadDate || 'N/A'}</p>
 							</div>
 						`;
 					});
@@ -269,25 +271,25 @@ $(document).ready(function() {
 				$("#storedImages").html(html);
 			},
 			error: function() {
-				$("#storedImages").html("<p class='text-danger'>Failed to load stored images.</p>");
+				$("#storedImages").html("<p class='text-danger'>FAILED TO LOAD STORED IMAGES.</p>");
 			}
 		});
 	}
 
 	$(document).on("click", ".deleteImg", function() {
 		const id = $(this).data("id");
-		if (confirm("Are you sure you want to delete this image?")) {
+		if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS IMAGE?")) {
 			$.ajax({
 				url: "api/customermanagement/delete/" + id,
 				type: "POST",
 				success: function() {
-					alert("Image deleted!");
+					alert("IMAGE DELETED!");
 					if (currentCustomerId) {
 						loadCustomerImages(currentCustomerId);
 					}
 				},
 				error: function() {
-					alert("Error deleting image.");
+					alert("ERROR DELETING IMAGE.");
 				}
 			});
 		}

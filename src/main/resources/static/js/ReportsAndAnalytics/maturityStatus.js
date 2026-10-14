@@ -1,13 +1,13 @@
 let allMaturityData = [];
 
-$(document).ready(function () {
+$(document).ready(function() {
 
-    loadBranchDropdown();
-    loadAllData();
+	loadBranchDropdown();
+	loadAllData();
 
-    $("#findBtn").click(function () {
-        applyFilters();
-    });
+	$("#findBtn").click(function() {
+		applyFilters();
+	});
 
 });
 
@@ -17,41 +17,41 @@ $(document).ready(function () {
 // ===============================
 function loadBranchDropdown() {
 
-    $.ajax({
-        url: "api/Maturitymanagement/getApplymaturitydetails",
-        type: "GET",
-        success: function (response) {
+	$.ajax({
+		url: "api/Maturitymanagement/getApplymaturitydetails",
+		type: "GET",
+		success: function(response) {
 
-            if (response.status === "OK") {
+			if (response.status === "OK") {
 
-                const uniqueBranches = new Set();
+				const uniqueBranches = new Set();
 
-                response.data.forEach(item => {
-                    if (item.branchName) {
-                        uniqueBranches.add(item.branchName.trim());
-                    }
-                });
+				response.data.forEach(item => {
+					if (item.branchName) {
+						uniqueBranches.add(item.branchName.trim());
+					}
+				});
 
-                $("#branchName").empty();
-                $("#branchName").append("<option value=''>-- Select Branch --</option>");
+				$("#branchName").empty();
+				$("#branchName").append("<option value=''>-- SELECT BRANCH --</option>");
 
-                uniqueBranches.forEach(branch => {
-                    $("#branchName").append(
-                        `<option value="${branch}">${branch}</option>`
-                    );
-                });
+				uniqueBranches.forEach(branch => {
+					$("#branchName").append(
+						`<option value="${branch}">${branch}</option>`
+					);
+				});
 
-            } else {
+			} else {
 
-                alert("Error : " + response.message);
+				alert("Error : " + response.message);
 
-            }
+			}
 
-        },
-        error: function () {
-            alert("Branch loading failed");
-        }
-    });
+		},
+		error: function() {
+			alert("BRANCH LOADING FAILED");
+		}
+	});
 
 }
 
@@ -61,30 +61,30 @@ function loadBranchDropdown() {
 // ===============================
 function loadAllData() {
 
-    $.ajax({
-        url: "api/Maturitymanagement/getApplymaturitydetails",
-        type: "GET",
+	$.ajax({
+		url: "api/Maturitymanagement/getApplymaturitydetails",
+		type: "GET",
 
-        success: function (response) {
+		success: function(response) {
 
-            if (response.status === "OK") {
+			if (response.status === "OK") {
 
-                allMaturityData = response.data;
-                renderTable(allMaturityData);
+				allMaturityData = response.data;
+				renderTable(allMaturityData);
 
-            } else {
+			} else {
 
-                alert("⚠️ " + response.message);
+				alert("⚠️ " + response.message);
 
-            }
+			}
 
-        },
-        error: function () {
+		},
+		error: function() {
 
-            alert("Failed to load maturity data.");
+			alert("FAILED TO LOAD MATURITY DATA.");
 
-        }
-    });
+		}
+	});
 
 }
 
@@ -94,21 +94,21 @@ function loadAllData() {
 // ===============================
 function renderTable(data) {
 
-    let tbody = $(".datatable tbody");
-    tbody.empty();
+	let tbody = $(".datatable tbody");
+	tbody.empty();
 
-    if (data.length === 0) {
+	if (data.length === 0) {
 
-        tbody.append(`<tr>
-            <td colspan="10" class="text-center">No Records Found</td>
+		tbody.append(`<tr>
+            <td colspan="10" class="text-center">NO RECORDS FOUND</td>
         </tr>`);
 
-        return;
-    }
+		return;
+	}
 
-    data.forEach(function (item, index) {
+	data.forEach(function(item, index) {
 
-        let row = `
+		let row = `
         <tr>
             <td>${index + 1}</td>
             <td>${item.customerName || ''}</td>
@@ -127,9 +127,9 @@ function renderTable(data) {
         </tr>
         `;
 
-        tbody.append(row);
+		tbody.append(row);
 
-    });
+	});
 
 }
 
@@ -139,45 +139,45 @@ function renderTable(data) {
 // ===============================
 function applyFilters() {
 
-    let branchName = $("#branchName").val();
-    let fromDate = $("#fromDate").val();
-    let toDate = $("#toDate").val();
+	let branchName = $("#branchName").val();
+	let fromDate = $("#fromDate").val();
+	let toDate = $("#toDate").val();
 
-    let filteredData = allMaturityData.filter(item => {
+	let filteredData = allMaturityData.filter(item => {
 
-        let match = true;
+		let match = true;
 
-        if (branchName && item.branchName !== branchName) {
-            match = false;
-        }
+		if (branchName && item.branchName !== branchName) {
+			match = false;
+		}
 
-        if (fromDate) {
+		if (fromDate) {
 
-            let itemDate = new Date(item.maturityDate);
-            let startDate = new Date(fromDate);
+			let itemDate = new Date(item.maturityDate);
+			let startDate = new Date(fromDate);
 
-            if (itemDate < startDate) {
-                match = false;
-            }
+			if (itemDate < startDate) {
+				match = false;
+			}
 
-        }
+		}
 
-        if (toDate) {
+		if (toDate) {
 
-            let itemDate = new Date(item.maturityDate);
-            let endDate = new Date(toDate);
+			let itemDate = new Date(item.maturityDate);
+			let endDate = new Date(toDate);
 
-            if (itemDate > endDate) {
-                match = false;
-            }
+			if (itemDate > endDate) {
+				match = false;
+			}
 
-        }
+		}
 
-        return match;
+		return match;
 
-    });
+	});
 
-    renderTable(filteredData);
+	renderTable(filteredData);
 
 }
 
@@ -187,17 +187,17 @@ function applyFilters() {
 // ===============================
 function viewData(index) {
 
-    let data = allMaturityData[index];
+	let data = allMaturityData[index];
 
-    let printWindow = window.open('', '', 'width=900,height=700');
+	let printWindow = window.open('', '', 'width=900,height=700');
 
-    printWindow.document.write(`
+	printWindow.document.write(`
 
         <html>
 
         <head>
 
-            <title>Maturity Status Report</title>
+            <title>MATURITY STATUS REPORT</title>
 
             <style>
 
@@ -237,7 +237,7 @@ function viewData(index) {
             <h2>CO OPERATIVE SOCIETY LTD NAGPUR</h2>
             <p>PLOT NO 497 NEW NANDANWAN</p>
             <p>MAHARASHTRA - 440024</p>
-            <p>CIN : ASJ#567 | Email : example@gmail.com | Helpline : 9566200223</p>
+            <p>CIN : ASJ#567 | EMAIL : example@gmail.com | HELPLINE : 9566200223</p>
 
             <h3 style="text-align:center;margin-top:20px;">
                 MATURITY STATUS REPORT
@@ -246,42 +246,42 @@ function viewData(index) {
             <table>
 
                 <tr>
-                    <th>Customer Name</th>
+                    <th>CUSTOMER NAME</th>
                     <td>${data.customerName}</td>
                 </tr>
 
                 <tr>
-                    <th>Branch</th>
+                    <th>BRANCH</th>
                     <td>${data.branchName}</td>
                 </tr>
 
                 <tr>
-                    <th>Policy Code</th>
+                    <th>POLICY CODE</th>
                     <td>${data.policyCode}</td>
                 </tr>
 
                 <tr>
-                    <th>Policy Amount</th>
+                    <th>POLICY AMOUNT</th>
                     <td>${data.policyAmount}</td>
                 </tr>
 
                 <tr>
-                    <th>Maturity Date</th>
+                    <th>MATURITY DATE</th>
                     <td>${data.maturityDate}</td>
                 </tr>
 
                 <tr>
-                    <th>Maturity Amount</th>
+                    <th>MATURITY AMOUNT</th>
                     <td>${data.maturityAmount}</td>
                 </tr>
 
                 <tr>
-                    <th>Total Deposit</th>
+                    <th>TOTAL DEPOSIT</th>
                     <td>${data.depositAmount}</td>
                 </tr>
 
                 <tr>
-                    <th>Scheme Name</th>
+                    <th>SCHEME NAME</th>
                     <td>${data.schemeName}</td>
                 </tr>
 
@@ -293,7 +293,7 @@ function viewData(index) {
 
     `);
 
-    printWindow.document.close();
-    printWindow.print();
+	printWindow.document.close();
+	printWindow.print();
 
 }

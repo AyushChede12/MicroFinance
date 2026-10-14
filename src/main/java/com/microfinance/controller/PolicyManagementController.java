@@ -61,12 +61,12 @@ public class PolicyManagementController {
 
 		if (isSaved) {
 			ApiResponse<DailyDepositPM> response = ApiResponse.success(HttpStatus.CREATED,
-					"Daily Deposite saved successfully", dailyDepositPM);
+					"DAILY DEPOSITE SAVED SUCCESSFULLY", dailyDepositPM);
 			return ResponseEntity.status(HttpStatus.CREATED).body(response);
 
 		} else {
 			ApiResponse<DailyDepositPM> response = ApiResponse.error(HttpStatus.BAD_REQUEST,
-					"Failed to save fixed deposit.");
+					"FAILED TO SAVE FIXED DEPOSIT.");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 
 		}
@@ -86,11 +86,11 @@ public class PolicyManagementController {
 
 		if (deposits != null && !deposits.isEmpty()) {
 			ApiResponse<List<DailyDepositPM>> response = ApiResponse.success(HttpStatus.OK,
-					"Daily deposits fetched successfully.", deposits);
+					"DAILY DEPOSITS FETCHED SUCCESSFULLY.", deposits);
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} else {
 			ApiResponse<List<DailyDepositPM>> response = ApiResponse.error(HttpStatus.NOT_FOUND,
-					"No daily deposits found.");
+					"NO DAILY DEPOSITS FOUND.");
 			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 		}
 	}
@@ -102,11 +102,11 @@ public class PolicyManagementController {
 
 		if (deposit != null) {
 			ApiResponse<DailyDepositPM> response = ApiResponse.success(HttpStatus.OK,
-					"Daily deposit fetched successfully.", deposit);
+					"DAILY DEPOSIT FETCHED SUCCESSFULLY.", deposit);
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<DailyDepositPM> response = ApiResponse.error(HttpStatus.NOT_FOUND,
-					"Daily deposit not found for ID: " + id);
+					"DAILY DEPOSIT NOT FOUND FOR ID: " + id);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 	}
@@ -120,11 +120,11 @@ public class PolicyManagementController {
 
 		if (updated != null) {
 			ApiResponse<DailyDepositPM> response = ApiResponse.success(HttpStatus.OK,
-					"Daily deposit updated successfully.", updated);
+					"DAILY DEPOSIT UPDATED SUCCESSFULLY.", updated);
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<DailyDepositPM> response = ApiResponse.error(HttpStatus.NOT_FOUND,
-					"Daily deposit not found or failed to update.");
+					"DAILY DEPOSIT NOT FOUND OR FAILED TO UPDATE.");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 	}
@@ -135,12 +135,12 @@ public class PolicyManagementController {
 		boolean deleted = policyManagementService.deleteDailyDeposit(id);
 
 		if (deleted) {
-			ApiResponse<Void> response = ApiResponse.success(HttpStatus.OK, "Daily deposit deleted successfully.",
+			ApiResponse<Void> response = ApiResponse.success(HttpStatus.OK, "DAILY DEPOSIT DELETED SUCCESSFULLY.",
 					null);
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<Void> response = ApiResponse.error(HttpStatus.NOT_FOUND,
-					"Daily deposit not found for ID: " + id);
+					"DAILY DEPOSIT NOT FOUND FOR ID: " + id);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 	}
@@ -154,11 +154,11 @@ public class PolicyManagementController {
 
 		if (isSaved) {
 			ApiResponse<RecurringDepositPM> response = ApiResponse.success(HttpStatus.CREATED,
-					"Recurring deposit saved successfully.", recurringDepositPM);
+					"RECURRING DEPOSIT SAVED SUCCESSFULLY.", recurringDepositPM);
 			return new ResponseEntity<>(response, HttpStatus.CREATED);
 		} else {
 			ApiResponse<RecurringDepositPM> response = ApiResponse.error(HttpStatus.BAD_REQUEST,
-					"Failed to save recurring deposit.");
+					"FAILED TO SAVE RECURRING DEPOSIT.");
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -170,11 +170,11 @@ public class PolicyManagementController {
 
 		if (deposits != null && !deposits.isEmpty()) {
 			ApiResponse<List<RecurringDepositPM>> response = ApiResponse.success(HttpStatus.OK,
-					"Recurring deposits fetched successfully.", deposits);
+					"RECURRING DEPOSITS FETCHED SUCCESSFULLY.", deposits);
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} else {
 			ApiResponse<List<RecurringDepositPM>> response = ApiResponse.error(HttpStatus.NOT_FOUND,
-					"No recurring deposits found.");
+					"NO RECURRING DEPOSITS FOUND.");
 			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 		}
 	}
@@ -186,11 +186,11 @@ public class PolicyManagementController {
 
 		if (deposit != null) {
 			ApiResponse<RecurringDepositPM> response = ApiResponse.success(HttpStatus.OK,
-					"Recurring deposit fetched successfully.", deposit);
+					"RECURRING DEPOSIT FETCHED SUCCESSFULLY.", deposit);
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<RecurringDepositPM> response = ApiResponse.error(HttpStatus.NOT_FOUND,
-					"Recurring deposit not found for ID: " + id);
+					"RECURRING DEPOSIT NOT FOUND FOR ID: " + id);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 	}
@@ -204,11 +204,11 @@ public class PolicyManagementController {
 
 		if (updated != null) {
 			ApiResponse<RecurringDepositPM> response = ApiResponse.success(HttpStatus.OK,
-					"Recurring deposit updated successfully.", updated);
+					"RECURRING DEPOSIT UPDATED SUCCESSFULLY.", updated);
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<RecurringDepositPM> response = ApiResponse.error(HttpStatus.NOT_FOUND,
-					"Recurring deposit not found or failed to update.");
+					"RECURRING DEPOSIT NOT FOUND OR FAILED TO UPDATE.");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 	}
@@ -219,12 +219,12 @@ public class PolicyManagementController {
 		boolean deleted = policyManagementService.deleteRecurringDeposit(id);
 
 		if (deleted) {
-			ApiResponse<Void> response = ApiResponse.success(HttpStatus.OK, "Recurring deposit deleted successfully.",
+			ApiResponse<Void> response = ApiResponse.success(HttpStatus.OK, "RECURRING DEPOSIT DELETED SUCCESSFULLY.",
 					null);
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<Void> response = ApiResponse.error(HttpStatus.NOT_FOUND,
-					"Recurring deposit not found for ID: " + id);
+					"RECURRING DEPOSIT NOT FOUND FOR ID: " + id);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 	}
@@ -236,11 +236,11 @@ public class PolicyManagementController {
 
 		if (isSaved) {
 			ApiResponse<FixedDepositPM> response = ApiResponse.success(HttpStatus.CREATED,
-					"Fixed deposit saved successfully.", fixedDepositPM);
+					"FIXED DEPOSIT SAVED SUCCESSFULLY.", fixedDepositPM);
 			return ResponseEntity.status(HttpStatus.CREATED).body(response);
 		} else {
 			ApiResponse<FixedDepositPM> response = ApiResponse.error(HttpStatus.BAD_REQUEST,
-					"Failed to save fixed deposit.");
+					"FAILED TO SAVE FIXED DEPOSIT.");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 		}
 	}
@@ -252,10 +252,10 @@ public class PolicyManagementController {
 
 		if (deposits != null && !deposits.isEmpty()) {
 			ApiResponse<List<FixedDepositPM>> response = ApiResponse.success(HttpStatus.OK,
-					"Fixed deposits fetched successfully.", deposits);
+					"FIXED DEPOSITS FETCHED SUCCESSFULLY.", deposits);
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} else {
-			ApiResponse<List<FixedDepositPM>> response = ApiResponse.success(HttpStatus.OK, "No fixed deposits found.",
+			ApiResponse<List<FixedDepositPM>> response = ApiResponse.success(HttpStatus.OK, "NO FIXED DEPOSITS FOUND.",
 					java.util.Collections.emptyList());
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
@@ -268,11 +268,11 @@ public class PolicyManagementController {
 
 		if (deposit != null) {
 			ApiResponse<FixedDepositPM> response = ApiResponse.success(HttpStatus.OK,
-					"Fixed deposit fetched successfully.", deposit);
+					"FIXED DEPOSIT FETCHED SUCCESSFULLY.", deposit);
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<FixedDepositPM> response = ApiResponse.error(HttpStatus.NOT_FOUND,
-					"Fixed deposit not found for ID: " + id);
+					"FIXED DEPOSIT NOT FOUND FOR ID: " + id);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 	}
@@ -286,11 +286,11 @@ public class PolicyManagementController {
 
 		if (updated != null) {
 			ApiResponse<FixedDepositPM> response = ApiResponse.success(HttpStatus.OK,
-					"Fixed deposit updated successfully.", updated);
+					"FIXED DEPOSIT UPDATED SUCCESSFULLY.", updated);
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<FixedDepositPM> response = ApiResponse.error(HttpStatus.NOT_FOUND,
-					"Fixed deposit not found or failed to update.");
+					"FIXED DEPOSIT NOT FOUND OR FAILED TO UPDATE.");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 	}
@@ -301,12 +301,12 @@ public class PolicyManagementController {
 		boolean deleted = policyManagementService.deleteFixedDeposit(id);
 
 		if (deleted) {
-			ApiResponse<Void> response = ApiResponse.success(HttpStatus.OK, "Fixed deposit deleted successfully.",
+			ApiResponse<Void> response = ApiResponse.success(HttpStatus.OK, "FIXED DEPOSIT DELETED SUCCESSFULLY.",
 					null);
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<Void> response = ApiResponse.error(HttpStatus.NOT_FOUND,
-					"Fixed deposit not found for ID: " + id);
+					"FIXED DEPOSIT NOT FOUND FOR ID: " + id);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 	}
@@ -318,12 +318,12 @@ public class PolicyManagementController {
 		boolean isSaved = policyManagementService.savemistdeposite(misDepositPM);
 		if (isSaved) {
 			ApiResponse<MISDepositPM> response = ApiResponse.success(HttpStatus.CREATED,
-					"The MIS Deposite saved succesfully", misDepositPM);
+					"THE MIS DEPOSITE SAVED SUCCESFULLY", misDepositPM);
 			return new ResponseEntity<>(response, HttpStatus.CREATED);
 
 		} else {
 			ApiResponse<MISDepositPM> response = ApiResponse.error(HttpStatus.BAD_REQUEST,
-					"Failed to save MIS deposit.");
+					"FAILED TO SAVE MIS DEPOSIT.");
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 
@@ -336,11 +336,11 @@ public class PolicyManagementController {
 
 		if (deposits != null && !deposits.isEmpty()) {
 			ApiResponse<List<MISDepositPM>> response = ApiResponse.success(HttpStatus.OK,
-					"MIS deposits fetched successfully.", deposits);
+					"MIS DEPOSITS FETCHED SUCCESSFULLY.", deposits);
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} else {
 			ApiResponse<List<MISDepositPM>> response = ApiResponse.error(HttpStatus.NOT_FOUND,
-					"No MIS deposits found.");
+					"NO MIS DEPOSITS FOUND.");
 			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 		}
 	}
@@ -351,12 +351,12 @@ public class PolicyManagementController {
 		MISDepositPM deposit = policyManagementService.getMISDepositById(id);
 
 		if (deposit != null) {
-			ApiResponse<MISDepositPM> response = ApiResponse.success(HttpStatus.OK, "MIS deposit fetched successfully.",
+			ApiResponse<MISDepositPM> response = ApiResponse.success(HttpStatus.OK, "MIS DEPOSIT FETCHED SUCCESSFULLY.",
 					deposit);
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<MISDepositPM> response = ApiResponse.error(HttpStatus.NOT_FOUND,
-					"MIS deposit not found for ID: " + id);
+					"MIS DEPOSIT NOT FOUND FOR ID: " + id);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 	}
@@ -369,12 +369,12 @@ public class PolicyManagementController {
 		MISDepositPM updated = policyManagementService.updateMISDeposit(id, updatedData);
 
 		if (updated != null) {
-			ApiResponse<MISDepositPM> response = ApiResponse.success(HttpStatus.OK, "MIS deposit updated successfully.",
+			ApiResponse<MISDepositPM> response = ApiResponse.success(HttpStatus.OK, "MIS DEPOSIT UPDATED SUCCESSFULLY.",
 					updated);
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<MISDepositPM> response = ApiResponse.error(HttpStatus.NOT_FOUND,
-					"MIS deposit not found or failed to update.");
+					"MIS DEPOSIT NOT FOUND OR FAILED TO UPDATE.");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 	}
@@ -385,10 +385,10 @@ public class PolicyManagementController {
 		boolean deleted = policyManagementService.deleteMISDeposit(id);
 
 		if (deleted) {
-			ApiResponse<Void> response = ApiResponse.success(HttpStatus.OK, "MIS deposit deleted successfully.", null);
+			ApiResponse<Void> response = ApiResponse.success(HttpStatus.OK, "MIS DEPOSIT DELETED SUCCESSFULLY.", null);
 			return ResponseEntity.ok(response);
 		} else {
-			ApiResponse<Void> response = ApiResponse.error(HttpStatus.NOT_FOUND, "MIS deposit not found for ID: " + id);
+			ApiResponse<Void> response = ApiResponse.error(HttpStatus.NOT_FOUND, "MIS DEPOSIT NOT FOUND FOR ID: " + id);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 	}
@@ -428,11 +428,11 @@ public class PolicyManagementController {
 
 		if (invest != null && !invest.isEmpty()) {
 			ApiResponse<List<AddnewinvestmentPM>> response = ApiResponse.success(HttpStatus.OK,
-					"Investment Details fetched successfully.", invest);
+					"INVESTMENT DETAILS FETCHED SUCCESSFULLY.", invest);
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} else {
 			ApiResponse<List<AddnewinvestmentPM>> response = ApiResponse.error(HttpStatus.NOT_FOUND,
-					"No Details found.");
+					"NO DETAILS FOUND.");
 			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 		}
 	}
@@ -445,7 +445,7 @@ public class PolicyManagementController {
 		List<AddnewinvestmentPM> invest = policyManagementService.findByBranch(branchName);
 
 		ApiResponse<List<AddnewinvestmentPM>> response = new ApiResponse<>(HttpStatus.FOUND,
-				"investment fetched successfully.", invest);
+				"INVESTMENT FETCHED SUCCESSFULLY.", invest);
 		return ResponseEntity.ok(response);
 
 	}
@@ -456,10 +456,10 @@ public class PolicyManagementController {
 
 		DailyDepositPM response = policyManagementService.getDDTermAndInterestRate(planNameDD);
 		if (response != null) {
-			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "Daily Deposit plan details found", response));
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "DAILY DEPOSIT PLAN DETAILS FOUND", response));
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "Daily Deposit plan not found"));
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "DAILY DEPOSIT PLAN NOT FOUND"));
 		}
 	}
 
@@ -470,10 +470,10 @@ public class PolicyManagementController {
 		RecurringDepositPM response = policyManagementService.getRDTermAndInterestRate(planNameRD);
 		if (response != null) {
 			return ResponseEntity
-					.ok(ApiResponse.success(HttpStatus.OK, "Recurring Deposit plan details found", response));
+					.ok(ApiResponse.success(HttpStatus.OK, "RECURRING DEPOSIT PLAN DETAILS FOUND", response));
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "Recurring Deposit plan not found"));
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "RECURRING DEPOSIT PLAN NOT FOUND"));
 		}
 	}
 
@@ -483,10 +483,10 @@ public class PolicyManagementController {
 
 		FixedDepositPM response = policyManagementService.getFDTermAndInterestRate(planNameFD);
 		if (response != null) {
-			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "Fixed Deposit plan details found", response));
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "FIXED DEPOSIT PLAN DETAILS FOUND", response));
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "Fixed Deposit plan not found"));
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "FIXED DEPOSIT PLAN NOT FOUND"));
 		}
 	}
 
@@ -497,7 +497,7 @@ public class PolicyManagementController {
 		if (response != null) {
 			return ResponseEntity.ok(response);
 		} else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Data not found");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("DATA NOT FOUND");
 		}
 	}
 
@@ -506,12 +506,12 @@ public class PolicyManagementController {
 		try {
 			AddnewinvestmentPM savedInvestment = policyManagementService.saveInvestment(investment);
 			ApiResponse<AddnewinvestmentPM> response = new ApiResponse<>(HttpStatus.OK,
-					"✅ Investment saved successfully", savedInvestment);
+					"✅ INVESTMENT SAVED SUCCESSFULLY", savedInvestment);
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace(); // Debugging only
 			ApiResponse<AddnewinvestmentPM> errorResponse = new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR,
-					"❌ Failed to save investment", null);
+					"❌ FAILED TO SAVE INVESTMENT", null);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -527,7 +527,7 @@ public class PolicyManagementController {
 		List<AddnewinvestmentPM> rdPolicies = policyManagementService.getApprovedRDPolicies();
 
 		ApiResponse<List<AddnewinvestmentPM>> response = new ApiResponse<>(HttpStatus.OK,
-				"Approved RD policies fetched successfully", rdPolicies);
+				"APPROVED RD POLICIES FETCHED SUCCESSFULLY", rdPolicies);
 
 		return ResponseEntity.ok(response);
 	}
@@ -537,7 +537,7 @@ public class PolicyManagementController {
 		List<AddnewinvestmentPM> fdPolicies = policyManagementService.getApprovedFDPolicies();
 
 		ApiResponse<List<AddnewinvestmentPM>> response = new ApiResponse<>(HttpStatus.OK,
-				"Approved FD policies fetched successfully", fdPolicies);
+				"APPROVED FD POLICIES FETCHED SUCCESSFULLY", fdPolicies);
 
 		return ResponseEntity.ok(response);
 	}
@@ -547,7 +547,7 @@ public class PolicyManagementController {
 		List<AddnewinvestmentPM> ddPolicies = policyManagementService.getApprovedDDPolicies();
 
 		ApiResponse<List<AddnewinvestmentPM>> response = new ApiResponse<>(HttpStatus.OK,
-				"Approved DD policies fetched successfully", ddPolicies);
+				"APPROVED DD POLICIES FETCHED SUCCESSFULLY", ddPolicies);
 
 		return ResponseEntity.ok(response);
 	}
@@ -558,12 +558,12 @@ public class PolicyManagementController {
 		Optional<AddnewinvestmentPM> optionalPolicy = policyManagementService.findByPolicyCode(policyCode);
 
 		if (optionalPolicy.isPresent()) {
-			ApiResponse<AddnewinvestmentPM> response = new ApiResponse<>(HttpStatus.OK, "Policy found successfully",
+			ApiResponse<AddnewinvestmentPM> response = new ApiResponse<>(HttpStatus.OK, "POLICY FOUND SUCCESSFULLY",
 					optionalPolicy.get());
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<AddnewinvestmentPM> response = new ApiResponse<>(HttpStatus.NOT_FOUND,
-					"Policy not found for code: " + policyCode, null);
+					"POLICY NOT FOUND FOR CODE: " + policyCode, null);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 	}
@@ -573,7 +573,7 @@ public class PolicyManagementController {
 		List<AddnewinvestmentPM> allPolicies = policyManagementService.getAllPolicyManagementData();
 
 		ApiResponse<List<AddnewinvestmentPM>> response = new ApiResponse<>(HttpStatus.OK,
-				"All policy management data fetched successfully", allPolicies);
+				"ALL POLICY MANAGEMENT DATA FETCHED SUCCESSFULLY", allPolicies);
 
 		return ResponseEntity.ok(response);
 	}
@@ -623,7 +623,7 @@ public class PolicyManagementController {
 			Optional<AddnewinvestmentPM> optional = addinvestmentrepo.findByPolicyCode(policyCode);
 			if (!optional.isPresent()) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND)
-						.body(new ApiResponse<>(HttpStatus.NOT_FOUND, "Policy not found", null));
+						.body(new ApiResponse<>(HttpStatus.NOT_FOUND, "POLICY NOT FOUND", null));
 			}
 
 			AddnewinvestmentPM investment = optional.get();
@@ -635,7 +635,7 @@ public class PolicyManagementController {
 			// If policy fully paid already
 			if (paymentDue <= 0) {
 				return ResponseEntity
-						.ok(new ApiResponse<>(HttpStatus.OK, "No payment needed. Policy is already settled.", null));
+						.ok(new ApiResponse<>(HttpStatus.OK, "NO PAYMENT NEEDED. POLICY IS ALREADY SETTLED.", null));
 			}
 
 			// Today's deposit
@@ -686,18 +686,18 @@ public class PolicyManagementController {
 
 			// Final message based on updatedDue
 			if (updatedDue == 0) {
-				return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Policy is ready for maturity.", null));
+				return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "POLICY IS READY FOR MATURITY.", null));
 			} else if (updatedDue < 0) {
 				return ResponseEntity
-						.ok(new ApiResponse<>(HttpStatus.OK, "No payment needed. Policy is overpaid.", null));
+						.ok(new ApiResponse<>(HttpStatus.OK, "NO PAYMENT NEEDED. POLICY IS OVERPAID.", null));
 			} else {
 				return ResponseEntity.ok(
-						new ApiResponse<>(HttpStatus.OK, "Installment updated and renewal saved successfully", null));
+						new ApiResponse<>(HttpStatus.OK, "INSTALLMENT UPDATED AND RENEWAL SAVED SUCCESSFULLY", null));
 			}
 
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-					new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, "Update failed: " + e.getMessage(), null));
+					new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, "UPDATE FAILED: " + e.getMessage(), null));
 		}
 	}
 
@@ -707,11 +707,11 @@ public class PolicyManagementController {
 
 		if (approvedList.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(new ApiResponse<>(HttpStatus.NOT_FOUND, "No approved policies found", null));
+					.body(new ApiResponse<>(HttpStatus.NOT_FOUND, "NO APPROVED POLICIES FOUND", null));
 		}
 
 		return ResponseEntity
-				.ok(new ApiResponse<>(HttpStatus.OK, "Approved policies fetched successfully", approvedList));
+				.ok(new ApiResponse<>(HttpStatus.OK, "APPROVED POLICIES FETCHED SUCCESSFULLY", approvedList));
 
 		// return ResponseEntity.ok(response);
 
@@ -728,11 +728,11 @@ public class PolicyManagementController {
 
 		if (updated != null) {
 			ApiResponse<AddnewinvestmentPM> response = ApiResponse.success(HttpStatus.OK,
-					"MIS deposit updated successfully.", updated);
+					"MIS DEPOSIT UPDATED SUCCESSFULLY.", updated);
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<AddnewinvestmentPM> response = ApiResponse.error(HttpStatus.NOT_FOUND,
-					"MIS deposit not found or failed to update.");
+					"MIS DEPOSIT NOT FOUND OR FAILED TO UPDATE.");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 	}
@@ -742,21 +742,21 @@ public class PolicyManagementController {
 
 		List<FlexibleRenewal> fdData = policyManagementService.findBypolicyCode(policyCode);
 		if (!fdData.isEmpty()) {
-			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "FD data found", fdData));
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "FD DATA FOUND", fdData));
 		}
 
 		List<DailyPremiumRenewalPM> drdData = policyManagementService.findDailyData(policyCode);
 		if (!drdData.isEmpty()) {
-			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "DRD data found", drdData));
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "DRD DATA FOUND", drdData));
 		}
 
 		List<PolicyRenewal> renewalData = policyManagementService.findRenewalData(policyCode);
 		if (!renewalData.isEmpty()) {
-			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "RD/MIS data found", renewalData));
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "RD/MIS DATA FOUND", renewalData));
 		}
 
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
-				.body(ApiResponse.error(HttpStatus.NOT_FOUND, "No policy data found for policyCode: " + policyCode));
+				.body(ApiResponse.error(HttpStatus.NOT_FOUND, "NO POLICY DATA FOUND FOR POLICYCODE: " + policyCode));
 	}
 
 	// Ayush
@@ -808,7 +808,7 @@ public class PolicyManagementController {
 			e.printStackTrace();
 
 			ApiResponse<AddnewinvestmentPM> errorResponse = new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR,
-					"❌ Failed to save investment", null);
+					"❌ FAILED TO SAVE INVESTMENT", null);
 
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -822,11 +822,11 @@ public class PolicyManagementController {
 
 		if (!policyList.isEmpty()) {
 			ApiResponse<List<FullMaturity>> response = new ApiResponse<>(HttpStatus.OK,
-					"Payment Data found successfully", policyList);
+					"PAYMENT DATA FOUND SUCCESSFULLY", policyList);
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<List<FullMaturity>> response = new ApiResponse<>(HttpStatus.NOT_FOUND,
-					"Payment Data not found for code: " + policyCode, null);
+					"PAYMENT DATA NOT FOUND FOR CODE: " + policyCode, null);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 	}
@@ -835,11 +835,11 @@ public class PolicyManagementController {
 	public ResponseEntity<ApiResponse<String>> deletePolicyDataById(@RequestParam("id") Long id) {
 		boolean isDeleted = policyManagementService.deletePolicyDataById(id);
 		if (isDeleted) {
-			ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK, "Policy Data deleted successfully",
+			ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK, "POLICY DATA DELETED SUCCESSFULLY",
 					"success");
 			return ResponseEntity.ok(response);
 		} else {
-			ApiResponse<String> response = new ApiResponse<>(HttpStatus.NOT_FOUND, "Policy Data deletion failed",
+			ApiResponse<String> response = new ApiResponse<>(HttpStatus.NOT_FOUND, "POLICY DATA DELETION FAILED",
 					"failure");
 			return ResponseEntity.badRequest().body(response);
 		}
@@ -851,11 +851,11 @@ public class PolicyManagementController {
 
 		if (approvedList.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(new ApiResponse<>(HttpStatus.NOT_FOUND, "No approved policies found", null));
+					.body(new ApiResponse<>(HttpStatus.NOT_FOUND, "NO APPROVED POLICIES FOUND", null));
 		}
 
 		return ResponseEntity
-				.ok(new ApiResponse<>(HttpStatus.OK, "Approved RD policies fetched successfully", approvedList));
+				.ok(new ApiResponse<>(HttpStatus.OK, "APPROVED RD POLICIES FETCHED SUCCESSFULLY", approvedList));
 
 	}
 
@@ -865,7 +865,7 @@ public class PolicyManagementController {
 		List<FullMaturity> rdPolicies = policyManagementService.getApprovedRDPoliciesFromFullMaturity();
 
 		ApiResponse<List<FullMaturity>> response = new ApiResponse<>(HttpStatus.OK,
-				"RD policies fetched successfully From Full Maturity", rdPolicies);
+				"RD POLICIES FETCHED SUCCESSFULLY FROM FULL MATURITY", rdPolicies);
 
 		return ResponseEntity.ok(response);
 	}
@@ -885,7 +885,7 @@ public class PolicyManagementController {
 			e.printStackTrace();
 
 			ApiResponse<List<PolicyPayment>> errorResponse = new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR,
-					"❌ Failed to fetch payment history", null);
+					"❌ FAILED TO FETCH PAYMENT HISTORY", null);
 
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -918,7 +918,7 @@ public class PolicyManagementController {
 		return ResponseEntity.status(response.getStatus()).body(response);
 	}
 
-	//Ayush
+	// Ayush
 	@GetMapping("/getPolicyByPolicyCodeForFD")
 	public ResponseEntity<ApiResponse<AddnewinvestmentPM>> getPolicyByPolicyCodeForFD(@RequestParam String policyCode) {
 

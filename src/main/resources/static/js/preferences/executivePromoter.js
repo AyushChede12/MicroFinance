@@ -9,7 +9,7 @@ function photoUpload() {
 		};
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for photo.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR PHOTO.");
 	}
 }
 
@@ -25,7 +25,7 @@ function signatureUpload() {
 		};
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for signature.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR SIGNATURE.");
 	}
 }
 
@@ -39,7 +39,7 @@ function aadharUpload() {
 		};
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for aadhar.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR AADHAR.");
 	}
 }
 
@@ -53,7 +53,7 @@ function panUpload() {
 		};
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for pan.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR PAN.");
 	}
 }
 
@@ -67,7 +67,7 @@ function chequeUpload() {
 		};
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for cheque.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR CHEQUE.");
 	}
 }
 
@@ -99,10 +99,10 @@ $(document).ready(function() {
 			console.error("Error fetching states:", err);
 		}
 	});
-	
+
 	$('#state').on('change', function() {
 		const selectedStateId = $(this).find(':selected').data('id'); // ✅ Get ID from selected option
-		$('#district').empty().append('<option value="">Select District</option>');
+		$('#district').empty().append('<option value="">SELECT DISTRICT</option>');
 
 		if (selectedStateId) {
 			$.ajax({
@@ -180,71 +180,71 @@ $(document).ready(function() {
 			if (file) {
 				let fileSizeKB = file.size / 1024; // Convert bytes to KB
 				if (fileSizeKB < 10 || fileSizeKB > 500) {
-					$('#' + labelId).text(`* ${fieldName} size must be in KB`);
+					$('#' + labelId).text(`* ${fieldName.toUpperCase()} SIZE MUST BE IN KB`);
 					isValid = false;
 				}
 			}
 		}
 
 		// ===== Required field checks =====
-		if (type === '') { $('#chkexetype').text('* This field is required'); isValid = false; }
-		if (branchName === '') { $('#chkbranchname').text('* This field is required'); isValid = false; }
-		if (fullName === '') { $('#chkfullname').text('* This field is required'); isValid = false; }
-		if (dateOfBirth === '') { $('#chkdateofbirth').text('* This field is required'); isValid = false; }
-		if (promoterNo === '') { $('#chkpromoterno').text('* This field is required'); isValid = false; }
-		if (appointmentDate === '') { $('#chkappointmentdate').text('* This field is required'); isValid = false; }
-		if (relationName === '') { $('#chkrelationname').text('* This field is required'); isValid = false; }
-		if (relationToApplicant === '') { $('#chkrelationtoapplicant').text('* This field is required'); isValid = false; }
-		if (address === '') { $('#chkaddress').text('* This field is required'); isValid = false; }
-		if (district === '') { $('#chkdistrict').text('* This field is required'); isValid = false; }
-		if (state === '') { $('#chkstate').text('* This field is required'); isValid = false; }
+		if (type === '') { $('#chkexetype').text('* THIS FIELD IS REQUIRED'); isValid = false; }
+		if (branchName === '') { $('#chkbranchname').text('* THIS FIELD IS REQUIRED'); isValid = false; }
+		if (fullName === '') { $('#chkfullname').text('* THIS FIELD IS REQUIRED'); isValid = false; }
+		if (dateOfBirth === '') { $('#chkdateofbirth').text('* THIS FIELD IS REQUIRED'); isValid = false; }
+		if (promoterNo === '') { $('#chkpromoterno').text('* THIS FIELD IS REQUIRED'); isValid = false; }
+		if (appointmentDate === '') { $('#chkappointmentdate').text('* THIS FIELD IS REQUIRED'); isValid = false; }
+		if (relationName === '') { $('#chkrelationname').text('* THIS FIELD IS REQUIRED'); isValid = false; }
+		if (relationToApplicant === '') { $('#chkrelationtoapplicant').text('* THIS FIELD IS REQUIRED'); isValid = false; }
+		if (address === '') { $('#chkaddress').text('* THIS FIELD IS REQUIRED'); isValid = false; }
+		if (district === '') { $('#chkdistrict').text('* THIS FIELD IS REQUIRED'); isValid = false; }
+		if (state === '') { $('#chkstate').text('* THIS FIELD IS REQUIRED'); isValid = false; }
 
 		if (pinCode === '') {
-			$('#chkpincode').text('* This field is required');
+			$('#chkpincode').text('* THIS FIELD IS REQUIRED');
 			isValid = false;
 		} else if (!pinPattern.test(pinCode)) {
-			alert("Please enter a valid 6-digit PIN code (first digit cannot be 0).");
+			alert("PLEASE ENTER A VALID 6-DIGIT PIN CODE (FIRST DIGIT CANNOT BE 0).");
 			isValid = false;
 		}
 
 		if (aadharNo === '') {
-			$('#chkaadharno').text('* This field is required');
+			$('#chkaadharno').text('* THIS FIELD IS REQUIRED');
 			isValid = false;
 		} else if (!aadharPattern.test(aadharNo)) {
-			alert("Please enter a valid 12-digit Aadhar number.");
+			alert("PLEASE ENTER A VALID 12-DIGIT AADHAR NUMBER.");
 			isValid = false;
 		}
 
 		if (panNo === '') {
-			$('#chkpanno').text('* This field is required');
+			$('#chkpanno').text('* THIS FIELD IS REQUIRED');
 			isValid = false;
 		} else if (!panPattern.test(panNo)) {
-			alert("Please enter a valid PAN card number (e.g., ABCDE1234F).");
+			alert("PLEASE ENTER A VALID PAN CARD NUMBER (E.G., ABCDE1234F).");
 			isValid = false;
 		}
 
 		if (contactNo === '') {
-			$('#chkcontactno').text('* This field is required');
+			$('#chkcontactno').text('* THIS FIELD IS REQUIRED');
 			isValid = false;
 		} else if (!contactPattern.test(contactNo)) {
-			alert("Please enter a valid 10-digit mobile number.");
+			alert("PLEASE ENTER A VALID 10-DIGIT MOBILE NUMBER.");
 			isValid = false;
 		}
 
 		if (emailId === '') {
-			$('#chkemailid').text('* This field is required');
+			$('#chkemailid').text('* THIS FIELD IS REQUIRED');
 			isValid = false;
 		} else if (!emailPattern.test(emailId)) {
-			alert('Please enter a valid email address (e.g., example@domain.com)');
+			alert('PLEASE ENTER A VALID EMAIL ADDRESS (E.G., EXAMPLE@DOMAIN.COM)');
 			isValid = false;
 		}
 
 		// ===== Image required checks =====
-		if (!photo) { $('#chkphoto').text('* Photo is required'); isValid = false; }
-		if (!signature) { $('#chksignature').text('* Signature is required'); isValid = false; }
-		if (!aadharCard) { $('#chkaadhar').text('* Aadhar Card is required'); isValid = false; }
-		if (!panCard) { $('#chkpan').text('* PAN Card is required'); isValid = false; }
-		if (!cheque) { $('#chkcheque').text('* Cheque is required'); isValid = false; }
+		if (!photo) { $('#chkphoto').text('* PHOTO IS REQUIRED'); isValid = false; }
+		if (!signature) { $('#chksignature').text('* SIGNATURE IS REQUIRED'); isValid = false; }
+		if (!aadharCard) { $('#chkaadhar').text('* AADHAR CARD IS REQUIRED'); isValid = false; }
+		if (!panCard) { $('#chkpan').text('* PAN CARD IS REQUIRED'); isValid = false; }
+		if (!cheque) { $('#chkcheque').text('* CHEQUE IS REQUIRED'); isValid = false; }
 
 		// ===== Image size checks (10KB–500KB) =====
 		validateImageSize(photo, 'chkphoto', 'Photo');
@@ -254,15 +254,15 @@ $(document).ready(function() {
 		validateImageSize(cheque, 'chkcheque', 'Cheque');
 
 		// ===== Bank details validation =====
-		if (bankName === '') { $('#chkbankname').text('* This field is required'); isValid = false; }
-		if (ifscCode === '') { $('#chkifsccode').text('* This field is required'); isValid = false; }
-		if (micrCode === '') { $('#chkmicrcode').text('* This field is required'); isValid = false; }
+		if (bankName === '') { $('#chkbankname').text('* THIS FIELD IS REQUIRED'); isValid = false; }
+		if (ifscCode === '') { $('#chkifsccode').text('* THIS FIELD IS REQUIRED'); isValid = false; }
+		if (micrCode === '') { $('#chkmicrcode').text('* THIS FIELD IS REQUIRED'); isValid = false; }
 
 		if (accountNo === '') {
-			$('#chkaccountno').text('* This field is required');
+			$('#chkaccountno').text('* THIS FIELD IS REQUIRED');
 			isValid = false;
 		} else if (!accountNoPattern.test(accountNo)) {
-			$('#chkaccountno').text('* Account number must contain only digits');
+			$('#chkaccountno').text('* ACCOUNT NUMBER MUST CONTAIN ONLY DIGITS');
 			isValid = false;
 		}
 
@@ -311,15 +311,15 @@ $(document).ready(function() {
 			contentType: false,
 			success: function(response) {
 				if (response.status === 'OK') {
-					alert("Executive Founder Saved Successfully");
+					alert("EXECUTIVE FOUNDER SAVED SUCCESSFULLY");
 					location.reload();
 				} else {
-					alert("Failed to save executive/founder data.");
+					alert("FAILED TO SAVE EXECUTIVE/FOUNDER DATA.");
 				}
 			},
 			error: function(xhr) {
 				console.error("Error: ", xhr.responseText);
-				alert('An error occurred while saving the data. Please try again.');
+				alert('AN ERROR OCCURRED WHILE SAVING THE DATA. PLEASE TRY AGAIN.');
 			}
 		});
 	});
@@ -346,12 +346,12 @@ $(document).ready(function() {
 							<td>${item.emailId || ''}</td>
 							<td>${item.contactNo || ''}</td>
 							<td>
-								<button class="iconbutton" onclick="viewData(${item.id})" title="View">
+								<button class="iconbutton" onclick="viewData(${item.id})" title="VIEW">
 									<i class="fa-solid fa-pen-to-square text-primary"></i>
 								</button>
 							</td>
 							<td>
-								<button class="iconbutton" onclick="deleteData(${item.id})" title="Delete">
+								<button class="iconbutton" onclick="deleteData(${item.id})" title="DELETE">
 									<i class="fa-solid fa-trash text-danger"></i>
 								</button>
 							</td>
@@ -364,7 +364,7 @@ $(document).ready(function() {
 		},
 		error: function(xhr, status, error) {
 			console.error("❌ Error fetching data:", error);
-			alert("Failed to load executive founder data.");
+			alert("FAILED TO LOAD EXECUTIVE FOUNDER DATA.");
 		}
 	});*/
 
@@ -373,21 +373,21 @@ $(document).ready(function() {
 
 function deleteData(id) {
 
-	if (confirm("Are you sure you want to delete this Executive Data?")) {
+	if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS EXECUTIVE DATA?")) {
 		$.ajax({
 			url: "api/preference/deleteExecutiveFounder",
 			type: "POST",
 			data: { id: id },
 			success: function(response) {
 				if (response.status == "OK") {
-					alert("Executive Data Deleted Successfully");
+					alert("EXECUTIVE DATA DELETED SUCCESSFULLY");
 					location.reload();
 				} else {
-					alert("Delete failed: " + response.message);
+					alert("DELETE FAILED: " + response.message);
 				}
 			},
 			error: function(xhr, status, error) {
-				alert("Failed to delete Executive.");
+				alert("FAILED TO DELETE EXECUTIVE.");
 				console.error("Error:", error);
 			}
 		});
@@ -512,11 +512,11 @@ function viewData(id) {
 
 
 			} else {
-				alert("Executive founder not found: " + response.message);
+				alert("EXECUTIVE FOUNDER NOT FOUND: " + response.message);
 			}
 		},
 		error: function(xhr) {
-			alert("Request failed: " + xhr.responseText);
+			alert("REQUEST FAILED: " + xhr.responseText);
 		}
 	});
 }
@@ -586,125 +586,125 @@ $('#updateBtn').click(function(event) {
 		if (file) {
 			let fileSizeKB = file.size / 1024; // Convert bytes to KB
 			if (fileSizeKB < 10 || fileSizeKB > 500) {
-				$('#' + labelId).text(`* ${fieldName} size must be in KB`);
+				$('#' + labelId).text(`* ${fieldName.toUpperCase()} SIZE MUST BE IN KB`);
 				isValid = false;
 			}
 		}
 	}
 
 	if (type === '') {
-		$('#chkexetype').text('* This field is required');
+		$('#chkexetype').text('* THIS FIELD IS REQUIRED');
 		$('#type').focus();
 		isValid = false;
 	}
 
 	if (branchName === '') {
-		$('#chkbranchname').text('* This field is required');
+		$('#chkbranchname').text('* THIS FIELD IS REQUIRED');
 		$('#branchName').focus();
 		isValid = false;
 	}
 
 	if (fullName === '') {
-		$('#chkfullname').text('* This field is required');
+		$('#chkfullname').text('* THIS FIELD IS REQUIRED');
 		$('#fullName').focus();
 		isValid = false;
 	}
 
 	if (fullName === '') {
-		$('#chkopeningdate').text('* This field is required');
+		$('#chkopeningdate').text('* THIS FIELD IS REQUIRED');
 		$('#fullName').focus();
 		isValid = false;
 	}
 
 	if (dateOfBirth === '') {
-		$('#chkdateofbirth').text('* This field is required');
+		$('#chkdateofbirth').text('* THIS FIELD IS REQUIRED');
 		$('#dateOfBirth').focus();
 		isValid = false;
 	}
 
 	if (promoterNo === '') {
-		$('#chkpromoterno').text('* This field is required');
+		$('#chkpromoterno').text('* THIS FIELD IS REQUIRED');
 		$('#promoterNo').focus();
 		isValid = false;
 	}
 
 	if (appointmentDate === '') {
-		$('#chkappointmentdate').text('* This field is required');
+		$('#chkappointmentdate').text('* THIS FIELD IS REQUIRED');
 		$('#appointmentDate').focus();
 		isValid = false;
 	}
 	if (relationName === '') {
-		$('#chkrelationname').text('* This field is required');
+		$('#chkrelationname').text('* THIS FIELD IS REQUIRED');
 		$('#relationName').focus();
 		isValid = false;
 	}
 	if (relationToApplicant === '') {
-		$('#chkrelationtoapplicant').text('* This field is required');
+		$('#chkrelationtoapplicant').text('* THIS FIELD IS REQUIRED');
 		$('#relationToApplicant').focus();
 		isValid = false;
 	}
 	if (address === '') {
-		$('#chkaddress').text('* This field is required');
+		$('#chkaddress').text('* THIS FIELD IS REQUIRED');
 		$('#address').focus();
 		isValid = false;
 	}
 	if (district === '') {
-		$('#chkdistrict').text('* This field is required');
+		$('#chkdistrict').text('* THIS FIELD IS REQUIRED');
 		$('#district').focus();
 		isValid = false;
 	}
 	if (state === '') {
-		$('#chkstate').text('* This field is required');
+		$('#chkstate').text('* THIS FIELD IS REQUIRED');
 		$('#state').focus();
 		isValid = false;
 	}
 	if (pinCode === '') {
-		$('#chkpincode').text('* This field is required');
+		$('#chkpincode').text('* THIS FIELD IS REQUIRED');
 		$('#pinCode').focus();
 		isValid = false;
 	}
 	else if (!pinPattern.test(pinCode)) {
-		alert("Please enter a valid 6-digit PIN code (first digit cannot be 0).");
+		alert("PLEASE ENTER A VALID 6-DIGIT PIN CODE (FIRST DIGIT CANNOT BE 0).");
 		pinCode.focus();
 		isValid = false;
 	}
 	if (aadharNo === '') {
-		$('#chkaadharno').text('* This field is required');
+		$('#chkaadharno').text('* THIS FIELD IS REQUIRED');
 		$('#aadharNo').focus();
 		isValid = false;
 	}
 	else if (!aadharPattern.test(aadharNo)) {
-		alert("Please enter a valid 12-digit Aadhar number.");
+		alert("PLEASE ENTER A VALID 12-DIGIT AADHAR NUMBER.");
 		$('#aadharNo').focus();
 		isValid = false;
 	}
 	if (panNo === '') {
-		$('#chkpanno').text('* This field is required');
+		$('#chkpanno').text('* THIS FIELD IS REQUIRED');
 		$('#panNo').focus();
 		isValid = false;
 	}
 	else if (!panPattern.test(panNo)) {
-		alert("Please enter a valid PAN card number (e.g., ABCDE1234F).");
+		alert("PLEASE ENTER A VALID PAN CARD NUMBER (E.G., ABCDE1234F).");
 		panNo.focus();
 		isValid = false;
 	}
 	if (contactNo === '') {
-		$('#chkcontactno').text('* This field is required');
+		$('#chkcontactno').text('* THIS FIELD IS REQUIRED');
 		$('#contactNo').focus();
 		isValid = false;
 	}
 	else if (!contactPattern.test(contactNo)) {
-		alert("Please enter a valid 10-digit mobile number.");
+		alert("PLEASE ENTER A VALID 10-DIGIT MOBILE NUMBER.");
 		contactNo.focus();
 		isValid = false;
 	}
 	if (emailId === '') {
-		$('#chkemailid').text('* This field is required');
+		$('#chkemailid').text('* THIS FIELD IS REQUIRED');
 		$('#emailId').focus();
 		isValid = false;
 	}
 	else if (!emailPattern.test(emailId)) {
-		alert('Please enter a valid email address (e.g., example@domain.com)');
+		alert('PLEASE ENTER A VALID EMAIL ADDRESS (E.G., EXAMPLE@DOMAIN.COM)');
 		$('#emailId').focus();
 		isValid = false;
 	}
@@ -716,25 +716,25 @@ $('#updateBtn').click(function(event) {
 	const cheque = $('#cheque')[0].files[0];
 
 	if (bankName === '') {
-		$('#chkbankname').text('* This field is required');
+		$('#chkbankname').text('* THIS FIELD IS REQUIRED');
 		$('#bankName').focus();
 		isValid = false;
 	}
 	if (ifscCode === '') {
-		$('#chkifsccode').text('* This field is required');
+		$('#chkifsccode').text('* THIS FIELD IS REQUIRED');
 		$('#ifscCode').focus();
 		isValid = false;
 	}
 	if (micrCode === '') {
-		$('#chkmicrcode').text('* This field is required');
+		$('#chkmicrcode').text('* THIS FIELD IS REQUIRED');
 		$('#micrCode').focus();
 		isValid = false;
 	}
 	if (accountNo === '') {
-		$('#chkaccountno').text('* This field is required');
+		$('#chkaccountno').text('* THIS FIELD IS REQUIRED');
 		isValid = false;
 	} else if (!accountNoPattern.test(accountNo)) {
-		$('#chkaccountno').text('* Account number must contain only digits');
+		$('#chkaccountno').text('* ACCOUNT NUMBER MUST CONTAIN ONLY DIGITS');
 		$('#accountNo').focus();
 		isValid = false;
 	}
@@ -814,14 +814,14 @@ $('#updateBtn').click(function(event) {
 		contentType: false,
 		success: function(response) {
 			if (response.status == "OK") {
-				alert("Executive Founder Saved Successfully");
+				alert("EXECUTIVE FOUNDER SAVED SUCCESSFULLY");
 				location.reload();
 			} else {
 				alert(response.message);
 			}
 		},
 		error: function(xhr) {
-			alert("Error: " + xhr.responseText);
+			alert("ERROR: " + xhr.responseText);
 		}
 	});
 });
@@ -892,11 +892,11 @@ function loadExecutiveData() {
 				renderTable(currentPageExecutive);
 				togglePageNavigationExecutive();
 			} else {
-				alert("Failed to fetch data: " + response.message);
+				alert("FAILED TO FETCH DATA: " + response.message);
 			}
 		},
 		error: function() {
-			alert("Error while calling the API.");
+			alert("ERROR WHILE CALLING THE API.");
 		}
 	});
 }
@@ -920,12 +920,12 @@ function renderTable(page) {
                 <td>${(person.emailId || '').toUpperCase()}</td>
                 <td>${(person.contactNo || '').toUpperCase()}</td>
                 <td>
-                  <button class="iconbutton" onclick="viewData(${person.id})" title="View">
+                  <button class="iconbutton" onclick="viewData(${person.id})" title="VIEW">
                     <i class="fa-solid fa-pen-to-square text-primary"></i>
                   </button>
                 </td>
                 <td>
-                  <button class="iconbutton" onclick="deleteData(${person.id})" title="Delete">
+                  <button class="iconbutton" onclick="deleteData(${person.id})" title="DELETE">
                     <i class="fa-solid fa-trash text-danger"></i>
                   </button>
                 </td>
@@ -934,7 +934,7 @@ function renderTable(page) {
 	}
 
 	// Update page info
-	$("#pageInfo").text(`Page ${currentPageExecutive} of ${Math.ceil(totalDataExecutive.length / pageSizeExecutive)}`);
+	$("#pageInfo").text(`PAGE ${currentPageExecutive} OF ${Math.ceil(totalDataExecutive.length / pageSizeExecutive)}`);
 }
 
 // Button state toggling

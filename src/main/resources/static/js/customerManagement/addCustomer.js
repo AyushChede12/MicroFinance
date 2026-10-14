@@ -3,7 +3,6 @@ $(document).ready(function() {
 	$("#guardianAccountNo").hide();
 	loadCustomerTable();
 
-
 	// Hide Aadhar field initially
 	$("#aadharNo").closest(".col-lg-3").hide();
 
@@ -19,14 +18,10 @@ $(document).ready(function() {
 		}
 	});
 
-
-
 	$('#saveBtn').click(function(event) {
-
 		event.preventDefault();
 
 		var authenticate = $("#authenticateFor").val();
-
 		var minor = $("#minor").val();
 
 		$("[id^='chk']").text('');
@@ -34,13 +29,10 @@ $(document).ready(function() {
 		let isValid = true;
 
 		function validateText(fieldId, chkId, message) {
-
 			const value = $('#' + fieldId).val()?.trim();
 
 			if (!value) {
-
-				$('#' + chkId).text(message);
-
+				$('#' + chkId).text(message.toUpperCase());
 				isValid = false;
 			}
 
@@ -48,111 +40,100 @@ $(document).ready(function() {
 		}
 
 		function validateFile(fieldId, chkId, message, allowedTypes = [], maxSizeMB = 2) {
-
 			const input = $('#' + fieldId)[0];
 
 			// File is optional — only validate if a file was actually selected
 			if (!input || input.files.length === 0) {
-
 				return null;
 			}
 
 			const file = input.files[0];
 
 			if (allowedTypes.length && !allowedTypes.includes(file.type)) {
-
-				$('#' + chkId).text('Only JPG / PNG allowed');
-
+				$('#' + chkId).text('ONLY JPG / PNG ALLOWED');
 				isValid = false;
-
 				return null;
 			}
 
 			if (file.size > maxSizeMB * 1024 * 1024) {
-
-				$('#' + chkId).text(`File size must be < ${maxSizeMB}MB`);
-
+				$('#' + chkId).text(`FILE SIZE MUST BE < ${maxSizeMB}MB`);
 				isValid = false;
-
 				return null;
 			}
 
 			return file;
 		}
 
-
 		// ----------- VALIDATION ------------
 
 		validateText(
 			'authenticateFor',
 			'chkauthenticatefor',
-			'Please select authenticate for'
+			'PLEASE SELECT AUTHENTICATE FOR'
 		);
 
 		if (authenticate == 'aadhar') {
-
 			validateText(
 				'aadharNo',
 				'chkaadharno',
-				'Please enter Aadhar number'
+				'PLEASE ENTER AADHAR NUMBER'
 			);
 		}
 
 		validateText(
 			'signupDate',
 			'chksignupdate',
-			'Please select signup date'
+			'PLEASE SELECT SIGNUP DATE'
 		);
 
 		validateText(
 			'firstName',
 			'chkfirstname',
-			'Please enter first name'
+			'PLEASE ENTER FIRST NAME'
 		);
 
 		validateText(
 			'middleName',
 			'chkmiddlename',
-			'Please enter middle name'
+			'PLEASE ENTER MIDDLE NAME'
 		);
 
 		validateText(
 			'lastName',
 			'chklastname',
-			'Please enter last name'
+			'PLEASE ENTER LAST NAME'
 		);
 
 		validateText(
 			'dob',
 			'chkdob',
-			'Please select DOB'
+			'PLEASE SELECT DOB'
 		);
 
 		if (minor == 'Yes') {
-
 			validateText(
 				'guardianName',
 				'chkguardianname',
-				'Enter guardian name'
+				'ENTER GUARDIAN NAME'
 			);
 
 			validateText(
 				'guardianAccNo',
 				'chkguardianaccno',
-				'Enter guardian account no'
+				'ENTER GUARDIAN ACCOUNT NO'
 			);
 		}
 
 		validateText(
 			'relationToApplicant',
 			'chkrelationtoapplicant',
-			'Select relation'
+			'SELECT RELATION'
 		);
 
 		validateText(
 			'customerGender',
 			'chkgender',
-			'Select gender'
+			'SELECT GENDER'
 		);
 
 		// customerAge is auto-calculated from DOB (readonly field) - skip strict validation
@@ -161,46 +142,45 @@ $(document).ready(function() {
 		validateText(
 			'customerAddress',
 			'chkaddress',
-			'Enter address'
+			'ENTER ADDRESS'
 		);
 
 		validateText(
 			'state',
 			'chkstate',
-			'Select state'
+			'SELECT STATE'
 		);
 
 		validateText(
 			'district',
 			'chkdistrict',
-			'Select district'
+			'SELECT DISTRICT'
 		);
 
 		validateText(
 			'pinCode',
 			'chkpincode',
-			'Enter pincode'
+			'ENTER PINCODE'
 		);
 
 		validateText(
 			'branchName',
 			'chkbranch',
-			'Select branch'
+			'SELECT BRANCH'
 		);
 
 		validateText(
 			'contactNo',
 			'chkcontactno',
-			'Enter contact no'
+			'ENTER CONTACT NO'
 		);
-
 
 		// ---------- FILE VALIDATION ----------
 
 		const customerPhoto = validateFile(
 			'customerPhoto',
 			'chkaadharimage',
-			'Select aadhar image',
+			'SELECT AADHAR IMAGE',
 			['image/jpeg', 'image/png'],
 			2
 		);
@@ -208,7 +188,7 @@ $(document).ready(function() {
 		const customerSignature = validateFile(
 			'customerSignature',
 			'chkpanimage',
-			'Select signature',
+			'SELECT SIGNATURE',
 			['image/jpeg', 'image/png'],
 			1
 		);
@@ -216,7 +196,7 @@ $(document).ready(function() {
 		const customerVoter = validateFile(
 			'customerVoter',
 			'chkvoterimage',
-			'Select voter image',
+			'SELECT VOTER IMAGE',
 			['image/jpeg', 'image/png'],
 			2
 		);
@@ -224,7 +204,7 @@ $(document).ready(function() {
 		const customerDriving = validateFile(
 			'customerDriving',
 			'chklicenseimage',
-			'Select license image',
+			'SELECT LICENSE IMAGE',
 			['image/jpeg', 'image/png'],
 			2
 		);
@@ -232,7 +212,7 @@ $(document).ready(function() {
 		const nomineAadhar = validateFile(
 			'nomineAadhar',
 			'chknomineeaadhar',
-			'Select nominee aadhar',
+			'SELECT NOMINEE AADHAR',
 			['image/jpeg', 'image/png'],
 			2
 		);
@@ -240,7 +220,7 @@ $(document).ready(function() {
 		const nomineSignature = validateFile(
 			'nomineSignature',
 			'chknomineesignature',
-			'Select nominee signature',
+			'SELECT NOMINEE SIGNATURE',
 			['image/jpeg', 'image/png'],
 			2
 		);
@@ -248,18 +228,16 @@ $(document).ready(function() {
 		const newlyAddedImage = validateFile(
 			'newlyAddedImage',
 			'chknewlyaddedimage',
-			'Select newly added image',
+			'SELECT NEWLY ADDED IMAGE',
 			['image/jpeg', 'image/png'],
 			2
 		);
 
 		if (!isValid) return false;
 
-
 		// ----------- FORM DATA -----------
 
 		var formData = new FormData();
-
 
 		// Customer Basic
 
@@ -420,12 +398,10 @@ $(document).ready(function() {
 			$('#academicBackground').val()
 		);
 
-
 		// Referral
 
 		//		formData.append("referralCode", $('#referralCode').val());
 		//		formData.append("referralName", $('#referralName').val());
-
 
 		// Share
 
@@ -434,7 +410,6 @@ $(document).ready(function() {
 		//		formData.append("shareValue", $('#shareValue').val());
 		//		formData.append("lightBill", $('#lightBill').val());
 		//		formData.append("taxBill", $('#taxBill').val());
-
 
 		// Nominee
 
@@ -494,7 +469,6 @@ $(document).ready(function() {
 			$('#buildingFund').val()
 		);
 
-
 		formData.append(
 			"adminCharge",
 			$('#adminCharge').val()
@@ -542,7 +516,6 @@ $(document).ready(function() {
 		//		formData.append("fDate", $('#fDate').val());
 		//		formData.append("tDate", $('#tDate').val());
 
-
 		// Toggles
 
 		formData.append(
@@ -564,7 +537,6 @@ $(document).ready(function() {
 			"smsSend",
 			$('#toggle-sms-status').is(":checked") ? "1" : "0"
 		);
-
 
 		// Files
 
@@ -589,31 +561,21 @@ $(document).ready(function() {
 		if (newlyAddedImage)
 			formData.append("newlyAddedImage", newlyAddedImage);
 
-
 		// -------- AJAX --------
 
 		$.ajax({
-
 			type: 'POST',
-
 			url: 'api/customermanagement/saveOrUpdateCustomer',
-
 			data: formData,
-
 			processData: false,
-
 			contentType: false,
 
 			success: function(response) {
-
 				if (response.data) {
-
 					const customerId = response.data.id;
 
 					const saveMsg =
-						response.message ||
-						"Customer saved successfully!";
-
+						(response.message || "CUSTOMER SAVED SUCCESSFULLY!").toUpperCase();
 
 					// =====================================================
 					// ACCOUNT TRANSACTION
@@ -627,7 +589,6 @@ $(document).ready(function() {
 							.toString()
 							.trim()
 							.toUpperCase();
-
 
 					/*
 					 * Read Customer Fees
@@ -647,7 +608,6 @@ $(document).ready(function() {
 					const entryFee =
 						parseFloat($('#entryFee').val()) || 0;
 
-
 					/*
 					 * Calculate Total Customer Registration Fees
 					 */
@@ -657,23 +617,26 @@ $(document).ready(function() {
 						adminCharge +
 						documentCharge +
 						entryFee;
+
 					var firstName = $('#firstName').val();
 					var middleName = $('#middleName').val();
 					var lastName = $('#lastName').val();
+
 					const customerName = [
 						firstName,
 						middleName,
 						lastName
 					].filter(Boolean).join(" ");
+
 					var transactionType = "";
+
 					if ("CASH".equalsIgnoreCase(paymentBy)) {
-					    transactionType = "CUSTOMER_FEES_CASH";
+						transactionType = "CUSTOMER_FEES_CASH";
 					} else {
-					    transactionType = "TRANSFER";
+						transactionType = "TRANSFER";
 					}
 
 					const accountTransactionData = {
-
 						branchName:
 							$('#branchName').val(),
 
@@ -693,7 +656,7 @@ $(document).ready(function() {
 								.split('T')[0],
 
 						narration:
-							"Customer Registration Fees - " +
+							"CUSTOMER REGISTRATION FEES - " +
 							(
 								$('#memberCode').val() ||
 								customerId
@@ -725,37 +688,23 @@ $(document).ready(function() {
 							"ADMIN"
 					};
 
-
 					// -------------------------------------------------
 					// SAVE ACCOUNT TRANSACTION
 					// -------------------------------------------------
 
 					$.ajax({
-
 						type: 'POST',
+						url: 'accountManagement/saveAccountTransaction',
+						contentType: 'application/json',
+						data: JSON.stringify(accountTransactionData),
 
-						url:
-							'accountManagement/saveAccountTransaction',
-
-						contentType:
-							'application/json',
-
-						data:
-							JSON.stringify(
-								accountTransactionData
-							),
-
-						success: function(
-
-							transactionResponse
-						) {
-							alert("success");
+						success: function(transactionResponse) {
+							alert("SUCCESS");
 
 							console.log(
 								"AccountTransaction saved successfully:",
 								transactionResponse
 							);
-
 
 							/*
 							 * Existing Customer flow
@@ -768,12 +717,10 @@ $(document).ready(function() {
 						},
 
 						error: function(xhr) {
-
 							console.error(
 								"AccountTransaction Error:",
 								xhr
 							);
-
 
 							/*
 							 * Customer is already saved.
@@ -782,7 +729,7 @@ $(document).ready(function() {
 							 * Continue existing flow.
 							 */
 							alert(
-								"Customer saved successfully, but cash transaction could not be saved."
+								"CUSTOMER SAVED SUCCESSFULLY, BUT CASH TRANSACTION COULD NOT BE SAVED."
 							);
 
 							uploadExtraImages(
@@ -792,9 +739,7 @@ $(document).ready(function() {
 						}
 					});
 
-
 				} else {
-
 					/*
 					 * No AccountTransaction for:
 					 *
@@ -814,16 +759,13 @@ $(document).ready(function() {
 						saveMsg
 					);
 				}
-
 			},
 
 			error: function(xhr) {
-
 				console.error(xhr);
 
 				alert(
-					xhr.responseJSON?.message ||
-					"Something went wrong"
+					(xhr.responseJSON?.message || "SOMETHING WENT WRONG").toUpperCase()
 				);
 			}
 		});
@@ -894,16 +836,16 @@ $(document).ready(function() {
 			url: "api/customermanagement/saveOrUpdateCustomer",
 			type: "POST",
 			data: formData,
-			processData: false,  // Don't let jQuery convert FormData
-			contentType: false,  // Let browser set correct Content-Type
+			processData: false,
+			contentType: false,
 			success: function(response) {
 				console.log("✅ Success:", response);
-				alert(response.message || "Customer saved successfully!");
-				$('#customerForm')[0].reset(); // optional: clear form
+				alert((response.message || "CUSTOMER SAVED SUCCESSFULLY!").toUpperCase());
+				$('#customerForm')[0].reset();
 			},
 			error: function(xhr) {
 				console.error("❌ Error:", xhr.responseText);
-				alert("❌ Something went wrong while saving data!");
+				alert("❌ SOMETHING WENT WRONG WHILE SAVING DATA!");
 			}
 		});
 	});*/
@@ -911,6 +853,7 @@ $(document).ready(function() {
 	// =================================================
 	// CUSTOMER IMAGE UPLOAD EVENT LISTENERS & FUNCTIONS
 	// =================================================
+
 	$("#addFieldBtn").click(function(e) {
 		e.preventDefault();
 		createNewField();
@@ -929,7 +872,10 @@ $(document).ready(function() {
 		const val = $(this).val().trim();
 		const box = $(this).closest(".textUploadSet").find(".uploadContainer");
 
-		if (val.length === 0) { box.html(""); return; }
+		if (val.length === 0) {
+			box.html("");
+			return;
+		}
 
 		const uniqueId = "file-" + Date.now();
 
@@ -952,14 +898,15 @@ $(document).ready(function() {
 
 	$("#uploadAllBtn").click(function(e) {
 		e.preventDefault();
-		alert("Please click the SAVE button at the bottom of the page to save the customer details and automatically upload all added images.");
+		alert("PLEASE CLICK THE SAVE BUTTON AT THE BOTTOM OF THE PAGE TO SAVE THE CUSTOMER DETAILS AND AUTOMATICALLY UPLOAD ALL ADDED IMAGES.");
 	});
 
 	function uploadExtraImages(customerId, saveMsg) {
 		let uploadFields = $(".uploadField");
 		let uploadCount = uploadFields.length;
+
 		if (uploadCount === 0) {
-			alert(saveMsg || "Customer saved successfully!");
+			alert((saveMsg || "CUSTOMER SAVED SUCCESSFULLY!").toUpperCase());
 			location.reload();
 			return;
 		}
@@ -974,10 +921,16 @@ $(document).ready(function() {
 
 			if (!file) {
 				completed++;
+
 				if (completed === uploadCount) {
-					alert(hasFailed ? "Some extra images failed to upload." : (saveMsg || "Customer and all images saved successfully!"));
+					alert(
+						hasFailed
+							? "SOME EXTRA IMAGES FAILED TO UPLOAD."
+							: (saveMsg || "CUSTOMER AND ALL IMAGES SAVED SUCCESSFULLY!").toUpperCase()
+					);
 					location.reload();
 				}
+
 				return;
 			}
 
@@ -991,18 +944,26 @@ $(document).ready(function() {
 				data: fd,
 				processData: false,
 				contentType: false,
+
 				success: function() {
 					completed++;
+
 					if (completed === uploadCount) {
-						alert(hasFailed ? "Some extra images failed to upload." : (saveMsg || "Customer and all images saved successfully!"));
+						alert(
+							hasFailed
+								? "SOME EXTRA IMAGES FAILED TO UPLOAD."
+								: (saveMsg || "CUSTOMER AND ALL IMAGES SAVED SUCCESSFULLY!").toUpperCase()
+						);
 						location.reload();
 					}
 				},
+
 				error: function() {
 					hasFailed = true;
 					completed++;
+
 					if (completed === uploadCount) {
-						alert("Some extra images failed to upload.");
+						alert("SOME EXTRA IMAGES FAILED TO UPLOAD.");
 						location.reload();
 					}
 				}
@@ -1014,20 +975,23 @@ $(document).ready(function() {
 
 function photopreview() {
 	const file = document.getElementById("customerPhoto").files[0];
+
 	if (file && file.type.startsWith("image/")) {
 		const reader = new FileReader();
+
 		reader.onload = function(e) {
 			const previewimg = document.getElementById("bike1imagePreview");
 			document.getElementById("bike1imagePreview").src = e.target.result;
 			previewimg.style.width = "100%";
 			previewimg.style.height = "100%";
-			previewimg.style.objectFit = "cover"
-			previewimg.style.overflow = "hidden"
-			previewimg.style.borderRadius = "20px"
+			previewimg.style.objectFit = "cover";
+			previewimg.style.overflow = "hidden";
+			previewimg.style.borderRadius = "20px";
 		};
+
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for photo.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR PHOTO.");
 	}
 }
 
@@ -1035,58 +999,67 @@ function photopreview() {
 //Ayush
 function signpreview() {
 	const file = document.getElementById("customerSignature").files[0];
+
 	if (file && file.type.startsWith("image/")) {
 		const reader = new FileReader();
+
 		reader.onload = function(e) {
 			const previevimg = document.getElementById("bike2imagePreview");
 			document.getElementById("bike2imagePreview").src = e.target.result;
 			previevimg.style.width = "100%";
 			previevimg.style.height = "100%";
-			previevimg.style.objectFit = "cover"
-			previevimg.style.overflow = "hidden"
-			previevimg.style.borderRadius = "20px"
+			previevimg.style.objectFit = "cover";
+			previevimg.style.overflow = "hidden";
+			previevimg.style.borderRadius = "20px";
 		};
+
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for signature.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR SIGNATURE.");
 	}
 }
 
 function voterpreview() {
 	const file = document.getElementById("customerVoter").files[0];
+
 	if (file && file.type.startsWith("image/")) {
 		const reader = new FileReader();
+
 		reader.onload = function(e) {
 			const previevimg = document.getElementById("bike3imagePreview");
 			document.getElementById("bike3imagePreview").src = e.target.result;
 			previevimg.style.width = "100%";
 			previevimg.style.height = "100%";
-			previevimg.style.objectFit = "cover"
-			previevimg.style.overflow = "hidden"
-			previevimg.style.borderRadius = "20px"
+			previevimg.style.objectFit = "cover";
+			previevimg.style.overflow = "hidden";
+			previevimg.style.borderRadius = "20px";
 		};
+
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for signature.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR SIGNATURE.");
 	}
 }
 
 function drivingpreview() {
 	const file = document.getElementById("customerDriving").files[0];
+
 	if (file && file.type.startsWith("image/")) {
 		const reader = new FileReader();
+
 		reader.onload = function(e) {
 			const previevimg = document.getElementById("bike4imagePreview");
 			document.getElementById("bike4imagePreview").src = e.target.result;
 			previevimg.style.width = "100%";
 			previevimg.style.height = "100%";
-			previevimg.style.objectFit = "cover"
-			previevimg.style.overflow = "hidden"
-			previevimg.style.borderRadius = "20px"
+			previevimg.style.objectFit = "cover";
+			previevimg.style.overflow = "hidden";
+			previevimg.style.borderRadius = "20px";
 		};
+
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for signature.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR SIGNATURE.");
 	}
 }
 
@@ -1094,6 +1067,7 @@ function loadCustomerTable() {
 	$.ajax({
 		url: "api/customermanagement/getAllCustomer",
 		type: "GET",
+
 		success: function(data) {
 			let tbody = $("#customerTableBody");
 			tbody.empty();
@@ -1106,32 +1080,34 @@ function loadCustomerTable() {
 					cust.middleName,
 					cust.lastName
 				].filter(Boolean).join(" ");
+
 				tbody.append(`
 					<tr>
-					                        <td>${(idx + 1).toString().toUpperCase()}</td>
-					                        <td>${(cust.memberCode || "").toUpperCase()}</td>
-					                        <td>${(fullName || "").toUpperCase()}</td>
-					                        <td>${(cust.contactNo || "").toUpperCase()}</td>
-					                        <td>${(cust.aadharNo || "").toUpperCase()}</td>
-					                        <td>${(cust.district || "").toUpperCase()}</td>
-					                        <td>${(cust.branchName || "").toUpperCase()}</td>
-					                        <td>${(cust.dob || "").toUpperCase()}</td>
-					                    </tr>
+						<td>${(idx + 1).toString().toUpperCase()}</td>
+						<td>${(cust.memberCode || "").toUpperCase()}</td>
+						<td>${(fullName || "").toUpperCase()}</td>
+						<td>${(cust.contactNo || "").toUpperCase()}</td>
+						<td>${(cust.aadharNo || "").toUpperCase()}</td>
+						<td>${(cust.district || "").toUpperCase()}</td>
+						<td>${(cust.branchName || "").toUpperCase()}</td>
+						<td>${(cust.dob || "").toUpperCase()}</td>
+					</tr>
                 `);
 			});
 		},
+
 		error: function(err) {
 			console.log("Error loading table:", err);
 		}
 	});
 }
 
-
-
 function nomineeSignaturePreview() {
 	const file = document.getElementById("nomineSignature").files[0];
+
 	if (file && file.type.startsWith("image/")) {
 		const reader = new FileReader();
+
 		reader.onload = function(e) {
 			const previewImg = document.getElementById("nomineeSignatureImg");
 			document.getElementById("nomineeSignatureImg").src = e.target.result;
@@ -1140,17 +1116,19 @@ function nomineeSignaturePreview() {
 			previewImg.style.objectFit = "cover";
 			previewImg.style.borderRadius = "20px";
 		};
+
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for signature.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR SIGNATURE.");
 	}
 }
 
-
 function nomineeAadharPreview() {
 	const file = document.getElementById("nomineAadhar").files[0];
+
 	if (file && file.type.startsWith("image/")) {
 		const reader = new FileReader();
+
 		reader.onload = function(e) {
 			const previewImg = document.getElementById("nomineeAadharImg");
 			document.getElementById("nomineeAadharImg").src = e.target.result;
@@ -1160,16 +1138,19 @@ function nomineeAadharPreview() {
 			previewImg.style.overflow = "hidden";
 			previewImg.style.borderRadius = "20px";
 		};
+
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image for nominee Aadhar.");
+		alert("PLEASE UPLOAD A VALID IMAGE FOR NOMINEE AADHAR.");
 	}
 }
 
 function newlyaddedpreview() {
 	const file = document.getElementById("newlyAddedImage").files[0];
+
 	if (file && file.type.startsWith("image/")) {
 		const reader = new FileReader();
+
 		reader.onload = function(e) {
 			const previewImg = document.getElementById("newlyAddedImagePreview");
 			previewImg.src = e.target.result;
@@ -1179,9 +1160,10 @@ function newlyaddedpreview() {
 			previewImg.style.overflow = "hidden";
 			previewImg.style.borderRadius = "20px";
 		};
+
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image.");
+		alert("PLEASE UPLOAD A VALID IMAGE.");
 	}
 }
 
@@ -1190,22 +1172,25 @@ $(document).ready(function() {
 	$.ajax({
 		url: 'api/preference/getAllStates',
 		method: "GET",
+
 		success: function(response) {
 			if (response && response.data && Array.isArray(response.data)) {
 				console.log("Fetched states:", response.data);
+
 				response.data.forEach(function(state) {
 					$('#state').append(
 						$('<option>', {
-							value: state.stateName,  // What will be saved to DB
-							text: state.stateName.toUpperCase(),   // What user sees
-							'data-id': state.stateId // Optional: internal use
+							value: state.stateName,
+							text: state.stateName.toUpperCase(),
+							'data-id': state.stateId
 						})
 					);
 				});
 			} else {
-				console.warn("No state data available.");
+				console.warn("NO STATE DATA AVAILABLE.");
 			}
 		},
+
 		error: function(err) {
 			console.error("Error fetching states:", err);
 		}
@@ -1215,17 +1200,19 @@ $(document).ready(function() {
 
 // Load Districts when state is selected
 $('#state').on('change', function() {
-	const selectedStateId = $(this).find(':selected').data('id'); // ✅ Get ID from selected option
+	const selectedStateId = $(this).find(':selected').data('id');
 	$('#district').empty().append('<option value="">SELECT DISTRICT</option>');
 
 	if (selectedStateId) {
 		$.ajax({
 			url: 'api/preference/getAllDistrictsByStateId',
 			method: 'GET',
-			data: { stateId: selectedStateId },  // ✅ Now correct ID passed
+			data: { stateId: selectedStateId },
+
 			success: function(response) {
 				console.log("Fetched districts:", response);
 				const districts = response.allDistricts;
+
 				districts.forEach(function(district) {
 					$('#district').append(
 						$('<option>', {
@@ -1235,6 +1222,7 @@ $('#state').on('change', function() {
 					);
 				});
 			},
+
 			error: function(err) {
 				console.error("Error fetching districts:", err);
 			}
@@ -1242,18 +1230,19 @@ $('#state').on('change', function() {
 	}
 });
 
-
 $(document).ready(function() {
 	const dropdownIds = ["relationToApplicant", "nomineeRelationToApplicant"];
 
 	$.ajax({
-		url: "api/preference/getAllRelativeModule", // Ensure correct server path
+		url: "api/preference/getAllRelativeModule",
 		method: "GET",
+
 		success: function(data) {
 			console.log("Received relation data:", data);
 
 			dropdownIds.forEach(function(id) {
 				const $select = $("#" + id);
+
 				if ($select.length === 0) {
 					console.warn(`Dropdown with ID '${id}' not found.`);
 					return;
@@ -1267,12 +1256,13 @@ $(document).ready(function() {
 					$select.append(
 						$("<option>", {
 							value: item.relation,
-							text: item.relation
+							text: item.relation.toUpperCase()
 						})
 					);
 				});
 			});
 		},
+
 		error: function(err) {
 			console.error("Error loading relations:", err);
 		}
@@ -1282,19 +1272,20 @@ $(document).ready(function() {
 $(document).ready(function() {
 	// Fetch all branches and populate the dropdown
 	$.ajax({
-		url: "api/preference/getAllBranchModule", // Ensure correct API path
+		url: "api/preference/getAllBranchModule",
 		method: "GET",
+
 		success: function(data) {
 			console.log("Fetched Branches:", data);
 
 			const $branchDropdown = $('#branchName');
-			const addedBranches = new Set(); // ✅ Track added names
+			const addedBranches = new Set();
 
 			// Clear existing options
 			$branchDropdown.empty();
 
 			// Add default option
-			$branchDropdown.append('<option value="">-- Select Branch --</option>');
+			$branchDropdown.append('<option value="">-- SELECT BRANCH --</option>');
 
 			// Loop through and add only unique branch names
 			if (Array.isArray(data.data)) {
@@ -1305,22 +1296,23 @@ $(document).ready(function() {
 						$branchDropdown.append(
 							$('<option>', {
 								value: branchName,
-								text: branchName
+								text: branchName.toUpperCase()
 							})
 						);
-						addedBranches.add(branchName); // ✅ Mark as added
+
+						addedBranches.add(branchName);
 					}
 				});
 			} else {
 				console.warn("Unexpected data format:", data);
 			}
 		},
+
 		error: function(err) {
 			console.error("Error fetching branches:", err);
 		}
 	});
 });
-
 
 document.addEventListener("DOMContentLoaded", function() {
 	const paymentBy = document.getElementById("paymentBy");
@@ -1364,22 +1356,22 @@ document.addEventListener("DOMContentLoaded", function() {
 	handlePaymentChange();
 });
 
-
 document.addEventListener("DOMContentLoaded", function() {
 	// Function to fetch and bind bank accounts
 	function loadBankAccounts() {
 		fetch("api/preference/getAllBankModule")
 			.then(response => {
 				if (!response.ok) {
-					throw new Error("Network response was not ok");
+					throw new Error("NETWORK RESPONSE WAS NOT OK");
 				}
+
 				return response.json();
 			})
 			.then(response => {
 				console.log("Bank API response:", response);
 
 				const depositAccount = document.getElementById("depositAccount");
-				depositAccount.innerHTML = '<option value="">Select</option>';
+				depositAccount.innerHTML = '<option value="">SELECT</option>';
 
 				// ✅ Adjust based on actual API structure
 				const banks = response.data || response;
@@ -1388,7 +1380,7 @@ document.addEventListener("DOMContentLoaded", function() {
 					banks.forEach(bank => {
 						const option = document.createElement("option");
 						option.value = bank.accountNo;
-						option.textContent = `${bank.accountNo} (${bank.bankName})`;
+						option.textContent = `${bank.accountNo} (${bank.bankName.toUpperCase()})`;
 						depositAccount.appendChild(option);
 					});
 				} else {
@@ -1404,31 +1396,32 @@ document.addEventListener("DOMContentLoaded", function() {
 	loadBankAccounts();
 });
 
-
 $(document).ready(function() {
 	// Fetch all customers and populate the "select by code" dropdown
 	$.ajax({
 		url: "api/customermanagement/getAllCustomer",
 		method: "GET",
+
 		success: function(data) {
 			console.log("Fetched Members:", data);
+
 			data.forEach(function(customer) {
 				const optionText = `${customer.memberCode} - ${customer.customerName}`;
+
 				$('#selectMember').append(
 					$('<option>', {
-						value: customer.memberCode, // You can change this to customer.id or anything else if needed
-						text: optionText
+						value: customer.memberCode,
+						text: optionText.toUpperCase()
 					})
 				);
 			});
 		},
+
 		error: function(err) {
 			console.error("Error fetching customers:", err);
 		}
 	});
 });
-
-
 
 $(document).ready(function() {
 	// If already selected on load
@@ -1458,19 +1451,20 @@ function fetchBySelectedCustomer() {
 		data: JSON.stringify(input),
 		url: 'fetchBySelectedCustomer',
 		async: false,
+
 		success: function(data) {
 			if (data && data.length > 0) {
 				const c = data[0];
 
-				$("#customerName").val(c.customerName || "");
-				$("#customerCode").val(c.memberCode || "");
-				$("#contactNo").val(c.contactNo || "");
+				$("#customerName").val((c.customerName || "").toUpperCase());
+				$("#customerCode").val((c.memberCode || "").toUpperCase());
+				$("#contactNo").val((c.contactNo || "").toUpperCase());
 				$("#singupDate").val(c.signupDate || "");
-				$("#aadharNo").val(c.aadharNo || "");
-				$("#pan").val(c.panNo || "");
-				$("#voterNo").val(c.voterNo || "");
-				$("#rationCardNo").val(c.rationCardNo || "");
-				$("#drivingLicenseNo").val(c.drivingLicenceNo || "");
+				$("#aadharNo").val((c.aadharNo || "").toUpperCase());
+				$("#pan").val((c.panNo || "").toUpperCase());
+				$("#voterNo").val((c.voterNo || "").toUpperCase());
+				$("#rationCardNo").val((c.rationCardNo || "").toUpperCase());
+				$("#drivingLicenseNo").val((c.drivingLicenceNo || "").toUpperCase());
 
 				// Customer Photo
 				if (c.customerPhoto) {
@@ -1493,19 +1487,20 @@ function fetchBySelectedCustomer() {
 				}
 
 			} else {
-				alert("No data found for the selected member.");
+				alert("NO DATA FOUND FOR THE SELECTED MEMBER.");
 				clearCustomerFields();
 			}
 		},
+
 		error: function(jqXHR, textStatus, errorThrown) {
-			alert("Failed to fetch data: " + textStatus + ", " + errorThrown);
+			alert(("FAILED TO FETCH DATA: " + textStatus + ", " + errorThrown).toUpperCase());
 		}
 	});
 }
 
 function ifMinor() {
-
 	var minor = $("#minor").val();
+
 	if (minor === 'Yes') {
 		$("#guardianDetails").show();
 		$("#guardianAccount").show();
@@ -1518,17 +1513,16 @@ function ifMinor() {
 	}
 
 	var minor = $("#minor").val();
+
 	if (minor === 'Yes') {
 		$("#guardianDetails").show();
 		$("#guardianAccountNo").show();
-	}
-	else {
+	} else {
 		$("#guardianDetails").hide();
 		$("#guardianAccountNo").hide();
 		$("#guardianAccNo").val('');
 		$("#guardianDetails").val('');
 	}
-
 }
 
 
@@ -1543,6 +1537,7 @@ $(document).ready(function() {
 
 		let age = today.getFullYear() - dob.getFullYear();
 		const m = today.getMonth() - dob.getMonth();
+
 		if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
 			age--;
 		}
@@ -1569,6 +1564,7 @@ $(document).ready(function() {
 
 		let age = today.getFullYear() - dob.getFullYear();
 		const m = today.getMonth() - dob.getMonth();
+
 		if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
 			age--;
 		}
@@ -1587,13 +1583,12 @@ $(document).ready(function() {
 	});
 });
 
-
-
 $(document).ready(function() {
 	// 1️⃣ Fetch all customers for dropdown
 	$.ajax({
 		url: "api/customersavings/getAllSavingAccountData",
 		method: "GET",
+
 		success: function(response) {
 			console.log("Fetched Members:", response);
 
@@ -1613,7 +1608,6 @@ $(document).ready(function() {
 			// Populate dropdown
 			if (Array.isArray(customers) && customers.length > 0) {
 				customers.forEach(function(customer) {
-
 					const guardianValue = customer.selectByCustomer
 						? customer.selectByCustomer.trim()
 						: '';
@@ -1623,17 +1617,17 @@ $(document).ready(function() {
 					$('#guardianName').append(
 						$('<option>', {
 							value: guardianValue,
-							text: optionText
+							text: optionText.toUpperCase()
 						})
 					);
 				});
 			}
 		},
+
 		error: function(err) {
 			console.error("❌ Error fetching customers:", err);
 		}
 	});
-
 
 	$('#guardianName').on('change', function() {
 		const selectedCode = $(this).val().trim();
@@ -1649,33 +1643,33 @@ $(document).ready(function() {
 			$.ajax({
 				url: `api/customersavings/getAccountNumbersByCode?selectByCustomer=${encodeURIComponent(selectedCode)}`,
 				method: "GET",
+
 				success: function(res) {
 					console.log("Account number response:", res);
 
 					// Access account number using the selected code as key
-
 					if (res.data && res.data.length > 0) {
 						$('#guardianAccNo').val(res.data[0].accountNumber);
 					} else {
 						$('#guardianAccNo').val('');
 
 						if (res.data && res.data[selectedCode] && res.data[selectedCode].length > 0) {
-							$('#guardianAccNo').val(res.data[selectedCode][0]); // use first account number
+							$('#guardianAccNo').val(res.data[selectedCode][0]);
 						} else {
-							$('#guardianAccNo').val(''); // no account found
-
+							$('#guardianAccNo').val('');
 						}
 					}
 				},
+
 				error: function(err) {
 					console.error("❌ Error fetching account number:", err);
 					$('#guardianAccNo').val('');
 				}
 			});
 		}
-	}).trigger('change'); // trigger on load
-	// trigger on load
+	}).trigger('change');
 
+	// trigger on load
 
 	/*	$.ajax({
 			url: 'api/preference/getAllCategoryModule',
@@ -1686,9 +1680,9 @@ $(document).ready(function() {
 					response.data.forEach(function(category) {
 						$('#category').append(
 							$('<option>', {
-								value: category.category,  // What will be saved to DB
-								text: category.category,   // What user sees
-								'data-id': category.stateId // Optional: internal use
+								value: category.category,
+								text: category.category,
+								'data-id': category.stateId
 							})
 						);
 					});
@@ -1704,10 +1698,9 @@ $(document).ready(function() {
 	$.ajax({
 		url: 'api/preference/getAllCategoryModule',
 		method: "GET",
+
 		success: function(response) {
-
 			if (response.status === 'FOUND') {
-
 				console.log("Fetched Category:", response.data);
 
 				$('#category').empty().append('<option value="">--SELECT CATEGORY--</option>');
@@ -1726,20 +1719,20 @@ $(document).ready(function() {
 					$('#category').append(
 						$('<option>', {
 							value: categoryName,
-							text: categoryName
+							text: categoryName.toUpperCase()
 						})
 					);
 				});
 
 			} else {
-				console.warn("No Category data available.");
+				console.warn("NO CATEGORY DATA AVAILABLE.");
 			}
 		},
+
 		error: function(err) {
 			console.error("Error fetching Categories:", err);
 		}
 	});
-
 
 	$('#category').on('change', function() {
 		const selectedCategory = $("#category").val();
@@ -1749,19 +1742,22 @@ $(document).ready(function() {
 			$.ajax({
 				url: 'api/preference/getAllCasteByCategory',
 				method: 'GET',
-				data: { category: selectedCategory },  // ✅ Now correct ID passed
+				data: { category: selectedCategory },
+
 				success: function(response) {
 					console.log("Fetched caste:", response);
 					const casteList = response.data;
+
 					casteList.forEach(function(caste) {
 						$('#caste').append(
 							$('<option>', {
 								value: caste.caste,
-								text: caste.caste
+								text: caste.caste.toUpperCase()
 							})
 						);
 					});
 				},
+
 				error: function(err) {
 					console.error("Error fetching caste:", err);
 				}
@@ -1772,32 +1768,26 @@ $(document).ready(function() {
 
 document.addEventListener("DOMContentLoaded", function() {
 	document.getElementById("memberFeesTable").style.display = "none";
-
-
 });
 
 document.getElementById("memberFees").addEventListener("click", function(event) {
 	event.stopPropagation();
 
 	let table = document.getElementById("memberFeesTable");
+
 	table.style.display = (table.style.display === "none" || table.style.display === "")
 		? "block" : "none";
 });
-
 
 document.getElementById("memberFeesTable").addEventListener("click", function(event) {
 	event.stopPropagation();
 });
 
-
 document.addEventListener("click", function() {
 	document.getElementById("memberFeesTable").style.display = "none";
 });
 
-
-
 function calcOpeningFees() {
-
 	let n2000 = (document.getElementById("qty2000").value || 0) * 2000;
 	let n500 = (document.getElementById("qty500").value || 0) * 500;
 	let n200 = (document.getElementById("qty200").value || 0) * 200;

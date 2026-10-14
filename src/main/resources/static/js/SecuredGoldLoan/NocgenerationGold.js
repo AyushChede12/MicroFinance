@@ -6,7 +6,7 @@ $(document).ready(function() {
 		success: function(response) {
 			// Check data
 			if (!(response && response.data && Array.isArray(response.data))) {
-				alert("No Gold Data found.");
+				alert("NO GOLD DATA FOUND.");
 				return;
 			}
 
@@ -32,7 +32,7 @@ $(document).ready(function() {
 
 			// 👉 Step 3: Select2 Initialize (distinct data)
 			$('#findByGoldLoanId').select2({
-				placeholder: '-- Search Gold ID --',
+				placeholder: '-- SEARCH GOLD ID --',
 				data: goldOptions,
 				matcher: function(params, data) {
 					if ($.trim(params.term) === '') return data;
@@ -46,7 +46,7 @@ $(document).ready(function() {
 		},
 		error: function(xhr, status, error) {
 			console.error("Error fetching Gold Data:", error);
-			alert("Failed to load Gold ID.");
+			alert("FAILED TO LOAD GOLD ID.");
 		}
 	});
 
@@ -56,7 +56,7 @@ $(document).ready(function() {
 		const goldId = $("#findByGoldLoanId").val();
 
 		if (!goldId) {
-			alert("Please select a Gold ID");
+			alert("PLEASE SELECT A GOLD ID");
 			return;
 		}
 
@@ -70,49 +70,49 @@ $(document).ready(function() {
 
 					let content = `
 	        <div style="padding:30px; font-family:'Times New Roman', serif; border:2px solid #000; background:#fff; line-height:1.6;">
-	            
-	            <h2 style="text-align:center; margin:0; color:#FFA500;">Microfinance Cooperative Bank Ltd.</h2>
-	            <h4 style="text-align:center; margin:0;">Branch: ${goldData.branchName || "-"}</h4>
-	            <h3 style="text-align:center; margin:15px 0; text-decoration:underline;">No Objection Certificate (NOC)</h3>
 
-	            <p>Date: <b>${goldData.paymentDate || new Date().toLocaleDateString()}</b></p>
+	            <h2 style="text-align:center; margin:0; color:#FFA500;">MICROFINANCE COOPERATIVE BANK LTD.</h2>
+	            <h4 style="text-align:center; margin:0;">BRANCH: ${goldData.branchName || "-"}</h4>
+	            <h3 style="text-align:center; margin:15px 0; text-decoration:underline;">NO OBJECTION CERTIFICATE (NOC)</h3>
 
-	            <p>To,<br>
+	            <p>DATE: <b>${goldData.paymentDate || new Date().toLocaleDateString()}</b></p>
+
+	            <p>TO,<br>
 	               <b>${goldData.customerName || "-"}</b><br>
-	               Customer Code: ${goldData.customerCode || "-"}<br>
-	               Contact: ${goldData.contactNo || "-"}
+	               CUSTOMER CODE: ${goldData.customerCode || "-"}<br>
+	               CONTACT: ${goldData.contactNo || "-"}
 	            </p>
 
-	            <p>Subject: <b>No Objection Certificate for Gold Loan Closure</b></p>
+	            <p>SUBJECT: <b>NO OBJECTION CERTIFICATE FOR GOLD LOAN CLOSURE</b></p>
 
-	            <p>Dear <b>${goldData.customerName || "-"}</b>,</p>
+	            <p>DEAR <b>${goldData.customerName || "-"}</b>,</p>
 
-	            <p>This is to certify that you availed a Gold Loan from 
-	            <b>Microfinance Cooperative Bank Ltd.</b> under the loan plan 
-	            <b>${goldData.loanPlanName || "-"}</b>, starting from 
-	            <b>${goldData.dateOfLoan || "-"}</b> for an amount of 
+	            <p>THIS IS TO CERTIFY THAT YOU AVAILED A GOLD LOAN FROM 
+	            <b>MICROFINANCE COOPERATIVE BANK LTD.</b> UNDER THE LOAN PLAN 
+	            <b>${goldData.loanPlanName || "-"}</b>, STARTING FROM 
+	            <b>${goldData.dateOfLoan || "-"}</b> FOR AN AMOUNT OF 
 	            <b>${goldData.loanAmount || "-"}</b>.
 	            </p>
 
-	            <p>You have repaid your entire loan amount along with all applicable 
-	            interest and charges. Your loan account has been <b>successfully closed</b> on 
-	            <b>${goldData.paymentDate || "-"}</b>. As on today's date, there are 
-	            <b>no outstanding dues</b> payable to the bank for the mentioned loan account.</p>
+	            <p>YOU HAVE REPAID YOUR ENTIRE LOAN AMOUNT ALONG WITH ALL APPLICABLE 
+	            INTEREST AND CHARGES. YOUR LOAN ACCOUNT HAS BEEN <b>SUCCESSFULLY CLOSED</b> ON 
+	            <b>${goldData.paymentDate || "-"}</b>. AS ON TODAY'S DATE, THERE ARE 
+	            <b>NO OUTSTANDING DUES</b> PAYABLE TO THE BANK FOR THE MENTIONED LOAN ACCOUNT.</p>
 
 	            <p>
-	            We hereby issue this <b>No Objection Certificate (NOC)</b> declaring that 
-	            <b>${goldData.customerName || "-"}</b> is fully released from all liabilities 
-	            associated with the above-mentioned gold loan.
+	            WE HEREBY ISSUE THIS <b>NO OBJECTION CERTIFICATE (NOC)</b> DECLARING THAT 
+	            <b>${goldData.customerName || "-"}</b> IS FULLY RELEASED FROM ALL LIABILITIES 
+	            ASSOCIATED WITH THE ABOVE-MENTIONED GOLD LOAN.
 	            </p>
 
 	            <p style="margin-bottom:40px;">
-	            Thank you for banking with <b>Microfinance Cooperative Bank Ltd.</b>.
-	            We look forward to serving you again.
+	            THANK YOU FOR BANKING WITH <b>MICROFINANCE COOPERATIVE BANK LTD.</b>.
+	            WE LOOK FORWARD TO SERVING YOU AGAIN.
 	            </p>
 
 	            <p style="text-align:right; margin-top:20px;">
-	                Authorized Signatory<br>
-	                <b>Microfinance Cooperative Bank Ltd.</b>
+	                AUTHORIZED SIGNATORY<br>
+	                <b>MICROFINANCE COOPERATIVE BANK LTD.</b>
 	            </p>
 	        </div>
 	        `;
@@ -121,12 +121,12 @@ $(document).ready(function() {
 					$("#printBtn").show();
 
 				} else {
-					alert("No data found for this Gold Loan ID.");
+					alert("NO DATA FOUND FOR THIS GOLD LOAN ID.");
 				}
 			},
 			error: function(err) {
 				console.error(err);
-				alert("Error fetching Gold gold data.");
+				alert("ERROR FETCHING GOLD GOLD DATA.");
 			}
 		});
 	});
@@ -140,7 +140,7 @@ function printDocument() {
 	var content = document.getElementById("receiptArea").innerHTML;
 
 	var printWindow = window.open("", "", "height=700,width=900");
-	printWindow.document.write("<html><head><title>Print Document</title>");
+	printWindow.document.write("<html><head><title>PRINT DOCUMENT</title>");
 	printWindow.document.write("</head><body >");
 	printWindow.document.write(content);
 	printWindow.document.write("</body></html>");

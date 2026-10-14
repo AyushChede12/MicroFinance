@@ -15,7 +15,7 @@ $(document).ready(function() {
 //
 
 function loadDailyPremiumRenewalPMData() {
-	$.ajax({	
+	$.ajax({
 		url: "api/requestapproval/getUnapprovedDailyPremiumRenewalPM",
 		type: "GET",
 		contentType: "application/json",
@@ -25,19 +25,19 @@ function loadDailyPremiumRenewalPMData() {
 				//populateMemberCodeDropdown(allKYCData);
 				renderTable(allDailyPremiumRenewalPMData); // Initially show all
 			} else {
-				alert("No member data found.");
+				alert("NO MEMBER DATA FOUND.");
 			}
 		},
 		error: function(xhr, status, error) {
 			console.error("Error fetching data:", error);
-			alert("Failed to load data.");
+			alert("FAILED TO LOAD DATA.");
 		}
 	});
 }
 
 function populateMemberCodeDropdown(data) {
 	const dropdown = $('#branchName');
-	dropdown.empty().append('<option value="">Select Branch</option>');
+	dropdown.empty().append('<option value="">SELECT BRANCH</option>');
 	const uniqueCodes = [...new Set(data.map(item => item.branchName))];
 	uniqueCodes.forEach(code => {
 		dropdown.append(`<option value="${code}">${code}</option>`);
@@ -45,45 +45,45 @@ function populateMemberCodeDropdown(data) {
 }
 
 function renderTable(data) {
-    const tbody = $(".datatable tbody");
-    tbody.empty();
+	const tbody = $(".datatable tbody");
+	tbody.empty();
 
-    if (!data || data.length === 0) {
-        const noDataRow = `
+	if (!data || data.length === 0) {
+		const noDataRow = `
             <tr>
                 <td colspan="12" style="text-align:center; font-family: 'Poppins', sans-serif;">
-                    No data found
+                    NO DATA FOUND
                 </td>
             </tr>
         `;
-        tbody.append(noDataRow);0
-        return; // Exit the function early
-    }
+		tbody.append(noDataRow); 0
+		return; // Exit the function early
+	}
 
-    data.forEach((item, index) => {
-        const row = `
+	data.forEach((item, index) => {
+		const row = `
             <tr style="font-family: 'Poppins', sans-serif;">
                 <td>
                     <input type="checkbox" class="approval-checkbox"
                         data-id="${item.id}" ${item.isApproved ? 'checked' : ''} />
-                </td>   
-				<td>${index + 1}</td>
-				                  
-				                   <td>${item.policyCode || '-'}</td>
-				                   <td>${item.policyDate || '-'}</td>
-								   <td>${item.customerCode || '-'}</td>
-								   <td>${item.policyAmount || '-'}</td>
-								   <td>${item.maturityDate || '-'}</td>
-								   <td>${item.clientName || '-'}</td>
-								   <td>${item.contactNo || '-'}</td>
-								   <td>${item.renewalDate || '-'}</td>
-								   <td>${item.branchname || '-'}</td>
-								   
-								   
+                </td>  
+			<td>${index + 1}</td>
+
+			                   <td>${item.policyCode || '-'}</td>
+			                   <td>${item.policyDate || '-'}</td>
+							   <td>${item.customerCode || '-'}</td>
+							   <td>${item.policyAmount || '-'}</td>
+							   <td>${item.maturityDate || '-'}</td>
+							   <td>${item.clientName || '-'}</td>
+							   <td>${item.contactNo || '-'}</td>
+							   <td>${item.renewalDate || '-'}</td>
+							   <td>${item.branchname || '-'}</td>
+
+
             </tr>
         `;
-        tbody.append(row);
-    });
+		tbody.append(row);
+	});
 }
 
 //approval data
@@ -99,7 +99,7 @@ $(document).ready(function() {
 		});
 
 		if (selectedIds.length === 0) {
-			alert("Please select at least one row to approve.");
+			alert("PLEASE SELECT AT LEAST ONE ROW TO APPROVE.");
 			return;
 		}
 
@@ -114,12 +114,12 @@ $(document).ready(function() {
 				},
 				success: function(response) {
 					if (response.status === "OK") {
-						alert("Approved Successfully!");
+						alert("APPROVED SUCCESSFULLY!");
 						location.reload();
 					}
 				},
 				error: function(xhr) {
-					alert("Error approving ID " + id);
+					alert("ERROR APPROVING ID " + id);
 					console.error(xhr);
 				}
 			});

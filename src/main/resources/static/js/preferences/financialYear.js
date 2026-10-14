@@ -24,13 +24,13 @@ $(document).ready(function() {
 		// Validation: Financial Year Name
 		// Validation: Financial Year Name
 		if (fyName === '') {
-			$('#chkfyname').text('* This field is required');
+			$('#chkfyname').text('* THIS FIELD IS REQUIRED');
 			$('#financialYearName').focus();
 			isValid = false;
 		} else {
 			const fyPattern = /^[0-9]{4}-[0-9]{4}$/;
 			if (!fyPattern.test(fyName)) {
-				$('#chkfyname').text('* Please enter proper financial year (e.g., 2021-2022)');
+				$('#chkfyname').text('* PLEASE ENTER PROPER FINANCIAL YEAR (E.G., 2021-2022)');
 				$('#financialYearName').focus();
 				isValid = false;
 			} else {
@@ -38,7 +38,7 @@ $(document).ready(function() {
 				const startYear = parseInt(parts[0]);
 				const endYear = parseInt(parts[1]);
 				if (endYear - startYear !== 1) {
-					$('#chkfyname').text('* Financial year should be consecutive years (e.g., 2021-2022)');
+					$('#chkfyname').text('* FINANCIAL YEAR SHOULD BE CONSECUTIVE YEARS (E.G., 2021-2022)');
 					$('#financialYearName').focus();
 					isValid = false;
 				}
@@ -48,14 +48,14 @@ $(document).ready(function() {
 
 		// Validation: Date From
 		if (dateFrom === '') {
-			$('#chkdatefrom').text('* This field is required');
+			$('#chkdatefrom').text('* THIS FIELD IS REQUIRED');
 			if (isValid) $('#dateFrom').focus();
 			isValid = false;
 		}
 
 		// Validation: Date To
 		if (dateTo === '') {
-			$('#chkdateto').text('* This field is required');
+			$('#chkdateto').text('* THIS FIELD IS REQUIRED');
 			if (isValid) $('#dateTo').focus();
 			isValid = false;
 		}
@@ -63,7 +63,7 @@ $(document).ready(function() {
 		// Optional: Additional Date Range Validation
 		if (dateFrom !== '' && dateTo !== '') {
 			if (new Date(dateFrom) > new Date(dateTo)) {
-				$('#chkdateto').text('* Date To must be after Date From');
+				$('#chkdateto').text('* DATE TO MUST BE AFTER DATE FROM');
 				if (isValid) $('#dateTo').focus();
 				isValid = false;
 			}
@@ -88,62 +88,67 @@ $(document).ready(function() {
 			data: JSON.stringify(branchData),
 			success: function(response) {
 				if (response.status == 'CREATED') {
-					alert("Financial Year Saved Successfully"); // Show custom message from controller
+					alert("FINANCIAL YEAR SAVED SUCCESSFULLY"); // Show custom message from controller
 					location.reload(); // Reload page or update table
 				} else {
-					alert('Something went wrong. Please try again.');
+					alert('SOMETHING WENT WRONG. PLEASE TRY AGAIN.');
 				}
 			},
 			error: function(xhr) {
 				console.error('Error:', xhr.responseText);
-				alert('Failed to save financial data.');
+				alert('FAILED TO SAVE FINANCIAL DATA.');
 			}
 		});
 	});
 
 
 	$.ajax({
-	    type: "GET",
-	    url: "api/preference/getAllFinancialYear",
-	    contentType: "application/json",
-	    success: function(response) {
-	        console.log("Full Response from API:", response);
+		type: "GET",
+		url: "api/preference/getAllFinancialYear",
+		contentType: "application/json",
+		success: function(response) {
+			console.log("FULL RESPONSE FROM API:", response);
 
-	        if (response.status == "FOUND") {
-	            let data = response.data;
+			if (response.status == "FOUND") {
+				let data = response.data;
 
-	            // Sort by first year numerically (DESCENDING)
-	            data.sort((a, b) => {
-	                const aYear = parseInt(a.financialYearName.split('-')[0]);
-	                const bYear = parseInt(b.financialYearName.split('-')[0]);
-	                return bYear - aYear;   // DESCENDING
-	            });
+				// Sort by first year numerically (DESCENDING)
+				data.sort((a, b) => {
+					const aYear = parseInt(a.financialYearName.split('-')[0]);
+					const bYear = parseInt(b.financialYearName.split('-')[0]);
+					return bYear - aYear;   // DESCENDING
+				});
 
-	            let tableBody = $(".datatable tbody");
-	            tableBody.empty();
+				let tableBody = $(".datatable tbody");
+				tableBody.empty();
 
-	            data.forEach((item, index) => {
-	                let row = `<tr>
-	                    <td>${index + 1}</td>
-	                    <td>${item.financialYearName}</td>
-	                    <td>${item.dateFrom}</td>
-	                    <td>${item.dateTo}</td>
-	                    <td>
-	                        <button class="iconbutton" onclick="viewData(${item.id})" title="View">
-	                            <i class="fa-solid fa-pen-to-square text-primary"></i>
-	                        </button>
-	                    </td>
-	                </tr>`;
-	                tableBody.append(row);
-	            });
+				data.forEach((item, index) => {
+					let row = `<tr>
+                    <td>${index + 1}</td>
+                    <td>${item.financialYearName}</td>
+                    <td>${item.dateFrom}</td>
+                    <td>${item.dateTo}</td>
+                    <td>
+                        <button class="iconbutton" onclick="viewData(${item.id})" title="VIEW">
+                            <i class="fa-solid fa-pen-to-square text-primary"></i>
+                        </button>
+                    </td>
+					<td>
+						<button class="iconbutton" onclick="deleteData(${item.id})" title="DELETE">
+							<i class="fa-solid fa-trash text-danger"></i>
+						</button>
+					</td>
+                </tr>`;
+					tableBody.append(row);
+				});
 
-	        } else {
-	            alert("Failed to fetch branch data: " + response.message);
-	        }
-	    },
-	    error: function() {
-	        alert("Error while calling the API.");
-	    }
+			} else {
+				alert("FAILED TO FETCH BRANCH DATA: " + response.message);
+			}
+		},
+		error: function() {
+			alert("ERROR WHILE CALLING THE API.");
+		}
 	});
 
 
@@ -163,17 +168,17 @@ function viewData(id) {
 				$("#fromDate").val(branch.dateFrom);
 				$("#toDate").val(branch.dateTo);
 			} else {
-				alert("Branch not found: " + response.message);
+				alert("FINANCIAL YEAR NOT FOUND: " + response.message);
 			}
 		},
 		error: function(xhr) {
-			alert("Request failed: " + xhr.responseText);
+			alert("REQUEST FAILED: " + xhr.responseText);
 		}
 	});
 }
 
 function deleteData(id) {
-	if (confirm("Are you sure you want to delete this branch?")) {
+	if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS BRANCH?")) {
 		$.ajax({
 			url: "api/preference/deleteFinancialYearById",
 			type: "POST",
@@ -183,11 +188,11 @@ function deleteData(id) {
 					alert(response.message);
 					location.reload();
 				} else {
-					alert("Delete failed: " + response.message);
+					alert("DELETE FAILED: " + response.message);
 				}
 			},
 			error: function(xhr, status, error) {
-				alert("Failed to delete financial Year.");
+				alert("FAILED TO DELETE FINANCIAL YEAR.");
 				console.error("Error:", error);
 			}
 		});
@@ -209,13 +214,13 @@ function updateFY() {
 	let isValid = true;
 
 	if (fyName === '') {
-		$('#chkfyname').text('* This field is required');
+		$('#chkfyname').text('* THIS FIELD IS REQUIRED');
 		$('#financialYearName').focus();
 		isValid = false;
 	} else {
 		const fyPattern = /^[0-9]{4}-[0-9]{4}$/;
 		if (!fyPattern.test(fyName)) {
-			$('#chkfyname').text('* Please enter proper financial year (e.g., 2021-2022)');
+			$('#chkfyname').text('* PLEASE ENTER PROPER FINANCIAL YEAR (E.G., 2021-2022)');
 			$('#financialYearName').focus();
 			isValid = false;
 		} else {
@@ -223,7 +228,7 @@ function updateFY() {
 			const startYear = parseInt(parts[0]);
 			const endYear = parseInt(parts[1]);
 			if (endYear - startYear !== 1) {
-				$('#chkfyname').text('* Financial year should be consecutive years (e.g., 2021-2022)');
+				$('#chkfyname').text('* FINANCIAL YEAR SHOULD BE CONSECUTIVE YEARS (E.G., 2021-2022)');
 				$('#financialYearName').focus();
 				isValid = false;
 			}
@@ -233,14 +238,14 @@ function updateFY() {
 
 	// Validation: Date From
 	if (dateFrom === '') {
-		$('#chkdatefrom').text('* This field is required');
+		$('#chkdatefrom').text('* THIS FIELD IS REQUIRED');
 		if (isValid) $('#dateFrom').focus();
 		isValid = false;
 	}
 
 	// Validation: Date To
 	if (dateTo === '') {
-		$('#chkdateto').text('* This field is required');
+		$('#chkdateto').text('* THIS FIELD IS REQUIRED');
 		if (isValid) $('#dateTo').focus();
 		isValid = false;
 	}
@@ -248,7 +253,7 @@ function updateFY() {
 	// Optional: Additional Date Range Validation
 	if (dateFrom !== '' && dateTo !== '') {
 		if (new Date(dateFrom) > new Date(dateTo)) {
-			$('#chkdateto').text('* Date To must be after Date From');
+			$('#chkdateto').text('* DATE TO MUST BE AFTER DATE FROM');
 			if (isValid) $('#dateTo').focus();
 			isValid = false;
 		}
@@ -275,11 +280,11 @@ function updateFY() {
 				alert(response.message);
 				location.reload();
 			} else {
-				alert("Operation failed: " + response.message);
+				alert("OPERATION FAILED: " + response.message);
 			}
 		},
 		error: function(xhr) {
-			alert("Update failed: " + xhr.responseText);
+			alert("UPDATE FAILED: " + xhr.responseText);
 		}
 	});
 }

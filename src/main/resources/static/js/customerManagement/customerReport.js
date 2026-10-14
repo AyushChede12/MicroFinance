@@ -24,7 +24,7 @@ $(document).ready(function() {
 			populateTable(data);
 		},
 		error: function() {
-			alert("Failed to fetch customer data.");
+			alert("FAILED TO FETCH CUSTOMER DATA.");
 		}
 	});
 });
@@ -34,12 +34,12 @@ function populateTable(data) {
 	tbody.empty();
 
 	if (!data.length) {
-		tbody.append("<tr><td colspan='10'>No matching found.</td></tr>");
+		tbody.append("<tr><td colspan='10'>NO MATCHING FOUND.</td></tr>");
 		return;
 	}
-	
+
 	data.forEach((customer, i) => {
-		
+
 		// Convert all fields to uppercase safely
 		const memberCode = (customer.memberCode || "").toUpperCase();
 		const customerName = (customer.customerName || "").toUpperCase();
@@ -76,7 +76,7 @@ function populateTable(data) {
 	                    data-id="${customer.id}"
 	                    data-bs-toggle="modal"
 	                    data-bs-target="#bankReportModal"
-	                    title="View Report">
+	                    title="VIEW REPORT">
 	                    <i class="bi bi-printer"></i>
 	                </button>
 	            </td>
@@ -98,7 +98,7 @@ $(document).ready(function() {
 		const toDate = $("#toDate").val();
 
 		if (!selectedBranch || !fromDate || !toDate) {
-			alert("Please select Branch, From Date, and To Date.");
+			alert("PLEASE SELECT BRANCH, FROM DATE, AND TO DATE.");
 			return;
 		}
 
@@ -122,7 +122,7 @@ $(document).ready(function() {
 });
 
 document.getElementById("downloadPDF").addEventListener("click", function() {
-	alert("pdf");
+	alert("PDF");
 
 	const content = document.getElementById("bankReportContent").cloneNode(true);
 
@@ -154,22 +154,22 @@ function bindModalEvents() {
 		const customer = allCustomers.find(c => c.id === id);
 
 		if (!customer) {
-			alert("Customer not found!");
+			alert("CUSTOMER NOT FOUND!");
 			return;
 		}
 
 		// ===== COMPANY HEADING (FROM OTHER API) =====
 		if (companyDetails) {
-			$("#bankName").text(companyDetails.companyName || "N/A");
-			$("#reportTitle").text(companyDetails.shortName || "CUSTOMER PROFILE");
-			$("#signupDate").text(companyDetails.signUpDate || "N/A");
+			$("#bankName").text((companyDetails.companyName || "N/A").toUpperCase());
+			$("#reportTitle").text((companyDetails.shortName || "CUSTOMER PROFILE").toUpperCase());
+			$("#signupDate").text((companyDetails.signUpDate || "N/A").toUpperCase());
 		} else {
 			$("#bankName").text("COMPANY NAME");
 			$("#reportTitle").text("CUSTOMER PROFILE");
 		}
 
 		// ===== CUSTOMER HEADER =====
-		$("#customerCode").text(customer.memberCode || "N/A");
+		$("#customerCode").text((customer.memberCode || "N/A").toUpperCase());
 
 		// ===== FULL NAME =====
 		const fullName = [
@@ -179,25 +179,25 @@ function bindModalEvents() {
 		].filter(Boolean).join(" ");
 
 		// ===== CUSTOMER INFO =====
-		$("#customerName").text(fullName || "N/A");
-		$("#gender").text(customer.customerGender || "N/A");
-		$("#dob").text(customer.dob || "N/A");
-		$("#age").text(customer.customerAge || "N/A");
-		$("#maritalStatus").text(customer.relationshipStatus || "N/A");
+		$("#customerName").text((fullName || "N/A").toUpperCase());
+		$("#gender").text((customer.customerGender || "N/A").toUpperCase());
+		$("#dob").text((customer.dob || "N/A").toUpperCase());
+		$("#age").text((customer.customerAge || "N/A").toUpperCase());
+		$("#maritalStatus").text((customer.relationshipStatus || "N/A").toUpperCase());
 
 		// ===== CONTACT =====
-		$("#contactNo").text(customer.contactNo || "N/A");
-		$("#email").text(customer.emailId || "N/A");
-		$("#address").text(customer.customerAddress || "N/A");
-		$("#state").text(customer.state || "N/A");
-		$("#district").text(customer.district || "N/A");
-		$("#pincode").text(customer.pinCode || "N/A");
+		$("#contactNo").text((customer.contactNo || "N/A").toUpperCase());
+		$("#email").text((customer.emailId || "N/A").toUpperCase());
+		$("#address").text((customer.customerAddress || "N/A").toUpperCase());
+		$("#state").text((customer.state || "N/A").toUpperCase());
+		$("#district").text((customer.district || "N/A").toUpperCase());
+		$("#pincode").text((customer.pinCode || "N/A").toUpperCase());
 
 		// ===== KYC =====
-		$("#aadhar").text(customer.aadharNo || "N/A");
-		$("#pan").text(customer.panNo || "N/A");
-		$("#voter").text(customer.voterNo || "N/A");
-		$("#driving").text(customer.drivingLicenceNo || "N/A");
+		$("#aadhar").text((customer.aadharNo || "N/A").toUpperCase());
+		$("#pan").text((customer.panNo || "N/A").toUpperCase());
+		$("#voter").text((customer.voterNo || "N/A").toUpperCase());
+		$("#driving").text((customer.drivingLicenceNo || "N/A").toUpperCase());
 
 		// ===== PHOTO & SIGN =====
 		let basePath = window.location.origin + "/Uploads/";
@@ -223,4 +223,3 @@ $("#bankReportModal").off("shown.bs.modal").on("shown.bs.modal", function() {
 		}
 	});
 });
-

@@ -1,25 +1,24 @@
-
-$(document).ready(function(){
+$(document).ready(function() {
 	$.ajax({
-			url: "api/userCreation/getAllUsers", // your GET API
-			type: "GET",
-			contentType: "application/json",
-			success: function(users) {
-				console.log("Fetched users:", users);
-				var userSelect = $("#userName");
-				userSelect.empty(); // clear existing options
-				userSelect.append('<option value="">Select User</option>'); // default option
+		url: "api/userCreation/getAllUsers", // your GET API
+		type: "GET",
+		contentType: "application/json",
+		success: function(users) {
+			console.log("Fetched users:", users);
+			var userSelect = $("#userName");
+			userSelect.empty(); // clear existing options
+			userSelect.append('<option value="">SELECT USER</option>'); // default option
 
-				// Populate dropdown with userIds
-				users.forEach(function(user) {
-					userSelect.append('<option value="' + user.userId + '">' + user.userId + '</option>');
-				});
-			},
-			error: function(xhr) {
-				console.error("Error fetching users:", xhr);
-				alert("Failed to load users!");
-			}
-		});
+			// Populate dropdown with userIds
+			users.forEach(function(user) {
+				userSelect.append('<option value="' + user.userId + '">' + user.userId + '</option>');
+			});
+		},
+		error: function(xhr) {
+			console.error("Error fetching users:", xhr);
+			alert("FAILED TO LOAD USERS!");
+		}
+	});
 
 });
 
@@ -34,7 +33,7 @@ function retriveINCheckBox() {
 		success: function(data) {
 
 			if (!data || !data.service) {
-				alert("No services found!");
+				alert("NO SERVICES FOUND!");
 				return;
 			}
 
@@ -59,7 +58,7 @@ function retriveINCheckBox() {
 			submitUserServiceMap(selectedServices);
 		},
 		error: function() {
-			alert("Device control failed");
+			alert("DEVICE CONTROL FAILED");
 		}
 	});
 }
@@ -80,11 +79,11 @@ function submitUserServiceMap() {
 			service: selectedServices.toString()
 		},
 		success: function() {
-			alert("Access Updated Successfully!");
+			alert("ACCESS UPDATED SUCCESSFULLY!");
 			location.reload();
 		},
 		error: function() {
-			alert("Failed To Save Access!");
+			alert("FAILED TO SAVE ACCESS!");
 		}
 	});
 }

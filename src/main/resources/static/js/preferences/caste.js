@@ -9,7 +9,7 @@ $(document).ready(function() {
 		let isValid = true;
 
 		if (caste === '') {
-			$('#chkcaste').text('* This field is required');
+			$('#chkcaste').text('* THIS FIELD IS REQUIRED');
 			$('#caste').focus();
 			isValid = false;
 		}
@@ -32,12 +32,12 @@ $(document).ready(function() {
 					alert(response.message);
 					location.reload();
 				} else {
-					alert("Error: " + (response.message || "Unknown error occurred."));
+					alert("ERROR: " + (response.message || "UNKNOWN ERROR OCCURRED."));
 				}
 			},
 			error: function(xhr) {
 				console.error('Error:', xhr.responseText);
-				alert('Failed to save Caste data.');
+				alert('FAILED TO SAVE CASTE DATA.');
 			}
 		});
 	});
@@ -62,12 +62,12 @@ $(document).ready(function() {
 						<td>${index + 1}</td>
 						<td>${item.caste}</td>
 						<td>
-							<button class="iconbutton" onclick="deleteData(${item.id})" title="Delete">
+							<button class="iconbutton" onclick="deleteData(${item.id})" title="DELETE">
 								<i class="fa-solid fa-trash text-danger"></i>
 							</button>
 						</td>
 						<td>
-							<button type="button" class="iconbutton ms-2" onclick="deleteData(${item.id})" title="Delete">
+							<button type="button" class="iconbutton ms-2" onclick="deleteData(${item.id})" title="DELETE">
 								<i class="fa-solid fa-trash text-danger"></i>
 							</button>
 						</td>
@@ -75,18 +75,18 @@ $(document).ready(function() {
 					tableBody.append(row);
 				});
 			} else {
-				alert("Failed to fetch Caste data: " + response.message);
+				alert("FAILED TO FETCH CASTE DATA: " + response.message);
 			}
 		},
 		error: function() {
-			alert("Error while calling the API.");
+			alert("ERROR WHILE CALLING THE API.");
 		}
 	});
 
 });
 
 function deleteData(id) {
-	if (confirm("Are you sure you want to delete this Caste?")) {
+	if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS CASTE?")) {
 		$.ajax({
 			url: "api/preference/deleteCasteModuleById",
 			type: "POST",
@@ -96,11 +96,11 @@ function deleteData(id) {
 					alert(response.message);
 					location.reload();
 				} else {
-					alert("Delete failed: " + response.message);
+					alert("DELETE FAILED: " + response.message);
 				}
 			},
 			error: function(xhr, status, error) {
-				alert("Failed to delete Caste.");
+				alert("FAILED TO DELETE CASTE.");
 				console.error("Error:", error);
 			}
 		});

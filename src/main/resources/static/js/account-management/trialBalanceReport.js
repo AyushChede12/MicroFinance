@@ -17,14 +17,14 @@ function getTrialBalance() {
 
 	// ✅ Validation
 	if (!branchName || !startDate || !endDate) {
-		alert("⚠ Please select all fields");
+		alert("⚠ PLEASE SELECT ALL FIELDS");
 		return;
 	}
 
 	// 🔄 Loader
 	$(".datatable tbody").html(`
         <tr>
-            <td colspan="7" class="text-center">Loading...</td>
+            <td colspan="7" class="text-center">LOADING...</td>
         </tr>
     `);
 
@@ -42,7 +42,7 @@ function getTrialBalance() {
 			if (response.status === "OK") {
 				bindTrialTable(response.data, branchName, startDate, endDate);
 			} else {
-				showNoData(response.message || "No data found");
+				showNoData((response.message || "NO DATA FOUND").toUpperCase());
 			}
 		},
 
@@ -66,7 +66,7 @@ function bindTrialTable(data, branchName, startDate, endDate) {
 	$("#dateLabel").text(formatDate(startDate) + " TO " + formatDate(endDate));
 
 	if (!data || data.length === 0) {
-		showNoData("No Data Found");
+		showNoData("NO DATA FOUND");
 		return;
 	}
 
@@ -94,7 +94,7 @@ function bindTrialTable(data, branchName, startDate, endDate) {
 
 		rows += `
             <tr>
-                <td style="white-space: nowrap;">${item.ledgerName || '-'}</td>
+                <td style="white-space: nowrap;">${(item.ledgerName || '-').toUpperCase()}</td>
                 <td style="white-space: nowrap;">${openingDr}</td>
                 <td style="white-space: nowrap;">${openingCr}</td>
                 <td style="white-space: nowrap;">${debit.toFixed(2)}</td>
@@ -108,7 +108,7 @@ function bindTrialTable(data, branchName, startDate, endDate) {
 	// 🔥 TOTAL ROW
 	rows += `
         <tr style="font-weight:bold; background:#f5f5f5;">
-            <td>Total</td>
+            <td>TOTAL</td>
             <td></td>
             <td></td>
             <td></td>
@@ -122,7 +122,7 @@ function bindTrialTable(data, branchName, startDate, endDate) {
 
 	// ⚠ Validation
 	if (totalDr !== totalCr) {
-		alert("⚠ Trial Balance Not Matching!");
+		alert("⚠ TRIAL BALANCE NOT MATCHING!");
 	}
 }
 
@@ -133,7 +133,7 @@ function showNoData(message) {
 	$(".datatable tbody").html(`
         <tr>
             <td colspan="7" class="text-center text-danger">
-                ${message}
+                ${message.toUpperCase()}
             </td>
         </tr>
     `);
@@ -143,7 +143,7 @@ function showError() {
 	$(".datatable tbody").html(`
         <tr>
             <td colspan="7" class="text-center text-danger">
-                Error fetching data
+                ERROR FETCHING DATA
             </td>
         </tr>
     `);

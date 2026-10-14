@@ -29,19 +29,19 @@ function loadCustomerKYCData() {
 				//populateMemberCodeDropdown(allKYCData);
 				renderTable(allKYCData); // Initially show all
 			} else {
-				alert("No member data found.");
+				alert("NO MEMBER DATA FOUND.");
 			}
 		},
 		error: function(xhr, status, error) {
 			console.error("Error fetching data:", error);
-			alert("Failed to load data.");
+			alert("FAILED TO LOAD DATA.");
 		}
 	});
 }
 
 function populateMemberCodeDropdown(data) {
 	const dropdown = $('#branchName');
-	dropdown.empty().append('<option value="">Select Branch</option>');
+	dropdown.empty().append('<option value="">SELECT BRANCH</option>');
 	const uniqueCodes = [...new Set(data.map(item => item.branchName))];
 	uniqueCodes.forEach(code => {
 		dropdown.append(`<option value="${code}">${code}</option>`);
@@ -49,30 +49,30 @@ function populateMemberCodeDropdown(data) {
 }
 
 function renderTable(data) {
-    const tbody = $(".datatable tbody");
-    tbody.empty();
+	const tbody = $(".datatable tbody");
+	tbody.empty();
 
-    if (!data || data.length === 0) {
-        tbody.append(`
+	if (!data || data.length === 0) {
+		tbody.append(`
             <tr>
                 <td colspan="12" style="text-align:center; font-family: 'Poppins', sans-serif;">
-                    No data found
+                    NO DATA FOUND
                 </td>
             </tr>
         `);
-        return;
-    }
+		return;
+	}
 
-    data.forEach((item, index) => {
+	data.forEach((item, index) => {
 
-        // 🔹 Build FULL NAME
-        const fullName = [
-            item.firstName,
-            item.middleName,
-            item.lastName
-        ].filter(Boolean).join(" ");
+		// 🔹 Build FULL NAME
+		const fullName = [
+			item.firstName,
+			item.middleName,
+			item.lastName
+		].filter(Boolean).join(" ");
 
-        const row = `
+		const row = `
             <tr style="font-family: 'Poppins', sans-serif;">
                 <td>
                     <input type="checkbox" class="approval-checkbox"
@@ -96,43 +96,43 @@ function renderTable(data) {
             </tr>
         `;
 
-        tbody.append(row);
-    });
+		tbody.append(row);
+	});
 }
 
 
 //filter table
 function filterKYCData() {
-    const selectedCode = $('#branchName').val();
-    const fromDateVal = $('#fromDate').val();
-    const toDateVal = $('#toDate').val();
+	const selectedCode = $('#branchName').val();
+	const fromDateVal = $('#fromDate').val();
+	const toDateVal = $('#toDate').val();
 
-    const fromDate = fromDateVal ? new Date(fromDateVal) : null;
-    const toDate = toDateVal ? new Date(toDateVal) : null;
+	const fromDate = fromDateVal ? new Date(fromDateVal) : null;
+	const toDate = toDateVal ? new Date(toDateVal) : null;
 
-    const filtered = allKYCData.filter(item => {
+	const filtered = allKYCData.filter(item => {
 
-        const branchName = item.branchName;
-        const dob = item.dob ? new Date(item.dob) : null;
+		const branchName = item.branchName;
+		const dob = item.dob ? new Date(item.dob) : null;
 
-        // Branch filter
-        const matchesCode = selectedCode ? branchName === selectedCode : true;
+		// Branch filter
+		const matchesCode = selectedCode ? branchName === selectedCode : true;
 
-        // DOB null ho aur date selected ho → match false
-        if (!dob && (fromDate || toDate)) {
-            return false;
-        }
+		// DOB null ho aur date selected ho → match false
+		if (!dob && (fromDate || toDate)) {
+			return false;
+		}
 
-        // Date From
-        const matchesFrom = fromDate ? dob >= fromDate : true;
+		// Date From
+		const matchesFrom = fromDate ? dob >= fromDate : true;
 
-        // Date To
-        const matchesTo = toDate ? dob <= toDate : true;
+		// Date To
+		const matchesTo = toDate ? dob <= toDate : true;
 
-        return matchesCode && matchesFrom && matchesTo;
-    });
+		return matchesCode && matchesFrom && matchesTo;
+	});
 
-    renderTable(filtered);
+	renderTable(filtered);
 }
 
 
@@ -145,7 +145,7 @@ $(document).ready(function() {
 		const selectedCheckboxes = $('.approval-checkbox:checked');
 
 		if (selectedCheckboxes.length === 0) {
-			alert("Please select at least one customer to approve.");
+			alert("PLEASE SELECT AT LEAST ONE CUSTOMER TO APPROVE.");
 			return;
 		}
 
@@ -158,12 +158,12 @@ $(document).ready(function() {
 				type: 'POST',
 				success: function(response) {
 					if (response.status === "OK") {
-						alert("Approved Successfully!");
+						alert("APPROVED SUCCESSFULLY!");
 						location.reload();
 					}
 				},
 				error: function(xhr) {
-					alert("Error approving ID " + id);
+					alert("ERROR APPROVING ID " + id);
 					console.error(xhr);
 				}
 			});
@@ -181,7 +181,7 @@ $(document).ready(function() {
 			if (response.status == "FOUND") {
 				const branchList = response.data;
 				$("#branchName").empty(); // Clear existing options
-				$("#branchName").append("<option value=''>-- Select Branch --</option>");
+				$("#branchName").append("<option value=''>-- SELECT BRANCH --</option>");
 
 				for (let i = 0; i < branchList.length; i++) {
 					let branch = branchList[i];
@@ -190,12 +190,12 @@ $(document).ready(function() {
 					$("#branch").append(option);
 				}
 			} else {
-				alert("Error: " + response.message);
+				alert("ERROR: " + response.message);
 			}
 		},
 		error: function(xhr) {
 			console.error("Error loading branches:", xhr.responseText);
-			alert("Failed to load dropdown data.");
+			alert("FAILED TO LOAD DROPDOWN DATA.");
 		}
 	});
 });

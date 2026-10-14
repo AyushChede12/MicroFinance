@@ -15,7 +15,7 @@ $(document).ready(function() {
 
 				// Initialize Select2 with full data and custom search matcher
 				$('#accountNumber').select2({
-					placeholder: '-- Search Account Number or Name --',
+					placeholder: '-- SEARCH ACCOUNT NUMBER OR NAME --',
 					data: savingOptions,
 					matcher: function(params, data) {
 						// If no search term, return all
@@ -40,11 +40,11 @@ $(document).ready(function() {
 				});
 
 			} else {
-				alert("No Account Number found.");
+				alert("NO ACCOUNT NUMBER FOUND.");
 			}
 		},
 		error: function() {
-			alert("Failed to load Account Number.");
+			alert("FAILED TO LOAD ACCOUNT NUMBER.");
 		}
 	});
 
@@ -53,16 +53,16 @@ $(document).ready(function() {
 		type: "GET",
 		success: function(response) {
 			if (response.status === "FOUND") {
-				$("#selectByCustomer").empty().append("<option value=''>-- Select Customer Code --</option>");
+				$("#selectByCustomer").empty().append("<option value=''>-- SELECT CUSTOMER CODE --</option>");
 				response.data.forEach(function(item) {
 					$("#selectByCustomer").append(`<option value='${item.selectByCustomer}'>${item.selectByCustomer}</option>`);
 				});
 			} else {
-				alert("No Account Number found.");
+				alert("NO ACCOUNT NUMBER FOUND.");
 			}
 		},
 		error: function() {
-			alert("Failed to load Account Numbers.");
+			alert("FAILED TO LOAD ACCOUNT NUMBERS.");
 		}
 	});
 
@@ -71,16 +71,16 @@ $(document).ready(function() {
 		type: "GET",
 		success: function(response) {
 			if (response.status === "FOUND") {
-				$("#financialConsultantCode").empty().append("<option value=''>-- Select Financial Code --</option>");
+				$("#financialConsultantCode").empty().append("<option value=''>-- SELECT FINANCIAL CODE --</option>");
 				response.data.forEach(function(item) {
 					$("#financialConsultantCode").append(`<option value='${item.financialConsultantCode}'>${item.financialConsultantCode}</option>`);
 				});
 			} else {
-				alert("No Account Number found.");
+				alert("NO ACCOUNT NUMBER FOUND.");
 			}
 		},
 		error: function() {
-			alert("Failed to load Account Numbers.");
+			alert("FAILED TO LOAD ACCOUNT NUMBERS.");
 		}
 	});
 
@@ -161,6 +161,7 @@ $(document).ready(function() {
 						$("#JointPhotoPreview").attr("src", "Uploads/default-placeholder.jpg");
 						$("#JointPhotoHidden").val("");
 					}*/
+
 					// Photo
 					if (data.photo) {
 						const imagePath = `Uploads/${data.photo}`;
@@ -221,11 +222,11 @@ $(document).ready(function() {
 					updateToggleColor(document.getElementById('toggle-debit-card'));
 
 				} else {
-					alert("Failed");
+					alert("FAILED");
 				}
 			},
 			error: function(xhr) {
-				alert("Error: " + xhr.responseJSON.message);
+				alert("ERROR: " + xhr.responseJSON.message);
 			}
 		});
 	});
@@ -236,7 +237,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		const accountNumber = $('#accountNumber').val();
 		if (!accountNumber) {
-			alert("First select the data, then proceed to update.");
+			alert("FIRST SELECT THE DATA, THEN PROCEED TO UPDATE.");
 			return;
 		}
 
@@ -285,15 +286,15 @@ $(document).ready(function() {
 			cache: false,
 			success: function(response) {
 				if (response.status === "OK") {
-					alert("Saving Account Updated Successfully");
+					alert("SAVING ACCOUNT UPDATED SUCCESSFULLY");
 					location.reload();
 					// Optionally refresh the table or UI
 				} else {
-					alert("Something went wrong: " + response.message);
+					alert("SOMETHING WENT WRONG: " + response.message);
 				}
 			},
 			error: function(xhr) {
-				alert("Error while saving data: " + xhr.responseText);
+				alert("ERROR WHILE SAVING DATA: " + xhr.responseText);
 			}
 		});
 	});
@@ -303,28 +304,28 @@ $(document).ready(function() {
 		var id = $("#id").val();
 		let accountNumber = $("#accountNumber").val();
 		if (accountNumber !== "") {
-			if (confirm("Are you sure you want to delete this Saving Data?")) {
+			if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS SAVING DATA?")) {
 				$.ajax({
 					url: "api/customersavings/deleteSavingAccountDataById",
 					type: "POST",
 					data: { id: id },
 					success: function(response) {
 						if (response.status == "OK") {
-							alert("Customer Savings Data Deleted Successfully");
+							alert("CUSTOMER SAVINGS DATA DELETED SUCCESSFULLY");
 							location.reload();
 						} else {
-							alert("Delete failed: " + response.message);
+							alert("DELETE FAILED: " + response.message);
 						}
 					},
 					error: function(xhr, status, error) {
-						alert("Failed to delete Saving Data.");
+						alert("FAILED TO DELETE SAVING DATA.");
 						console.error("Error:", error);
 					}
 				});
 			}
 		}
 		else {
-			alert("First Select Any One Data Then Proceed To Delete!");
+			alert("FIRST SELECT ANY ONE DATA THEN PROCEED TO DELETE!");
 		}
 
 	});
@@ -340,11 +341,11 @@ $(document).ready(function() {
 					let data = response.data[0];
 					$("#id").val(data.id);
 				} else {
-					alert("Transfer Share Details Not Found For Customer");
+					alert("TRANSFER SHARE DETAILS NOT FOUND FOR CUSTOMER");
 				}
 			},
 			error: function() {
-				alert("Shares not found or server error");
+				alert("SHARES NOT FOUND OR SERVER ERROR");
 			}
 		});
 
@@ -401,17 +402,17 @@ function fetchByFinancialCode() {
 		url: "api/financialconsultant/getfinancialHierarchyByFinancialCode",
 		data: { financialCode: financialConsultantCode },
 		success: function(response) {
-			alert("success");
+			alert("SUCCESS");
 			if (response.status == "OK") {
-				alert("if condition");
+				alert("IF CONDITION");
 				let data = response.data[0];
 				$("#financialConsultantName").val(data.customerName);
 			} else {
-				alert("Transfer Share Details Not Found For Customer");
+				alert("TRANSFER SHARE DETAILS NOT FOUND FOR CUSTOMER");
 			}
 		},
 		error: function() {
-			alert("Shares not found or server error");
+			alert("SHARES NOT FOUND OR SERVER ERROR");
 		}
 	});
 
@@ -428,7 +429,7 @@ function photoUpload() {
 		};
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for photo.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR PHOTO.");
 	}
 }
 
@@ -444,7 +445,7 @@ function signatureUpload() {
 		};
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for signature.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR SIGNATURE.");
 	}
 }
 
@@ -458,7 +459,7 @@ function JointPhotoUpload() {
 		};
 		reader.readAsDataURL(file);
 	} else {
-		alert("Please upload a valid image file for Joint photo.");
+		alert("PLEASE UPLOAD A VALID IMAGE FILE FOR JOINT PHOTO.");
 	}
 }
 

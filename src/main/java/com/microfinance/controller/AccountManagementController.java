@@ -61,7 +61,7 @@ public class AccountManagementController {
 	public ResponseEntity<ApiResponse<LedgerAccountDto>> createLedger(@Valid @RequestBody LedgerAccountDto dto) {
 		LedgerAccountDto created = accountManagementService.createLedger(dto);
 		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(ApiResponse.success(HttpStatus.CREATED, "Ledger created successfully", created));
+				.body(ApiResponse.success(HttpStatus.CREATED, "LEDGER CREATED SUCCESSFULLY", created));
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class AccountManagementController {
 	@GetMapping("/all")
 	public ResponseEntity<ApiResponse<List<LedgerAccountDto>>> getAllLedgers() {
 		List<LedgerAccountDto> ledgers = accountManagementService.getAllLedgers();
-		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "Ledgers retrieved successfully", ledgers));
+		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "LEDGERS RETRIEVED SUCCESSFULLY", ledgers));
 	}
 
 	/**
@@ -84,13 +84,13 @@ public class AccountManagementController {
 	@GetMapping("/{id}")
 	public ResponseEntity<ApiResponse<LedgerAccountDto>> getLedgerById(@PathVariable Long id) {
 		LedgerAccountDto ledger = accountManagementService.getLedgerById(id);
-		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "Ledger retrieved successfully", ledger));
+		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "LEDGER RETRIEVED SUCCESSFULLY", ledger));
 	}
 
 	@GetMapping("/groupNames")
 	public ResponseEntity<ApiResponse<List<String>>> getGroupNames() {
 		List<String> groupNames = accountManagementService.groupNames();
-		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "Group names fetched", groupNames));
+		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "GROUP NAMES FETCHED", groupNames));
 	}
 
 	/**
@@ -103,7 +103,7 @@ public class AccountManagementController {
 	public ResponseEntity<ApiResponse<List<LedgerAccountDto>>> getLedgersByBranch(@PathVariable String branchName) {
 		List<LedgerAccountDto> ledgers = accountManagementService.getLedgersByBranch(branchName);
 		return ResponseEntity
-				.ok(ApiResponse.success(HttpStatus.OK, "Ledgers for branch retrieved successfully", ledgers));
+				.ok(ApiResponse.success(HttpStatus.OK, "LEDGERS FOR BRANCH RETRIEVED SUCCESSFULLY", ledgers));
 	}
 
 	// Ayush
@@ -111,12 +111,12 @@ public class AccountManagementController {
 	public ResponseEntity<ApiResponse<String>> deleteLedger(@RequestParam("id") Long id) {
 		boolean isDeleted = accountManagementService.deleteLedger(id);
 		if (isDeleted) {
-			ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK, "Ledger Account deleted successfully",
-					"success");
+			ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK, "LEDGER ACCOUNT DELETED SUCCESSFULLY",
+					"SUCCESS");
 			return ResponseEntity.ok(response);
 		} else {
-			ApiResponse<String> response = new ApiResponse<>(HttpStatus.BAD_REQUEST, "Ledger Account deletion failed",
-					"failure");
+			ApiResponse<String> response = new ApiResponse<>(HttpStatus.BAD_REQUEST, "LEDGER ACCCOUNT DELETION FAILED",
+					"FAILURE");
 			return ResponseEntity.badRequest().body(response);
 		}
 	}
@@ -127,7 +127,7 @@ public class AccountManagementController {
 			@RequestParam String startDate, @RequestParam String endDate) {
 		List<OutgoingPaymentDto> results = accountManagementService.searchPayments(branchName, startDate, endDate);
 		return ResponseEntity
-				.ok(ApiResponse.success(HttpStatus.OK, "Outgoing Payments retrieved successfully", results));
+				.ok(ApiResponse.success(HttpStatus.OK, "OUTGOING PAYMENTS RETRIEVED SUCCESSFULLY", results));
 	}
 
 	// Create OutgoingPayment Entry
@@ -136,7 +136,7 @@ public class AccountManagementController {
 			@Valid @RequestBody OutgoingPaymentDto dto) {
 		OutgoingPaymentDto created = accountManagementService.createOutgoingPayment(dto);
 		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(ApiResponse.success(HttpStatus.CREATED, "Outgoing payment created successfully", created));
+				.body(ApiResponse.success(HttpStatus.CREATED, "OUTGOING PAYMENT CREATED SUCCESSFULLY", created));
 	}
 
 	// Get all OutgoingPayment Entries
@@ -144,7 +144,7 @@ public class AccountManagementController {
 	public ResponseEntity<ApiResponse<List<OutgoingPaymentDto>>> getAllOutgoingPayment() {
 		List<OutgoingPaymentDto> payments = accountManagementService.getAllOutgoingPayment();
 
-		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "All outgoing payments fetched", payments));
+		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "ALL OUTGOING PAYMENTS FETCHED", payments));
 	}
 
 	// Get OutgoingPayment by ID
@@ -152,19 +152,19 @@ public class AccountManagementController {
 	public ResponseEntity<ApiResponse<OutgoingPaymentDto>> getOutgoingPayment(@PathVariable Long id) {
 		OutgoingPaymentDto dto = accountManagementService.getOutgoingPayment(id);
 
-		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "Outgoing payment retrieved successfully", dto));
+		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "OUTGOING PAYMENT RETRIEVED SUCCESSFULLY", dto));
 	}
 
 	@PostMapping("/deleteOutgoingPaymentById") // Ayush
 	public ResponseEntity<ApiResponse<String>> deleteOutgoingPayment(@RequestParam("id") Long id) {
 		boolean isDeleted = accountManagementService.deleteOutgoingPayment(id);
 		if (isDeleted) {
-			ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK, "Outgoing Payment deleted successfully",
-					"success");
+			ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK, "OUTGOING PAYMENT DELETED SUCCESSFULLY",
+					"SUCCESS");
 			return ResponseEntity.ok(response);
 		} else {
-			ApiResponse<String> response = new ApiResponse<>(HttpStatus.BAD_REQUEST, "Outgoing Payment deletion failed",
-					"failure");
+			ApiResponse<String> response = new ApiResponse<>(HttpStatus.BAD_REQUEST, "OUTGOING PAYMENT DELETION FAILED",
+					"FAILURE");
 			return ResponseEntity.badRequest().body(response);
 		}
 	}
@@ -178,7 +178,7 @@ public class AccountManagementController {
 		List<IncomingReceiptDto> results = accountManagementService.searchIncomingReceipt(branchName, startDate,
 				endDate);
 		return ResponseEntity
-				.ok(ApiResponse.success(HttpStatus.OK, "Incoming Payments retrieved successfully", results));
+				.ok(ApiResponse.success(HttpStatus.OK, "INCOMING PAYMENTS RETRIEVED SUCCESSFULLY", results));
 	}
 
 	// Create IncomingReceiptEntry
@@ -187,7 +187,7 @@ public class AccountManagementController {
 			@Valid @RequestBody IncomingReceiptDto dto) {
 		IncomingReceiptDto created = accountManagementService.createIncomingReceipt(dto);
 		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(ApiResponse.success(HttpStatus.CREATED, "Incoming Receipt Entry created successfully", created));
+				.body(ApiResponse.success(HttpStatus.CREATED, "INCOMING RECEIPT ENTRY CREATED SUCCESSFULLY", created));
 
 	}
 
@@ -195,7 +195,7 @@ public class AccountManagementController {
 	@GetMapping("/allIncomingReceipt")
 	public ResponseEntity<ApiResponse<List<IncomingReceiptDto>>> getAllIncomingReceipt() {
 		List<IncomingReceiptDto> payments = accountManagementService.getAllIncomingReceipt();
-		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "All Incoming Receipt Entry fetched", payments));
+		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "ALL INCOMING RECEIPT ENTRY FETCHED", payments));
 	}
 
 	// Get IncomingReceiptEntry ID (for View)
@@ -204,7 +204,7 @@ public class AccountManagementController {
 		IncomingReceiptDto dto = accountManagementService.getIncomingReceipt(id);
 
 		return ResponseEntity
-				.ok(ApiResponse.success(HttpStatus.OK, "Incoming Receipt Entry retrieved successfully", dto));
+				.ok(ApiResponse.success(HttpStatus.OK, "INCOMING RECEIPT ENTRY RETRIEVED SUCCESSFULLY", dto));
 	}
 
 	// Ayush
@@ -212,12 +212,12 @@ public class AccountManagementController {
 	public ResponseEntity<ApiResponse<String>> deleteIncomingPayment(@RequestParam("id") Long id) {
 		boolean isDeleted = accountManagementService.deleteIncomingPayment(id);
 		if (isDeleted) {
-			ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK, "Incoming Payment deleted successfully",
-					"success");
+			ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK, "INCOMING PAYMENT DELETED SUCCESSFULLY",
+					"SUCCESS");
 			return ResponseEntity.ok(response);
 		} else {
-			ApiResponse<String> response = new ApiResponse<>(HttpStatus.BAD_REQUEST, "Incoming Payment deletion failed",
-					"failure");
+			ApiResponse<String> response = new ApiResponse<>(HttpStatus.BAD_REQUEST,
+					"INCOMING PAYMENT DELETION FAILED", "FAILURE");
 			return ResponseEntity.badRequest().body(response);
 		}
 	}
@@ -230,7 +230,7 @@ public class AccountManagementController {
 		List<BankCashTransferDto> results = accountManagementService.searchBankCashTransfer(branchName, startDate,
 				endDate);
 		return ResponseEntity
-				.ok(ApiResponse.success(HttpStatus.OK, " BankCashTransfer Entry retrieved successfully", results));
+				.ok(ApiResponse.success(HttpStatus.OK, "BANKCASHTRANSFER ENTRY RETRIEVED SUCCESSFULLY", results));
 
 	}
 
@@ -239,13 +239,13 @@ public class AccountManagementController {
 			@Valid @RequestBody BankCashTransferDto dto) {
 		BankCashTransferDto created = accountManagementService.createBankCashTransfer(dto);
 		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(ApiResponse.success(HttpStatus.CREATED, " BankCashTransfer Entry created successfully", created));
+				.body(ApiResponse.success(HttpStatus.CREATED, "BANKCASHTRANSFER ENTRY CREATED SUCCESSFULLY", created));
 	}
 
 	@GetMapping("/allBankCashTransfer")
 	public ResponseEntity<ApiResponse<List<BankCashTransferDto>>> getAllBankCashTransfer() {
 		List<BankCashTransferDto> entries = accountManagementService.getAllBankCashTransfer();
-		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "All BankCashTransfer Entry fetched", entries));
+		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "ALL BANKCASHTRANSFER ENTRY FETCHED", entries));
 
 	}
 
@@ -253,7 +253,7 @@ public class AccountManagementController {
 	public ResponseEntity<ApiResponse<BankCashTransferDto>> getBankCashTransfer(@PathVariable Long id) {
 		BankCashTransferDto dto = accountManagementService.getBankCashTransfer(id);
 		return ResponseEntity
-				.ok(ApiResponse.success(HttpStatus.OK, "BankCashTransfer Entry retrieved successfully With Id", dto));
+				.ok(ApiResponse.success(HttpStatus.OK, "BANKCASHTRANSFER ENTRY RETRIEVED SUCCESSFULLY WITH ID", dto));
 	}
 
 	// Ayush
@@ -261,20 +261,21 @@ public class AccountManagementController {
 	public ResponseEntity<ApiResponse<String>> deleteBankCashTransfer(@RequestParam("id") Long id) {
 		boolean isDeleted = accountManagementService.deleteBankCashTransfer(id);
 		if (isDeleted) {
-			ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK, "Bank Cash Transfer deleted successfully",
-					"success");
+			ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK, "BANK CASH TRANSFER DELETED SUCCESSFULLY",
+					"SUCCESS");
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<String> response = new ApiResponse<>(HttpStatus.BAD_REQUEST,
-					"Bank Cash Transfer deletion failed", "failure");
+					"BANK CASH TRANSFER DELETION FAILED", "FAILURE");
 			return ResponseEntity.badRequest().body(response);
 		}
 	}
+
 	/*
 	 * @GetMapping("/ledgerByBranchAndGroup/{branchName}") public
 	 * ResponseEntity<ApiResponse<List<LedgerAccountMaster>>>
 	 * getBankCashLedgersByBranch(
-	 * 
+	 *
 	 * @PathVariable String branchName) { List<LedgerAccountMaster> ledgers =
 	 * accountManagementService.getBankCashLedgersByBranch(branchName); return
 	 * ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "Filtered Ledgers",
@@ -287,7 +288,7 @@ public class AccountManagementController {
 			@RequestParam String startDate, @RequestParam String endDate) {
 		List<ManualJournalDto> results = accountManagementService.searchManualJournal(branchName, startDate, endDate);
 		return ResponseEntity
-				.ok(ApiResponse.success(HttpStatus.OK, "Manual Journal Entry retrieved Succesfully", results));
+				.ok(ApiResponse.success(HttpStatus.OK, "MANUAL JOURNAL ENTRY RETRIEVED SUCCESSFULLY", results));
 
 	}
 
@@ -296,32 +297,32 @@ public class AccountManagementController {
 		ManualJournalDto created = accountManagementService.createManualJournal(dto);
 
 		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(ApiResponse.success(HttpStatus.CREATED, "Manual Journal created successfully", created));
+				.body(ApiResponse.success(HttpStatus.CREATED, "MANUAL JOURNAL CREATED SUCCESSFULLY", created));
 	}
 
 	@GetMapping("/allManualJournal")
 	public ResponseEntity<ApiResponse<List<ManualJournalDto>>> getAllManualJournal() {
 		List<ManualJournalDto> entries = accountManagementService.getAllManualJournal();
-		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "All ManualJournal Entry fetched", entries));
+		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "ALL MANUAL JOURNAL ENTRY FETCHED", entries));
 	}
 
 	@GetMapping("/manualJournal/{id}")
 	public ResponseEntity<ApiResponse<ManualJournalDto>> getManualJournal(@PathVariable Long id) {
 		ManualJournalDto dto = accountManagementService.getManualJournal(id);
 		return ResponseEntity
-				.ok(ApiResponse.success(HttpStatus.OK, "Manual Journal retrieved successfully With Id", dto));
+				.ok(ApiResponse.success(HttpStatus.OK, "MANUAL JOURNAL RETRIEVED SUCCESSFULLY WITH ID", dto));
 	}
 
 	@PostMapping("/deleteManualJournalById") // Ayush
 	public ResponseEntity<ApiResponse<String>> deleteManualJournalEntry(@RequestParam("id") Long id) {
 		boolean isDeleted = accountManagementService.deleteManualJournalEntry(id);
 		if (isDeleted) {
-			ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK, "Manual Journal Entry deleted successfully",
-					"success");
+			ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK, "MANUAL JOURNAL ENTRY DELETED SUCCESSFULLY",
+					"SUCCESS");
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<String> response = new ApiResponse<>(HttpStatus.BAD_REQUEST,
-					"Manual Journal Entry deletion failed", "failure");
+					"MANUAL JOURNAL ENTRY DELETION FAILED", "FAILURE");
 			return ResponseEntity.badRequest().body(response);
 		}
 	}
@@ -330,7 +331,7 @@ public class AccountManagementController {
 	public ResponseEntity<ApiResponse<List<LedgerAccountMaster>>> getEligibleLedgersForManualJournal(
 			@PathVariable String branchName) {
 		List<LedgerAccountMaster> ledgers = accountManagementService.getEligibleLedgersForManualJournal(branchName);
-		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "Eligible ledgers fetched", ledgers));
+		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "ELIGIBLE LEDGERS FETCHED", ledgers));
 	}
 
 	@GetMapping("/ledger-summary")
@@ -340,7 +341,7 @@ public class AccountManagementController {
 
 		List<LedgerSummaryDto> result = accountManagementService.getLedgerSummary(branch, ledger, startDate, endDate);
 
-		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "Fetched Successfully", result));
+		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "FETCHED SUCCESSFULLY", result));
 	}
 
 	@GetMapping("/journal-entry-report")
@@ -351,7 +352,7 @@ public class AccountManagementController {
 		Map<String, Object> report = accountManagementService.getJournalEntryReport(branch, voucherType, startDate,
 				endDate);
 
-		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "Journal Report Fetched Successfully", report));
+		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "JOURNAL REPORT FETCHED SUCCESSFULLY", report));
 	}
 
 	@GetMapping("/trial-balance")
@@ -361,7 +362,7 @@ public class AccountManagementController {
 
 		List<TrialBalanceReportDto> response = accountManagementService.getTrialBalance(branch, startDate, endDate);
 
-		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "Trial Balance Fetched Successfully", response));
+		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "TRIAL BALANCE FETCHED SUCCESSFULLY", response));
 	}
 
 	// Ayush - Incentive Payment
@@ -384,10 +385,10 @@ public class AccountManagementController {
 		Map<String, Object> response = accountManagementService.getFullIncentiveDetails(request);
 
 		if (response == null || response.isEmpty()) {
-			return ResponseEntity.ok(new ApiResponse(HttpStatus.NOT_FOUND, "No Incentive Data Found", null));
+			return ResponseEntity.ok(new ApiResponse(HttpStatus.NOT_FOUND, "NO INCENTIVE DATA FOUND", null));
 		}
 
-		return ResponseEntity.ok(new ApiResponse(HttpStatus.FOUND, "Incentive Details Fetched Successfully", response));
+		return ResponseEntity.ok(new ApiResponse(HttpStatus.FOUND, "INCENTIVE DETAILS FETCHED SUCCESSFULLY", response));
 	}
 
 	@PostMapping("/save-incentive-payment")
@@ -397,10 +398,10 @@ public class AccountManagementController {
 
 		if (result.equals("ALREADY_PAID")) {
 			return ResponseEntity
-					.ok(new ApiResponse(HttpStatus.CONFLICT, "Incentive Already Paid For This Month", null));
+					.ok(new ApiResponse(HttpStatus.CONFLICT, "INCENTIVE ALREADY PAID FOR THIS MONTH", null));
 		}
 
-		return ResponseEntity.ok(new ApiResponse(HttpStatus.OK, "Incentive Payment Saved Successfully", result));
+		return ResponseEntity.ok(new ApiResponse(HttpStatus.OK, "INCENTIVE PAYMENT SAVED SUCCESSFULLY", result));
 	}
 
 	@PostMapping("/deposit")
@@ -408,13 +409,13 @@ public class AccountManagementController {
 
 		accountManagementService.depositAmount(accountNumber, amount);
 
-		return ResponseEntity.ok("Deposit Successful");
+		return ResponseEntity.ok("DEPOSIT SUCCESSFUL");
 	}
 
 	@GetMapping("/allPendingCheques")
 	public ApiResponse<List<LoanPayment>> getAllPendingCheques() {
 		List<LoanPayment> list = accountManagementService.findAllPendingCheques();
-		return new ApiResponse<>(HttpStatus.OK, "All pending cheques", list);
+		return new ApiResponse<>(HttpStatus.OK, "ALL PENDING CHEQUES", list);
 	}
 
 	@PostMapping("/search")
@@ -426,14 +427,14 @@ public class AccountManagementController {
 					chequeNo);
 
 			if (list == null || list.isEmpty()) {
-				return new ApiResponse<>(HttpStatus.NOT_FOUND, "No cheque records found.", list);
+				return new ApiResponse<>(HttpStatus.NOT_FOUND, "NO CHEQUE RECORDS FOUND.", list);
 			}
 
-			return new ApiResponse<>(HttpStatus.FOUND, "Cheque records fetched successfully.", list);
+			return new ApiResponse<>(HttpStatus.FOUND, "CHEQUE RECORDS FETCHED SUCCESSFULLY.", list);
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, "Error while fetching cheque records.", null);
+			return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, "ERROR WHILE FETCHING CHEQUE RECORDS.", null);
 		}
 	}
 
@@ -441,9 +442,9 @@ public class AccountManagementController {
 	public ApiResponse<LoanPayment> clearCheque(@RequestParam Long id) {
 		try {
 			LoanPayment updated = accountManagementService.clearCheque(id);
-			return new ApiResponse<>(HttpStatus.OK, "Cheque cleared. Payment marked as PAID.", updated);
+			return new ApiResponse<>(HttpStatus.OK, "CHEQUE CLEARED. PAYMENT MARKED AS PAID.", updated);
 		} catch (Exception e) {
-			return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to clear cheque.", null);
+			return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, "FAILED TO CLEAR CHEQUE.", null);
 		}
 	}
 
@@ -451,9 +452,9 @@ public class AccountManagementController {
 	public ApiResponse<LoanPayment> bounceCheque(@RequestParam Long id) {
 		try {
 			LoanPayment updated = accountManagementService.bounceCheque(id);
-			return new ApiResponse<>(HttpStatus.OK, "Cheque bounced Successfully.", updated);
+			return new ApiResponse<>(HttpStatus.OK, "CHEQUE BOUNCED SUCCESSFULLY.", updated);
 		} catch (Exception e) {
-			return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to bounce cheque.", null);
+			return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, "FAILED TO BOUNCE CHEQUE.", null);
 		}
 	}
 
@@ -464,10 +465,10 @@ public class AccountManagementController {
 		List<LedgerAccountMaster> list = accountManagementService.getAssetsLedgers();
 
 		if (list.isEmpty()) {
-			return new ApiResponse<>(HttpStatus.NOT_FOUND, "No Assets Ledgers Found", list);
+			return new ApiResponse<>(HttpStatus.NOT_FOUND, "NO ASSETS LEDGERS FOUND", list);
 		}
 
-		return new ApiResponse<>(HttpStatus.OK, "Assets Ledgers Fetched Successfully", list);
+		return new ApiResponse<>(HttpStatus.OK, "ASSETS LEDGERS FETCHED SUCCESSFULLY", list);
 	}
 
 	@GetMapping("/expenses")
@@ -476,19 +477,19 @@ public class AccountManagementController {
 		List<LedgerAccountMaster> list = accountManagementService.getExpenseLedgers();
 
 		if (list.isEmpty()) {
-			return new ApiResponse<>(HttpStatus.NOT_FOUND, "No Expense Ledgers Found", list);
+			return new ApiResponse<>(HttpStatus.NOT_FOUND, "NO EXPENSE LEDGERS FOUND", list);
 		}
 
-		return new ApiResponse<>(HttpStatus.OK, "Expense Ledgers Fetched Successfully", list);
+		return new ApiResponse<>(HttpStatus.OK, "EXPENSE LEDGERS FETCHED SUCCESSFULLY", list);
 	}
 
 	@PostMapping("/pay")
 	public ApiResponse<IncentivePayment> payIncentive(@RequestBody IncentivePayment request) {
 		try {
 			IncentivePayment response = accountManagementService.saveAndPay(request);
-			return new ApiResponse<>(HttpStatus.OK, "Incentive Paid Successfully", response);
+			return new ApiResponse<>(HttpStatus.OK, "INCENTIVE PAID SUCCESSFULLY", response);
 		} catch (Exception e) {
-			return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, "Error: " + e.getMessage(), null);
+			return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, "ERROR: " + e.getMessage(), null);
 		}
 	}
 
@@ -539,10 +540,10 @@ public class AccountManagementController {
 		System.out.println(data);
 
 		if (data.isEmpty()) {
-			return new ApiResponse<>(HttpStatus.NOT_FOUND, "No Transactions Found", null);
+			return new ApiResponse<>(HttpStatus.NOT_FOUND, "NO TRANSACTIONS FOUND", null);
 		}
 
-		return new ApiResponse<>(HttpStatus.OK, "Statement fetched successfully", data);
+		return new ApiResponse<>(HttpStatus.OK, "STATEMENT FETCHED SUCCESSFULLY", data);
 	}
 
 	// Cash Book
@@ -556,7 +557,7 @@ public class AccountManagementController {
 			AccountTransaction savedTransaction = accountManagementService.saveTransaction(request);
 
 			ApiResponse<AccountTransaction> response = ApiResponse.success(HttpStatus.CREATED,
-					"Account transaction saved successfully", savedTransaction);
+					"ACCOUNT TRANSACTION SAVED SUCCESSFULLY", savedTransaction);
 
 			return ResponseEntity.status(HttpStatus.CREATED).body(response);
 
@@ -569,7 +570,7 @@ public class AccountManagementController {
 		} catch (Exception e) {
 
 			ApiResponse<AccountTransaction> response = ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR,
-					"Unable to save account transaction");
+					"UNABLE TO SAVE ACCOUNT TRANSACTION");
 
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 		}
@@ -585,14 +586,14 @@ public class AccountManagementController {
 					endDate);
 
 			if (data == null || data.isEmpty()) {
-				return new ApiResponse<>(HttpStatus.NOT_FOUND, "No CashBook Transactions Found", null);
+				return new ApiResponse<>(HttpStatus.NOT_FOUND, "NO CASHBOOK TRANSACTIONS FOUND", null);
 			}
 
-			return new ApiResponse<>(HttpStatus.OK, "CashBook Data fetched successfully", data);
+			return new ApiResponse<>(HttpStatus.OK, "CASHBOOK DATA FETCHED SUCCESSFULLY", data);
 
 		} catch (Exception e) {
 
-			return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Error", null);
+			return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL ERROR", null);
 		}
 	}
 
@@ -603,10 +604,10 @@ public class AccountManagementController {
 
 		try {
 			List<AccountTransaction> data = accountManagementService.getFundTransfers(branchName, startDate, endDate);
-			return new ApiResponse<>(HttpStatus.OK, "Fund Transfer fetched successfully", data);
+			return new ApiResponse<>(HttpStatus.OK, "FUND TRANSFER FETCHED SUCCESSFULLY", data);
 
 		} catch (Exception e) {
-			return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Error", null);
+			return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL ERROR", null);
 
 		}
 	}
@@ -621,18 +622,18 @@ public class AccountManagementController {
 			List<AccountTransaction> data = accountManagementService.getDailyTransactions(branchName, accountCode,
 					startDate, endDate);
 
-			return new ApiResponse<>(HttpStatus.OK, "Daily Transaction fetched successfully", data);
+			return new ApiResponse<>(HttpStatus.OK, "DAILY TRANSACTION FETCHED SUCCESSFULLY", data);
 
 		} catch (Exception e) {
 
-			return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Error", null);
+			return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL ERROR", null);
 		}
 	}
 
 	@GetMapping("/getUniqueLedgerDropdown")
 	public ResponseEntity<ApiResponse<List<Map<String, Object>>>> getLedgerDropdown() {
 		List<Map<String, Object>> ledgers = accountManagementService.getUniqueLedgerDropdown();
-		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "Ledger dropdown retrieved successfully", ledgers));
+		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "LEDGER DROPDOWN RETRIEVED SUCCESSFULLY", ledgers));
 	}
 
 	// Trial Balance Report
@@ -642,16 +643,16 @@ public class AccountManagementController {
 
 		// ✅ Validation
 		if (branchName == null || branchName.trim().isEmpty()) {
-			return ResponseEntity.badRequest().body(new ApiResponse<>("ERROR", "Branch is required", null));
+			return ResponseEntity.badRequest().body(new ApiResponse<>("ERROR", "BRANCH IS REQUIRED", null));
 		}
 
 		if (startDate == null || endDate == null) {
-			return ResponseEntity.badRequest().body(new ApiResponse<>("ERROR", "Date range is required", null));
+			return ResponseEntity.badRequest().body(new ApiResponse<>("ERROR", "DATE RANGE IS REQUIRED", null));
 		}
 
 		List<TrialBalanceDTO> data = accountManagementService.getTrialBalance(branchName, startDate, endDate);
 
-		return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Trial Balance fetched successfully", data));
+		return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "TRIAL BALANCE FETCHED SUCCESSFULLY", data));
 	}
 
 	// PL Statement
@@ -662,7 +663,7 @@ public class AccountManagementController {
 
 		List<PLStatementDto> data = accountManagementService.getPLStatement(branchName, startDate, endDate);
 
-		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "P&L data fetched successfully", data));
+		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "P&L DATA FETCHED SUCCESSFULLY", data));
 	}
 
 	// Balance Sheet
@@ -673,11 +674,11 @@ public class AccountManagementController {
 		try {
 			BalanceSheetDTO data = accountManagementService.getBalanceSheet(branchName, startDate, endDate);
 
-			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "Balance sheet fetched successfully", data));
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "BALANCE SHEET FETCHED SUCCESSFULLY", data));
 
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "Error: " + e.getMessage()));
+					.body(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "ERROR: " + e.getMessage()));
 		}
 	}
 
@@ -702,7 +703,7 @@ public class AccountManagementController {
 	public ResponseEntity<ApiResponse<List<AccountTransaction>>> getInterBranchTransfers() {
 		try {
 			List<AccountTransaction> list = accountManagementService.getInterBranchTransfers();
-			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "Transfer List Fetched Successfully", list));
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "TRANSFER LIST FETCHED SUCCESSFULLY", list));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()));
@@ -715,10 +716,10 @@ public class AccountManagementController {
 		List<LedgerAccountMaster> list = accountManagementService.getBankAccountLedgers();
 
 		if (list.isEmpty()) {
-			return new ApiResponse<>(HttpStatus.NOT_FOUND, "No Active Bank Accounts Found", list);
+			return new ApiResponse<>(HttpStatus.NOT_FOUND, "NO ACTIVE BANK ACCOUNTS FOUND", list);
 		}
 
-		return new ApiResponse<>(HttpStatus.OK, "Active Bank Accounts Fetched Successfully", list);
+		return new ApiResponse<>(HttpStatus.OK, "ACTIVE BANK ACCOUNTS FETCHED SUCCESSFULLY", list);
 	}
 
 }

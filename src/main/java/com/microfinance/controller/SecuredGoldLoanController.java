@@ -43,12 +43,12 @@ public class SecuredGoldLoanController {
 		SecuredGoldPlan savedGoldLoan = secureGoldLoanService.saveLoanManagmentData(goldLoan);
 
 		if (savedGoldLoan != null) {
-			String message = (goldLoan.getId() != null) ? "Data updated successfully" : "Data saved successfully";
+			String message = (goldLoan.getId() != null) ? "DATA UPDATED SUCCESSFULLY" : "DATA SAVED SUCCESSFULLY";
 			ApiResponse<SecuredGoldPlan> response = new ApiResponse<>(HttpStatus.OK, message, savedGoldLoan);
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<SecuredGoldPlan> errorResponse = new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR,
-					"Failed to save or update data", null);
+					"FAILED TO SAVE OR UPDATE DATA", null);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
 		}
 	}
@@ -59,10 +59,10 @@ public class SecuredGoldLoanController {
 
 		if (list != null && !list.isEmpty()) {
 			ApiResponse<List<SecuredGoldPlan>> response = new ApiResponse<>(HttpStatus.OK,
-					"Gold Secure Plan fetched successfully", list);
+					"GOLD SECURE PLAN FETCHED SUCCESSFULLY", list);
 			return ResponseEntity.ok(response);
 		} else {
-			ApiResponse<List<SecuredGoldPlan>> response = new ApiResponse<>(HttpStatus.NOT_FOUND, "No data found",
+			ApiResponse<List<SecuredGoldPlan>> response = new ApiResponse<>(HttpStatus.NOT_FOUND, "NO DATA FOUND",
 					null);
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
 		}
@@ -76,13 +76,13 @@ public class SecuredGoldLoanController {
 			// Success response
 			ApiResponse<SecuredGoldPlan> response = new ApiResponse<>(
 
-					HttpStatus.OK, "Loan fetched successfully", goldLoan);
+					HttpStatus.OK, "LOAN FETCHED SUCCESSFULLY", goldLoan);
 			return ResponseEntity.ok(response);
 		} else {
 			// Failure response
 			ApiResponse<SecuredGoldPlan> response = new ApiResponse<>(
 
-					HttpStatus.NOT_FOUND, "GoldLoan not found with ID: " + id, null);
+					HttpStatus.NOT_FOUND, "GOLDLOAN NOT FOUND WITH ID: " + id, null);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 	}
@@ -92,11 +92,11 @@ public class SecuredGoldLoanController {
 		boolean deleted = secureGoldLoanService.deleteGoldLoanLoanById(id);
 
 		if (deleted) {
-			ApiResponse<SecuredGoldPlan> response = new ApiResponse<>(HttpStatus.OK, "Gold Loan deleted successfully",
+			ApiResponse<SecuredGoldPlan> response = new ApiResponse<>(HttpStatus.OK, "GOLD LOAN DELETED SUCCESSFULLY",
 					null);
 			return ResponseEntity.ok(response);
 		} else {
-			ApiResponse<SecuredGoldPlan> response = new ApiResponse<>(HttpStatus.NOT_FOUND, "Gold Loan not found",
+			ApiResponse<SecuredGoldPlan> response = new ApiResponse<>(HttpStatus.NOT_FOUND, "GOLD LOAN NOT FOUND",
 					null);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
@@ -107,13 +107,13 @@ public class SecuredGoldLoanController {
 		List<GoldDirectory> list = secureGoldLoanService.getAllGoldDirectories();
 
 		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK,
-				list.isEmpty() ? "No records found" : "Records fetched successfully", list));
+				list.isEmpty() ? "NO RECORDS FOUND" : "RECORDS FETCHED SUCCESSFULLY", list));
 	}
 
 	@GetMapping("/getAllMembersForGoldLoan")
 	public ResponseEntity<ApiResponse<List<addCustomer>>> getAllMembersforGold() {
 		List<addCustomer> list = secureGoldLoanService.getAllCustomers();
-		ApiResponse<List<addCustomer>> response = ApiResponse.success(HttpStatus.OK, "All Members Fetched Successfully",
+		ApiResponse<List<addCustomer>> response = ApiResponse.success(HttpStatus.OK, "ALL MEMBERS FETCHED SUCCESSFULLY",
 				list);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
@@ -125,10 +125,10 @@ public class SecuredGoldLoanController {
 
 			if (customerList == null || customerList.isEmpty()) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND)
-						.body(new ApiResponse<>(HttpStatus.NOT_FOUND, "No customer found for member code", null));
+						.body(new ApiResponse<>(HttpStatus.NOT_FOUND, "NO CUSTOMER FOUND FOR MEMBER CODE", null));
 			}
 
-			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Customer(s) found", customerList));
+			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "CUSTOMER(S) FOUND", customerList));
 		} catch (RuntimeException ex) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), null));
@@ -146,10 +146,10 @@ public class SecuredGoldLoanController {
 
 			if (goldLoanList == null || goldLoanList.isEmpty()) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND)
-						.body(new ApiResponse<>(HttpStatus.NOT_FOUND, "No Loan Found", null));
+						.body(new ApiResponse<>(HttpStatus.NOT_FOUND, "NO LOAN FOUND", null));
 			}
 
-			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "LoanPlan found", goldLoanList));
+			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "LOANPLAN FOUND", goldLoanList));
 		} catch (RuntimeException ex) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), null));
@@ -160,12 +160,12 @@ public class SecuredGoldLoanController {
 	public ResponseEntity<ApiResponse<GoldDirectory>> saveGoldDirectory(@RequestBody GoldDirectory goldDirectory) {
 		if (goldDirectory.getId() != 0) {
 			return ResponseEntity.badRequest().body(
-					ApiResponse.error(HttpStatus.BAD_REQUEST, "Id should not be provided while saving new record"));
+					ApiResponse.error(HttpStatus.BAD_REQUEST, "ID SHOULD NOT BE PROVIDED WHILE SAVING NEW RECORD"));
 		}
 
 		GoldDirectory saved = secureGoldLoanService.saveGoldDirectory(goldDirectory);
 
-		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "Data Saved successfully", saved));
+		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "DATA SAVED SUCCESSFULLY", saved));
 	}
 
 	@GetMapping("/getAllCustomers")
@@ -173,7 +173,7 @@ public class SecuredGoldLoanController {
 		List<addCustomer> list = secureGoldLoanService.getAllCustomers();
 
 		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK,
-				list.isEmpty() ? "No records found" : "Records fetched successfully", list));
+				list.isEmpty() ? "NO RECORDS FOUND" : "RECORDS FETCHED SUCCESSFULLY", list));
 	}
 
 	@GetMapping("/getByMemberCodeApplyForGold")
@@ -185,10 +185,10 @@ public class SecuredGoldLoanController {
 
 			if (goldLoanList == null || goldLoanList.isEmpty()) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND)
-						.body(new ApiResponse<>(HttpStatus.NOT_FOUND, "No Loan Found", null));
+						.body(new ApiResponse<>(HttpStatus.NOT_FOUND, "NO LOAN FOUND", null));
 			}
 
-			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "LoanPlan found", goldLoanList));
+			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "LOANPLAN FOUND", goldLoanList));
 		} catch (RuntimeException ex) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), null));
@@ -201,11 +201,11 @@ public class SecuredGoldLoanController {
 
 		if (isSaved) {
 			ApiResponse<ApplyForGold> response = ApiResponse.success(HttpStatus.CREATED,
-					"Gold Loan Application saved successfully.", applyForGold);
+					"GOLD LOAN APPLICATION SAVED SUCCESSFULLY.", applyForGold);
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<ApplyForGold> response = ApiResponse.error(HttpStatus.BAD_REQUEST,
-					"Failed to save Gold Loan Application.");
+					"FAILED TO SAVE GOLD LOAN APPLICATION.");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 		}
 	}
@@ -215,7 +215,7 @@ public class SecuredGoldLoanController {
 		List<ApplyForGold> list = secureGoldLoanService.getAllGoldLoanCustomer();
 
 		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK,
-				list.isEmpty() ? "No records found" : "Records fetched successfully", list));
+				list.isEmpty() ? "NO RECORDS FOUND" : "RECORDS FETCHED SUCCESSFULLY", list));
 	}
 
 	@PostMapping("/getByGoldIDforApproval")
@@ -226,10 +226,10 @@ public class SecuredGoldLoanController {
 
 			if (goldLoanList == null || goldLoanList.isEmpty()) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND)
-						.body(new ApiResponse<>(HttpStatus.NOT_FOUND, "No Gold Loan Found", null));
+						.body(new ApiResponse<>(HttpStatus.NOT_FOUND, "NO GOLD LOAN FOUND", null));
 			}
 
-			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "GoldLoanPlan found", goldLoanList));
+			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "GOLDLOANPLAN FOUND", goldLoanList));
 		} catch (RuntimeException ex) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), null));
@@ -244,18 +244,18 @@ public class SecuredGoldLoanController {
 
 		switch (result) {
 		case "already_approved":
-			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Gold Loan is already approved.", null));
+			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "GOLD LOAN IS ALREADY APPROVED.", null));
 
 		case "success":
-			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Gold Loan approved successfully.", approval));
+			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "GOLD LOAN APPROVED SUCCESSFULLY.", approval));
 
 		case "not_found":
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(new ApiResponse<>(HttpStatus.NOT_FOUND, "Gold Loan not found.", null));
+					.body(new ApiResponse<>(HttpStatus.NOT_FOUND, "GOLD LOAN NOT FOUND.", null));
 
 		default:
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body(new ApiResponse<>(HttpStatus.BAD_REQUEST, "Unknown error occurred.", null));
+					.body(new ApiResponse<>(HttpStatus.BAD_REQUEST, "UNKNOWN ERROR OCCURRED.", null));
 		}
 	}
 
@@ -265,11 +265,11 @@ public class SecuredGoldLoanController {
 		if (gold != null && !gold.isEmpty()) {
 
 			ApiResponse<List<ApplyForGold>> response = new ApiResponse<>(HttpStatus.OK,
-					"Approved Gold Data fetched successfully.", gold);
+					"APPROVED GOLD DATA FETCHED SUCCESSFULLY.", gold);
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<List<ApplyForGold>> response = new ApiResponse<>(HttpStatus.OK,
-					"No approved Policy Renewal found.", java.util.Collections.emptyList());
+					"NO APPROVED POLICY RENEWAL FOUND.", java.util.Collections.emptyList());
 			return ResponseEntity.ok(response);
 		}
 	}
@@ -280,11 +280,11 @@ public class SecuredGoldLoanController {
 		if (gold != null && !gold.isEmpty()) {
 
 			ApiResponse<List<ApplyForGold>> response = new ApiResponse<>(HttpStatus.OK,
-					"Approved Gold Data fetched successfully.", gold);
+					"APPROVED GOLD DATA FETCHED SUCCESSFULLY.", gold);
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<List<ApplyForGold>> response = new ApiResponse<>(HttpStatus.OK,
-					"No unapproved Gold Customer found.", java.util.Collections.emptyList());
+					"NO UNAPPROVED GOLD CUSTOMER FOUND.", java.util.Collections.emptyList());
 			return ResponseEntity.ok(response);
 		}
 	}
@@ -295,12 +295,12 @@ public class SecuredGoldLoanController {
 		try {
 			GoldLoanClose savedData = secureGoldLoanService.closeGoldLoan(goldLoanCloseRequest);
 
-			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Loan Closed Successfully", savedData));
+			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "LOAN CLOSED SUCCESSFULLY", savedData));
 
 		} catch (Exception e) {
 
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse<>(
-					HttpStatus.INTERNAL_SERVER_ERROR, "Failed to Close Loan: " + e.getMessage(), null));
+					HttpStatus.INTERNAL_SERVER_ERROR, "FAILED TO CLOSE LOAN: " + e.getMessage(), null));
 		}
 	}
 
@@ -309,7 +309,7 @@ public class SecuredGoldLoanController {
 		List<GoldLoanClose> list = secureGoldLoanService.getAllGoldClosure();
 
 		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK,
-				list.isEmpty() ? "No records found" : "Records fetched successfully", list));
+				list.isEmpty() ? "NO RECORDS FOUND" : "RECORDS FETCHED SUCCESSFULLY", list));
 	}
 
 	@GetMapping("/getGoldClosuresByGoldId")
@@ -318,10 +318,10 @@ public class SecuredGoldLoanController {
 
 		if (closures != null && !closures.isEmpty()) {
 			return ResponseEntity
-					.ok(new ApiResponse<>(HttpStatus.OK, "Gold closure records fetched successfully", closures));
+					.ok(new ApiResponse<>(HttpStatus.OK, "GOLD CLOSURE RECORDS FETCHED SUCCESSFULLY", closures));
 		} else {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
-					new ApiResponse<>(HttpStatus.NO_CONTENT, "No Gold closure records found for this Gold ID", null));
+					new ApiResponse<>(HttpStatus.NO_CONTENT, "NO GOLD CLOSURE RECORDS FOUND FOR THIS GOLD ID", null));
 		}
 	}
 
@@ -333,8 +333,8 @@ public class SecuredGoldLoanController {
 			Map<String, Object> data = new HashMap<>();
 			data.put("loanStatus", isClosed ? "CLOSED" : "ACTIVE");
 
-			String message = isClosed ? "EMI paid successfully. Gold Loan is now closed."
-					: "EMI paid successfully. Remaining balance updated.";
+			String message = isClosed ? "EMI PAID SUCCESSFULLY. GOLD LOAN IS NOW CLOSED."
+					: "EMI PAID SUCCESSFULLY. REMAINING BALANCE UPDATED.";
 
 			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, message, data));
 
@@ -351,7 +351,7 @@ public class SecuredGoldLoanController {
 		List<ApplyForGold> activeLoans = secureGoldLoanService.getAllActiveGoldLoans();
 
 		return new ApiResponse<>(HttpStatus.OK,
-				activeLoans.isEmpty() ? "No Active Loans Found" : "Active Loans Loaded Successfully", activeLoans);
+				activeLoans.isEmpty() ? "NO ACTIVE LOANS FOUND" : "ACTIVE LOANS LOADED SUCCESSFULLY", activeLoans);
 	}
 
 	@GetMapping("/getGoldPaymentByGoldId")
@@ -360,10 +360,10 @@ public class SecuredGoldLoanController {
 
 		if (closures != null && !closures.isEmpty()) {
 			return ResponseEntity
-					.ok(new ApiResponse<>(HttpStatus.OK, "Gold Payment records fetched successfully", closures));
+					.ok(new ApiResponse<>(HttpStatus.OK, "GOLD PAYMENT RECORDS FETCHED SUCCESSFULLY", closures));
 		} else {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
-					new ApiResponse<>(HttpStatus.NO_CONTENT, "No Gold Payment records found for this Gold ID", null));
+					new ApiResponse<>(HttpStatus.NO_CONTENT, "NO GOLD PAYMENT RECORDS FOUND FOR THIS GOLD ID", null));
 		}
 	}
 
@@ -373,17 +373,18 @@ public class SecuredGoldLoanController {
 		ApiResponse response = secureGoldLoanService.saveInstallmentAndUpdateSavings(emiPay);
 		return ResponseEntity.ok(response);
 	}
-	
+
 	@GetMapping("/getEMIInstallmentDataByGoldID")
-	public ResponseEntity<ApiResponse<List<EmiInstallmentPaymentGold>>> getEMIInstallmentDataByGoldId(@RequestParam String goldID){
+	public ResponseEntity<ApiResponse<List<EmiInstallmentPaymentGold>>> getEMIInstallmentDataByGoldId(
+			@RequestParam String goldID) {
 		List<EmiInstallmentPaymentGold> installment = secureGoldLoanService.getEMIInstallmentGoldByID(goldID);
-		
+
 		if (installment != null && !installment.isEmpty()) {
 			return ResponseEntity
-					.ok(new ApiResponse<>(HttpStatus.OK, "EMI Installment records fetched successfully", installment));
+					.ok(new ApiResponse<>(HttpStatus.OK, "EMI INSTALLMENT RECORDS FETCHED SUCCESSFULLY", installment));
 		} else {
-			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
-					new ApiResponse<>(HttpStatus.NO_CONTENT, "No EMI Installment records found for this Gold ID", null));
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ApiResponse<>(HttpStatus.NO_CONTENT,
+					"NO EMI INSTALLMENT RECORDS FOUND FOR THIS GOLD ID", null));
 		}
 	}
 }

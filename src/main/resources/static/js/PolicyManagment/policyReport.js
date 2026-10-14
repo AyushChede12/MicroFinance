@@ -44,7 +44,7 @@ function toggleTransaction() {
 
 	if (!policyCode) {
 
-		alert("Please select a Policy Code first.");
+		alert("PLEASE SELECT A POLICY CODE FIRST.");
 
 		return;
 	}
@@ -54,7 +54,7 @@ function toggleTransaction() {
 
 			if (!response.ok) {
 
-				throw new Error("Policy not found");
+				throw new Error("POLICY NOT FOUND");
 			}
 
 			return response.json();
@@ -100,7 +100,7 @@ function toggleTransaction() {
 
 			if (!response.ok) {
 
-				throw new Error("Company details not found");
+				throw new Error("COMPANY DETAILS NOT FOUND");
 			}
 
 			return response.json();
@@ -123,7 +123,7 @@ function toggleTransaction() {
 
 		.catch(error => {
 
-			alert("Error fetching data: " + error.message);
+			alert("ERROR FETCHING DATA: " + error.message);
 
 			console.error("Error:", error);
 		});
@@ -135,7 +135,7 @@ function printTransactionSection() {
 	const content = document.getElementById("transactionSection").innerHTML;
 
 	const printWindow = window.open('', '', 'height=800,width=1000');
-	printWindow.document.write('<html><head><title>Transaction Receipt</title>');
+	printWindow.document.write('<html><head><title>TRANSACTION RECEIPT</title>');
 
 	// Optional styling for print
 	printWindow.document.write(`
@@ -228,13 +228,13 @@ $(document).ready(function() {
 		);
 
 		if (!policyCode) {
-			alert("Policy Code not found!");
+			alert("POLICY CODE NOT FOUND!");
 			return;
 		}
 
 		$button
 			.prop('disabled', true)
-			.html('<i class="fa fa-spinner fa-spin"></i> Loading...');
+			.html('<i class="fa fa-spinner fa-spin"></i> LOADING...');
 
 		$.ajax({
 
@@ -250,7 +250,7 @@ $(document).ready(function() {
 			console.log("Policy Response:", policyResponse);
 
 			if (!policyResponse || !policyResponse.data) {
-				alert("Policy data not found!");
+				alert("POLICY DATA NOT FOUND!");
 				return;
 			}
 
@@ -271,7 +271,7 @@ $(document).ready(function() {
 					companyResponse;
 
 				if (!company) {
-					alert("Company details not found!");
+					alert("COMPANY DETAILS NOT FOUND!");
 					return;
 				}
 
@@ -547,7 +547,7 @@ $(document).ready(function() {
 				if (!printWindow) {
 
 					alert(
-						"Please allow pop-ups for this website."
+						"PLEASE ALLOW POP-UPS FOR THIS WEBSITE."
 					);
 
 					return;
@@ -564,7 +564,7 @@ $(document).ready(function() {
 	<meta charset="UTF-8">
 
 	<title>
-	Investment Transaction Slip - ${safe(policy.policyCode)}
+	INVESTMENT TRANSACTION SLIP - ${safe(policy.policyCode)}
 	</title>
 
 	<style>
@@ -945,7 +945,7 @@ $(document).ready(function() {
 	        <div class="policy-info-item">
 
 	            <span class="label">
-	                Policy Code
+	                POLICY CODE
 	            </span>
 
 	            <span class="value">
@@ -957,7 +957,7 @@ $(document).ready(function() {
 	        <div class="policy-info-item">
 
 	            <span class="label">
-	                Policy Start Date
+	                POLICY START DATE
 	            </span>
 
 	            <span class="value">
@@ -969,7 +969,7 @@ $(document).ready(function() {
 	        <div class="policy-info-item">
 
 	            <span class="label">
-	                Transaction Date
+	                TRANSACTION DATE
 	            </span>
 
 	            <span class="value">
@@ -987,32 +987,32 @@ $(document).ready(function() {
 	    <table class="details-table">
 
 	        <tr>
-	            <td>Customer Name</td>
+	            <td>CUSTOMER NAME</td>
 	            <td>${customerName}</td>
 	        </tr>
 
 	        <tr>
-	            <td>Member / Customer Code</td>
+	            <td>MEMBER / CUSTOMER CODE</td>
 	            <td>${memberCode}</td>
 	        </tr>
 
 	        <tr>
-	            <td>Contact Number</td>
+	            <td>CONTACT NUMBER</td>
 	            <td>${contactNo}</td>
 	        </tr>
 
 	        <tr>
-	            <td>Address</td>
+	            <td>ADDRESS</td>
 	            <td>${address}</td>
 	        </tr>
 
 	        <tr>
-	            <td>Nominee Name</td>
+	            <td>NOMINEE NAME</td>
 	            <td>${nominee}</td>
 	        </tr>
 
 	        <tr>
-	            <td>Relationship</td>
+	            <td>RELATIONSHIP</td>
 	            <td>${relationship}</td>
 	        </tr>
 
@@ -1025,52 +1025,52 @@ $(document).ready(function() {
 	    <table class="details-table">
 
 	        <tr>
-	            <td>Scheme Type</td>
+	            <td>SCHEME TYPE</td>
 	            <td>${schemeType}</td>
 	        </tr>
 
 	        <tr>
-	            <td>Scheme Name</td>
+	            <td>SCHEME NAME</td>
 	            <td>${schemeName}</td>
 	        </tr>
 
 	        <tr>
-	            <td>Scheme Code / Plan</td>
+	            <td>SCHEME CODE / PLAN</td>
 	            <td>${schemeCode}</td>
 	        </tr>
 
 	        <tr>
-	            <td>Scheme Mode</td>
+	            <td>SCHEME MODE</td>
 	            <td>${schemeMode}</td>
 	        </tr>
 
 	        <tr>
-	            <td>Policy Amount</td>
+	            <td>POLICY AMOUNT</td>
 	            <td class="amount">${policyAmount}</td>
 	        </tr>
 
 	        <tr>
-	            <td>Deposit Amount</td>
+	            <td>DEPOSIT AMOUNT</td>
 	            <td class="amount">${depositAmount}</td>
 	        </tr>
 
 	        <tr>
-	            <td>Rate Of Interest</td>
+	            <td>RATE OF INTEREST</td>
 	            <td>${roi} %</td>
 	        </tr>
 
 	        <tr>
-	            <td>Scheme Term</td>
+	            <td>SCHEME TERM</td>
 	            <td>${schemeTerm}</td>
 	        </tr>
 
 	        <tr>
-	            <td>Maturity Date</td>
+	            <td>MATURITY DATE</td>
 	            <td>${maturityDate}</td>
 	        </tr>
 
 	        <tr>
-	            <td>Maturity Amount</td>
+	            <td>MATURITY AMOUNT</td>
 	            <td class="amount">${maturityAmount}</td>
 	        </tr>
 
@@ -1087,7 +1087,7 @@ $(document).ready(function() {
 	        <div class="summary-box">
 
 	            <div class="summary-label">
-	                Paid Amount
+	                PAID AMOUNT
 	            </div>
 
 	            <div class="summary-value">
@@ -1099,7 +1099,7 @@ $(document).ready(function() {
 	        <div class="summary-box">
 
 	            <div class="summary-label">
-	                Amount Due
+	                AMOUNT DUE
 	            </div>
 
 	            <div class="summary-value">
@@ -1111,7 +1111,7 @@ $(document).ready(function() {
 	        <div class="summary-box">
 
 	            <div class="summary-label">
-	                Balance
+	                BALANCE
 	            </div>
 
 	            <div class="summary-value">
@@ -1131,7 +1131,7 @@ $(document).ready(function() {
 	        <div class="payment-item">
 
 	            <div class="payment-label">
-	                Payment By
+	                PAYMENT BY
 	            </div>
 
 	            <div class="payment-value">
@@ -1143,7 +1143,7 @@ $(document).ready(function() {
 	        <div class="payment-item">
 
 	            <div class="payment-label">
-	                Mode Of Payment
+	                MODE OF PAYMENT
 	            </div>
 
 	            <div class="payment-value">
@@ -1155,7 +1155,7 @@ $(document).ready(function() {
 	        <div class="payment-item">
 
 	            <div class="payment-label">
-	                Installments Paid
+	                INSTALLMENTS PAID
 	            </div>
 
 	            <div class="payment-value">
@@ -1167,7 +1167,7 @@ $(document).ready(function() {
 	        <div class="payment-item">
 
 	            <div class="payment-label">
-	                Total Installments
+	                TOTAL INSTALLMENTS
 	            </div>
 
 	            <div class="payment-value">
@@ -1179,7 +1179,7 @@ $(document).ready(function() {
 	        <div class="payment-item">
 
 	            <div class="payment-label">
-	                Last Payment Date
+	                LAST PAYMENT DATE
 	            </div>
 
 	            <div class="payment-value">
@@ -1191,7 +1191,7 @@ $(document).ready(function() {
 	        <div class="payment-item">
 
 	            <div class="payment-label">
-	                Next Due Date
+	                NEXT DUE DATE
 	            </div>
 
 	            <div class="payment-value">
@@ -1211,7 +1211,7 @@ $(document).ready(function() {
 	        <tr>
 
 	            <td>
-	                Remark
+	                REMARK
 	            </td>
 
 	            <td>
@@ -1264,7 +1264,7 @@ $(document).ready(function() {
 	    </div>
 
 	    <div class="official">
-	        This is a system generated Investment Transaction Slip.
+	        THIS IS A SYSTEM GENERATED INVESTMENT TRANSACTION SLIP.
 	    </div>
 
 	</div>
@@ -1309,7 +1309,7 @@ $(document).ready(function() {
 				);
 
 				alert(
-					"Unable to fetch company details."
+					"UNABLE TO FETCH COMPANY DETAILS."
 				);
 
 			});
@@ -1322,7 +1322,7 @@ $(document).ready(function() {
 			);
 
 			alert(
-				"Unable to fetch policy details."
+				"UNABLE TO FETCH POLICY DETAILS."
 			);
 
 		}).always(function() {
@@ -1330,7 +1330,7 @@ $(document).ready(function() {
 			$button
 				.prop('disabled', false)
 				.html(
-					'<i class="fa fa-print"></i> Print'
+					'<i class="fa fa-print"></i> PRINT'
 				);
 
 		});
@@ -1345,7 +1345,7 @@ $("#findBtn").click(function() {
 	const policyCode = $("#findPolicyNumber").val().trim();
 
 	if (!policyCode) {
-		alert("Please enter Policy Code.");
+		alert("PLEASE ENTER POLICY CODE.");
 		$("#policyTableBody").empty();
 		return;
 	}
@@ -1369,7 +1369,7 @@ $("#findBtn").click(function() {
 				alert(
 					response && response.message
 						? response.message
-						: "No data found for Policy Code: " + policyCode
+						: "NO DATA FOUND FOR POLICY CODE: " + policyCode
 				);
 				return;
 			}
@@ -1463,7 +1463,7 @@ $("#findBtn").click(function() {
                     <td>
                         ${noOfInstallments}
                     </td>
-					
+
 					<td>
 					     ${lastInstPaid}
 					</td>
@@ -1483,7 +1483,7 @@ $("#findBtn").click(function() {
                             data-policy-code="${policyCodeValue}">
 
                             <i class="fa fa-print"></i>
-                            Print
+                            PRINT
 
                         </button>
                     </td>
@@ -1507,7 +1507,7 @@ $("#findBtn").click(function() {
 			$("#policyTableBody").empty();
 
 			let message =
-				"Error while fetching policy data.";
+				"ERROR WHILE FETCHING POLICY DATA.";
 
 			if (
 				xhr.responseJSON &&
@@ -1522,5 +1522,3 @@ $("#findBtn").click(function() {
 	});
 
 });
-
-

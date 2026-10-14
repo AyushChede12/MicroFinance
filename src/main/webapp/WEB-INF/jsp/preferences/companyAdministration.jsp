@@ -417,7 +417,7 @@
 
 		</div>
 
-		<div class="row" style="margin-top: 30px; display: none;">
+		<div class="row" style="margin-top: 30px;">
 			<div class="col-12 text-center">
 				<button type="button" id="updateBtn" class="btn btn-success"
 					disabled>UPDATE</button>

@@ -3,21 +3,21 @@ $(document).ready(function() {
 		url: "api/joinliability/viewGroupDirectories",
 		type: "GET",
 		success: function(response) {
-			console.log("API response:", response);
+			console.log("API RESPONSE:", response);
 			var dropdown1 = $('#groupCode');
 			dropdown1.empty();
-			dropdown1.append('<option value="">Select</option>');
+			dropdown1.append('<option value="">SELECT</option>');
 
 			if (response.status === "OK" && response.data) {
 				$.each(response.data, function(index, customer) {
 					dropdown1.append('<option value="' + customer.groupID + '">' + customer.groupID + '</option>');
 				});
 			} else {
-				dropdown1.append('<option value="">No groups found</option>');
+				dropdown1.append('<option value="">NO GROUPS FOUND</option>');
 			}
 		},
 		error: function() {
-			alert("Failed to fetch group list.");
+			alert("FAILED TO FETCH GROUP LIST.");
 		}
 	});
 
@@ -45,12 +45,12 @@ $(document).ready(function() {
 						$('#communityAddress').val(customer.communityAddress);
 
 					} else {
-						alert('No customer data found!');
+						alert('NO CUSTOMER DATA FOUND!');
 						$('#communityName').val('');
 					}
 				},
 				error: function() {
-					alert('Error while fetching customer data!');
+					alert('ERROR WHILE FETCHING CUSTOMER DATA!');
 				}
 			});
 		} else {
@@ -58,27 +58,27 @@ $(document).ready(function() {
 		}
 	});
 
-	//fecth data from the crete 
+	//fecth data from the crete
 	//fecth data from the create group Lending
 	$.ajax({
 		url: "api/joinliability/viewlendinggroup",
 		type: "GET",
 		success: function(response) {
-			console.log("API response:", response);
+			console.log("API RESPONSE:", response);
 			var dropdown1 = $('#planCode');
 			dropdown1.empty();
-			dropdown1.append('<option value="">Select</option>');
+			dropdown1.append('<option value="">SELECT</option>');
 
 			if (response.status === "OK" && response.data) {
 				$.each(response.data, function(index, customer) {
 					dropdown1.append('<option value="' + customer.planCode + '">' + customer.planCode + '</option>');
 				});
 			} else {
-				dropdown1.append('<option value="">No groups found</option>');
+				dropdown1.append('<option value="">NO GROUPS FOUND</option>');
 			}
 		},
 		error: function() {
-			alert("Failed to fetch group list.");
+			alert("FAILED TO FETCH GROUP LIST.");
 		}
 	});
 
@@ -114,12 +114,12 @@ $(document).ready(function() {
 
 
 					} else {
-						alert('No customer data found!');
+						alert('NO CUSTOMER DATA FOUND!');
 						$('#processingFee').val('');
 					}
 				},
 				error: function() {
-					alert('Error while fetching customer data!');
+					alert('ERROR WHILE FETCHING CUSTOMER DATA!');
 				}
 			});
 		} else {
@@ -127,7 +127,7 @@ $(document).ready(function() {
 		}
 	});
 
-	// save code 
+	// save code
 
 	$('#saveBtn').on('click', function(e) {
 		if (!validateTotalAmount()) {
@@ -170,10 +170,10 @@ $(document).ready(function() {
 			approvalDate: $('#approvalDate').val(),
 			photo: $('#photoHidden').val(),
 			signature: $('#signatureHidden').val(),
-			term:$("#term").val()
+			term: $("#term").val()
 		};
 
-		console.log("Sending group loan data:", groupLoanData);
+		console.log("SENDING GROUP LOAN DATA:", groupLoanData);
 
 		$.ajax({
 			url: 'api/joinliability/saveGroupLoan',
@@ -181,17 +181,18 @@ $(document).ready(function() {
 			contentType: 'application/json',
 			data: JSON.stringify(groupLoanData),
 			success: function(response) {
-				console.log("✅ Saved successfully:", response);
-				alert(response.message || "Group Loan saved successfully!");
+				console.log("✅ SAVED SUCCESSFULLY:", response);
+				alert(response.message || "GROUP LOAN SAVED SUCCESSFULLY!");
 				// Optional: Clear form or reload
 				$('#formid')[0].reset();
 			},
 			error: function(xhr, status, error) {
-				console.error("❌ Save error:", xhr.responseText);
-				alert("Failed to save group loan data. Check inputs or server logs.");
+				console.error("❌ SAVE ERROR:", xhr.responseText);
+				alert("FAILED TO SAVE GROUP LOAN DATA. CHECK INPUTS OR SERVER LOGS.");
 			}
 		});
 	});
+
 	//feach data
 	function fetchGroupLoanData() {
 		$.ajax({
@@ -199,7 +200,7 @@ $(document).ready(function() {
 			type: "GET",
 			dataType: "json",
 			success: function(response) {
-				console.log("API Success:", response);
+				console.log("API SUCCESS:", response);
 
 				// ✅ जर response.status आणि response.data असेल तर
 				const data = response.data ? response.data : response;
@@ -208,36 +209,37 @@ $(document).ready(function() {
 
 				if (data.length > 0) {
 					$.each(data, function(index, item) {
-						console.log("Item:", item);
+						console.log("ITEM:", item);
 						const row = `
-						
-						
-				                           <tr>
-				                               <td>${item.groupCode || ''}</td>
-				                               <td>${item.planCode || ''}</td>
-				                               <td>${item.communityLeader || ''}</td>
-				                               <td>${item.loanSchemeName || ''}</td>
-				                               <td>${item.selectedMember || ''}</td>
-				                               <td>${item.customerName || ''}</td>
-				                               <td>${item.emiType || ''}</td>
-				                               <td>${item.contactNumber || ''}</td>
-											   
-				                           </tr>
-				                       `;
+
+
+                                               <tr>
+                                                   <td>${item.groupCode || ''}</td>
+                                                   <td>${item.planCode || ''}</td>
+                                                   <td>${item.communityLeader || ''}</td>
+                                                   <td>${item.loanSchemeName || ''}</td>
+                                                   <td>${item.selectedMember || ''}</td>
+                                                   <td>${item.customerName || ''}</td>
+                                                   <td>${item.emiType || ''}</td>
+                                                   <td>${item.contactNumber || ''}</td>
+
+                                               </tr>
+                                           `;
 						tableBody.append(row);
 					});
 				} else {
-					tableBody.html(`<tr><td colspan="7" class="text-center text-warning">No data found.</td></tr>`);
+					tableBody.html(`<tr><td colspan="7" class="text-center text-warning">NO DATA FOUND.</td></tr>`);
 				}
 			},
 			error: function(xhr, status, error) {
-				console.error("API Error:", error);
-				$("#groupLoanBody").html(`<tr><td colspan="7" class="text-center text-danger">Something went wrong.</td></tr>`);
+				console.error("API ERROR:", error);
+				$("#groupLoanBody").html(`<tr><td colspan="7" class="text-center text-danger">SOMETHING WENT WRONG.</td></tr>`);
 			}
 		});
 	}
 
 	fetchGroupLoanData();
+
 	//total amount
 	function validateTotalAmount() {
 		const enteredAmount = parseFloat($("#totalAmount").val()) || 0;
@@ -246,7 +248,7 @@ $(document).ready(function() {
 
 		if (enteredAmount < minAmt || enteredAmount > maxAmt) {
 			$("#totalAmountError")
-				.text(`You can apply for a loan between ${minAmt} to ${maxAmt}.`)
+				.text(`YOU CAN APPLY FOR A LOAN BETWEEN ${minAmt} TO ${maxAmt}.`)
 				.removeClass("d-none");
 			$("#totalAmount").addClass("is-invalid");
 			return false;
@@ -267,6 +269,3 @@ $(document).ready(function() {
 
 
 });
-
-
-

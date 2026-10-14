@@ -6,25 +6,25 @@ $(document).ready(function() {
 		let tableBody = "";
 		$.each(data, function(index, item) {
 			tableBody += `
-				<tr>
-					<td>${index + 1}</td>
-					<td><input type="checkbox" class="selectCheckbox" data-code="${item.financialCode}"></td>
-					<td>${item.financialCode || ''}</td>
-					<td>${item.financialName || ''}</td>
-					<td>${item.contactNo || ''}</td>
-					<td>${item.branchName || ''}</td>
-					<td>${item.customerAddress || ''}</td>
-					<td>${item.district || ''}</td>
-					<td>${item.state || ''}</td>
-					<td>${item.pinCode || ''}</td>
-					<td>${item.profession || ''}</td>
-					<td>${item.selectPosition || ''}</td>
-					<td>
-						<button class="iconbutton generateBtn" data-code="${item.financialCode}" title="Generate">
-							<i class="fa-solid fa-id-card text-success"></i>
-						</button>
-					</td>
-				</tr>`;
+                <tr>
+                    <td>${index + 1}</td>
+                    <td><input type="checkbox" class="selectCheckbox" data-code="${item.financialCode}"></td>
+                    <td>${item.financialCode || ''}</td>
+                    <td>${item.financialName || ''}</td>
+                    <td>${item.contactNo || ''}</td>
+                    <td>${item.branchName || ''}</td>
+                    <td>${item.customerAddress || ''}</td>
+                    <td>${item.district || ''}</td>
+                    <td>${item.state || ''}</td>
+                    <td>${item.pinCode || ''}</td>
+                    <td>${item.profession || ''}</td>
+                    <td>${item.selectPosition || ''}</td>
+                    <td>
+                        <button class="iconbutton generateBtn" data-code="${item.financialCode}" title="GENERATE">
+                            <i class="fa-solid fa-id-card text-success"></i>
+                        </button>
+                    </td>
+                </tr>`;
 		});
 		$("table tbody").html(tableBody);
 	}
@@ -44,7 +44,7 @@ $(document).ready(function() {
 				renderTable(data);
 			},
 			error: function() {
-				alert("Error fetching data.");
+				alert("ERROR FETCHING DATA.");
 			}
 		});
 	}
@@ -66,7 +66,7 @@ $(document).ready(function() {
 		if (checkbox.is(':checked')) {
 			window.location.href = `/IDCardFinancial?financialCode=${financialCode}`;
 		} else {
-			alert("Please check the checkbox to generate the ID card.");
+			alert("PLEASE CHECK THE CHECKBOX TO GENERATE THE ID CARD.");
 		}
 	});
 
@@ -79,7 +79,7 @@ $(document).ready(function() {
 			url: `api/financialconsultant/getfinancialHierarchyByFinancialCode?financialCode=${finCode}`,
 			type: "GET",
 			success: function(response) {
-				console.log("API response:", response)
+				console.log("API RESPONSE:", response);
 				const data = response.data?.[0]; // using optional chaining for safety
 				if (data) {
 					$("#financialCode").text(data.financialCode || '—');
@@ -105,7 +105,7 @@ $(document).ready(function() {
 				}
 			},
 			error: function() {
-				alert("Could not load financialCode.");
+				alert("COULD NOT LOAD FINANCIALCODE.");
 			}
 		});
 	}
