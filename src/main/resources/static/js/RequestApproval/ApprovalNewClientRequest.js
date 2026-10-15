@@ -1,145 +1,22 @@
-$(document).ready(function() {
-	memberCodeDropdown();
-});
-
-
-//anjali patil
-
-let allKYCData = [];
 
 $(document).ready(function() {
-	// Load all member data on page load
+
+	let allKYCData = [];
+
+	// LOAD ALL UNAPPROVED CUSTOMERS
 	loadCustomerKYCData();
 
-	// Button click filter
+	// LOAD BRANCH DROPDOWN
+	loadBranchDropdown();
+
+	// FIND BUTTON
 	$('#findBtn').on('click', function(e) {
-		e.preventDefault(); // Prevent form submission
+		e.preventDefault();
 		filterKYCData();
 	});
-});
 
-function loadCustomerKYCData() {
-	$.ajax({
-		url: "api/requestapproval/unapproved",
-		type: "GET",
-		contentType: "application/json",
-		success: function(response) {
-			if (response.status === "OK" && Array.isArray(response.data)) {
-				allKYCData = response.data;
-				//populateMemberCodeDropdown(allKYCData);
-				renderTable(allKYCData); // Initially show all
-			} else {
-				alert("NO MEMBER DATA FOUND.");
-			}
-		},
-		error: function(xhr, status, error) {
-			console.error("Error fetching data:", error);
-			alert("FAILED TO LOAD DATA.");
-		}
-	});
-}
-
-function populateMemberCodeDropdown(data) {
-	const dropdown = $('#branchName');
-	dropdown.empty().append('<option value="">SELECT BRANCH</option>');
-	const uniqueCodes = [...new Set(data.map(item => item.branchName))];
-	uniqueCodes.forEach(code => {
-		dropdown.append(`<option value="${code}">${code}</option>`);
-	});
-}
-
-function renderTable(data) {
-	const tbody = $(".datatable tbody");
-	tbody.empty();
-
-	if (!data || data.length === 0) {
-		tbody.append(`
-            <tr>
-                <td colspan="12" style="text-align:center; font-family: 'Poppins', sans-serif;">
-                    NO DATA FOUND
-                </td>
-            </tr>
-        `);
-		return;
-	}
-
-	data.forEach((item, index) => {
-
-		// 🔹 Build FULL NAME
-		const fullName = [
-			item.firstName,
-			item.middleName,
-			item.lastName
-		].filter(Boolean).join(" ");
-
-		const row = `
-            <tr style="font-family: 'Poppins', sans-serif;">
-                <td>
-                    <input type="checkbox" class="approval-checkbox"
-                        data-id="${item.id}" ${item.isApproved ? 'checked' : ''} />
-                </td>
-
-                <td>${index + 1}</td>
-
-                <!-- 👇 now using fullName instead of item.customerName -->
-                <td>${fullName || '-'}</td>
-
-                <td>${item.memberCode || '-'}</td>
-                <td>${item.branchName || '-'}</td>
-                <td>${item.dob || '-'}</td>
-                <td>${item.customerAge || '-'}</td>
-                <td>${item.customerGender || '-'}</td>
-                <td>${item.customerAddress || '-'}</td>
-                <td>${item.academicBackground || '-'}</td>
-                <td>${item.contactNo || '-'}</td>
-                <td>${item.emailId || '-'}</td>
-            </tr>
-        `;
-
-		tbody.append(row);
-	});
-}
-
-
-//filter table
-function filterKYCData() {
-	const selectedCode = $('#branchName').val();
-	const fromDateVal = $('#fromDate').val();
-	const toDateVal = $('#toDate').val();
-
-	const fromDate = fromDateVal ? new Date(fromDateVal) : null;
-	const toDate = toDateVal ? new Date(toDateVal) : null;
-
-	const filtered = allKYCData.filter(item => {
-
-		const branchName = item.branchName;
-		const dob = item.dob ? new Date(item.dob) : null;
-
-		// Branch filter
-		const matchesCode = selectedCode ? branchName === selectedCode : true;
-
-		// DOB null ho aur date selected ho → match false
-		if (!dob && (fromDate || toDate)) {
-			return false;
-		}
-
-		// Date From
-		const matchesFrom = fromDate ? dob >= fromDate : true;
-
-		// Date To
-		const matchesTo = toDate ? dob <= toDate : true;
-
-		return matchesCode && matchesFrom && matchesTo;
-	});
-
-	renderTable(filtered);
-}
-
-
-//anjali  approve button code
-
-$(document).ready(function() {
-	$('#approvedBtn').click(function(e) {
+	// APPROVE BUTTON
+	$('#approvedBtn').on('click', function(e) {
 		e.preventDefault();
 
 		const selectedCheckboxes = $('.approval-checkbox:checked');
@@ -149,53 +26,271 @@ $(document).ready(function() {
 			return;
 		}
 
+		const approvalRequests = [];
+
 		selectedCheckboxes.each(function() {
 			const id = $(this).data('id');
-			const isApproved = 1; // because you're only approving selected ones
 
-			$.ajax({
-				url: `api/requestapproval/approvedCustomerData?id=${id}&isApproved=${isApproved}`,
-				type: 'POST',
-				success: function(response) {
-					if (response.status === "OK") {
-						alert("APPROVED SUCCESSFULLY!");
-						location.reload();
+			approvalRequests.push(
+				$.ajax({
+					url: "api/requestapproval/approvedCustomerData",
+					type: "POST",
+					data: {
+						id: id,
+						isApproved: 1
 					}
-				},
-				error: function(xhr) {
-					alert("ERROR APPROVING ID " + id);
-					console.error(xhr);
-				}
-			});
+				})
+			);
 		});
 
+		$.when.apply($, approvalRequests)
+			.done(function() {
+				alert("APPROVED SUCCESSFULLY!");
+				location.reload();
+			})
+			.fail(function(xhr) {
+				console.error("ERROR APPROVING CUSTOMERS:", xhr.responseText);
+				alert("ERROR APPROVING CUSTOMERS. PLEASE CHECK THE DATA.");
+			});
 	});
+
 });
 
-//Get All brnach in DropDowne
-$(document).ready(function() {
-	$.ajax({
-		url: "api/preference/getAllBranchModule", // Add base path if needed like api/preference/getAllBranchModule
-		type: "GET",
-		success: function(response) {
-			if (response.status == "FOUND") {
-				const branchList = response.data;
-				$("#branchName").empty(); // Clear existing options
-				$("#branchName").append("<option value=''>-- SELECT BRANCH --</option>");
 
-				for (let i = 0; i < branchList.length; i++) {
-					let branch = branchList[i];
-					let option = `<option value="${branch.branchName}">${branch.branchName}</option>`;
-					$("#branchName").append(option);
-					$("#branch").append(option);
-				}
+// LOAD ALL UNAPPROVED CUSTOMERS
+function loadCustomerKYCData() {
+
+	$.ajax({
+		url: "api/requestapproval/unapproved",
+		type: "GET",
+		dataType: "json",
+
+		success: function(response) {
+
+			console.log("UNAPPROVED CUSTOMERS RESPONSE:", response);
+
+			if (response && Array.isArray(response.data)) {
+
+				allKYCData = response.data;
+
+				renderTable(allKYCData);
+
 			} else {
-				alert("ERROR: " + response.message);
+
+				allKYCData = [];
+				renderTable([]);
+
+				console.warn("CUSTOMER DATA IS NOT AVAILABLE IN RESPONSE.DATA");
 			}
 		},
-		error: function(xhr) {
-			console.error("Error loading branches:", xhr.responseText);
+
+		error: function(xhr, status, error) {
+
+			console.error("ERROR FETCHING CUSTOMER DATA:", error);
+			console.error("SERVER RESPONSE:", xhr.responseText);
+
+			allKYCData = [];
+			renderTable([]);
+
+			if (xhr.status === 404) {
+				console.log("NO UNAPPROVED CUSTOMERS FOUND.");
+			} else {
+				alert("FAILED TO LOAD DATA.");
+			}
+		}
+	});
+}
+
+
+// LOAD ALL BRANCHES IN DROPDOWN
+function loadBranchDropdown() {
+
+	$.ajax({
+		url: "api/preference/getAllBranchModule",
+		type: "GET",
+		dataType: "json",
+
+		success: function(response) {
+
+			if (response && response.status === "OK" &&
+				Array.isArray(response.data)) {
+
+				const branchList = response.data;
+
+				$("#branchName").empty();
+				$("#branchName").append(
+					"<option value=''>-- SELECT BRANCH --</option>"
+				);
+
+				$("#branch").empty();
+				$("#branch").append(
+					"<option value=''>-- SELECT BRANCH --</option>"
+				);
+
+				for (let i = 0; i < branchList.length; i++) {
+
+					const branch = branchList[i];
+					const branchName = branch.branchName || "";
+
+					const option = $("<option></option>")
+						.val(branchName)
+						.text(branchName);
+
+					$("#branchName").append(option.clone());
+					$("#branch").append(option);
+				}
+
+			} else {
+				console.error("BRANCH DATA NOT FOUND:", response);
+				alert("ERROR: " + (response.message || "BRANCH DATA NOT FOUND."));
+			}
+		},
+
+		error: function(xhr, status, error) {
+			console.error("ERROR LOADING BRANCHES:", error);
+			console.error("SERVER RESPONSE:", xhr.responseText);
 			alert("FAILED TO LOAD DROPDOWN DATA.");
 		}
 	});
-});
+}
+
+
+// RENDER CUSTOMER TABLE
+function renderTable(data) {
+
+	const tbody = $(".datatable tbody");
+	tbody.empty();
+
+	if (!Array.isArray(data) || data.length === 0) {
+
+		tbody.append(`
+            <tr>
+                <td colspan="12"
+                    style="text-align:center; font-family:'Poppins',sans-serif;">
+                    NO DATA FOUND
+                </td>
+            </tr>
+        `);
+
+		return;
+	}
+
+	data.forEach(function(item, index) {
+
+		// NULL-SAFE STRING CONVERSION
+		const safeText = function(value) {
+			return value == null ? "" : String(value);
+		};
+
+		// BUILD FULL NAME
+		const fullName = [
+			item.firstName,
+			item.middleName,
+			item.lastName
+		]
+			.filter(function(name) {
+				return name != null && String(name).trim() !== "";
+			})
+			.join(" ");
+
+		const branchName = safeText(item.branchName);
+		const customerGender = safeText(item.customerGender);
+		const customerAddress = safeText(item.customerAddress);
+		const contactNo = safeText(item.contactNo);
+		const emailId = safeText(item.emailId);
+
+		const row = `
+            <tr style="font-family:'Poppins',sans-serif;">
+
+                <td>
+                    <input type="checkbox"
+                        class="approval-checkbox"
+                        data-id="${safeText(item.id)}"
+                        ${item.isApproved === true ? "checked" : ""} />
+                </td>
+
+                <td>${index + 1}</td>
+
+                <td>${safeText(fullName).toUpperCase() || "-"}</td>
+
+                <td>${safeText(item.memberCode) || "-"}</td>
+
+                <td>${safeText(item.accountNumber) || "-"}</td>
+
+                <td>${branchName.toUpperCase() || "-"}</td>
+
+                <td>${safeText(item.dob) || "-"}</td>
+
+                <td>${safeText(item.customerAge) || "-"}</td>
+
+                <td>${customerGender.toUpperCase() || "-"}</td>
+
+                <td>${customerAddress.toUpperCase() || "-"}</td>
+
+                <td>${contactNo.toUpperCase() || "-"}</td>
+
+                <td>${emailId.toUpperCase() || "-"}</td>
+
+            </tr>
+        `;
+
+		tbody.append(row);
+	});
+}
+
+
+// FILTER TABLE
+
+function filterKYCData() {
+
+	const selectedCode = $('#branchName').val();
+	const selectedAccountNumber = $('#accountNumber').val().trim().toLowerCase();
+
+	const fromDateVal = $('#fromDate').val();
+	const toDateVal = $('#toDate').val();
+
+	const fromDate = fromDateVal ? new Date(fromDateVal) : null;
+	const toDate = toDateVal ? new Date(toDateVal) : null;
+
+	const filtered = allKYCData.filter(function(item) {
+
+		const branchName = item.branchName || "";
+		const accountNumber = String(item.accountNumber || "").trim().toLowerCase();
+		const dob = item.dob ? new Date(item.dob) : null;
+
+		// BRANCH FILTER
+		const matchesBranch = selectedCode
+			? branchName === selectedCode
+			: true;
+
+		// ACCOUNT NUMBER FILTER
+		const matchesAccountNumber = selectedAccountNumber
+			? accountNumber.includes(selectedAccountNumber)
+			: true;
+
+		// DATE FILTER
+		if (!dob && (fromDate || toDate)) {
+			return false;
+		}
+
+		const matchesFrom = fromDate
+			? dob >= fromDate
+			: true;
+
+		const matchesTo = toDate
+			? dob < new Date(
+				toDate.getFullYear(),
+				toDate.getMonth(),
+				toDate.getDate() + 1
+			)
+			: true;
+
+		return matchesBranch &&
+			matchesAccountNumber &&
+			matchesFrom &&
+			matchesTo;
+	});
+
+	renderTable(filtered);
+}
+

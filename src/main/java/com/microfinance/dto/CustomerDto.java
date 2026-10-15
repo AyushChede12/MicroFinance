@@ -13,6 +13,7 @@ public class CustomerDto {
 
 	// Customer Details
 	private String memberCode;
+	private String accountNumber;
 	private String authenticateFor;
 	private String signupDate;
 	private String major;
@@ -115,6 +116,14 @@ public class CustomerDto {
 
 	public void setMemberCode(String memberCode) {
 		this.memberCode = memberCode;
+	}
+
+	public String getAccountNumber() {
+		return accountNumber;
+	}
+
+	public void setAccountNumber(String accountNumber) {
+		this.accountNumber = accountNumber;
 	}
 
 	public String getAuthenticateFor() {

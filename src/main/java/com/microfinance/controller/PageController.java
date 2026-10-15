@@ -481,6 +481,8 @@ public class PageController {
 	@GetMapping("/addCustomer")
 	public String getAddClient(Model model) {
 		long maxId = customerRepo.getMaxId();
+		String accountNumber = String.format("2025%08d", maxId + 1);
+		model.addAttribute("accountNumber", accountNumber);
 		String memberCode = "M" + "0000" + (maxId + 1);
 		model.addAttribute("memberCode", memberCode);
 		model.addAttribute("contentPage", "customerManagement/addCustomer.jsp");

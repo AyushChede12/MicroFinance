@@ -46,7 +46,6 @@ public class CustomerManagementService {
 	BranchModuleRepo branchModuleRepo;
 
 	@Value("${upload.directory}")
-
 	private String uploadDirectory;
 
 	public ApiResponse<addCustomer> saveOrUpdateCustomer(CustomerDto clientMasterDto, MultipartFile customerPhoto,
@@ -64,6 +63,7 @@ public class CustomerManagementService {
 // Mapping fields
 // You already did this correctly
 		addcustomer.setMemberCode(clientMasterDto.getMemberCode());
+		addcustomer.setAccountNumber(clientMasterDto.getAccountNumber());
 		addcustomer.setAuthenticateFor(clientMasterDto.getAuthenticateFor());
 		addcustomer.setSignupDate(clientMasterDto.getSignupDate());
 		addcustomer.setMajor(clientMasterDto.getMajor());

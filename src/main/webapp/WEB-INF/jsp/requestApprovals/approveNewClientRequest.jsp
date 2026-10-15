@@ -1,12 +1,12 @@
 
 <div class="pagetitle">
-	<h1>REQUEST APPROVALS </h1>
+	<h1>REQUEST APPROVALS</h1>
 	<nav>
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item"><a href="openDashboard"> <i
 					class="bi bi-check-circle"></i>
 			</a></li>
-			<li class="breadcrumb-item action">APPROVE NEW CLIENT REQUEST </li>
+			<li class="breadcrumb-item action">APPROVE CUSTOMER REQUEST</li>
 		</ol>
 	</nav>
 </div>
@@ -43,7 +43,16 @@
 					</div>
 
 				</div>
-				<div class="col-lg-4">
+				<div class="col-lg-3">
+					<div class="d-flex flex-column formFields">
+						<label for="">ACCOUNT NUMBER</label> <input type="number"
+							id="accountNumber" name="accountNumber" required="required"
+							class="form-control" style="height: 30px;"
+							placeholder="ENTER ACCOUNT NO...">
+					</div>
+
+				</div>
+				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
 						<label for="vehicalNo">DATE FROM</label> <input type="date"
 							name="fromDate" id="fromDate" required="required"
@@ -51,7 +60,7 @@
 					</div>
 				</div>
 
-				<div class="col-lg-4">
+				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
 						<label for="vehicalNo">DATE TO</label> <input type="date"
 							name="toDate" id="toDate" required="required"
@@ -84,14 +93,14 @@
 							<tr style="font-family: 'Poppins', sans-serif;">
 								<th scope="col"></th>
 								<th scope="col">SR NO.</th>
-								<th scope="col">MEMBER NAME</th>
-								<th scope="col">MEMBER CODE</th>
+								<th scope="col">CUSTOMER NAME</th>
+								<th scope="col">CUSTOMER CODE</th>
+								<th scope="col">ACCOUNT NUMBER</th>
 								<th scope="col">BRANCH NAME</th>
 								<th scope="col">DATE OF BIRTH</th>
 								<th scope="col">AGE</th>
 								<th scope="col">GENDER</th>
 								<th scope="col">ADDRESS</th>
-								<th scope="col">ACADEMIC BACKGROUND</th>
 								<th scope="col">CONTACT NO</th>
 								<th scope="col">EMAIL ID</th>
 

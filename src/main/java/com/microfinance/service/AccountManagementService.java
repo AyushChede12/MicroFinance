@@ -3002,6 +3002,7 @@ public class AccountManagementService {
 		transaction.setTransactionType(request.getTransactionType());
 
 		transaction.setReferenceNo(request.getReferenceNo());
+		transaction.setPaymentBy(request.getPaymentBy());
 
 		/*
 		 * Default status
