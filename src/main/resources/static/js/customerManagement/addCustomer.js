@@ -23,6 +23,8 @@ $(document).ready(function() {
 
 		var authenticate = $("#authenticateFor").val();
 		var minor = $("#minor").val();
+		var accountNumber = $("#accountNumber").val();
+		var accountCode = $("#accountCode").val();
 
 		$("[id^='chk']").text('');
 
@@ -244,6 +246,11 @@ $(document).ready(function() {
 		formData.append(
 			"memberCode",
 			$('#memberCode').val()
+		);
+
+		formData.append(
+			"accountNumber",
+			$('#accountNumber').val()
 		);
 
 		formData.append(
@@ -574,8 +581,15 @@ $(document).ready(function() {
 				if (response.data) {
 					const customerId = response.data.id;
 
-					const saveMsg =
-						(response.message || "CUSTOMER SAVED SUCCESSFULLY!").toUpperCase();
+					Swal.fire({
+						icon: "success",
+						title: "REGISTRATION SUCCESSFUL",
+						html:
+							"CUSTOMER REGISTRATION COMPLETED SUCCESSFULLY!<br><br>" +
+							"<b>ACCOUNT NUMBER: " + accountNumber + "</b><br><br>" +
+							"THANK YOU FOR REGISTERING WITH US.",
+						confirmButtonText: "OK"
+					});
 
 					// =====================================================
 					// ACCOUNT TRANSACTION
@@ -630,7 +644,7 @@ $(document).ready(function() {
 
 					var transactionType = "";
 
-					if ("CASH".equalsIgnoreCase(paymentBy)) {
+					if ((paymentBy || "").toUpperCase() === "CASH") {
 						transactionType = "CUSTOMER_FEES_CASH";
 					} else {
 						transactionType = "TRANSFER";
@@ -640,20 +654,20 @@ $(document).ready(function() {
 						branchName:
 							$('#branchName').val(),
 
-						accountCode:
+						paymentBy:
 							paymentBy,
+
+						accountCode:
+							accountCode,
 
 						customerName:
 							customerName,
 
 						accountNumber:
-							memberCode,
+							accountNumber,
 
 						transactionDate:
-							$('#signupDate').val() ||
-							new Date()
-								.toISOString()
-								.split('T')[0],
+							$('#signupDate').val(),
 
 						narration:
 							"CUSTOMER REGISTRATION FEES - " +
@@ -672,8 +686,7 @@ $(document).ready(function() {
 							transactionType,
 
 						referenceNo:
-							$('#memberCode').val() ||
-							String(customerId),
+							$('#memberCode').val(),
 
 						status:
 							"SUCCESS",
@@ -697,14 +710,14 @@ $(document).ready(function() {
 						url: 'accountManagement/saveAccountTransaction',
 						contentType: 'application/json',
 						data: JSON.stringify(accountTransactionData),
-
+						dataType: 'json',
 						success: function(transactionResponse) {
-							alert("SUCCESS");
 
 							console.log(
 								"AccountTransaction saved successfully:",
 								transactionResponse
 							);
+							
 
 							/*
 							 * Existing Customer flow
@@ -1067,32 +1080,70 @@ function loadCustomerTable() {
 	$.ajax({
 		url: "api/customermanagement/getAllCustomer",
 		type: "GET",
+		dataType: "json",
 
-		success: function(data) {
+		success: function(response) {
+			console.log("Customer API Response:", response);
+
 			let tbody = $("#customerTableBody");
 			tbody.empty();
 
-			data.forEach((cust, idx) => {
+			// Handle direct array or wrapped API response
+			let data = Array.isArray(response)
+				? response
+				: Array.isArray(response.data)
+					? response.data
+					: Array.isArray(response.body)
+						? response.body
+						: Array.isArray(response.content)
+							? response.content
+							: null;
 
-				// 🔹 Build FULL NAME from first, middle, last
+			if (!data) {
+				console.error("Customer data is not an array:", response);
+				tbody.append(
+					$("<tr>").append(
+						$("<td>", {
+							colspan: 8,
+							text: "UNABLE TO LOAD CUSTOMER DATA"
+						})
+					)
+				);
+				return;
+			}
+
+			data.forEach(function(cust, idx) {
+
+				// Build FULL NAME from first, middle, last
 				const fullName = [
 					cust.firstName,
 					cust.middleName,
 					cust.lastName
-				].filter(Boolean).join(" ");
+				]
+					.filter(name => name && name.trim())
+					.join(" ");
+
+				// Convert values to uppercase safely
+				const memberCode = String(cust.memberCode || "").toUpperCase();
+				const customerName = String(fullName || "").toUpperCase();
+				const contactNo = String(cust.contactNo || "").toUpperCase();
+				const aadharNo = String(cust.aadharNo || "").toUpperCase();
+				const district = String(cust.district || "").toUpperCase();
+				const branchName = String(cust.branchName || "").toUpperCase();
+				const dob = String(cust.dob || "").toUpperCase();
 
 				tbody.append(`
 					<tr>
-						<td>${(idx + 1).toString().toUpperCase()}</td>
-						<td>${(cust.memberCode || "").toUpperCase()}</td>
-						<td>${(fullName || "").toUpperCase()}</td>
-						<td>${(cust.contactNo || "").toUpperCase()}</td>
-						<td>${(cust.aadharNo || "").toUpperCase()}</td>
-						<td>${(cust.district || "").toUpperCase()}</td>
-						<td>${(cust.branchName || "").toUpperCase()}</td>
-						<td>${(cust.dob || "").toUpperCase()}</td>
+						<td>${idx + 1}</td>
+						<td>${memberCode}</td>
+						<td>${customerName}</td>
+						<td>${contactNo}</td>
+						<td>${aadharNo}</td>
+						<td>${district}</td>
+						<td>${branchName}</td>
+						<td>${dob}</td>
 					</tr>
-                `);
+				`);
 			});
 		},
 
@@ -1401,9 +1452,33 @@ $(document).ready(function() {
 	$.ajax({
 		url: "api/customermanagement/getAllCustomer",
 		method: "GET",
+		dataType: "json",
 
-		success: function(data) {
-			console.log("Fetched Members:", data);
+		success: function(response) {
+			console.log("Fetched Members:", response);
+
+			// Handle different API response structures
+			var data = Array.isArray(response)
+				? response
+				: Array.isArray(response.data)
+					? response.data
+					: Array.isArray(response.body)
+						? response.body
+						: null;
+
+			if (!data) {
+				console.error("Customer list is not an array:", response);
+				alert("INVALID CUSTOMER DATA RECEIVED FROM SERVER.");
+				return;
+			}
+
+			$('#selectMember').empty();
+			$('#selectMember').append(
+				$('<option>', {
+					value: '',
+					text: 'SELECT MEMBER'
+				})
+			);
 
 			data.forEach(function(customer) {
 				const optionText = `${customer.memberCode} - ${customer.customerName}`;
@@ -1418,7 +1493,8 @@ $(document).ready(function() {
 		},
 
 		error: function(err) {
-			console.error("Error fetching customers:", err);
+			console.error("ERROR FETCHING CUSTOMERS:", err);
+			alert("INTERNAL SERVER ERROR");
 		}
 	});
 });

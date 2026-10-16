@@ -15,6 +15,7 @@ public class AccountTransactionRequest {
 
 	private String transactionType;
 	private String referenceNo;
+	private String paymentBy;
 
 	private String status;
 
@@ -101,6 +102,14 @@ public class AccountTransactionRequest {
 
 	public void setReferenceNo(String referenceNo) {
 		this.referenceNo = referenceNo;
+	}
+
+	public String getPaymentBy() {
+		return paymentBy;
+	}
+
+	public void setPaymentBy(String paymentBy) {
+		this.paymentBy = paymentBy;
 	}
 
 	public String getStatus() {

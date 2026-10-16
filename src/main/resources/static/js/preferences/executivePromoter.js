@@ -551,16 +551,16 @@ $('#updateBtn').click(function(event) {
 	$('#chkaccountno').text('');
 
 	var type = $('#type').val().trim();
-	var branchName = $('#branchName').val().trim();
+	var branchName = $('#branchName').val();
 	var fullName = $('#fullName').val().trim();
 	var dateOfBirth = $('#dateOfBirth').val().trim();
 	var promoterNo = $('#promoterNo').val().trim();
 	var appointmentDate = $('#appointmentDate').val().trim();
-	var relationName = $('#relationName').val().trim();
-	var relationToApplicant = $('#relationToApplicant').val().trim();
+	var relationName = $('#relationName').val();
+	var relationToApplicant = $('#relationToApplicant').val();
 	var address = $('#address').val().trim();
-	var district = $('#district').val().trim();
-	var state = $('#state').val().trim();
+	var district = $('#district').val();
+	var state = $('#state').val();
 	var pinCode = $('#pinCode').val().trim();
 	var aadharNo = $('#aadharNo').val().trim();
 	var panNo = $('#panNo').val().trim();
@@ -814,7 +814,7 @@ $('#updateBtn').click(function(event) {
 		contentType: false,
 		success: function(response) {
 			if (response.status == "OK") {
-				alert("EXECUTIVE FOUNDER SAVED SUCCESSFULLY");
+				alert("EXECUTIVE FOUNDER UPDATED SUCCESSFULLY");
 				location.reload();
 			} else {
 				alert(response.message);

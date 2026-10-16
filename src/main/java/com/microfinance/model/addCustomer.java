@@ -14,6 +14,8 @@ public class addCustomer {
 	@Column(name = "member_code", length = 50)
 	private String memberCode;
 
+	private String accountNumber;
+
 	@Column(name = "authenticate_for", length = 50)
 	private String authenticateFor;
 
@@ -258,6 +260,30 @@ public class addCustomer {
 
 	public void setMemberCode(String memberCode) {
 		this.memberCode = memberCode;
+	}
+
+	public String getAccountNumber() {
+		return accountNumber;
+	}
+
+	public void setAccountNumber(String accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+
+	public Boolean getIsVerified() {
+		return isVerified;
+	}
+
+	public void setIsVerified(Boolean isVerified) {
+		this.isVerified = isVerified;
+	}
+
+	public Boolean getIsApproved() {
+		return isApproved;
+	}
+
+	public void setIsApproved(Boolean isApproved) {
+		this.isApproved = isApproved;
 	}
 
 	public String getAuthenticateFor() {
