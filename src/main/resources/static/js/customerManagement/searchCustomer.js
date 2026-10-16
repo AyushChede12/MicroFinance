@@ -1,92 +1,218 @@
-var allCustomers = []; // STORE FULL DATA
+var allCustomers = []; // STORE FULL CUSTOMER DATA
 
 $(document).ready(function() {
 
-	// 1️⃣ LOAD ALL CUSTOMERS ONCE
+	// 1. LOAD ALL CUSTOMERS ONCE
 	$.ajax({
 		url: "api/customermanagement/getAllCustomer",
 		type: "GET",
+
 		success: function(data) {
+
 			allCustomers = data;
-			renderTable(allCustomers);
+
+			// EXTRACT CUSTOMER ARRAY
+			var customers = getCustomerArray(allCustomers);
+
+			// DISPLAY ALL CUSTOMERS
+			renderTable(customers);
 		},
+
 		error: function() {
 			alert("FAILED TO FETCH CUSTOMER DATA.");
 		}
 	});
 
-	// 2️⃣ FILTER ON BRANCH CHANGE
-	$('#branchName').on('change', function() {
+	// 2. FILTER ON BRANCH CHANGE
+	$("#branchName").on("change", function() {
 		filterCustomers();
 	});
 
-	// 3️⃣ FILTER ON CUSTOMER NAME TYPING
-	$('#customerName').on('keyup', function() {
+	// 3. FILTER ON CUSTOMER NAME TYPING
+	$("#customerName").on("input", function() {
 		filterCustomers();
 	});
 
 });
 
-// 🔍 FILTERING LOGIC
+
+// 4. EXTRACT CUSTOMER ARRAY FROM API RESPONSE
+function getCustomerArray(response) {
+
+	if (Array.isArray(response)) {
+		return response;
+	}
+
+	if (response && Array.isArray(response.data)) {
+		return response.data;
+	}
+
+	if (response && response.data &&
+		Array.isArray(response.data.content)) {
+		return response.data.content;
+	}
+
+	if (response && Array.isArray(response.content)) {
+		return response.content;
+	}
+
+	console.error("INVALID CUSTOMER DATA:", response);
+
+	return [];
+}
+
+
+// 5. FILTER CUSTOMERS
 function filterCustomers() {
 
-	var selectedBranch = $('#branchName').val().toLowerCase();
-	var searchName = $('#customerName').val().toLowerCase();
+	var customers = getCustomerArray(allCustomers);
 
-	var filteredData = allCustomers.filter(function(customer) {
+	var selectedBranch = String($("#branchName").val() || "")
+		.trim()
+		.toLowerCase();
+
+	var searchName = String($("#customerName").val() || "")
+		.trim()
+		.toLowerCase();
+
+	// FILTER CUSTOMER RECORDS
+	var filteredData = customers.filter(function(customer) {
+
+		if (!customer) {
+			return false;
+		}
 
 		// BRANCH MATCH
-		var branchMatch = !selectedBranch ||
-			(customer.branchName &&
-				customer.branchName.toLowerCase().includes(selectedBranch));
+		var branch = String(customer.branchName || "")
+			.trim()
+			.toLowerCase();
 
-		// 🔑 FULL NAME BUILD
+		var branchMatch = !selectedBranch ||
+			branch === selectedBranch;
+
+		// BUILD FULL CUSTOMER NAME
 		var fullName = [
 			customer.firstName,
 			customer.middleName,
 			customer.lastName
-		].filter(Boolean).join(" ").toLowerCase();
+		]
+			.filter(function(name) {
+				return name !== null &&
+					name !== undefined &&
+					String(name).trim() !== "";
+			})
+			.map(function(name) {
+				return String(name).trim();
+			})
+			.join(" ")
+			.toLowerCase();
 
-		// NAME MATCH
-		var nameMatch = !searchName || fullName.includes(searchName);
+		// FALLBACK IF API RETURNS customerName
+		if (!fullName) {
+			fullName = String(customer.customerName || "")
+				.trim()
+				.toLowerCase();
+		}
 
+		// CUSTOMER NAME MATCH
+		var nameMatch = !searchName ||
+			fullName.includes(searchName);
+
+		// BOTH FILTERS MUST MATCH
 		return branchMatch && nameMatch;
+
 	});
 
+	// DISPLAY FILTERED CUSTOMERS
 	renderTable(filteredData);
 }
 
 
-// 📋 TABLE RENDERING
+// 6. TABLE RENDERING
 function renderTable(data) {
 
 	var tbody = $("table tbody");
+
 	tbody.empty();
 
-	if (data.length === 0) {
-		tbody.append("<tr><td colspan='9' class='text-center'>NO RECORDS FOUND</td></tr>");
+	// NO RECORDS FOUND
+	if (!Array.isArray(data) || data.length === 0) {
+
+		tbody.append(
+			"<tr>" +
+			"<td colspan='9' class='text-center'>" +
+			"NO RECORDS FOUND" +
+			"</td>" +
+			"</tr>"
+		);
+
 		return;
 	}
 
+	// DISPLAY CUSTOMER ROWS
 	$.each(data, function(i, customer) {
-		let fullName = [
+
+		// BUILD FULL CUSTOMER NAME
+		var fullName = [
 			customer.firstName,
 			customer.middleName,
 			customer.lastName
-		].filter(Boolean).join(" ");
+		]
+			.filter(function(name) {
+				return name !== null &&
+					name !== undefined &&
+					String(name).trim() !== "";
+			})
+			.map(function(name) {
+				return String(name).trim();
+			})
+			.join(" ");
 
-		var row = "<tr>" +
-			"<td>" + (i + 1) + "</td>" +
-			"<td>" + (customer.memberCode || '').toUpperCase() + "</td>" +
-			"<td>" + (fullName || '').toUpperCase() + "</td>" +
-			"<td>" + (customer.customerGender || '').toUpperCase() + "</td>" +
-			"<td>" + (customer.dob || '').toUpperCase() + "</td>" +
-			"<td>" + (customer.branchName || '').toUpperCase() + "</td>" +
-			"<td>" + (customer.contactNo || '').toUpperCase() + "</td>" +
-			"<td>" + (customer.nomineeName || '').toUpperCase() + "</td>" +
-			"<td>" + (customer.customerAddress || '').toUpperCase() + "</td>" +
-			"</tr>";
+		// FALLBACK CUSTOMER NAME
+		if (!fullName) {
+			fullName = customer.customerName || "";
+		}
 
+		// CONVERT ALL DISPLAY VALUES TO UPPERCASE
+		var memberCode = String(customer.memberCode || "")
+			.toUpperCase();
+
+		fullName = String(fullName).toUpperCase();
+
+		var gender = String(customer.customerGender || "")
+			.toUpperCase();
+
+		var dob = String(customer.dob || "")
+			.toUpperCase();
+
+		var branchName = String(customer.branchName || "")
+			.toUpperCase();
+
+		var contactNo = String(customer.contactNo || "")
+			.toUpperCase();
+
+		var nomineeName = String(customer.nomineeName || "")
+			.toUpperCase();
+
+		var address = String(customer.customerAddress || "")
+			.toUpperCase();
+
+		// CREATE TABLE ROW
+		var row = $("<tr>");
+
+		row.append($("<td>").text(i + 1));
+		row.append($("<td>").text(memberCode));
+		row.append($("<td>").text(fullName));
+		row.append($("<td>").text(gender));
+		row.append($("<td>").text(dob));
+		row.append($("<td>").text(branchName));
+		row.append($("<td>").text(contactNo));
+		row.append($("<td>").text(nomineeName));
+		row.append($("<td>").text(address));
+
+		// APPEND ROW TO TABLE
 		tbody.append(row);
+
 	});
+
 }
