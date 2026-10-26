@@ -79,8 +79,9 @@
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields mb-4">
 						<label for="">FINANCIAL CONSULTANT CODE</label> <input type="text"
-							name="financialConsultantCode" id="financialConsultantCode" style="text-transform: uppercase;"	
-							required="required" placeholder="ENTER FINANCIAL CONSULTANT CODE" />
+							name="financialConsultantCode" id="financialConsultantCode"
+							style="text-transform: uppercase;" required="required"
+							placeholder="ENTER FINANCIAL CONSULTANT CODE" />
 					</div>
 				</div>
 				<div class="col-lg-3">

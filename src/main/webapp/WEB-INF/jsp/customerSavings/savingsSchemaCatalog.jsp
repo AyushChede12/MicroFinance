@@ -26,57 +26,58 @@
 
 		<div class="col-lg-3">
 			<div class="d-flex flex-column formFields mb-4">
-				<label>PLAN NAME</label>
-				<input type="text" id="policyName" class="form-control" style="text-transform: uppercase;"
+				<label>PLAN NAME</label> <input type="text" id="policyName"
+					class="form-control" style="text-transform: uppercase;"
 					placeholder="ENTER PLAN NAME" required />
 			</div>
 		</div>
 
 		<div class="col-lg-3">
 			<div class="d-flex flex-column formFields mb-4">
-				<label>YEARLY ROI (%)</label>
-				<input type="number" id="yearlyROI" class="form-control";
-					placeholder="ENTER YEARLY ROI" step="0.01" required />
+				<label>YEARLY ROI (%)</label> <input type="number" id="yearlyROI"
+					class="form-control" ;
+					placeholder="ENTER YEARLY ROI"
+					step="0.01" required />
 			</div>
 		</div>
 
 		<div class="col-lg-3">
 			<div class="d-flex flex-column formFields mb-4">
-				<label>CUSTOMER NAME</label>
-				<input type="text" id="customerName" class="form-control" style="text-transform: uppercase";
+				<label>CUSTOMER NAME</label> <input type="text" id="customerName"
+					class="form-control" style="text-transform: uppercase"
+					;
 					placeholder="ENTER CUSTOMER NAME" required />
 			</div>
 		</div>
 
 		<div class="col-lg-3">
 			<div class="d-flex flex-column formFields mb-4">
-				<label>INITIAL DEPOSIT</label>
-				<input type="number" id="initialDeposit" class="form-control"
+				<label>INITIAL DEPOSIT</label> <input type="number"
+					id="initialDeposit" class="form-control"
 					placeholder="ENTER INITIAL DEPOSIT" required />
 			</div>
 		</div>
 
 		<div class="col-lg-3">
 			<div class="d-flex flex-column formFields mb-4">
-				<label>MINIMUM OPENING BALANCE</label>
-				<input type="number" id="minimumOpeningBalance"
-					class="form-control"
+				<label>MINIMUM OPENING BALANCE</label> <input type="number"
+					id="minimumOpeningBalance" class="form-control"
 					placeholder="ENTER MINIMUM OPENING BALANCE" />
 			</div>
 		</div>
 
 		<div class="col-lg-3">
 			<div class="d-flex flex-column formFields mb-4">
-				<label>RESERVED FUNDS</label>
-				<input type="number" id="reservedFunds" class="form-control"
+				<label>RESERVED FUNDS</label> <input type="number"
+					id="reservedFunds" class="form-control"
 					placeholder="ENTER RESERVED FUNDS" />
 			</div>
 		</div>
 
 		<div class="col-lg-3">
 			<div class="d-flex flex-column formFields mb-4">
-				<label>MESSAGING FEES</label>
-				<select id="messagingFees" class="form-control" required>
+				<label>MESSAGING FEES</label> <select id="messagingFees"
+					class="form-control" required>
 					<option value="">SELECT</option>
 					<option value="YES">YES</option>
 					<option value="NO">NO</option>
@@ -86,8 +87,8 @@
 
 		<div class="col-lg-3">
 			<div class="d-flex flex-column formFields mb-4">
-				<label>MESSAGING INTERVAL</label>
-				<select id="messagingInterval" class="form-control">
+				<label>MESSAGING INTERVAL</label> <select id="messagingInterval"
+					class="form-control">
 					<option value="">SELECT</option>
 					<option value="MONTHLY">MONTHLY</option>
 				</select>
@@ -96,67 +97,60 @@
 
 		<div class="col-lg-3">
 			<div class="d-flex flex-column formFields mb-4">
-				<label>MONTHLY FREE IFSC</label>
-				<input type="number" id="monthlyFreeIFSC"
-					class="form-control"
+				<label>MONTHLY FREE IFSC</label> <input type="number"
+					id="monthlyFreeIFSC" class="form-control"
 					placeholder="ENTER MONTHLY FREE IFSC" />
 			</div>
 		</div>
 
 		<div class="col-lg-3">
 			<div class="d-flex flex-column formFields mb-4">
-				<label>FREE MONEY TRANSFERS</label>
-				<input type="number" id="freeMoneyTransfers"
-					class="form-control"
+				<label>FREE MONEY TRANSFERS</label> <input type="number"
+					id="freeMoneyTransfers" class="form-control"
 					placeholder="ENTER FREE MONEY TRANSFERS" />
 			</div>
 		</div>
 
 		<div class="col-lg-3">
 			<div class="d-flex flex-column formFields mb-4">
-				<label>LIMIT PER TRANSACTION</label>
-				<input type="number" id="limitPerTransaction"
-					class="form-control"
+				<label>LIMIT PER TRANSACTION</label> <input type="number"
+					id="limitPerTransaction" class="form-control"
 					placeholder="ENTER LIMIT PER TRANSACTION" />
 			</div>
 		</div>
 
 		<div class="col-lg-3">
 			<div class="d-flex flex-column formFields mb-4">
-				<label>DAILY LIMIT</label>
-				<input type="number" id="dailyLimit" class="form-control"
-					placeholder="ENTER DAILY LIMIT" />
+				<label>DAILY LIMIT</label> <input type="number" id="dailyLimit"
+					class="form-control" placeholder="ENTER DAILY LIMIT" />
 			</div>
 		</div>
 
 		<div class="col-lg-3">
 			<div class="d-flex flex-column formFields mb-4">
-				<label>WEEKLY LIMIT</label>
-				<input type="number" id="weeklyLimit" class="form-control"
-					placeholder="ENTER WEEKLY LIMIT" />
+				<label>WEEKLY LIMIT</label> <input type="number" id="weeklyLimit"
+					class="form-control" placeholder="ENTER WEEKLY LIMIT" />
 			</div>
 		</div>
 
 		<div class="col-lg-3">
 			<div class="d-flex flex-column formFields mb-4">
-				<label>MONTHLY LIMIT</label>
-				<input type="number" id="monthlyLimit" class="form-control"
-					placeholder="ENTER MONTHLY LIMIT" />
+				<label>MONTHLY LIMIT</label> <input type="number" id="monthlyLimit"
+					class="form-control" placeholder="ENTER MONTHLY LIMIT" />
 			</div>
 		</div>
 
 		<div class="col-lg-3">
 			<div class="d-flex flex-column formFields mb-4">
-				<label>SERVICE FEE</label>
-				<input type="number" id="serviceFee" class="form-control"
-					placeholder="ENTER SERVICE FEE" />
+				<label>SERVICE FEE</label> <input type="number" id="serviceFee"
+					class="form-control" placeholder="ENTER SERVICE FEE" />
 			</div>
 		</div>
 
 		<div class="col-lg-3">
 			<div class="d-flex flex-column formFields mb-4">
-				<label>BILLING CYCLE</label>
-				<select id="billingCycle" class="form-control">
+				<label>BILLING CYCLE</label> <select id="billingCycle"
+					class="form-control">
 					<option value="">SELECT</option>
 					<option value="DAILY">DAILY</option>
 					<option value="WEEKLY">WEEKLY</option>
@@ -168,26 +162,23 @@
 
 		<div class="col-lg-3">
 			<div class="d-flex flex-column formFields mb-4">
-				<label>CARD FEE</label>
-				<input type="number" id="cardFee" class="form-control"
-					placeholder="ENTER CARD FEE" />
+				<label>CARD FEE</label> <input type="number" id="cardFee"
+					class="form-control" placeholder="ENTER CARD FEE" />
 			</div>
 		</div>
 
 		<div class="col-lg-3">
 			<div class="d-flex flex-column formFields mb-4">
-				<label>MONTHLY CARD LIMIT</label>
-				<input type="number" id="monthlyCardLimit"
-					class="form-control"
+				<label>MONTHLY CARD LIMIT</label> <input type="number"
+					id="monthlyCardLimit" class="form-control"
 					placeholder="MONTHLY CARD LIMIT" />
 			</div>
 		</div>
 
 		<div class="col-lg-3">
 			<div class="d-flex flex-column formFields mb-4">
-				<label>YEARLY CARD LIMIT</label>
-				<input type="number" id="yearlyCardLimit"
-					class="form-control"
+				<label>YEARLY CARD LIMIT</label> <input type="number"
+					id="yearlyCardLimit" class="form-control"
 					placeholder="YEARLY CARD LIMIT" />
 			</div>
 		</div>
@@ -237,20 +228,19 @@
 	</div>
 </div>
 <style>
-    /* Make all form inputs and selects uniform with slightly smaller size */
-    #savingForm input,
-    #savingForm select {
-        width: 100%;        /* Full width of their column */
-        height: 36px;       /* Slightly smaller height */
-        padding: 5px 10px;  /* Adjust padding for smaller height */
-        box-sizing: border-box; /* Include padding in width */
-        font-size: 0.9rem;  /* Keep text readable */
-    }
+/* Make all form inputs and selects uniform with slightly smaller size */
+#savingForm input, #savingForm select {
+	width: 100%; /* Full width of their column */
+	height: 36px; /* Slightly smaller height */
+	padding: 5px 10px; /* Adjust padding for smaller height */
+	box-sizing: border-box; /* Include padding in width */
+	font-size: 0.9rem; /* Keep text readable */
+}
 
-    /* Optional: make placeholders consistent */
-    #savingForm input::placeholder {
-        font-size: 0.85rem;
-    }
+/* Optional: make placeholders consistent */
+#savingForm input::placeholder {
+	font-size: 0.85rem;
+}
 </style>
 
 

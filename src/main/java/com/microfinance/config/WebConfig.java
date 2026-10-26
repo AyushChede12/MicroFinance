@@ -21,7 +21,7 @@ public class WebConfig implements WebMvcConfigurer {
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/Uploads/**")
-				.addResourceLocations("file:D:/UpdatedMicroFinance/UpdatedMicroFinance/src/main/webapp/Uploads/");
+				.addResourceLocations("file:D:/Microfinance/MicroFinance/src/main/webapp/Uploads/");
 	}
 	
 }

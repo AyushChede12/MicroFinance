@@ -15,7 +15,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>microfinance</name>
-	<description>Infosai Product</description>
+	<description>MicroFinance</description>
 	<url />
 	<licenses>
 		<license />
@@ -134,7 +134,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>MicrofinanceDemo</finalName>
+		<finalName>MicroFinance</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

@@ -130,14 +130,14 @@ body {
 <body>
 	<div class="container">
 		<div class="form-box">
-			<h1>Login</h1>
-			<div id="errorMsg"></div>
+			<h1>LOGIN</h1>
+			<div id="errorMsg" style="text-transform: uppercase;"></div>
 			<form id="form1">
 				<div
 					style="display: flex; justify-content: space-between; align-items: center;">
 					<div class="textfield">
 						<input class="inputfield" type="text" id="username"
-							name="username" required> <span></span> <label
+							name="username" style="text-transform: uppercase;" required> <span></span> <label
 							class="inputlabels">USERNAME</label>
 					</div>
 					<div style="position: relative; margin-bottom: 10px;">

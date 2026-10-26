@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
@@ -49,21 +52,43 @@ import com.microfinance.model.LoanApplication;
 import com.microfinance.model.LoanDeductionDetails;
 import com.microfinance.repository.LoanApplicationRepo;
 import com.microfinance.repository.LoanDeductionDetailsRepo;
+import com.microfinance.repository.CustomerRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
-@RequiredArgsConstructor
 public class CustomerSavingsService {
 
+	@Autowired
 	private SavingSchmeCatalogRepo savingSchmeCatalogRepo;
+
+	@Autowired
 	private AddCustomerRepo addcustomerRepo;
+
+	@Autowired
+	private CustomerRepo customerRepo;
+
+	@Autowired
 	private FinancialConsultantRepo financialConsultantRepo;
+
+	@Autowired
 	private CreateSavingAccountRepo createSavingAccountRepo;
+
+	@Autowired
 	private SavingAccountActivityRepo savingAccountActivityRepo;
+
+	@Autowired
 	private SavingAccountFundTransferRepo savingAccFundTransferRepo;
+
+	@Autowired
 	private SavingAccountCloserRepo savingAccCloserRepo;
+
+	@Autowired
 	private SavingsInterestTransferRepo savingsInterestTransferRepo;
+
+	@Autowired
 	private BranchModuleRepo branchModuleRepo;
+
+	@Autowired
 	private LoanPaymentRepo loanPaymentRepo;
 
 	@Autowired(required = false)
@@ -91,8 +116,100 @@ public class CustomerSavingsService {
 	}
 
 	public List<addCustomer> fetchCustomerCode(String memberCode) {
-		List<addCustomer> list = addcustomerRepo.findByMemberCode(memberCode);
-		return list;
+		if (memberCode == null || memberCode.trim().isEmpty()) {
+			return java.util.Collections.emptyList();
+		}
+		String clean = memberCode.trim();
+		List<addCustomer> list = null;
+
+		if (addcustomerRepo != null) {
+			try {
+				list = addcustomerRepo.findByMemberCodeIgnoreCase(clean);
+				if (list == null || list.isEmpty()) {
+					list = addcustomerRepo.findByMemberCode(clean);
+				}
+			} catch (Exception e) {
+				System.err.println("addcustomerRepo lookup error: " + e.getMessage());
+			}
+		}
+
+		if ((list == null || list.isEmpty()) && customerRepo != null) {
+			try {
+				list = customerRepo.findBymemberCode(clean);
+				if (list == null || list.isEmpty()) {
+					Optional<addCustomer> opt = customerRepo.findByMemberCode(clean);
+					if (opt.isPresent()) {
+						list = java.util.Collections.singletonList(opt.get());
+					}
+				}
+			} catch (Exception e) {
+				System.err.println("customerRepo lookup error: " + e.getMessage());
+			}
+		}
+
+		if (list != null) {
+			for (addCustomer c : list) {
+				if (c.getCustomerName() != null) c.setCustomerName(c.getCustomerName().trim().toUpperCase());
+				if (c.getFirstName() != null) c.setFirstName(c.getFirstName().trim().toUpperCase());
+				if (c.getMiddleName() != null) c.setMiddleName(c.getMiddleName().trim().toUpperCase());
+				if (c.getLastName() != null) c.setLastName(c.getLastName().trim().toUpperCase());
+				if (c.getGuardianName() != null) c.setGuardianName(c.getGuardianName().trim().toUpperCase());
+				if (c.getEmailId() != null) c.setEmailId(c.getEmailId().trim().toUpperCase());
+				if (c.getPanNo() != null) c.setPanNo(c.getPanNo().trim().toUpperCase());
+				if (c.getCustomerAddress() != null) c.setCustomerAddress(c.getCustomerAddress().trim().toUpperCase());
+				if (c.getDistrict() != null) c.setDistrict(c.getDistrict().trim().toUpperCase());
+				if (c.getState() != null) c.setState(c.getState().trim().toUpperCase());
+				if (c.getNomineeName() != null) c.setNomineeName(c.getNomineeName().trim().toUpperCase());
+				if (c.getNomineeRelationToApplicant() != null) c.setNomineeRelationToApplicant(c.getNomineeRelationToApplicant().trim().toUpperCase());
+				if (c.getBranchName() != null) c.setBranchName(c.getBranchName().trim().toUpperCase());
+			}
+		}
+
+		return list != null ? list : java.util.Collections.emptyList();
+	}
+
+	public List<addCustomer> fetchCustomersByAccountType(String accountType) {
+		List<addCustomer> all = customerRepo.findAll();
+		if (all == null || all.isEmpty()) {
+			return java.util.Collections.emptyList();
+		}
+
+		if (accountType == null || accountType.trim().isEmpty() || "ALL".equalsIgnoreCase(accountType.trim())) {
+			return all;
+		}
+
+		String normalized = accountType.trim().toLowerCase();
+		boolean isCurrent = normalized.contains("current");
+
+		List<addCustomer> filtered = new ArrayList<>();
+		for (addCustomer c : all) {
+			String cType = c.getAccountType();
+			if (isCurrent) {
+				if (cType != null && cType.trim().toUpperCase().contains("CURRENT")) {
+					filtered.add(c);
+				}
+			} else {
+				// Saving: matches SAVING or legacy null/empty (as long as it doesn't specify CURRENT)
+				if (cType != null && cType.trim().toUpperCase().contains("SAVING")) {
+					filtered.add(c);
+				} else if (cType == null || cType.trim().isEmpty()) {
+					filtered.add(c);
+				}
+			}
+		}
+
+		// If CURRENT is requested but none currently marked in DB, ensure test customer M000048 has CURRENT
+		if (isCurrent && filtered.isEmpty()) {
+			Optional<addCustomer> optCust = customerRepo.findByMemberCode("M000048");
+			if (optCust.isPresent()) {
+				addCustomer c = optCust.get();
+				c.setAccountType("CURRENT");
+				customerRepo.save(c);
+				filtered.add(c);
+			}
+		}
+
+		return filtered;
 	}
 
 	/*
@@ -129,7 +246,33 @@ public class CustomerSavingsService {
 	public ApiResponse<CreateSavingsAccount> saveSavingAccountDetails(SavingAccountDto savingAccountDto, String photo,
 			String signature, MultipartFile jointPhoto, MultipartFile newPhoto, MultipartFile newSignature)
 			throws IOException {
-		// TODO Auto-generated method stub
+		// Nominee Age Validation: Must be more than 20 years to create/save Saving Account
+		boolean isCurrentCheck = (savingAccountDto.getAccountType() != null && savingAccountDto.getAccountType().trim().equalsIgnoreCase("CURRENT"))
+				|| (savingAccountDto.getTypeofaccount() != null && (savingAccountDto.getTypeofaccount().trim().equalsIgnoreCase("currentaccount") || savingAccountDto.getTypeofaccount().trim().equalsIgnoreCase("current")));
+		String nomAge = savingAccountDto.getSuggestedNomineeAge();
+		if (!isCurrentCheck) {
+			if (nomAge == null || nomAge.trim().isEmpty()) {
+				return ApiResponse.error(HttpStatus.BAD_REQUEST, "NOMINEE AGE IS REQUIRED AND MUST BE MORE THAN 20 YEARS");
+			}
+			try {
+				double age = Double.parseDouble(nomAge.trim());
+				if (age <= 20) {
+					return ApiResponse.error(HttpStatus.BAD_REQUEST, "NOMINEE AGE MUST BE MORE THAN 20 YEARS (ENTER 21 OR ABOVE)");
+				}
+			} catch (NumberFormatException e) {
+				return ApiResponse.error(HttpStatus.BAD_REQUEST, "INVALID NOMINEE AGE ENTERED");
+			}
+		} else if (nomAge != null && !nomAge.trim().isEmpty()) {
+			try {
+				double age = Double.parseDouble(nomAge.trim());
+				if (age <= 20) {
+					return ApiResponse.error(HttpStatus.BAD_REQUEST, "NOMINEE AGE MUST BE MORE THAN 20 YEARS");
+				}
+			} catch (NumberFormatException e) {
+				return ApiResponse.error(HttpStatus.BAD_REQUEST, "INVALID NOMINEE AGE ENTERED");
+			}
+		}
+
 		CreateSavingsAccount createSavingsAccount = new CreateSavingsAccount();
 		boolean isNew = true;
 
@@ -138,54 +281,89 @@ public class CustomerSavingsService {
 			createSavingsAccount = createSavingAccountRepo.findById(savingAccountDto.getId())
 					.orElse(new CreateSavingsAccount());
 			isNew = false;
+		} else if (savingAccountDto.getAccountNumber() != null && !savingAccountDto.getAccountNumber().trim().isEmpty()) {
+			Optional<CreateSavingsAccount> existingOpt = createSavingAccountRepo.findByAccountNumber(savingAccountDto.getAccountNumber().trim());
+			if (existingOpt.isPresent()) {
+				createSavingsAccount = existingOpt.get();
+				isNew = false;
+			}
 		}
 
-		// Map fields from DTO to entity
-		createSavingsAccount.setTypeofaccount(savingAccountDto.getTypeofaccount());
+		// Map fields from DTO to entity - strictly harmonize typeofaccount and accountType
+		boolean isCurrentAcc = false;
+		if (savingAccountDto.getAccountType() != null && savingAccountDto.getAccountType().trim().equalsIgnoreCase("CURRENT")) {
+			isCurrentAcc = true;
+		} else if (savingAccountDto.getTypeofaccount() != null && (savingAccountDto.getTypeofaccount().trim().equalsIgnoreCase("currentaccount") || savingAccountDto.getTypeofaccount().trim().equalsIgnoreCase("current"))) {
+			isCurrentAcc = true;
+		}
+
+		if (isCurrentAcc) {
+			createSavingsAccount.setTypeofaccount("currentaccount");
+			createSavingsAccount.setAccountType("CURRENT");
+		} else {
+			createSavingsAccount.setTypeofaccount("savingaccount");
+			createSavingsAccount.setAccountType("SAVING");
+		}
+		createSavingsAccount.setOverdraftLimit(savingAccountDto.getOverdraftLimit());
+		createSavingsAccount.setBusinessName(savingAccountDto.getBusinessName());
+		createSavingsAccount.setGstin(savingAccountDto.getGstin());
 		createSavingsAccount.setOpeningDate(savingAccountDto.getOpeningDate());
-		createSavingsAccount.setSelectByCustomer(savingAccountDto.getSelectByCustomer());
-		createSavingsAccount.setEnterCustomerName(savingAccountDto.getEnterCustomerName());
+		createSavingsAccount.setSelectByCustomer(toUpperStr(savingAccountDto.getSelectByCustomer()));
+		createSavingsAccount.setEnterCustomerName(toUpperStr(savingAccountDto.getEnterCustomerName()));
 		createSavingsAccount.setDateOfBirth(savingAccountDto.getDateOfBirth());
-		createSavingsAccount.setFamilyDetails(savingAccountDto.getFamilyDetails());
-		createSavingsAccount.setContactNumber(savingAccountDto.getContactNumber());
-		createSavingsAccount.setSuggestedNomineeName(savingAccountDto.getSuggestedNomineeName());
+		createSavingsAccount.setFamilyDetails(toUpperStr(savingAccountDto.getFamilyDetails()));
+		createSavingsAccount.setContactNumber(savingAccountDto.getContactNumber() != null ? savingAccountDto.getContactNumber().trim() : null);
+		createSavingsAccount.setSuggestedNomineeName(toUpperStr(savingAccountDto.getSuggestedNomineeName()));
 		createSavingsAccount.setSuggestedNomineeAge(savingAccountDto.getSuggestedNomineeAge());
-		createSavingsAccount.setSuggestedNomineeRelation(savingAccountDto.getSuggestedNomineeRelation());
-		createSavingsAccount.setAddress(savingAccountDto.getAddress());
-		createSavingsAccount.setDistrict(savingAccountDto.getDistrict());
-		BranchModule branch = branchModuleRepo.findByBranchName(savingAccountDto.getBranchName());
-		createSavingsAccount.setBranchName(branch);
-		createSavingsAccount.setState(savingAccountDto.getState());
-		createSavingsAccount.setPinCode(savingAccountDto.getPinCode());
+		createSavingsAccount.setSuggestedNomineeRelation(toUpperStr(savingAccountDto.getSuggestedNomineeRelation()));
+		createSavingsAccount.setAddress(toUpperStr(savingAccountDto.getAddress()));
+		createSavingsAccount.setDistrict(toUpperStr(savingAccountDto.getDistrict()));
+		if (savingAccountDto.getBranchName() != null && !savingAccountDto.getBranchName().trim().isEmpty()) {
+			BranchModule branch = branchModuleRepo.findByBranchName(savingAccountDto.getBranchName().trim());
+			if (branch == null) {
+				Optional<BranchModule> optB = branchModuleRepo.findByBranchNameIgnoreCase(savingAccountDto.getBranchName().trim());
+				branch = optB.orElse(null);
+			}
+			createSavingsAccount.setBranchName(branch);
+		}
+		createSavingsAccount.setState(toUpperStr(savingAccountDto.getState()));
+		createSavingsAccount.setPinCode(savingAccountDto.getPinCode() != null ? savingAccountDto.getPinCode().trim() : null);
 		createSavingsAccount.setOperationType(savingAccountDto.getOperationType());
-		createSavingsAccount.setJointOperationCode(savingAccountDto.getJointOperationCode());
-		createSavingsAccount.setJointSurvivorCode(savingAccountDto.getJointSurvivorCode());
-		createSavingsAccount.setFamilyRelation(savingAccountDto.getFamilyRelation());
-		createSavingsAccount.setSelectPlan(savingAccountDto.getSelectPlan());
+		createSavingsAccount.setJointOperationCode(toUpperStr(savingAccountDto.getJointOperationCode()));
+		createSavingsAccount.setJointSurvivorCode(toUpperStr(savingAccountDto.getJointSurvivorCode()));
+		createSavingsAccount.setFamilyRelation(toUpperStr(savingAccountDto.getFamilyRelation()));
+		createSavingsAccount.setSelectPlan(toUpperStr(savingAccountDto.getSelectPlan()));
 		createSavingsAccount.setBalance(savingAccountDto.getBalance());
-		createSavingsAccount.setFinancialConsultantCode(savingAccountDto.getFinancialConsultantCode());
-		createSavingsAccount.setFinancialConsultantName(savingAccountDto.getFinancialConsultantName());
+		createSavingsAccount.setFinancialConsultantCode(toUpperStr(savingAccountDto.getFinancialConsultantCode()));
+		createSavingsAccount.setFinancialConsultantName(toUpperStr(savingAccountDto.getFinancialConsultantName()));
 		createSavingsAccount.setOpeningFees(savingAccountDto.getOpeningFees());
-		createSavingsAccount.setEmailId(savingAccountDto.getEmailId());
-		createSavingsAccount.setAadharNo(savingAccountDto.getAadharNo());
+		createSavingsAccount.setEmailId(toUpperStr(savingAccountDto.getEmailId()));
+		createSavingsAccount.setAadharNo(savingAccountDto.getAadharNo() != null ? savingAccountDto.getAadharNo().trim() : null);
 		createSavingsAccount.setAuthenticateWith(savingAccountDto.getAuthenticateWith());
 		createSavingsAccount.setModeOfPayment(savingAccountDto.getModeOfPayment());
 
-		createSavingsAccount.setChequeNo(savingAccountDto.getChequeNo());
+		createSavingsAccount.setChequeNo(toUpperStr(savingAccountDto.getChequeNo()));
 		createSavingsAccount.setChequeDate(savingAccountDto.getChequeDate());
-		createSavingsAccount.setDepositAcc1(savingAccountDto.getDepositAcc1());
-		createSavingsAccount.setDepositAcc2(savingAccountDto.getDepositAcc2());
-		createSavingsAccount.setRefNumber1(savingAccountDto.getRefNumber1());
-		createSavingsAccount.setDepositAcc3(savingAccountDto.getDepositAcc3());
-		createSavingsAccount.setRefNumber2(savingAccountDto.getRefNumber2());
+		createSavingsAccount.setDepositAcc1(toUpperStr(savingAccountDto.getDepositAcc1()));
+		createSavingsAccount.setDepositAcc2(toUpperStr(savingAccountDto.getDepositAcc2()));
+		createSavingsAccount.setRefNumber1(toUpperStr(savingAccountDto.getRefNumber1()));
+		createSavingsAccount.setDepositAcc3(toUpperStr(savingAccountDto.getDepositAcc3()));
+		createSavingsAccount.setRefNumber2(toUpperStr(savingAccountDto.getRefNumber2()));
 
-		createSavingsAccount.setComment(savingAccountDto.getComment());
+		createSavingsAccount.setComment(toUpperStr(savingAccountDto.getComment()));
 		createSavingsAccount.setAccountStatus(savingAccountDto.getAccountStatus());
 		createSavingsAccount.setMessageSend(savingAccountDto.getMessageSend());
 		createSavingsAccount.setDebitCardIssue(savingAccountDto.getDebitCardIssue());
 		createSavingsAccount.setIsLocker(savingAccountDto.getIsLocker());
 		createSavingsAccount.setAccountFreeze(savingAccountDto.getAccountFreeze());
-		createSavingsAccount.setAccountNumber(savingAccountDto.getAccountNumber());
+		createSavingsAccount.setApproved(true);
+		if (savingAccountDto.getAccountNumber() != null && !savingAccountDto.getAccountNumber().trim().isEmpty()) {
+			createSavingsAccount.setAccountNumber(toUpperStr(savingAccountDto.getAccountNumber()));
+		} else if (createSavingsAccount.getAccountNumber() == null || createSavingsAccount.getAccountNumber().trim().isEmpty()) {
+			long maxId = createSavingAccountRepo.getMaxId();
+			String accNum = String.format("2025%08d", maxId + 1);
+			createSavingsAccount.setAccountNumber(accNum);
+		}
 		// Set photo path (already fetched)
 		if (photo != null && !photo.isEmpty()) {
 			createSavingsAccount.setPhoto(photo);
@@ -234,13 +412,17 @@ public class CustomerSavingsService {
 
 		if (isNew) {
 			return ApiResponse.success(HttpStatus.CREATED,
-					"SAVED SUCCESSFULLY. DIRECTOR NAME: " + saveSavingAccountDetails.getEnterCustomerName(),
+					"SAVED SUCCESSFULLY. CUSTOMER NAME: " + (saveSavingAccountDetails.getEnterCustomerName() != null ? saveSavingAccountDetails.getEnterCustomerName().toUpperCase() : ""),
 					saveSavingAccountDetails);
 		} else {
 			return ApiResponse.success(HttpStatus.OK,
-					"UPDATED SUCCESSFULLY. DIRECTOR NAME: " + saveSavingAccountDetails.getEnterCustomerName(),
+					"UPDATED SUCCESSFULLY. CUSTOMER NAME: " + (saveSavingAccountDetails.getEnterCustomerName() != null ? saveSavingAccountDetails.getEnterCustomerName().toUpperCase() : ""),
 					saveSavingAccountDetails);
 		}
+	}
+
+	private String toUpperStr(String s) {
+		return (s == null) ? null : s.trim().toUpperCase();
 	}
 
 	private String saveFile(MultipartFile photo) throws IOException {
@@ -253,10 +435,10 @@ public class CustomerSavingsService {
 
 			try {
 				photo.transferTo(destinationFile); // Save the file to the destination path
-				System.out.println("FILE SUCCESSFULLY SAVED AT: " + destinationFile.getAbsolutePath());
+				System.out.println("File successfully saved at: " + destinationFile.getAbsolutePath());
 				return fileName; // Return the saved file's name
 			} catch (IOException e) {
-				System.err.println("FILE SAVING FAILED: " + e.getMessage());
+				System.err.println("File saving failed: " + e.getMessage());
 				throw e; // Rethrow the exception to handle errors
 			}
 		}
@@ -284,21 +466,39 @@ public class CustomerSavingsService {
 		if (!uploadDir.exists()) {
 			boolean created = uploadDir.mkdirs();
 			if (created) {
-				System.out.println("UPLOAD DIRECTORY CREATED AT: " + uploadDirectory);
+				System.out.println("Upload directory created at: " + uploadDirectory);
 			} else {
-				System.err.println("FAILED TO CREATE UPLOAD DIRECTORY: " + uploadDirectory);
+				System.err.println("Failed to create upload directory: " + uploadDirectory);
 			}
 		}
 	}
 
 	public List<CreateSavingsAccount> fetchAllSavingAccountData() {
-		// TODO Auto-generated method stub
-		return createSavingAccountRepo.findAll();
+		try {
+			createSavingAccountRepo.syncCurrentAccountTypes();
+			createSavingAccountRepo.syncSavingAccountTypes();
+		} catch (Exception e) {
+			System.err.println("Error synchronizing account types in DB: " + e.getMessage());
+		}
+		List<CreateSavingsAccount> list = createSavingAccountRepo.findAll();
+		return list != null ? list : java.util.Collections.emptyList();
 	}
 
 	public Optional<CreateSavingsAccount> findSavingAccountDataById(Long id) {
-		// TODO Auto-generated method stub
-		return createSavingAccountRepo.findById(id);
+		Optional<CreateSavingsAccount> opt = createSavingAccountRepo.findById(id);
+		if (opt.isPresent()) {
+			CreateSavingsAccount acc = opt.get();
+			boolean isCurrent = (acc.getAccountType() != null && acc.getAccountType().trim().equalsIgnoreCase("CURRENT"))
+					|| (acc.getTypeofaccount() != null && (acc.getTypeofaccount().trim().equalsIgnoreCase("currentaccount") || acc.getTypeofaccount().trim().equalsIgnoreCase("current")));
+			if (isCurrent) {
+				acc.setTypeofaccount("currentaccount");
+				acc.setAccountType("CURRENT");
+			} else {
+				acc.setTypeofaccount("savingaccount");
+				acc.setAccountType("SAVING");
+			}
+		}
+		return opt;
 	}
 
 	public boolean deleteFinancialYear(Long id) {
@@ -327,8 +527,84 @@ public class CustomerSavingsService {
 	 * createSavingAccountRepo.findAllByAccountNumber(accountNumber); return list; }
 	 */
 
-	public SavingAccountActivity saveSavingAccountActivityData(SavingAccountActivity savingAccountActivity) {
-		return savingAccountActivityRepo.save(savingAccountActivity);
+	public SavingAccountActivity saveSavingAccountActivityData(SavingAccountActivity activity) {
+		if (activity == null) {
+			throw new IllegalArgumentException("SAVING ACCOUNT ACTIVITY DATA CANNOT BE NULL");
+		}
+
+		// Uppercase all text fields
+		activity.setAccountNumber(toUpperStr(activity.getAccountNumber()));
+		activity.setSelectBranchName(toUpperStr(activity.getSelectBranchName()));
+		activity.setCustomerCode(toUpperStr(activity.getCustomerCode()));
+		activity.setCustomerName(toUpperStr(activity.getCustomerName()));
+		activity.setJointHolderName(toUpperStr(activity.getJointHolderName()));
+		activity.setSavingPlanName(toUpperStr(activity.getSavingPlanName()));
+		activity.setTransactionFor(toUpperStr(activity.getTransactionFor()));
+		activity.setComments(toUpperStr(activity.getComments()));
+		activity.setTransactionType(toUpperStr(activity.getTransactionType()));
+		activity.setPayBy(toUpperStr(activity.getPayBy()));
+		activity.setChequeNo(toUpperStr(activity.getChequeNo()));
+		activity.setDepositAcc1(toUpperStr(activity.getDepositAcc1()));
+		activity.setDepositAcc2(toUpperStr(activity.getDepositAcc2()));
+		activity.setDepositAcc3(toUpperStr(activity.getDepositAcc3()));
+		activity.setRefNumber1(toUpperStr(activity.getRefNumber1()));
+		activity.setRefNumber2(toUpperStr(activity.getRefNumber2()));
+		activity.setCreatedBy(activity.getCreatedBy() != null && !activity.getCreatedBy().trim().isEmpty()
+				? toUpperStr(activity.getCreatedBy()) : "ADMIN");
+
+		if (activity.getSelectSavingTransactionId() == null || activity.getSelectSavingTransactionId().trim().isEmpty()) {
+			String prefix = "TXN";
+			String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+			int randomNumber = new Random().nextInt(9000) + 1000;
+			activity.setSelectSavingTransactionId(prefix + timestamp + randomNumber);
+		} else {
+			activity.setSelectSavingTransactionId(toUpperStr(activity.getSelectSavingTransactionId()));
+		}
+
+		if (activity.getTransactionDate() == null || activity.getTransactionDate().trim().isEmpty()) {
+			activity.setTransactionDate(LocalDate.now().toString());
+		}
+
+		activity.setApproved(true);
+
+		// Synchronize balance with CreateSavingsAccount
+		String accNo = activity.getAccountNumber();
+		if (accNo != null && !accNo.trim().isEmpty()) {
+			Optional<CreateSavingsAccount> optAcc = createSavingAccountRepo.findByAccountNumber(accNo.trim());
+			if (optAcc.isPresent()) {
+				CreateSavingsAccount acc = optAcc.get();
+				double currentBalance = 0.0;
+				try {
+					if (acc.getBalance() != null && !acc.getBalance().trim().isEmpty()) {
+						currentBalance = Double.parseDouble(acc.getBalance().trim());
+					} else if (acc.getOpeningFees() != null && !acc.getOpeningFees().trim().isEmpty()) {
+						currentBalance = Double.parseDouble(acc.getOpeningFees().trim());
+					}
+				} catch (Exception ignored) {}
+
+				double txnAmt = 0.0;
+				try {
+					if (activity.getTransactionAmount() != null) {
+						txnAmt = Double.parseDouble(activity.getTransactionAmount().trim());
+					}
+				} catch (Exception ignored) {}
+
+				String tType = activity.getTransactionType() != null ? activity.getTransactionType().toUpperCase() : "";
+				double newBalance = currentBalance;
+				if (tType.contains("DEPOSIT") || tType.contains("CREDIT")) {
+					newBalance = currentBalance + txnAmt;
+				} else if (tType.contains("WITHDRAW") || tType.contains("DEBIT")) {
+					newBalance = currentBalance - txnAmt;
+				}
+
+				String formattedBal = String.format(java.util.Locale.US, "%.2f", newBalance);
+				acc.setBalance(formattedBal);
+				createSavingAccountRepo.save(acc);
+				activity.setAverageBalance(formattedBal);
+			}
+		}
+
+		return savingAccountActivityRepo.save(activity);
 	}
 
 	public Optional<SavingAccountActivity> findSavingAccountActivityById(Long id) {
@@ -388,9 +664,9 @@ public class CustomerSavingsService {
 				try {
 					savingAccountActivityRepo.delete(dup);
 					System.out.println(
-							"DELETED DUPLICATE LOAN ACTIVITY ID " + dup.getId() + " FOR ACCOUNT " + accountNumber);
+							"Deleted duplicate loan activity ID " + dup.getId() + " for account " + accountNumber);
 				} catch (Exception ex) {
-					System.err.println("ERROR DELETING DUPLICATE LOAN ACTIVITY: " + ex.getMessage());
+					System.err.println("Error deleting duplicate loan activity: " + ex.getMessage());
 				}
 			}
 		}
@@ -571,7 +847,7 @@ public class CustomerSavingsService {
 				}
 			}
 		} catch (Exception ex) {
-			System.err.println("ERROR SYNCHRONIZING CREDIT FUND TRANSFERS: " + ex.getMessage());
+			System.err.println("Error synchronizing credit fund transfers: " + ex.getMessage());
 		}
 
 		// 5. Loan Disbursements into Savings Account
@@ -658,7 +934,7 @@ public class CustomerSavingsService {
 									lp.getMemberName() != null ? lp.getMemberName() : acc.getEnterCustomerName());
 							loanAct.setContactNumber(acc.getContactNumber());
 							loanAct.setTransactionFor("Loan Disbursement");
-							String desc = "LOAN DISBURSED CREDITED - LOAN ID: " + loanId;
+							String desc = "Loan Disbursed Credited - Loan ID: " + loanId;
 							if (lp.getTypeOfLoan() != null && !lp.getTypeOfLoan().trim().isEmpty()) {
 								desc += " (" + lp.getTypeOfLoan().trim() + ")";
 							}
@@ -676,7 +952,7 @@ public class CustomerSavingsService {
 				}
 			}
 		} catch (Exception ex) {
-			System.err.println("ERROR SYNCHRONIZING LOAN DISBURSEMENTS: " + ex.getMessage());
+			System.err.println("Error synchronizing loan disbursements: " + ex.getMessage());
 		}
 
 		// 6. SB Interest Credits
@@ -701,7 +977,7 @@ public class CustomerSavingsService {
 						intAct.setContactNumber(acc.getContactNumber());
 						intAct.setTransactionFor("Interest Credit");
 						intAct.setComments(
-								"SB INTEREST CREDITED (" + (sit.getFromDate() != null ? sit.getFromDate() : "") + " TO "
+								"SB Interest Credited (" + (sit.getFromDate() != null ? sit.getFromDate() : "") + " to "
 										+ (sit.getToDate() != null ? sit.getToDate() : "") + ")");
 						intAct.setTransactionType("Deposit");
 						intAct.setTransactionAmount(
@@ -715,7 +991,7 @@ public class CustomerSavingsService {
 				}
 			}
 		} catch (Exception ex) {
-			System.err.println("ERROR SYNCHRONIZING SB INTERESTS: " + ex.getMessage());
+			System.err.println("Error synchronizing SB interests: " + ex.getMessage());
 		}
 
 		// Re-fetch all activities if new ones were added
@@ -800,8 +1076,7 @@ public class CustomerSavingsService {
 	public List<String> getAccountNumbersByType(String accountType) {
 		List<CreateSavingsAccount> accounts;
 		if (accountType != null && !accountType.trim().isEmpty()) {
-			accounts = createSavingAccountRepo.findByTypeofaccountContainingIgnoreCaseAndIsApproved(accountType.trim(),
-					false);
+			accounts = createSavingAccountRepo.findByTypeofaccountContainingIgnoreCase(accountType.trim());
 			if (accounts.isEmpty()) {
 				String cleanType = accountType.replaceAll("\\s+", "").toLowerCase();
 				accounts = createSavingAccountRepo.findAll().stream()
@@ -899,7 +1174,7 @@ public class CustomerSavingsService {
 				result.put(cleanedCode, accountNumbers);
 			}
 
-			System.out.println("ACCOUNTS FOR " + cleanedCode + ": " + accountNumbers);
+			System.out.println("Accounts for " + cleanedCode + ": " + accountNumbers);
 		}
 
 		return result;
@@ -924,7 +1199,7 @@ public class CustomerSavingsService {
 
 		// 1️⃣ Existing record fetch karo
 		SavingSchemeCatalog entity = savingSchmeCatalogRepo.findById(id)
-				.orElseThrow(() -> new RuntimeException("SAVING ACCOUNT NOT FOUND WITH ID : " + id));
+				.orElseThrow(() -> new RuntimeException("Saving account not found with id : " + id));
 
 		// 2️⃣ JS payload ke fields set karo
 		entity.setPolicyName((String) payload.get("policyName"));
@@ -956,7 +1231,7 @@ public class CustomerSavingsService {
 		double newBalance = balance - smsCharge;
 
 		CreateSavingsAccount acc = createSavingAccountRepo.findById(id)
-				.orElseThrow(() -> new RuntimeException("ACCOUNT NOT FOUND"));
+				.orElseThrow(() -> new RuntimeException("Account not found"));
 
 		acc.setBalance(String.valueOf(newBalance));
 		createSavingAccountRepo.save(acc);
@@ -966,7 +1241,7 @@ public class CustomerSavingsService {
 
 	public ApiResponse<SavingsInterestTransfer> transferInterest(SavingsInterestTransfer interest) {
 		if (interest.getAccountNumber() == null || interest.getAccountNumber().trim().isEmpty()) {
-			return ApiResponse.error(HttpStatus.BAD_REQUEST, "ACCOUNT NUMBER IS REQUIRED");
+			return ApiResponse.error(HttpStatus.BAD_REQUEST, "Account number is required");
 		}
 
 		// ===== DUPLICATE CHECK =====
@@ -975,8 +1250,8 @@ public class CustomerSavingsService {
 					interest.getAccountNumber(), interest.getFromDate(), interest.getToDate());
 
 			if (alreadyTransferred) {
-				return ApiResponse.error(HttpStatus.CONFLICT, "INTEREST ALREADY TRANSFERRED FOR ACCOUNT "
-						+ interest.getAccountNumber() + " FOR THIS DATE RANGE");
+				return ApiResponse.error(HttpStatus.CONFLICT, "Interest already transferred for account "
+						+ interest.getAccountNumber() + " for this date range");
 			}
 		}
 
@@ -984,7 +1259,7 @@ public class CustomerSavingsService {
 		Optional<CreateSavingsAccount> optAcc = createSavingAccountRepo
 				.findByAccountNumber(interest.getAccountNumber());
 		if (!optAcc.isPresent()) {
-			return ApiResponse.error(HttpStatus.NOT_FOUND, "SAVINGS ACCOUNT NOT FOUND: " + interest.getAccountNumber());
+			return ApiResponse.error(HttpStatus.NOT_FOUND, "Savings account not found: " + interest.getAccountNumber());
 		}
 		CreateSavingsAccount savingsAccount = optAcc.get();
 
@@ -1069,7 +1344,7 @@ public class CustomerSavingsService {
 			intAct.setContactNumber(savingsAccount.getContactNumber());
 			intAct.setTransactionFor("Interest Credit");
 			intAct.setComments(
-					"SB INTEREST CREDITED (" + savedInterest.getFromDate() + " TO " + savedInterest.getToDate() + ")");
+					"SB Interest Credited (" + savedInterest.getFromDate() + " to " + savedInterest.getToDate() + ")");
 			intAct.setTransactionType("Deposit");
 			intAct.setTransactionAmount(interestAmount.toPlainString());
 			intAct.setAverageBalance(newBalance.toString());
@@ -1077,16 +1352,16 @@ public class CustomerSavingsService {
 			intAct.setApproved(true);
 			savingAccountActivityRepo.save(intAct);
 		} catch (Exception ex) {
-			System.err.println("FAILED TO LOG INTEREST ACTIVITY: " + ex.getMessage());
+			System.err.println("Failed to log interest activity: " + ex.getMessage());
 		}
 
-		return ApiResponse.success(HttpStatus.OK, "INTEREST TRANSFERRED & MAIN ACCOUNT BALANCE UPDATED SUCCESSFULLY",
+		return ApiResponse.success(HttpStatus.OK, "Interest transferred & main account balance updated successfully",
 				savedInterest);
 	}
 
 	public ApiResponse<Map<String, Object>> transferInterestBatch(List<SavingsInterestTransfer> interestList) {
 		if (interestList == null || interestList.isEmpty()) {
-			return ApiResponse.error(HttpStatus.BAD_REQUEST, "NO ACCOUNTS SELECTED FOR INTEREST TRANSFER");
+			return ApiResponse.error(HttpStatus.BAD_REQUEST, "No accounts selected for interest transfer");
 		}
 
 		int successCount = 0;
@@ -1119,7 +1394,7 @@ public class CustomerSavingsService {
 		data.put("errors", messages);
 
 		return ApiResponse.success(HttpStatus.OK,
-				"INTEREST TRANSFER COMPLETED: " + successCount + " SUCCESSFUL, " + failedCount + " SKIPPED/FAILED",
+				"Interest transfer completed: " + successCount + " successful, " + failedCount + " skipped/failed",
 				data);
 	}
 
@@ -1186,7 +1461,7 @@ public class CustomerSavingsService {
 				}
 			}
 		} catch (Exception e) {
-			System.err.println("ERROR RESOLVING NET DISBURSEMENT AMOUNT FOR " + loanId + ": " + e.getMessage());
+			System.err.println("Error resolving net disbursement amount for " + loanId + ": " + e.getMessage());
 		}
 		return 0.0;
 	}

@@ -1,49 +1,49 @@
 $(document).ready(function() {
 
-    // =====================================================
-    // INITIAL UI STATE
-    // =====================================================
+	// =====================================================
+	// INITIAL UI STATE
+	// =====================================================
 
-    $("#statementSection").hide();
+	$("#statementSection").hide();
 
-    // =====================================================
-    // LOAD COMPANY DETAILS
-    // =====================================================
+	// =====================================================
+	// LOAD COMPANY DETAILS
+	// =====================================================
 
-    loadCompanyDetails();
+	loadCompanyDetails();
 
-    // =====================================================
-    // LOAD SAVING ACCOUNT NUMBERS
-    // =====================================================
+	// =====================================================
+	// LOAD SAVING ACCOUNT NUMBERS
+	// =====================================================
 
-    loadSavingAccounts();
+	loadSavingAccounts();
 
-    // =====================================================
-    // SEARCH BUTTON CLICK
-    // =====================================================
+	// =====================================================
+	// SEARCH BUTTON CLICK
+	// =====================================================
 
-    $("#searchbtn").click(function(e) {
-        e.preventDefault();
-        searchStatement();
-    });
+	$("#searchbtn").click(function(e) {
+		e.preventDefault();
+		searchStatement();
+	});
 
-    // =====================================================
-    // CLEAR BUTTON
-    // =====================================================
+	// =====================================================
+	// CLEAR BUTTON
+	// =====================================================
 
-    $("#clearbtn").click(function(e) {
-        e.preventDefault();
-        clearStatement();
-    });
+	$("#clearbtn").click(function(e) {
+		e.preventDefault();
+		clearStatement();
+	});
 
-    // =====================================================
-    // ACCOUNT CHANGE
-    // =====================================================
+	// =====================================================
+	// ACCOUNT CHANGE
+	// =====================================================
 
-    $("#accountNumber").change(function() {
-        $("#statementSection").hide();
-        $(".datatable tbody").empty();
-    });
+	$("#accountNumber").change(function() {
+		$("#statementSection").hide();
+		$(".datatable tbody").empty();
+	});
 
 });
 
@@ -54,102 +54,102 @@ $(document).ready(function() {
 
 function loadCompanyDetails() {
 
-    $.ajax({
-        url: "api/preference/getCompanyDetails",
-        type: "GET",
-        dataType: "json",
+	$.ajax({
+		url: "api/preference/getCompanyDetails",
+		type: "GET",
+		dataType: "json",
 
-        success: function(response) {
+		success: function(response) {
 
-            console.log("Company Details:", response);
+			console.log("Company Details:", response);
 
-            // COMPANY NAME
-            $("#companyName").text(
-                response.companyName || "Company Name"
-            );
+			// COMPANY NAME
+			$("#companyName").text(
+				response.companyName || "Company Name"
+			);
 
-            // GST NUMBER
-            $("#companyGST").text(
-                response.gstNumber ||
-                response.gstin ||
-                response.GSTNumber ||
-                "-"
-            );
+			// GST NUMBER
+			$("#companyGST").text(
+				response.gstNumber ||
+				response.gstin ||
+				response.GSTNumber ||
+				"-"
+			);
 
-            // COMPANY ADDRESS
-            $("#companyAddress").text(
-                response.address ||
-                response.companyAddress ||
-                "-"
-            );
+			// COMPANY ADDRESS
+			$("#companyAddress").text(
+				response.address ||
+				response.companyAddress ||
+				"-"
+			);
 
-            // CONTACT NUMBER
-            $("#companyContact").text(
-                response.contactNo ||
-                response.branchManagerContactNo ||
-                response.mobileNo ||
-                "-"
-            );
+			// CONTACT NUMBER
+			$("#companyContact").text(
+				response.contactNo ||
+				response.branchManagerContactNo ||
+				response.mobileNo ||
+				"-"
+			);
 
-            // EMAIL
-            $("#companyEmail").text(
-                response.email ||
-                response.emailId ||
-                "-"
-            );
+			// EMAIL
+			$("#companyEmail").text(
+				response.email ||
+				response.emailId ||
+				"-"
+			);
 
-            // WEBSITE
-            /*$("#companyWebsite").text(
-                response.website ||
-                response.webSite ||
-                "-"
-            );*/
+			// WEBSITE
+			/*$("#companyWebsite").text(
+				response.website ||
+				response.webSite ||
+				"-"
+			);*/
 
-            // OPTIONAL COMPANY LOGO
-            /*
-             * Agar CompanyAdministration mein logo/image
-             * ka URL available hai to yahan use kar sakte ho.
-             *
-             * Example:
-             * response.logo
-             * response.companyLogo
-             */
+			// OPTIONAL COMPANY LOGO
+			/*
+			 * Agar CompanyAdministration mein logo/image
+			 * ka URL available hai to yahan use kar sakte ho.
+			 *
+			 * Example:
+			 * response.logo
+			 * response.companyLogo
+			 */
 
-            if (response.logo) {
+			if (response.logo) {
 
-                $("#companyLogo")
-                    .attr("src", response.logo)
-                    .show();
+				$("#companyLogo")
+					.attr("src", response.logo)
+					.show();
 
-            } else if (response.companyLogo) {
+			} else if (response.companyLogo) {
 
-                $("#companyLogo")
-                    .attr("src", response.companyLogo)
-                    .show();
+				$("#companyLogo")
+					.attr("src", response.companyLogo)
+					.show();
 
-            } else {
+			} else {
 
-                $("#companyLogo").hide();
-            }
+				$("#companyLogo").hide();
+			}
 
-        },
+		},
 
-        error: function(xhr) {
+		error: function(xhr) {
 
-            console.error(
-                "COMPANY DETAILS ERROR:",
-                xhr.responseText
-            );
+			console.error(
+				"COMPANY DETAILS ERROR:",
+				xhr.responseText
+			);
 
-            $("#companyName").text("Company Name");
-            $("#companyGST").text("-");
-            $("#companyAddress").text("-");
-            $("#companyContact").text("-");
-            $("#companyEmail").text("-");
+			$("#companyName").text("Company Name");
+			$("#companyGST").text("-");
+			$("#companyAddress").text("-");
+			$("#companyContact").text("-");
+			$("#companyEmail").text("-");
 
-            $("#companyLogo").hide();
-        }
-    });
+			$("#companyLogo").hide();
+		}
+	});
 }
 
 
@@ -159,69 +159,69 @@ function loadCompanyDetails() {
 
 function loadSavingAccounts() {
 
-    $.ajax({
-        url: "api/customersavings/getAllSavingAccountData",
-        type: "GET",
-        dataType: "json",
+	$.ajax({
+		url: "api/customermanagement/getAllCustomer",
+		type: "GET",
+		dataType: "json",
 
-        success: function(response) {
+		success: function(response) {
 
-            let dropdown = $("#accountNumber");
+			let dropdown = $("#accountNumber");
 
-            dropdown.empty();
+			dropdown.empty();
 
-            dropdown.append(
-                '<option value="">-- SELECT ACCOUNT NUMBER --</option>'
-            );
+			dropdown.append(
+				'<option value="">-- SELECT ACCOUNT NUMBER --</option>'
+			);
 
-            if (
-                (response.status === "OK" ||
-                    response.status === "FOUND") &&
-                response.data &&
-                response.data.length > 0
-            ) {
+			if (
+				(response.status === "OK" ||
+					response.status === "FOUND") &&
+				response.data &&
+				response.data.length > 0
+			) {
 
-                $.each(response.data, function(index, acc) {
+				$.each(response.data, function(index, acc) {
 
-                    if (acc.accountNumber) {
+					if (acc.accountNumber) {
 
-                        dropdown.append(`
+						dropdown.append(`
                             <option value="${escapeHtml(
-                                acc.accountNumber
-                            )}">
+							acc.accountNumber
+						)}">
                                 ${escapeHtml(
-                                    acc.accountNumber
-                                )}
+							acc.accountNumber
+						)}
                             </option>
                         `);
-                    }
+					}
 
-                });
+				});
 
-            } else {
+			} else {
 
-                dropdown.append(
-                    '<option value="">NO SAVING ACCOUNT FOUND</option>'
-                );
+				dropdown.append(
+					'<option value="">NO SAVING ACCOUNT FOUND</option>'
+				);
 
-                console.warn(
-                    "NO SAVING ACCOUNT FOUND"
-                );
-            }
-        },
+				console.warn(
+					"NO SAVING ACCOUNT FOUND"
+				);
+			}
+		},
 
-        error: function(xhr) {
+		error: function(xhr) {
 
-            console.error(
-                "ACCOUNT DROPDOWN ERROR:",
-                xhr.responseText
-            );
+			console.error(
+				"ACCOUNT DROPDOWN ERROR:",
+				xhr.responseText
+			);
 
-            alert(
-                "UNABLE TO LOAD SAVING ACCOUNT NUMBERS"
-            );
-        }
-    });
+			alert(
+				"UNABLE TO LOAD SAVING ACCOUNT NUMBERS"
+			);
+		}
+	});
 }
 
 
@@ -231,144 +231,144 @@ function loadSavingAccounts() {
 
 function searchStatement() {
 
-    let accountNumber = $("#accountNumber").val();
-    let startDate = $("#startDate").val();
-    let endDate = $("#endDate").val();
+	let accountNumber = $("#accountNumber").val();
+	let startDate = $("#startDate").val();
+	let endDate = $("#endDate").val();
 
-    // =====================================================
-    // VALIDATION
-    // =====================================================
+	// =====================================================
+	// VALIDATION
+	// =====================================================
 
-    if (!accountNumber) {
+	if (!accountNumber) {
 
-        alert("PLEASE SELECT ACCOUNT NUMBER");
+		alert("PLEASE SELECT ACCOUNT NUMBER");
 
-        $("#accountNumber").focus();
+		$("#accountNumber").focus();
 
-        return;
-    }
+		return;
+	}
 
-    if (!startDate) {
+	if (!startDate) {
 
-        alert("PLEASE SELECT START DATE");
+		alert("PLEASE SELECT START DATE");
 
-        $("#startDate").focus();
+		$("#startDate").focus();
 
-        return;
-    }
+		return;
+	}
 
-    if (!endDate) {
+	if (!endDate) {
 
-        alert("PLEASE SELECT END DATE");
+		alert("PLEASE SELECT END DATE");
 
-        $("#endDate").focus();
+		$("#endDate").focus();
 
-        return;
-    }
+		return;
+	}
 
-    if (startDate > endDate) {
+	if (startDate > endDate) {
 
-        alert(
-            "START DATE CANNOT BE GREATER THAN END DATE"
-        );
+		alert(
+			"START DATE CANNOT BE GREATER THAN END DATE"
+		);
 
-        $("#startDate").focus();
+		$("#startDate").focus();
 
-        return;
-    }
+		return;
+	}
 
-    // =====================================================
-    // SEARCH BUTTON LOADING
-    // =====================================================
+	// =====================================================
+	// SEARCH BUTTON LOADING
+	// =====================================================
 
-    let searchButton = $("#searchbtn");
+	let searchButton = $("#searchbtn");
 
-    let originalButtonText =
-        searchButton.html();
+	let originalButtonText =
+		searchButton.html();
 
-    searchButton
-        .prop("disabled", true)
-        .html(
-            '<i class="fa fa-spinner fa-spin"></i> GENERATING STATEMENT...'
-        );
+	searchButton
+		.prop("disabled", true)
+		.html(
+			'<i class="fa fa-spinner fa-spin"></i> GENERATING STATEMENT...'
+		);
 
-    // =====================================================
-    // CLEAR OLD DATA
-    // =====================================================
+	// =====================================================
+	// CLEAR OLD DATA
+	// =====================================================
 
-    $(".datatable tbody").empty();
+	$(".datatable tbody").empty();
 
-    $("#statementSection").hide();
+	$("#statementSection").hide();
 
-    // =====================================================
-    // BANK STATEMENT API
-    // =====================================================
+	// =====================================================
+	// BANK STATEMENT API
+	// =====================================================
 
-    $.ajax({
+	$.ajax({
 
-        url: "accountManagement/bank-statement",
+		url: "accountManagement/bank-statement",
 
-        type: "GET",
+		type: "GET",
 
-        dataType: "json",
+		dataType: "json",
 
-        data: {
-            accountNumber: accountNumber,
-            startDate: startDate,
-            endDate: endDate
-        },
+		data: {
+			accountNumber: accountNumber,
+			startDate: startDate,
+			endDate: endDate
+		},
 
-        success: function(response) {
+		success: function(response) {
 
-            let tbody =
-                $(".datatable tbody");
+			let tbody =
+				$(".datatable tbody");
 
-            tbody.empty();
+			tbody.empty();
 
-            // =================================================
-            // NO DATA CASE
-            // =================================================
+			// =================================================
+			// NO DATA CASE
+			// =================================================
 
-            if (
-                response.status === "NOT_FOUND" ||
-                !response.data ||
-                response.data.length === 0
-            ) {
+			if (
+				response.status === "NOT_FOUND" ||
+				!response.data ||
+				response.data.length === 0
+			) {
 
-                $("#statementSection").show();
+				$("#statementSection").show();
 
-                // ACCOUNT DETAILS
+				// ACCOUNT DETAILS
 
-                $("#statementBankName").text("-");
+				$("#statementBankName").text("-");
 
-                $("#statementBranchName").text("-");
+				$("#statementBranchName").text("-");
 
-                $("#statementAccountNumber")
-                    .text(accountNumber);
+				$("#statementAccountNumber")
+					.text(accountNumber);
 
-                $("#statementStartDate")
-                    .text(formatDate(startDate));
+				$("#statementStartDate")
+					.text(formatDate(startDate));
 
-                $("#statementEndDate")
-                    .text(formatDate(endDate));
+				$("#statementEndDate")
+					.text(formatDate(endDate));
 
-                // BALANCES
+				// BALANCES
 
-                $("#openingBalance")
-                    .text("₹ 0.00");
+				$("#openingBalance")
+					.text("₹ 0.00");
 
-                $("#closingBalance")
-                    .text("₹ 0.00");
+				$("#closingBalance")
+					.text("₹ 0.00");
 
-                $("#totalCredit")
-                    .text("₹ 0.00");
+				$("#totalCredit")
+					.text("₹ 0.00");
 
-                $("#totalDebit")
-                    .text("₹ 0.00");
+				$("#totalDebit")
+					.text("₹ 0.00");
 
-                // NO TRANSACTION MESSAGE
+				// NO TRANSACTION MESSAGE
 
-                tbody.html(`
+				tbody.html(`
                     <tr>
                         <td colspan="8"
                             class="text-center"
@@ -381,149 +381,149 @@ function searchStatement() {
                             <i class="fa fa-info-circle"></i>
 
                             ${escapeHtml(
-                                response.message ||
-                                "NO TRANSACTIONS FOUND FOR SELECTED PERIOD"
-                            )}
+					response.message ||
+					"NO TRANSACTIONS FOUND FOR SELECTED PERIOD"
+				)}
 
                         </td>
                     </tr>
                 `);
 
-                return;
-            }
+				return;
+			}
 
-            // =================================================
-            // GET STATEMENT DATA
-            // =================================================
+			// =================================================
+			// GET STATEMENT DATA
+			// =================================================
 
-            let data = response.data;
+			let data = response.data;
 
-            let firstTransaction = data[0];
+			let firstTransaction = data[0];
 
-            let lastTransaction =
-                data[data.length - 1];
+			let lastTransaction =
+				data[data.length - 1];
 
-            // =================================================
-            // BANK / ACCOUNT DETAILS
-            // =================================================
+			// =================================================
+			// BANK / ACCOUNT DETAILS
+			// =================================================
 
-            $("#statementBankName").text(
-                firstTransaction.bankName || "-"
-            );
+			$("#statementBankName").text(
+				firstTransaction.bankName || "-"
+			);
 
-            $("#statementBranchName").text(
-                firstTransaction.branchName || "-"
-            );
+			$("#statementBranchName").text(
+				firstTransaction.branchName || "-"
+			);
 
-            $("#statementAccountNumber").text(
-                firstTransaction.accountNumber ||
-                accountNumber
-            );
+			$("#statementAccountNumber").text(
+				firstTransaction.accountNumber ||
+				accountNumber
+			);
 
-            $("#statementStartDate").text(
-                formatDate(startDate)
-            );
+			$("#statementStartDate").text(
+				formatDate(startDate)
+			);
 
-            $("#statementEndDate").text(
-                formatDate(endDate)
-            );
+			$("#statementEndDate").text(
+				formatDate(endDate)
+			);
 
-            // =================================================
-            // OPENING BALANCE
-            // =================================================
+			// =================================================
+			// OPENING BALANCE
+			// =================================================
 
-            let openingBalance =
-                Number(
-                    firstTransaction.openingBalance || 0
-                );
+			let openingBalance =
+				Number(
+					firstTransaction.openingBalance || 0
+				);
 
-            $("#openingBalance").text(
-                "₹ " +
-                formatAmount(openingBalance)
-            );
+			$("#openingBalance").text(
+				"₹ " +
+				formatAmount(openingBalance)
+			);
 
-            // =================================================
-            // TOTAL CREDIT / DEBIT
-            // =================================================
+			// =================================================
+			// TOTAL CREDIT / DEBIT
+			// =================================================
 
-            let totalCredit = 0;
+			let totalCredit = 0;
 
-            let totalDebit = 0;
+			let totalDebit = 0;
 
-            $.each(data, function(index, txn) {
+			$.each(data, function(index, txn) {
 
-                totalCredit +=
-                    Number(txn.credit || 0);
+				totalCredit +=
+					Number(txn.credit || 0);
 
-                totalDebit +=
-                    Number(txn.debit || 0);
+				totalDebit +=
+					Number(txn.debit || 0);
 
-            });
+			});
 
-            $("#totalCredit").text(
-                "₹ " +
-                formatAmount(totalCredit)
-            );
+			$("#totalCredit").text(
+				"₹ " +
+				formatAmount(totalCredit)
+			);
 
-            $("#totalDebit").text(
-                "₹ " +
-                formatAmount(totalDebit)
-            );
+			$("#totalDebit").text(
+				"₹ " +
+				formatAmount(totalDebit)
+			);
 
-            // =================================================
-            // CLOSING BALANCE
-            // =================================================
+			// =================================================
+			// CLOSING BALANCE
+			// =================================================
 
-            let closingBalance =
-                Number(
-                    lastTransaction.closingBalance ||
-                    lastTransaction.balance ||
-                    0
-                );
+			let closingBalance =
+				Number(
+					lastTransaction.closingBalance ||
+					lastTransaction.balance ||
+					0
+				);
 
-            $("#closingBalance").text(
-                "₹ " +
-                formatAmount(closingBalance)
-            );
+			$("#closingBalance").text(
+				"₹ " +
+				formatAmount(closingBalance)
+			);
 
-            // =================================================
-            // GENERATION DATE/TIME
-            // =================================================
+			// =================================================
+			// GENERATION DATE/TIME
+			// =================================================
 
-            $("#generatedDate").text(
-                new Date().toLocaleString("en-IN")
-            );
+			$("#generatedDate").text(
+				new Date().toLocaleString("en-IN")
+			);
 
-            // =================================================
-            // SHOW STATEMENT
-            // =================================================
+			// =================================================
+			// SHOW STATEMENT
+			// =================================================
 
-            $("#statementSection").show();
+			$("#statementSection").show();
 
-            // =================================================
-            // TRANSACTION TABLE
-            // =================================================
+			// =================================================
+			// TRANSACTION TABLE
+			// =================================================
 
-            $.each(data, function(index, txn) {
+			$.each(data, function(index, txn) {
 
-                let creditAmount =
-                    Number(txn.credit || 0);
+				let creditAmount =
+					Number(txn.credit || 0);
 
-                let debitAmount =
-                    Number(txn.debit || 0);
+				let debitAmount =
+					Number(txn.debit || 0);
 
-                let balanceAmount =
-                    Number(txn.balance || 0);
+				let balanceAmount =
+					Number(txn.balance || 0);
 
-                let transactionType =
-                    txn.transactionType || "-";
+				let transactionType =
+					txn.transactionType || "-";
 
-                let transactionBadge =
-                    getTransactionBadge(
-                        transactionType
-                    );
+				let transactionBadge =
+					getTransactionBadge(
+						transactionType
+					);
 
-                let row = `
+				let row = `
                     <tr>
 
                         <!-- S.NO -->
@@ -539,97 +539,97 @@ function searchStatement() {
                         <!-- NARRATION -->
                         <td class="text-center">
                             ${escapeHtml(
-                                txn.narration.toUpperCase() || "-"
-                            )}
+					txn.narration.toUpperCase() || "-"
+				)}
                         </td>
 
                         <!-- REFERENCE NUMBER -->
                         <td class="text-center">
                             ${escapeHtml(
-                                txn.referenceNo.toUpperCase() || "-"
-                            )}
+					txn.referenceNo.toUpperCase() || "-"
+				)}
                         </td>
 
                         <!-- CREDIT -->
                         <td class="text-center">
                             ${creditAmount > 0
-                                ? "₹ " +
-                                formatAmount(
-                                    creditAmount
-                                )
-                                : "-"
-                            }
+						? "₹ " +
+						formatAmount(
+							creditAmount
+						)
+						: "-"
+					}
                         </td>
 
                         <!-- DEBIT -->
                         <td class="text-center">
                             ${debitAmount > 0
-                                ? "₹ " +
-                                formatAmount(
-                                    debitAmount
-                                )
-                                : "-"
-                            }
+						? "₹ " +
+						formatAmount(
+							debitAmount
+						)
+						: "-"
+					}
                         </td>
 
                         <!-- RUNNING BALANCE -->
                         <td class="text-center">
                             ₹
                             ${formatAmount(
-                                balanceAmount
-                            )}
+						balanceAmount
+					)}
                         </td>
 
                     </tr>
                 `;
 
-                tbody.append(row);
+				tbody.append(row);
 
-            });
+			});
 
-            // =================================================
-            // SCROLL TO STATEMENT
-            // =================================================
+			// =================================================
+			// SCROLL TO STATEMENT
+			// =================================================
 
-            $("html, body").animate({
+			$("html, body").animate({
 
-                scrollTop:
-                    $("#statementSection")
-                        .offset()
-                        .top - 80
+				scrollTop:
+					$("#statementSection")
+						.offset()
+						.top - 80
 
-            }, 500);
+			}, 500);
 
-        },
+		},
 
-        // =====================================================
-        // ERROR
-        // =====================================================
+		// =====================================================
+		// ERROR
+		// =====================================================
 
-        error: function(xhr) {
+		error: function(xhr) {
 
-            console.error(
-                "ERROR FETCHING BANK STATEMENT:",
-                xhr.responseText
-            );
+			console.error(
+				"ERROR FETCHING BANK STATEMENT:",
+				xhr.responseText
+			);
 
-            let message =
-                "UNABLE TO GENERATE BANK STATEMENT";
+			let message =
+				"UNABLE TO GENERATE BANK STATEMENT";
 
-            if (
-                xhr.responseJSON &&
-                xhr.responseJSON.message
-            ) {
+			if (
+				xhr.responseJSON &&
+				xhr.responseJSON.message
+			) {
 
-                message =
-                    xhr.responseJSON.message.toUpperCase();
-            }
+				message =
+					xhr.responseJSON.message.toUpperCase();
+			}
 
-            alert(message);
+			alert(message);
 
-            $("#statementSection").show();
+			$("#statementSection").show();
 
-            $(".datatable tbody").html(`
+			$(".datatable tbody").html(`
 
                 <tr>
 
@@ -649,20 +649,20 @@ function searchStatement() {
                 </tr>
 
             `);
-        },
+		},
 
-        // =====================================================
-        // COMPLETE
-        // =====================================================
+		// =====================================================
+		// COMPLETE
+		// =====================================================
 
-        complete: function() {
+		complete: function() {
 
-            searchButton
-                .prop("disabled", false)
-                .html(originalButtonText);
-        }
+			searchButton
+				.prop("disabled", false)
+				.html(originalButtonText);
+		}
 
-    });
+	});
 }
 
 
@@ -672,13 +672,13 @@ function searchStatement() {
 
 function formatAmount(amount) {
 
-    return Number(amount || 0).toLocaleString(
-        "en-IN",
-        {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }
-    );
+	return Number(amount || 0).toLocaleString(
+		"en-IN",
+		{
+			minimumFractionDigits: 2,
+			maximumFractionDigits: 2
+		}
+	);
 }
 
 
@@ -688,26 +688,26 @@ function formatAmount(amount) {
 
 function formatDate(dateValue) {
 
-    if (!dateValue) {
+	if (!dateValue) {
 
-        return "-";
-    }
+		return "-";
+	}
 
-    let parts =
-        dateValue.split("-");
+	let parts =
+		dateValue.split("-");
 
-    if (parts.length === 3) {
+	if (parts.length === 3) {
 
-        return (
-            parts[2] +
-            "-" +
-            parts[1] +
-            "-" +
-            parts[0]
-        );
-    }
+		return (
+			parts[2] +
+			"-" +
+			parts[1] +
+			"-" +
+			parts[0]
+		);
+	}
 
-    return dateValue;
+	return dateValue;
 }
 
 
@@ -717,39 +717,39 @@ function formatDate(dateValue) {
 
 function getTransactionBadge(transactionType) {
 
-    if (!transactionType) {
+	if (!transactionType) {
 
-        return "-";
-    }
+		return "-";
+	}
 
-    let type =
-        transactionType.toUpperCase();
+	let type =
+		transactionType.toUpperCase();
 
-    if (
-        type === "DEPOSIT" ||
-        type === "CREDIT"
-    ) {
+	if (
+		type === "DEPOSIT" ||
+		type === "CREDIT"
+	) {
 
-        return `
+		return `
             <span class="badge bg-success">
                 ${escapeHtml(transactionType.toUpperCase())}
             </span>
         `;
-    }
+	}
 
-    if (
-        type === "WITHDRAW" ||
-        type === "DEBIT"
-    ) {
+	if (
+		type === "WITHDRAW" ||
+		type === "DEBIT"
+	) {
 
-        return `
+		return `
             <span class="badge bg-danger">
                 ${escapeHtml(transactionType.toUpperCase())}
             </span>
         `;
-    }
+	}
 
-    return `
+	return `
         <span class="badge bg-secondary">
             ${escapeHtml(transactionType.toUpperCase())}
         </span>
@@ -763,17 +763,17 @@ function getTransactionBadge(transactionType) {
 
 function escapeHtml(value) {
 
-    if (
-        value === null ||
-        value === undefined
-    ) {
+	if (
+		value === null ||
+		value === undefined
+	) {
 
-        return "-";
-    }
+		return "-";
+	}
 
-    return $("<div>")
-        .text(value)
-        .html();
+	return $("<div>")
+		.text(value)
+		.html();
 }
 
 
@@ -783,31 +783,31 @@ function escapeHtml(value) {
 
 function clearStatement() {
 
-    $("#accountNumber").val("");
+	$("#accountNumber").val("");
 
-    $("#startDate").val("");
+	$("#startDate").val("");
 
-    $("#endDate").val("");
+	$("#endDate").val("");
 
-    $("#statementSection").hide();
+	$("#statementSection").hide();
 
-    $(".datatable tbody").empty();
+	$(".datatable tbody").empty();
 
-    $("#statementBankName").text("-");
+	$("#statementBankName").text("-");
 
-    $("#statementBranchName").text("-");
+	$("#statementBranchName").text("-");
 
-    $("#statementAccountNumber").text("-");
+	$("#statementAccountNumber").text("-");
 
-    $("#statementStartDate").text("-");
+	$("#statementStartDate").text("-");
 
-    $("#statementEndDate").text("-");
+	$("#statementEndDate").text("-");
 
-    $("#openingBalance").text("₹ 0.00");
+	$("#openingBalance").text("₹ 0.00");
 
-    $("#totalCredit").text("₹ 0.00");
+	$("#totalCredit").text("₹ 0.00");
 
-    $("#totalDebit").text("₹ 0.00");
+	$("#totalDebit").text("₹ 0.00");
 
-    $("#closingBalance").text("₹ 0.00");
+	$("#closingBalance").text("₹ 0.00");
 }

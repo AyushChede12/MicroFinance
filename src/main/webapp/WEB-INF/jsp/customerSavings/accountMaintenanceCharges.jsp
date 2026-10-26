@@ -74,4 +74,3 @@
 </div>
 <script
 	src="${pageContext.request.contextPath}/js/customerSavings/ServiceCharge.js"></script>
-

@@ -481,8 +481,6 @@ public class PageController {
 	@GetMapping("/addCustomer")
 	public String getAddClient(Model model) {
 		long maxId = customerRepo.getMaxId();
-		String accountNumber = String.format("2025%08d", maxId + 1);
-		model.addAttribute("accountNumber", accountNumber);
 		String memberCode = "M" + "0000" + (maxId + 1);
 		model.addAttribute("memberCode", memberCode);
 		model.addAttribute("contentPage", "customerManagement/addCustomer.jsp");
@@ -911,9 +909,12 @@ public class PageController {
 
 	@GetMapping("/newLoanApplication")
 	public String getNewLoanApplication(Model model) {
-		long maxId = loanApplicationRepo.getMaxId();
-		String loanCode = "LP" + "0000" + (maxId + 1);
-		model.addAttribute("loanCode", loanCode);
+//		long maxId = loanApplicationRepo.getMaxId();
+//		System.out.println("first");
+//		String loanCode = "LP" + "0000" + (maxId + 1);
+//		System.out.println("Second");
+//		model.addAttribute("loanCode", loanCode);
+//		System.out.println("Third");
 		model.addAttribute("contentPage", "loanManagement/newLoanApplication.jsp");
 		return "main";
 	}
@@ -1010,9 +1011,8 @@ public class PageController {
 	}
 
 	@GetMapping("/createCurrentAccount")
-	public String getCreateCurrentAccount(Model model) {
-		model.addAttribute("contentPage", "customerSavings/createCurrentAccount.jsp");
-		return "main";
+	public String getCreateCurrentAccount() {
+		return "redirect:/createSavingsAccount";
 	}
 
 	@GetMapping("/savingsAccountActivity")
@@ -1046,9 +1046,8 @@ public class PageController {
 	}
 
 	@GetMapping("/currentAccountRecordBook")
-	public String getCurrentAccountRecordBook(Model model) {
-		model.addAttribute("contentPage", "customerSavings/currentAccountRecordBook.jsp");
-		return "main";
+	public String getCurrentAccountRecordBook() {
+		return "redirect:/savingsRecordBook";
 	}
 
 	@GetMapping("/savingsAccountStatement")

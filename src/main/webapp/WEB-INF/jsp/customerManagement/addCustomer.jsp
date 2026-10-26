@@ -64,9 +64,8 @@
 				</ol>
 			</nav>
 			<div class="row">
-				<input type="hidden" name="accountNumber" id="accountNumber"
-					value="${accountNumber}">
-					<input type="hidden" name="accountCode" id="accountCode" value="107">
+				<input type="hidden"
+					name="accountCode" id="accountCode" value="107">
 
 				<div class="col-lg-0">
 					<div class="d-none flex-column formFields">
@@ -458,6 +457,20 @@
 							required="required" placeholder="ENTER TAX BILL NO" />
 					</div>
 				</div>
+
+				<div class="col-lg-3 mb-4">
+					<div class="d-flex flex-column formFields">
+						<label for="">ACCOUNT TYPE</label> <select id="accountType"
+							name="accountType" required="required"
+							class="form-control selectField" style="height: 30px;">
+							<option value="">--SELECT ACCOUNT TYPE--</option>
+							<option value="SAVING">SAVING ACCOUNT</option>
+							<option value="CURRENT">CURRENT ACCOUNT</option>
+
+						</select> <small id="chkaccounttype" style="color: red;"></small>
+					</div>
+				</div>
+
 			</div>
 
 			<div class="row mt-4">

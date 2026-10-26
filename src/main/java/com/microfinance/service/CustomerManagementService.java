@@ -63,7 +63,6 @@ public class CustomerManagementService {
 // Mapping fields
 // You already did this correctly
 		addcustomer.setMemberCode(clientMasterDto.getMemberCode());
-		addcustomer.setAccountNumber(clientMasterDto.getAccountNumber());
 		addcustomer.setAuthenticateFor(clientMasterDto.getAuthenticateFor());
 		addcustomer.setSignupDate(clientMasterDto.getSignupDate());
 		addcustomer.setMajor(clientMasterDto.getMajor());
@@ -94,6 +93,8 @@ public class CustomerManagementService {
 		addcustomer.setNoOfShare(clientMasterDto.getNoOfShare());
 		addcustomer.setLightBill(clientMasterDto.getLightBill());
 		addcustomer.setTaxBill(clientMasterDto.getTaxBill());
+		addcustomer.setAccountType(clientMasterDto.getAccountType());
+		addcustomer.setAccountStatus("ACTIVE");
 		addcustomer.setFirstName(clientMasterDto.getFirstName());
 		addcustomer.setMiddleName(clientMasterDto.getMiddleName());
 		addcustomer.setLastName(clientMasterDto.getLastName());
@@ -201,7 +202,14 @@ public class CustomerManagementService {
 				return;
 			}
 			CreateSavingsAccount account = new CreateSavingsAccount();
-			account.setTypeofaccount("savingaccount");
+			String accType = savedCustomer.getAccountType();
+			if ("CURRENT".equalsIgnoreCase(accType) || "currentaccount".equalsIgnoreCase(accType)) {
+				account.setTypeofaccount("currentaccount");
+				account.setAccountType("CURRENT");
+			} else {
+				account.setTypeofaccount("savingaccount");
+				account.setAccountType("SAVING");
+			}
 			account.setOpeningDate(savedCustomer.getSignupDate());
 			account.setSelectByCustomer(savedCustomer.getMemberCode());
 			account.setEnterCustomerName(savedCustomer.getCustomerName());

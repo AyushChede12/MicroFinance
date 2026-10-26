@@ -24,6 +24,8 @@ public class savingAccountFundTransfer {
 	private String amount;
 	private String comment;
 	private boolean isApproved;
+	private String debitAccountType;
+	private String creditAccountType;
 	
 	public Long getId() {
 		return id;
@@ -115,6 +117,18 @@ public class savingAccountFundTransfer {
 	public void setApproved(boolean isApproved) {
 		this.isApproved = isApproved;
 	}
-	
-	
+
+	public String getDebitAccountType() {
+		return debitAccountType;
+	}
+	public void setDebitAccountType(String debitAccountType) {
+		this.debitAccountType = debitAccountType;
+	}
+
+	public String getCreditAccountType() {
+		return creditAccountType;
+	}
+	public void setCreditAccountType(String creditAccountType) {
+		this.creditAccountType = creditAccountType;
+	}
 }

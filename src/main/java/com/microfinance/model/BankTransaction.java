@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class BankTransaction {
@@ -20,6 +22,14 @@ public class BankTransaction {
 	private Double balance;
 	private String transactionType; // DEPOSIT / WITHDRAW
 	private String referenceNo;
+
+	@ManyToOne
+	@JoinColumn(name = "bank_id", nullable = false)
+	private BankModule bank;
+
+	@ManyToOne
+	@JoinColumn(name = "branch_id")
+	private BranchModule branch;
 
 	public Long getId() {
 		return id;
@@ -91,6 +101,22 @@ public class BankTransaction {
 
 	public void setReferenceNo(String referenceNo) {
 		this.referenceNo = referenceNo;
+	}
+
+	public BankModule getBank() {
+		return bank;
+	}
+
+	public void setBank(BankModule bank) {
+		this.bank = bank;
+	}
+
+	public BranchModule getBranch() {
+		return branch;
+	}
+
+	public void setBranch(BranchModule branch) {
+		this.branch = branch;
 	}
 
 }

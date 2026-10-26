@@ -174,7 +174,7 @@
 						style="background-size: cover; background-repeat: no-repeat" />
 						<div id="img-view">
 							<img src="Uploads/upload.png" alt="upload_icon"
-								id="photoPreview" /><input type="hidden" name="photoHidden"
+								id="photoPreview"><input type="hidden" name="photoHidden"
 								id="photoHidden">
 
 						</div>
@@ -184,14 +184,14 @@
 				<div class="col-lg-3 mb-5">
 					<label for=""
 						style="font-size: 12px; font-family: 'Poppins', sans-serif; font-weight: 700; margin-bottom: 5px;">
-						NEWLY ADDED IMAGE
-					</label> <label for="newlyAddedImage" id="drop-area"> <input type="file"
-						accept="image/*" name="newlyAddedImage" id="newlyAddedImage" hidden="hidden"
+						NEWLY ADDED IMAGE </label> <label for="newlyAddedImage" id="drop-area">
+						<input type="file" accept="image/*" name="newlyAddedImage"
+						id="newlyAddedImage" hidden="hidden"
 						style="background-size: cover; background-repeat: no-repeat" />
 						<div id="img-view">
 							<img src="Uploads/upload.png" alt="upload_icon"
-								id="newlyAddedImagePreview" /><input type="hidden" name="newlyAddedImageHidden"
-								id="newlyAddedImageHidden">
+								id="newlyAddedImagePreview" /><input type="hidden"
+								name="newlyAddedImageHidden" id="newlyAddedImageHidden">
 
 						</div>
 					</label>
@@ -200,20 +200,24 @@
 			</div>
 
 			<!-- CUSTOMER IMAGE UPLOAD SECTION -->
-			<div class="container mt-4" id="customerImageUploadSection" style="display: none;">
+			<div class="container mt-4" id="customerImageUploadSection"
+				style="display: none;">
 				<div class="row">
 					<div class="col-lg-12">
 						<h4 class="mt-4">CUSTOMER IMAGE UPLOAD</h4>
 						<div id="fieldContainer">
 							<div class="textUploadSet mb-4">
 								<input type="text" class="form-control nameField"
-									placeholder="ENTER IMAGE NAME..." style="text-transform: uppercase;">
+									placeholder="ENTER IMAGE NAME..."
+									style="text-transform: uppercase;">
 								<div class="uploadContainer"></div>
 							</div>
 						</div>
 
-						<button type="button" id="addFieldBtn" class="btn btn-primary mt-2">ADD +</button>
-						<button type="button" id="uploadAllBtn" class="btn btn-success mt-2">UPLOAD ALL</button>
+						<button type="button" id="addFieldBtn"
+							class="btn btn-primary mt-2">ADD +</button>
+						<button type="button" id="uploadAllBtn"
+							class="btn btn-success mt-2">UPLOAD ALL</button>
 						<button type="button" id="reloadDataBtn" class="btn btn-info mt-2">RELOAD</button>
 
 						<div id="storedImages" class="mt-4"></div>

@@ -47,7 +47,6 @@ function fetchBySelectedCustomer() {
 				//$("#signaturePreview").attr("src", c.customerSignature ? baseUrl + c.customerSignature : baseUrl + "default-placeholder.jpg");
 				//$("#signaturePreview").attr("src", c.customerSignature ? baseUrl + c.customerSignature : baseUrl + "default-placeholder.jpg");
 				//$("#signaturePreview").attr("src", c.customerSignature ? baseUrl + c.customerSignature : baseUrl + "default-placeholder.jpg");
-				alert(c.customerPhoto);
 				if (c.customerPhoto) {
 					const photoPath = `Uploads/${c.customerPhoto}`;
 					$("#photoPreview").attr("src", photoPath);

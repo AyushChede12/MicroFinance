@@ -490,7 +490,34 @@ public class SavingAccountDto {
 	public void setAmount(String amount) {
 		this.amount = amount;
 	}
-	
-	
+
+	// ---- Current Account specific fields ----
+	private String overdraftLimit;  // OD facility — Current Account only
+	private String businessName;    // Business name — Current Account only
+	private String gstin;           // GSTIN — Current Account (business) only
+
+	public String getOverdraftLimit() {
+		return overdraftLimit;
+	}
+
+	public void setOverdraftLimit(String overdraftLimit) {
+		this.overdraftLimit = overdraftLimit;
+	}
+
+	public String getBusinessName() {
+		return businessName;
+	}
+
+	public void setBusinessName(String businessName) {
+		this.businessName = businessName;
+	}
+
+	public String getGstin() {
+		return gstin;
+	}
+
+	public void setGstin(String gstin) {
+		this.gstin = gstin;
+	}
 
 }

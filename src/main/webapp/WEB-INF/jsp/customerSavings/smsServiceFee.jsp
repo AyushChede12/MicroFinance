@@ -24,8 +24,8 @@
 		<!-- BY DATE -->
 		<div class="col-lg-3">
 			<div class="d-flex flex-column formFields mb-4">
-				<label>BY DATE</label>
-				<select id="byDate" class="form-control selectField" style="height: 45px;">
+				<label>BY DATE</label> <select id="byDate"
+					class="form-control selectField" style="height: 45px;">
 					<option value="">--SELECT DURATION--</option>
 					<option value="today">TODAY</option>
 					<option value="yesterday">YESTERDAY</option>
@@ -39,8 +39,8 @@
 		<!-- ACCOUNT TYPE -->
 		<div class="col-lg-3">
 			<div class="d-flex flex-column formFields mb-4">
-				<label>ACCOUNT TYPE</label>
-				<select id="accountType" class="form-control selectField" style="height: 45px;">
+				<label>ACCOUNT TYPE</label> <select id="accountType"
+					class="form-control selectField" style="height: 45px;">
 					<option value="">--SELECT ACCOUNT TYPE--</option>
 					<option value="SAVINGS">SAVINGS</option>
 					<option value="CURRENT">CURRENT</option>
@@ -51,8 +51,8 @@
 		<!-- CHARGE TYPE -->
 		<div class="col-lg-3">
 			<div class="d-flex flex-column formFields mb-4">
-				<label>CHARGE TYPE</label>
-				<select id="chargeType" class="form-control selectField" style="height: 45px;">
+				<label>CHARGE TYPE</label> <select id="chargeType"
+					class="form-control selectField" style="height: 45px;">
 					<option value="">--SELECT CHARGE TYPE--</option>
 					<option value="SMS">SMS CHARGE</option>
 					<option value="SERVICE">SERVICE CHARGE</option>
@@ -64,11 +64,8 @@
 		<!-- AMOUNT -->
 		<div class="col-lg-3">
 			<div class="d-flex flex-column formFields mb-4">
-				<label>AMOUNT</label>
-				<input type="number" id="amount" name="amount"
-					class="form-control"
-					placeholder="ENTER AMOUNT"
-					min="0" step="0.01">
+				<label>AMOUNT</label> <input type="number" id="amount" name="amount"
+					class="form-control" placeholder="ENTER AMOUNT" min="0" step="0.01">
 			</div>
 		</div>
 
@@ -78,9 +75,7 @@
 	<div class="row">
 		<div class="col-12 d-flex justify-content-center">
 			<button type="button" id="searchBtn" class="btnStyle"
-				style="background-color:#FFA500;">
-				SEARCH
-			</button>
+				style="background-color: #FFA500;">SEARCH</button>
 		</div>
 	</div>
 
@@ -107,21 +102,19 @@
 			</div>
 		</div>
 	</div>
-<!-- APPLY BUTTON -->
-<div class="row mt-3">
-    <div class="col-12 d-flex justify-content-center">
-        <button type="button" id="applyBtn" class="btnStyle"
-            style="background-color:#28a745;">
-            APPLY
-        </button>
-    </div>
-</div>
+	<!-- APPLY BUTTON -->
+	<div class="row mt-3">
+		<div class="col-12 d-flex justify-content-center">
+			<button type="button" id="applyBtn" class="btnStyle"
+				style="background-color: #28a745;">APPLY</button>
+		</div>
+	</div>
 
 
 </form>
 
 </div>
 <script src="jquery.min.js"></script>
-<script src="${pageContext.request.contextPath}/js/customerSavings/SMSServiceFee.js"></script>
-	
-	
+<script
+	src="${pageContext.request.contextPath}/js/customerSavings/SMSServiceFee.js"></script>
+

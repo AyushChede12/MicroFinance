@@ -27,7 +27,7 @@ public interface CreateSavingAccountRepo extends JpaRepository<CreateSavingsAcco
 
 	List<CreateSavingsAccount> findByTypeofaccountContainingIgnoreCaseAndIsApproved(String keyword, boolean isApproved);
 
-//	List<CreateSavingsAccount> findByTypeofaccountContainingIgnoreCase(String keyword, boolean isApproved);
+	List<CreateSavingsAccount> findByTypeofaccountContainingIgnoreCase(String keyword);
 
 	List<CreateSavingsAccount> findAllByAccountNumberAndIsApprovedTrue(String accountNumber);
 
@@ -38,6 +38,10 @@ public interface CreateSavingAccountRepo extends JpaRepository<CreateSavingsAcco
 	List<CreateSavingsAccount> findBySelectByCustomer(String selectByCustomer);
 
 	boolean existsBySelectByCustomer(String customerId);
+
+	boolean existsBySelectByCustomerAndTypeofaccountIgnoreCase(String customerId, String typeofaccount);
+
+	List<CreateSavingsAccount> findByTypeofaccountIgnoreCase(String typeofaccount);
 
 	List<CreateSavingsAccount> findByIsApprovedTrueAndMessageSend(String messageSend);
 
@@ -65,4 +69,13 @@ public interface CreateSavingAccountRepo extends JpaRepository<CreateSavingsAcco
 	@Query("SELECT COALESCE(SUM(s.openingFees),0) FROM CreateSavingsAccount s WHERE s.branchName = :branchName AND s.openingDate BETWEEN :startDate AND :endDate")
 	Double getTotalSavingOpeningIncome(String branchName, LocalDate startDate, LocalDate endDate);
 
+	@Modifying
+	@Transactional
+	@Query("UPDATE CreateSavingsAccount c SET c.typeofaccount = 'currentaccount' WHERE UPPER(c.accountType) = 'CURRENT'")
+	int syncCurrentAccountTypes();
+
+	@Modifying
+	@Transactional
+	@Query("UPDATE CreateSavingsAccount c SET c.typeofaccount = 'savingaccount' WHERE c.accountType IS NULL OR UPPER(c.accountType) = 'SAVING' OR c.accountType = ''")
+	int syncSavingAccountTypes();
 }

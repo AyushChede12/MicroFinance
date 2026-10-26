@@ -21,13 +21,13 @@ public class GlobalExceptionHandler {
 	
     @ExceptionHandler(ResourceNotFoundException.class)
     public String handleNotFound(ResourceNotFoundException ex, Model model) {
-        model.addAttribute("error", ex.getMessage());
+        model.addAttribute("error", (ex.getMessage() != null) ? ex.getMessage().toUpperCase() : "RESOURCE NOT FOUND");
         return "error/404"; // Create error/404.jsp
     }
     
     @ExceptionHandler(Exception.class)
     public String handleAll(Exception ex, Model model) {
-        model.addAttribute("error", "Something went wrong: " + ex.getMessage());
+        model.addAttribute("error", "SOMETHING WENT WRONG: " + (ex.getMessage() != null ? ex.getMessage().toUpperCase() : ""));
         return "error/general"; // Create error/general.jsp
     }
     

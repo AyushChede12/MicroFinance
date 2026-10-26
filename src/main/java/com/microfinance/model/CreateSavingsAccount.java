@@ -77,6 +77,11 @@ public class CreateSavingsAccount {
 	private String chargeType;
 	private String amount;
 
+	// Current Account specific fields
+	private String overdraftLimit;   // OD limit applicable only for Current Account
+	private String businessName;     // Business name for Current Account holders
+	private String gstin;            // GSTIN for Current Account (business)
+
 	@ManyToOne
 	@JoinColumn(name = "branch_id")
 	private BranchModule branchName;
@@ -495,6 +500,31 @@ public class CreateSavingsAccount {
 
 	public void setAmount(String amount) {
 		this.amount = amount;
+	}
+
+	// Current Account specific getters/setters
+	public String getOverdraftLimit() {
+		return overdraftLimit;
+	}
+
+	public void setOverdraftLimit(String overdraftLimit) {
+		this.overdraftLimit = overdraftLimit;
+	}
+
+	public String getBusinessName() {
+		return businessName;
+	}
+
+	public void setBusinessName(String businessName) {
+		this.businessName = businessName;
+	}
+
+	public String getGstin() {
+		return gstin;
+	}
+
+	public void setGstin(String gstin) {
+		this.gstin = gstin;
 	}
 
 	public BranchModule getBranchName() {

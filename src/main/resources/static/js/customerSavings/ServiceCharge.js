@@ -1,3 +1,4 @@
+
 let allServiceData = [];
 
 
@@ -56,7 +57,7 @@ $("#searchServiceChargeBtn").click(function() {
 	const selected = $("#byDate").val();
 
 	if (!selected) {
-		alert("PLEASE SELECT A DATE RANGE!");
+		alert("Please select a date range!");
 		return;
 	}
 
@@ -76,13 +77,13 @@ $("#searchServiceChargeBtn").click(function() {
 				loadServiceTable(allServiceData);
 			} else {
 				$("#serviceTableBody").html(`
-                    <tr><td colspan="6" class="text-center">NO RECORDS FOUND</td></tr>
+                    <tr><td colspan="6" class="text-center">No Records Found</td></tr>
                 `);
 			}
 		},
 
 		error: function(xhr) {
-			alert("ERROR FETCHING RECORDS: " + xhr.responseText);
+			alert("Error fetching records: " + xhr.responseText);
 		}
 	});
 });
@@ -99,10 +100,10 @@ function loadServiceTable(data) {
                 <td>${acc.accountNumber}</td>
                 <td>${acc.openingDate}</td>
                 <td class="balance">${acc.balance}</td>
-                <td>${acc.messageSend === "1" ? "ENABLED" : "DISABLED"}</td>
+                <td>${acc.messageSend === "1" ? "Enabled" : "Disabled"}</td>
                 <td>
                     <button class="apply-service-btn btn btn-sm btn-warning" data-id="${acc.id}">
-                        APPLY
+                        Apply
                     </button>
                 </td>
             </tr>
@@ -123,7 +124,7 @@ $(document).on("click", ".apply-service-btn", function() {
 
 	console.log("CLICKED ID:", id);
 
-	if (!confirm("ARE YOU SURE YOU WANT TO DEDUCT SERVICE CHARGES?")) return;
+	if (!confirm("Are you sure you want to deduct service charges?")) return;
 
 	$.ajax({
 		url: "api/customersavings/deduct-service-charges",
@@ -142,17 +143,17 @@ $(document).on("click", ".apply-service-btn", function() {
 				row.find(".balance").text(newBalance.toFixed(2));
 
 
-				alert("SERVICE CHARGE SUCCESSFULLY DEDUCTED!\nNEW BALANCE: " + newBalance);
+				alert("Service Charge Successfully Deducted!\nNew Balance: " + newBalance);
 
 				return;
 			}
 
-			alert("FAILED: " + (response.message || "UNKNOWN ERROR"));
+			alert("Failed: " + (response.message || "Unknown error"));
 		},
 
 		error: function(xhr) {
 			console.error("ERROR:", xhr.responseText);
-			alert("ERROR APPLYING SERVICE CHARGES");
+			alert("Error applying service charges");
 		}
 	});
 });

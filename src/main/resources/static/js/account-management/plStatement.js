@@ -1,375 +1,280 @@
+
 $(document).ready(function() {
+
+	// Load Branch Dropdown
 	BranchNameDropdown();
 
-	toggleTransferFields($('#transferMode').val());
-
-	$('#transferMode').on('change', function() {
-		toggleTransferFields(this.value);
-	});
-
-
-	$("#formid").submit(function(e) {
+	// Search Button Click
+	$("#searchBtn").on("click", function(e) {
 		e.preventDefault();
-		saveOutgoingPayment();
+		searchPLStatement();
 	});
 
-	$('#searchBtn').click(function(e) {
+	// Prevent Form Submission Reload
+	$("#formid").on("submit", function(e) {
 		e.preventDefault();
-		searchOutgoingPayments();
+		searchPLStatement();
 	});
 
+	// End Date cannot be earlier than Start Date
+	$("#startDate").on("change", function() {
+		const startDate = $(this).val();
 
+		$("#endDate").attr("min", startDate);
 
-	$("#entryBranchName").on("change", function() {
-		const selectedBranch = $(this).val();
-		LedgerDropdown(selectedBranch);
+		if ($("#endDate").val() && $("#endDate").val() < startDate) {
+			$("#endDate").val("");
+		}
+	});
+
+	// Start Date cannot be later than End Date
+	$("#endDate").on("change", function() {
+		const endDate = $(this).val();
+
+		$("#startDate").attr("max", endDate);
 	});
 
 });
-function showTableData() {
-	const tableBody = $("#tableBody");
-	const toggleBtn = $("#toggleBtn");
-
-	if (tableBody.children().length === 0) {
-		// No data loaded yet — load and show
-		loadOutgoingPaymentData();
-		toggleBtn.html('HIDE');
-	} else {
-		// Data exists — toggle visibility
-		if (tableBody.is(":visible")) {
-			tableBody.hide();
-			toggleBtn.html('SHOW');
-		} else {
-			tableBody.show();
-			toggleBtn.html('HIDE');
-		}
-	}
-}
-function toggleTransferFields(mode) {
-	const m = (mode || '').toLowerCase().trim();
-
-	// Hide all conditional groups by default
-	$('.chequeFields').addClass('d-none');
-	$('.onlineFields').addClass('d-none');
-
-	// Clear conditional inputs when switching modes to avoid stale values
-	$('#chequeNo').val('');
-	$('#chequeDate').val('');
-	$('#bankName').val('');
-	$('#transactionRef').val('');
-
-	if (m === 'cheque') {
-		$('.chequeFields').removeClass('d-none');
-	} else if (m === 'online transfer') {
-		// If only "Online Transfer" should display this, change to: (m === 'online transfer')
-		$('.onlineFields').removeClass('d-none');
-	}
-}
 
 
-
-
-
-// Save New Outgoing Payment Entry
-function saveOutgoingPayment() {
-	const paymentData = {
-		branchName: $('#entryBranchName').val().trim(),
-		dateOfEntry: $('#dateOfEntry').val(),
-		transferMode: $('#transferMode').val(),
-		creditLedger: $('#creditLedger').val(),
-		debitLedger: $('#debitLedger').val(),
-		transactionAmount: $('#transactionAmount').val(),
-		remarks: $('#remarks').val(),
-		chequeNo: $('#chequeNo').val(),
-		chequeDate: $('#chequeDate').val(),
-		bankName: $('#bankName').val(),
-		transactionRef: $('#transactionRef').val()
-	};
-
-	// Client-side validation
-	if (!paymentData.branchName || !paymentData.dateOfEntry || !paymentData.transferMode ||
-		!paymentData.creditLedger || !paymentData.debitLedger || !paymentData.transactionAmount) {
-		alert("PLEASE FILL IN ALL REQUIRED FIELDS.");
-		return;
-	}
-
-	// Conditional validation
-	if (paymentData.transferMode.toLowerCase() === "cheque") {
-		if (!paymentData.chequeNo || !paymentData.chequeDate || !paymentData.bankName) {
-			alert("CHEQUE NO, DATE AND BANK NAME ARE REQUIRED FOR CHEQUE PAYMENTS.");
-			return;
-		}
-	}
-	if (paymentData.transferMode.toLowerCase() === "online transfer") {
-		if (!paymentData.transactionRef) {
-			alert("TRANSACTION REF IS REQUIRED FOR ONLINE TRANSFER.");
-			return;
-		}
-	}
-
-	$.ajax({
-		type: "POST",
-		url: "accountManagement/createOutgoingPayment",
-		contentType: "application/json",
-		data: JSON.stringify(paymentData),
-		success: function(response) {
-			if (response?.status === "CREATED") {
-				alert((response.message || "OUTGOING PAYMENT SAVED SUCCESSFULLY!").toUpperCase());
-				$("#formid")[0].reset();
-				$('.chequeFields').addClass('d-none');
-				$('.onlineFields').addClass('d-none');
-				loadOutgoingPaymentData();
-			} else {
-				alert("UNEXPECTED RESPONSE: " + (response.message || "").toUpperCase());
-			}
-		},
-		error: function(xhr) {
-			let errorMsg = "ERROR SAVING OUTGOING PAYMENT.";
-			try {
-				const res = JSON.parse(xhr.responseText);
-				if (res?.message) errorMsg = res.message.toUpperCase();
-			} catch (e) {
-				console.error("Error parsing save response:", e);
-			}
-			alert(errorMsg);
-		}
-	});
-}
-
-function loadOutgoingPaymentData() {
-	$.ajax({
-		type: "GET",
-		url: "accountManagement/allOutgoingPayment",
-		contentType: "application/json",
-		success: function(response) {
-			const tbody = $("#tableBody");
-			tbody.empty();
-
-			const payments = response?.data || [];
-
-			if (payments.length === 0) {
-				tbody.append(`<tr><td colspan="10">NO OUTGOING PAYMENTS FOUND</td></tr>`);
-				return;
-			}
-
-			payments.forEach(payment => {
-				const row = `
-                   <tr>
-                       <td>${payment.id ?? ''}</td>
-                       <td>${(payment.branchName).toUpperCase() ?? ''}</td>
-					<td>${(payment.voucherID).toUpperCase() ?? ''}</td>
-                       <td>${(payment.dateOfEntry).toUpperCase() ?? ''}</td>
-					<td>${(payment.creditLedger).toUpperCase() ?? ''}</td>
-                       <td>${(payment.debitLedger).toUpperCase() ?? ''}</td>
-					<td>${(payment.transferMode).toUpperCase() ?? ''}</td>
-                       <td>${(payment.transactionAmount).toUpperCase() ?? ''}</td>
-                       <td>${(payment.remarks).toUpperCase() ?? ''}</td>
-                       <td>
-                           <button class="iconbutton" onclick="viewOutgoingPayment(${payment.id})" title="VIEW">
-                               <i class="fa-solid fa-eye text-primary"></i>
-                           </button>
-                       </td>
-					<td>
-						<button class="iconbutton" onclick="deleteOutgoingPayment(${payment.id})" title="DELETE">
-							<i class="fa-solid fa-trash text-danger"></i>
-						</button>
-					</td>
-                   </tr>
-               `;
-				tbody.append(row);
-			});
-		},
-		error: function() {
-			alert("FAILED TO LOAD OUTGOING PAYMENTS.");
-		}
-	});
-}
-
-function viewOutgoingPayment(id) {
-	$.ajax({
-		type: "GET",
-		url: `accountManagement/outgoingPayment/${id}`,
-		contentType: "application/json",
-		success: function(response) {
-			const data = response.data;
-
-			// Branch preselect
-			$("#entryBranchName option").each(function() {
-				if ($(this).val()?.trim().toLowerCase() === data.branchName?.trim().toLowerCase()) {
-					$(this).prop("selected", true);
-					return false;
-				}
-			});
-
-			$("#voucherID").val(data.voucherID);
-			$("#dateOfEntry").val(data.dateOfEntry);
-			$("#transferMode").val(data.transferMode);
-			$("#transactionAmount").val(data.transactionAmount);
-			$("#remarks").val(data.remarks);
-
-			toggleTransferFields(data.transferMode);
-
-			$("#chequeNo").val(data.chequeNo ?? "");
-			$("#chequeDate").val(data.chequeDate ?? "");
-			$("#bankName").val(data.bankName ?? "");
-			$("#transactionRef").val(data.transactionRef ?? "");
-
-			LedgerDropdown(data.branchName, data.creditLedger, data.debitLedger);
-		},
-		error: function() {
-			alert("FAILED TO LOAD OUTGOING PAYMENT DATA");
-		}
-	});
-}
-
-function searchOutgoingPayments() {
-	const branchName = $('#searchBranchName').val();
-	const startDate = $('#startDate').val();
-	const endDate = $('#endDate').val();
-
-	if (!branchName || !startDate || !endDate) {
-		alert("PLEASE FILL IN BRANCH NAME, START DATE, AND END DATE.");
-		return;
-	}
-
-	$.ajax({
-		type: "GET",
-		url: "accountManagement/search",
-		data: { branchName, startDate, endDate },
-		success: function(response) {
-			const tbody = $("#tableBody");
-			tbody.empty();
-
-			const payments = response.data || [];
-
-			if (payments.length === 0) {
-				tbody.append(`<tr><td colspan="10">NO RESULTS FOUND</td></tr>`);
-				return;
-			}
-
-			payments.forEach(payment => {
-				const row = `
-                   <tr>
-                       <td>${payment.id || ''}</td>
-                       <td>${(payment.branchName).toUpperCase() || ''}</td>
-                       <td>${(payment.dateOfEntry).toUpperCase() || ''}</td>
-                       <td>${(payment.transferMode).toUpperCase() || ''}</td>
-                       <td>${(payment.creditLedger).toUpperCase() || ''}</td>
-                       <td>${(payment.debitLedger).toUpperCase() || ''}</td>
-                       <td>${(payment.transactionAmount).toUpperCase() || ''}</td>
-                       <td>${(payment.remarks).toUpperCase() || ''}</td>
-                       <td>${(payment.voucherID).toUpperCase() || ''}</td>
-                       <td>
-                           <button class="iconbutton" onclick="viewOutgoingPayment(${payment.id})" title="VIEW">
-                               <i class="fa-solid fa-eye text-primary"></i>
-                           </button>
-                       </td>
-					<td>
-						<button class="iconbutton" onclick="deleteOutgoingPayment(${payment.id})" title="DELETE">
-							<i class="fa-solid fa-trash text-danger"></i>
-						</button>
-					</td>
-                   </tr>
-               `;
-				tbody.append(row);
-			});
-		},
-		error: function() {
-			alert("SEARCH FAILED");
-		}
-	});
-}
-
-// Load Credit & Debit Ledgers by branch
-function LedgerDropdown(branchName, selectedCr = "", selectedDr = "") {
-	if (!branchName || branchName.trim() === "") {
-		console.warn("Branch name is missing. Skipping ledger dropdown load.");
-		return;
-	}
-	$.ajax({
-		type: "GET",
-		url: `accountManagement/ledgerByBranch/${branchName}`,
-		contentType: "application/json",
-		success: function(data) {
-			if (data.status == "OK") {
-				const ledgers = data.data || [];
-
-				// Credit Ledger → Assets (Cash/Bank)
-				let crOptions = "<option value=''>--SELECT CREDIT LEDGER--</option>";
-				// Debit Ledger → Liabilities/Expenses/Equity
-				let drOptions = "<option value=''>--SELECT DEBIT LEDGER--</option>";
-				ledgers.forEach(ledger => {
-					const g = ledger.groupName.toLowerCase();
-					const t = ledger.accountType.toLowerCase();
-					const title = ledger.accountTitle;
-
-					// Credit Ledger (Source of Payment → Cash/Bank under Assets)
-					if (g === "assets" && (t === "cash in hand" || t === "bank account")) {
-						const selected = title.trim().toLowerCase() === selectedCr.trim().toLowerCase() ? "selected" : "";
-						crOptions += `<option value="${title}" ${selected}>${title.toUpperCase()}</option>`;
-					}
-
-					// Debit Ledger (Destination → Liabilities, Expenses, Equity, OR Loan under Assets)
-					if (g === "liabilities" || g === "expenses" || g === "equity" || (g === "assets" && t === "loans")) {
-						const selected = title.trim().toLowerCase() === selectedDr.trim().toLowerCase() ? "selected" : "";
-						drOptions += `<option value="${title}" ${selected}>${title.toUpperCase()}</option>`;
-					}
-				});
-
-				$("#creditLedger").html(crOptions);
-				$("#debitLedger").html(drOptions);
-			}
-			else {
-				alert("BRANCH NOT FOUND");
-			}
-
-		},
-		error: function() {
-			alert("FAILED TO LOAD LEDGER ACCOUNTS FOR SELECTED BRANCH");
-		}
-	});
-}
-
+// =====================================================
+// LOAD BRANCH NAME DROPDOWN
+// =====================================================
 function BranchNameDropdown() {
+
 	$.ajax({
 		type: "GET",
-		contentType: "application/json",
-		url: 'api/preference/getAllBranchModule',
+		url: "api/preference/getAllBranchModule",
+		dataType: "json",
+
 		success: function(response) {
-			let options = "<option value=''>--SELECT BRANCH NAME--</option>";
-			if (response && Array.isArray(response.data)) {
-				response.data.forEach(branch => {
-					options += `<option value='${branch.branchName}'>${branch.branchName.toUpperCase()}</option>`;
-				});
-			}
-			$("#searchBranchName").html(options);
-			$("#entryBranchName").html(options);
+
+			const branchDropdown = $("#branchName");
+
+			branchDropdown.empty();
+			branchDropdown.append(
+				'<option value="">--SELECT BRANCH--</option>'
+			);
+
+			const branches = Array.isArray(response)
+				? response
+				: (Array.isArray(response?.data) ? response.data : []);
+
+			branches.forEach(function(branch) {
+
+				if (!branch.branchName) {
+					return;
+				}
+
+				const branchName = branch.branchName;
+
+				branchDropdown.append(
+					$("<option>", {
+						value: branchName,
+						text: branchName.toUpperCase()
+					})
+				);
+			});
 		},
-		error: function() {
+
+		error: function(xhr) {
+
+			console.error(
+				"Failed to load branch names:",
+				xhr.responseText
+			);
+
 			alert("FAILED TO LOAD BRANCH NAMES.");
 		}
 	});
+
 }
 
-function deleteOutgoingPayment(id) {
-	if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS OUTGOING PAYMENT?")) {
-		$.ajax({
-			url: "accountManagement/deleteOutgoingPaymentById",
-			type: "POST",
-			data: { id: id },
-			success: function(response) {
-				if (response.status == "OK") {
-					alert((response.message || "").toUpperCase());
-					location.reload();
-				} else {
-					alert("DELETE FAILED: " + (response.message || "").toUpperCase());
-				}
-			},
-			error: function(xhr, status, error) {
-				alert("FAILED TO DELETE PAYMENT.");
-				console.error("Error:", error);
-			}
-		});
+
+// =====================================================
+// SEARCH PROFIT & LOSS STATEMENT
+// API: GET /accountManagement/pl-statementData
+// =====================================================
+function searchPLStatement() {
+
+	const branchName = $("#branchName").val();
+	const startDate = $("#startDate").val();
+	const endDate = $("#endDate").val();
+
+	const tbody = $(".datatable tbody");
+
+	// Clear Previous Results
+	tbody.empty();
+
+	// Validate Required Fields
+	if (!branchName || !startDate || !endDate) {
+
+		alert(
+			"PLEASE SELECT BRANCH NAME, START DATE AND END DATE."
+		);
+
+		return;
 	}
 
+	// Validate Date Range
+	if (startDate > endDate) {
+
+		alert("START DATE CANNOT BE GREATER THAN END DATE.");
+
+		return;
+	}
+
+	// Show Loading Message
+	tbody.html(
+		'<tr><td colspan="5">LOADING P&L STATEMENT...</td></tr>'
+	);
+
+	$.ajax({
+		type: "GET",
+
+		url: "accountManagement/pl-statementData",
+
+		data: {
+			branchName: branchName,
+			startDate: startDate,
+			endDate: endDate
+		},
+
+		dataType: "json",
+
+		success: function(response) {
+
+			tbody.empty();
+
+			console.log("P&L Statement API Response:", response);
+
+			// Handle ApiResponse wrapper
+			const plData = Array.isArray(response)
+				? response
+				: (
+					Array.isArray(response?.data)
+						? response.data
+						: []
+				);
+
+			// Handle Empty Results
+			if (plData.length === 0) {
+
+				tbody.append(`
+                    <tr>
+                        <td colspan="5">
+                            NO P&L RECORDS FOUND FOR THE SELECTED PERIOD.
+                        </td>
+                    </tr>
+                `);
+
+				return;
+			}
+
+			// Display P&L Records
+			plData.forEach(function(item) {
+
+				const date = item.date ?? "";
+				const branch = item.branchName ?? "";
+
+				const totalIncome = Number(item.totalIncome ?? 0);
+				const totalExpense = Number(item.totalExpense ?? 0);
+				const profitOrLoss = Number(item.profitOrLoss ?? 0);
+
+				const formattedIncome = formatAmount(totalIncome);
+				const formattedExpense = formatAmount(totalExpense);
+				const formattedProfitLoss = formatAmount(profitOrLoss);
+
+				const profitLossLabel = profitOrLoss > 0
+					? "PROFIT"
+					: profitOrLoss < 0
+						? "LOSS"
+						: "NO PROFIT / NO LOSS";
+
+				const profitLossClass = profitOrLoss > 0
+					? "text-success"
+					: profitOrLoss < 0
+						? "text-danger"
+						: "";
+
+				const row = $("<tr>");
+
+				row.append(
+					$("<td>").text(date)
+				);
+
+				row.append(
+					$("<td>").text(branch.toUpperCase())
+				);
+
+				row.append(
+					$("<td>").text(formattedIncome)
+				);
+
+				row.append(
+					$("<td>").text(formattedExpense)
+				);
+
+				const profitLossCell = $("<td>")
+					.addClass(profitLossClass)
+					.css("font-weight", "600")
+					.text(
+						formattedProfitLoss +
+						" (" + profitLossLabel + ")"
+					);
+
+				row.append(profitLossCell);
+
+				tbody.append(row);
+			});
+
+		},
+
+		error: function(xhr) {
+
+			tbody.empty();
+
+			console.error(
+				"P&L Statement API Error:",
+				xhr.status,
+				xhr.responseText
+			);
+
+			let errorMessage = "FAILED TO FETCH P&L STATEMENT.";
+
+			if (xhr.status === 404) {
+				errorMessage =
+					"P&L API NOT FOUND. PLEASE CHECK THE API URL.";
+			} else if (xhr.status === 400) {
+				errorMessage =
+					"INVALID SEARCH PARAMETERS. PLEASE CHECK THE DATES.";
+			} else if (xhr.status === 500) {
+				errorMessage =
+					"SERVER ERROR WHILE FETCHING P&L STATEMENT.";
+			}
+
+			tbody.append(`
+                <tr>
+                    <td colspan="5" class="text-danger">
+                        ${errorMessage}
+                    </td>
+                </tr>
+            `);
+
+			alert(errorMessage);
+		}
+	});
+
+}
+
+
+// =====================================================
+// FORMAT AMOUNT
+// =====================================================
+function formatAmount(amount) {
+
+	return Number(amount).toLocaleString("en-IN", {
+		minimumFractionDigits: 2,
+		maximumFractionDigits: 2
+	});
 }

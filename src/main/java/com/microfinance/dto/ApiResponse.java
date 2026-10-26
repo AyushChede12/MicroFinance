@@ -13,7 +13,7 @@ public class ApiResponse<T> {
     // Constructors
     public ApiResponse(HttpStatus status, String message, T data) {
         this.status = status;
-        this.message = message;
+        this.message = (message != null) ? message.toUpperCase() : null;
         this.data = data;
     }
 
@@ -50,7 +50,7 @@ public class ApiResponse<T> {
     }
 
     public void setMessage(String message) {
-        this.message = message;
+        this.message = (message != null) ? message.toUpperCase() : null;
     }
 
     public T getData() {
