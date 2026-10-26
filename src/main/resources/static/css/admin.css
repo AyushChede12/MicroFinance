@@ -1114,3 +1114,54 @@ li.selected {
     font-size: 12px !important;
     color: #888;
 }
+
+/* =========================================================
+   PROJECT-WIDE GLOBAL UPPERCASE ENFORCEMENT FOR DISPLAY ELEMENTS
+   ========================================================= */
+.table,
+.table th,
+.table td,
+table th,
+table td,
+.form-control,
+.form-select,
+.select2-container,
+.select2-selection__rendered,
+.select2-results__option,
+select,
+input[type="text"],
+input[type="search"],
+input[type="email"],
+textarea,
+label,
+.form-label,
+.card-title,
+.card-header,
+.modal-title,
+.modal-body,
+.alert,
+.badge,
+.sidebar-nav a,
+.sidebar-nav span,
+.btn,
+button,
+.swal2-popup,
+.swal2-title,
+.swal2-content,
+.swal2-html-container,
+.swal2-actions,
+.swal2-confirm,
+.swal2-cancel {
+    text-transform: uppercase !important;
+}
+
+input::placeholder,
+textarea::placeholder,
+.select2-selection__placeholder {
+    text-transform: uppercase !important;
+}
+
+/* Exempt passwords from uppercase transformation */
+input[type="password"] {
+    text-transform: none !important;
+}

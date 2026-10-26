@@ -13,7 +13,6 @@ public class CustomerDto {
 
 	// Customer Details
 	private String memberCode;
-	private String accountNumber;
 	private String authenticateFor;
 	private String signupDate;
 	private String major;
@@ -48,6 +47,8 @@ public class CustomerDto {
 	private String shareValue;
 	private String lightBill;
 	private String taxBill;
+	private String accountType;
+	private String accountStatus;
 
 	private MultipartFile customerPhoto;
 	private MultipartFile customerSignature;
@@ -118,13 +119,6 @@ public class CustomerDto {
 		this.memberCode = memberCode;
 	}
 
-	public String getAccountNumber() {
-		return accountNumber;
-	}
-
-	public void setAccountNumber(String accountNumber) {
-		this.accountNumber = accountNumber;
-	}
 
 	public String getAuthenticateFor() {
 		return authenticateFor;
@@ -396,6 +390,22 @@ public class CustomerDto {
 
 	public void setTaxBill(String taxBill) {
 		this.taxBill = taxBill;
+	}
+
+	public String getAccountType() {
+		return accountType;
+	}
+
+	public void setAccountType(String accountType) {
+		this.accountType = accountType;
+	}
+
+	public String getAccountStatus() {
+		return accountStatus;
+	}
+
+	public void setAccountStatus(String accountStatus) {
+		this.accountStatus = accountStatus;
 	}
 
 	public MultipartFile getCustomerPhoto() {

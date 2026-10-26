@@ -1,8 +1,8 @@
-/****************************************************
+/*******************************
  * DROPDOWNS
- ****************************************************/
+ *******************************/
 
-// ACCOUNT NUMBER DROPDOWN
+// Account Number Dropdown
 function AccNoDropdown() {
 	$.ajax({
 		url: "api/customersavings/getAllSavingAccountData",
@@ -20,12 +20,12 @@ function AccNoDropdown() {
 			}
 		},
 		error: function() {
-			alert("FAILED TO FETCH ACCOUNT NUMBERS.");
+			alert("Failed to fetch Account Numbers.");
 		}
 	});
 }
 
-// SCHEME NAME DROPDOWN
+// Scheme Name Dropdown
 function schemeNameDropdown() {
 	$.ajax({
 		url: "api/customersavings/fetchsavingchemecatalog",
@@ -41,14 +41,14 @@ function schemeNameDropdown() {
 			}
 		},
 		error: function() {
-			alert("FAILED TO FETCH SCHEME NAME.");
+			alert("Failed to fetch Scheme Name.");
 		}
 	});
 }
 
-/****************************************************
+/*******************************
  * DATA FETCH (ONCE)
- ****************************************************/
+ *******************************/
 let allSavingAccData = [];
 
 function loadAllSavingAccounts() {
@@ -59,7 +59,7 @@ function loadAllSavingAccounts() {
 
 			if (!response.data || response.data.length === 0) {
 				$("#tableSavingAcc").html(
-					"<tr><td colspan='14' class='text-center'>NO RECORDS FOUND</td></tr>"
+					"<tr><td colspan='14' class='text-center'>No Records Found</td></tr>"
 				);
 				return;
 			}
@@ -68,23 +68,23 @@ function loadAllSavingAccounts() {
 			renderTable(allSavingAccData); // ✅ SHOW ALL DATA FIRST
 		},
 		error: function() {
-			alert("FAILED TO LOAD SAVING ACCOUNT DATA.");
+			alert("Failed to load Saving Account Data.");
 		}
 	});
 }
 
 
-/****************************************************
+/*******************************
  * COMBINED FILTER LOGIC
- ****************************************************/
+ *******************************/
 
 function applyAllFilters() {
 
 	if (allSavingAccData.length === 0) return;
 
 	const branch = $("#branchName").val();
-	const fromDate = $("#fromDate").val(); // YYYY-MM-DD
-	const toDate = $("#toDate").val();     // YYYY-MM-DD
+	const fromDate = $("#fromDate").val(); // yyyy-MM-dd
+	const toDate = $("#toDate").val();     // yyyy-MM-dd
 	const customerName = $("#customerName").val().toLowerCase();
 	const accountNo = $("#accountNumber").val();
 	const customerCode = $("#customerCode").val().toLowerCase();
@@ -98,10 +98,10 @@ function applyAllFilters() {
 			branch = item.branchName.branchName || "";
 		}
 
-		// BRANCH
+		// Branch
 		if (branch && branch?.toLowerCase() !== branch.toLowerCase()) return false;
 
-		// OPENING DATE (STRING COMPARE)
+		// Opening Date (STRING compare)
 		if (fromDate || toDate) {
 			const openDateStr = toYMD(item.openingDate);
 
@@ -109,36 +109,37 @@ function applyAllFilters() {
 			if (toDate && openDateStr > toDate) return false;
 		}
 
-		// CUSTOMER NAME
+		// Customer Name
 		if (customerName && !item.enterCustomerName.toLowerCase().includes(customerName))
 			return false;
 
-		// ACCOUNT NO
+		// Account No
 		if (accountNo && item.accountNumber !== accountNo)
 			return false;
 
-		// CUSTOMER CODE
+		// Customer Code
 		if (customerCode && !item.selectByCustomer.toLowerCase().includes(customerCode))
 			return false;
 
-		// FINANCIAL CONSULTANT CODE
+		// Financial Consultant Code
 		if (financialCode && !item.financialConsultantCode.toLowerCase().includes(financialCode))
 			return false;
 
-		// SCHEME / PLAN
+		// Scheme / Plan
 		if (planName && item.selectPlan !== planName)
 			return false;
 
-		return true; // SAB CONDITIONS MATCH
+		return true; // sab conditions match
 	});
 
 	renderTable(filteredData);
 }
 
 
-/****************************************************
+
+/*******************************
  * INPUT EVENTS (NO BUTTON)
- ****************************************************/
+ *******************************/
 
 $("#branchName").on("change", applyAllFilters);
 $("#fromDate").on("input", applyAllFilters);
@@ -149,14 +150,14 @@ $("#customerCode").on("input", applyAllFilters);
 $("#financialConsultantCode").on("input", applyAllFilters);
 $("#schemename").on("change", applyAllFilters);
 
-/****************************************************
+/*******************************
  * TABLE RENDER
- ****************************************************/
+ *******************************/
 
 function renderTable(data) {
 	if (data.length === 0) {
 		$("#tableSavingAcc").html(
-			"<tr><td colspan='14' class='text-center'>NO MATCHING RECORDS</td></tr>"
+			"<tr><td colspan='14' class='text-center'>No Matching Records</td></tr>"
 		);
 		return;
 	}
@@ -170,8 +171,8 @@ function renderTable(data) {
 		}
 
 		const approvalStatus = item.approved
-			? '<span class="badge bg-success">APPROVED</span>'
-			: '<span class="badge bg-danger">NOT APPROVED</span>';
+			? '<span class="badge bg-success">Approved</span>'
+			: '<span class="badge bg-danger">Not Approved</span>';
 
 		return `
 			<tr>
@@ -199,12 +200,12 @@ function renderTable(data) {
 function toYMD(dateStr) {
 	if (!dateStr) return "";
 
-	// ALREADY YYYY-MM-DD
+	// already yyyy-MM-dd
 	if (dateStr.includes("-") && dateStr.length === 10) {
 		return dateStr;
 	}
 
-	// DD/MM/YYYY → YYYY-MM-DD
+	// dd/MM/yyyy → yyyy-MM-dd
 	const parts = dateStr.split("/");
 	if (parts.length === 3) {
 		return `${parts[2]}-${parts[1].padStart(2, "0")}-${parts[0].padStart(2, "0")}`;

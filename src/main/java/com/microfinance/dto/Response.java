@@ -21,7 +21,7 @@ public class Response {
 	}
 
 	public void setMessage(String message) {
-		this.message = message;
+		this.message = (message != null) ? message.toUpperCase() : null;
 	}
 
 	public T getData() {

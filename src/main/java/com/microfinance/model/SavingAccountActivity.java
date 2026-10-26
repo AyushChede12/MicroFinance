@@ -37,6 +37,8 @@ public class SavingAccountActivity {
 	@Column(name = "is_approved")
 	private boolean isApproved;
 
+	private String createdBy;
+
 	public Long getId() {
 		return id;
 	}
@@ -227,6 +229,14 @@ public class SavingAccountActivity {
 
 	public void setApproved(boolean isApproved) {
 		this.isApproved = isApproved;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
 	}
 
 }

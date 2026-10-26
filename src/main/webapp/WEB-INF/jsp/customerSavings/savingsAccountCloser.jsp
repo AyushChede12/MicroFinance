@@ -6,7 +6,7 @@
 			<li class="breadcrumb-item"><a href="openDashboard"> <i
 					class="bi bi-bank text-blue"></i>
 			</a></li>
-			<li class="breadcrumb-item action"> SAVING ACCOUNT CLOSER</li>
+			<li class="breadcrumb-item action">SAVING ACCOUNT CLOSER</li>
 		</ol>
 	</nav>
 </div>
@@ -22,8 +22,8 @@
 			<div class="row">
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields mb-4">
-						<label for="">ACCOUNT NUMBER</label> <select
-							id="accountNumber" name="accountNumber" required="required"
+						<label for="">ACCOUNT NUMBER</label> <select id="accountNumber"
+							name="accountNumber" required="required"
 							class="form-control selectField" style="height: 30px;">
 							<option value="">--SELECT ACCOUNT NO--</option>
 						</select>
@@ -32,49 +32,49 @@
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields mb-4">
-						<label for="">CUSTOMER CODE </label> <input type="text" readonly="readonly"
-							name="customerCode" id="customerCode" required="required"
-							placeholder="ENTER CUSTOMER CODE" />
+						<label for="">CUSTOMER CODE </label> <input type="text"
+							readonly="readonly" name="customerCode" id="customerCode"
+							required="required" placeholder="ENTER CUSTOMER CODE" />
 					</div>
 				</div>
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields mb-4">
-						<label for="">CUSTOMER NAME </label> <input type="text" readonly="readonly"
-							name="customerName" id="customerName" required="required"
-							placeholder="ENTER CUSTOMER NAME" />
+						<label for="">CUSTOMER NAME </label> <input type="text"
+							readonly="readonly" name="customerName" id="customerName"
+							required="required" placeholder="ENTER CUSTOMER NAME" />
 					</div>
 				</div>
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields mb-4">
-						<label for="">CONTACT NUMBER</label> <input type="text" readonly="readonly"
-							name="contactNumber" id="contactNumber" required="required"
-							placeholder="ENTER CONTACT NUMBER" />
+						<label for="">CONTACT NUMBER</label> <input type="text"
+							readonly="readonly" name="contactNumber" id="contactNumber"
+							required="required" placeholder="ENTER CONTACT NUMBER" />
 					</div>
 				</div>
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields mb-4">
-						<label for="">OPENING BRANCH</label> <input type="text" readonly="readonly"
-							name="branchName" id="branchName" required="required"
-							placeholder="ENTER OPENING BRANCH" />
+						<label for="">OPENING BRANCH</label> <input type="text"
+							readonly="readonly" name="branchName" id="branchName"
+							required="required" placeholder="ENTER OPENING BRANCH" />
 					</div>
 				</div>
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields mb-4">
-						<label for="">OPENING DATE</label> <input type="text" readonly="readonly"
-							name="openingDate" id="openingDate" required="required"
-							placeholder="ENTER OPENING DATE" />
+						<label for="">OPENING DATE</label> <input type="text"
+							readonly="readonly" name="openingDate" id="openingDate"
+							required="required" placeholder="ENTER OPENING DATE" />
 					</div>
 				</div>
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields mb-4">
-						<label for="">CURRENT BALANCE</label> <input type="text" readonly="readonly"
-							name="currentBalance" id="currentBalance" required="required"
-							placeholder="ENTER CURRENT BALANCE" />
+						<label for="">CURRENT BALANCE</label> <input type="text"
+							readonly="readonly" name="currentBalance" id="currentBalance"
+							required="required" placeholder="ENTER CURRENT BALANCE" />
 					</div>
 				</div>
 

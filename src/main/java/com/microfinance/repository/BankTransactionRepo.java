@@ -22,4 +22,6 @@ public interface BankTransactionRepo extends JpaRepository<BankTransaction, Long
 	List<BankTransaction> findBankStatement(@Param("accountNumber") String accountNumber,
 			@Param("startDate") String startDate, @Param("endDate") String endDate);
 
+	List<BankTransaction> findByBank_IdOrderByIdDesc(Long bankId);
+
 }

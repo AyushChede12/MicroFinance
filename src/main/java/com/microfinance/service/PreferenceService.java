@@ -3,6 +3,7 @@ package com.microfinance.service;
 import java.io.File;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -26,6 +27,7 @@ import com.microfinance.dto.BankModuleDto;
 import com.microfinance.dto.ExecutiveFounderDto;
 import com.microfinance.exception.BadRequestException;
 import com.microfinance.model.BankModule;
+import com.microfinance.model.BankTransaction;
 import com.microfinance.model.BranchModule;
 import com.microfinance.model.CategoryModule;
 import com.microfinance.model.CodeModule;
@@ -38,6 +40,7 @@ import com.microfinance.model.Transactions;
 import com.microfinance.model.UserMenuAccess;
 import com.microfinance.model.states;
 import com.microfinance.repository.BankModuleRepo;
+import com.microfinance.repository.BankTransactionRepo;
 import com.microfinance.repository.BranchModuleRepo;
 import com.microfinance.repository.CategoryModuleRepo;
 import com.microfinance.repository.CodeModuleRepo;
@@ -55,43 +58,46 @@ import com.microfinance.repository.CompanyImageUploadsRepo;
 public class PreferenceService {
 
 	@Autowired
-	BranchModuleRepo branchModuleRepo;
+	private BranchModuleRepo branchModuleRepo;
 
 	@Autowired
-	BankModuleRepo bankModuleRepo;
+	private BankModuleRepo bankModuleRepo;
 
 	@Autowired
-	RelativeModuleRepo relativeModuleRepo;
+	private RelativeModuleRepo relativeModuleRepo;
 
 	@Autowired
-	CategoryModuleRepo categoryModuleRepo;
+	private CategoryModuleRepo categoryModuleRepo;
 
 	@Autowired
-	FinancialYearRepo financialYearRepo;
+	private FinancialYearRepo financialYearRepo;
 
 	@Autowired
-	ExecutiveFounderRepo executiveFounderRepo;
+	private ExecutiveFounderRepo executiveFounderRepo;
 
 	@Autowired
-	CompanyAdministrationRepo companyAdministrationRepo;
+	private CompanyAdministrationRepo companyAdministrationRepo;
 
 	@Autowired
-	Staterepo stateRepo;
+	private Staterepo stateRepo;
 
 	@Autowired
-	CodeModuleRepo codeModuleRepo;
+	private CodeModuleRepo codeModuleRepo;
 
 	@Autowired
-	TransactionsRepo transactionsRepo;
+	private TransactionsRepo transactionsRepo;
 
 	@Autowired
-	UserCreationRepo userCreationRepo;
+	private UserCreationRepo userCreationRepo;
 
 	@Autowired
-	UserMenuAccessRepo userMenuAccessRepo;
+	private UserMenuAccessRepo userMenuAccessRepo;
 
 	@Autowired
-	CompanyImageUploadsRepo companyImageUploadsRepo;
+	private CompanyImageUploadsRepo companyImageUploadsRepo;
+
+	@Autowired
+	private BankTransactionRepo bankTransactionRepo;
 
 	@Value("${upload.directory}")
 	private String uploadDirectory;
@@ -719,6 +725,69 @@ public class PreferenceService {
 	public CompanyAdministration getCompanyDetails() {
 		// TODO Auto-generated method stub
 		return companyAdministrationRepo.findTopByOrderByIdAsc();
+	}
+
+	@Transactional
+	public BankTransaction saveBankTransaction(Long bankId, Long branchId, BankTransaction transaction) {
+
+		// 1. Validate bank
+		BankModule bank = bankModuleRepo.findById(bankId)
+				.orElseThrow(() -> new RuntimeException("Bank not found: " + bankId));
+
+		// 2. Validate branch
+		BranchModule branch = branchModuleRepo.findById(branchId)
+				.orElseThrow(() -> new RuntimeException("Branch not found: " + branchId));
+
+		if (branch.getBank() == null || !branch.getBank().getId().equals(bankId)) {
+			throw new RuntimeException("Selected branch does not belong to this bank");
+		}
+
+		// 3. Validate credit and debit
+		BigDecimal credit = transaction.getCredit() == null ? BigDecimal.ZERO
+				: BigDecimal.valueOf(transaction.getCredit());
+
+		BigDecimal debit = transaction.getDebit() == null ? BigDecimal.ZERO
+				: BigDecimal.valueOf(transaction.getDebit());
+
+		if (credit.signum() < 0 || debit.signum() < 0) {
+			throw new RuntimeException("Credit and debit cannot be negative");
+		}
+
+		if ((credit.signum() > 0 && debit.signum() > 0) || (credit.signum() == 0 && debit.signum() == 0)) {
+			throw new RuntimeException("Enter either credit or debit amount");
+		}
+
+		// 4. Get latest transaction balance
+		List<BankTransaction> transactions = bankTransactionRepo.findByBank_IdOrderByIdDesc(bankId);
+
+		BigDecimal previousBalance;
+
+		if (transactions.isEmpty()) {
+			String openingBalance = bank.getOpeningBalance();
+
+			previousBalance = openingBalance == null || openingBalance.trim().isEmpty() ? BigDecimal.ZERO
+					: new BigDecimal(openingBalance.trim());
+		} else {
+			Double lastBalance = transactions.get(0).getBalance();
+
+			previousBalance = lastBalance == null ? BigDecimal.ZERO : BigDecimal.valueOf(lastBalance);
+		}
+
+		// 5. Calculate new balance
+		BigDecimal newBalance = previousBalance.add(credit).subtract(debit);
+
+		if (newBalance.signum() < 0) {
+			throw new RuntimeException("Insufficient bank balance");
+		}
+
+		// 6. Set relationships and transaction details
+		transaction.setBank(bank);
+		transaction.setBranch(branch);
+		transaction.setAccountNumber(bank.getAccountNo());
+		transaction.setBalance(newBalance.doubleValue());
+
+		// 7. Save transaction
+		return bankTransactionRepo.save(transaction);
 	}
 
 }

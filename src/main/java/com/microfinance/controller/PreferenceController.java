@@ -30,6 +30,7 @@ import com.microfinance.dto.ApiResponse;
 import com.microfinance.dto.BankModuleDto;
 import com.microfinance.dto.ExecutiveFounderDto;
 import com.microfinance.model.BankModule;
+import com.microfinance.model.BankTransaction;
 import com.microfinance.model.BranchModule;
 import com.microfinance.model.CategoryModule;
 import com.microfinance.model.CodeModule;
@@ -594,6 +595,20 @@ public class PreferenceController {
 
 		}
 
+	}
+
+	@PostMapping("/saveBankTransaction")
+	public ResponseEntity<?> saveTransaction(@RequestParam Long bankId, @RequestParam Long branchId,
+			@RequestBody BankTransaction transaction) {
+
+		try {
+			BankTransaction saved = preferenceService.saveBankTransaction(bankId, branchId, transaction);
+
+			return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+
+		} catch (RuntimeException e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
 	}
 
 }

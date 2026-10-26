@@ -7,6 +7,7 @@ function getCashBook() {
 	let branchName = $("#branchName").val();
 	let startDate = $("#startDate").val();
 	let endDate = $("#endDate").val();
+	alert(branchName);
 
 	// ================= VALIDATION =================
 

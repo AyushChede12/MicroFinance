@@ -10,7 +10,7 @@ $(document).ready(function() {
 		const selected = $("#byDate").val();
 
 		if (!selected) {
-			alert("PLEASE SELECT DATE");
+			alert("Please select date");
 			return;
 		}
 
@@ -80,11 +80,11 @@ $(document).ready(function() {
 					renderTable(allmessageSendData);
 				} else {
 					$("#tbody").empty();
-					alert("NO DATA FOUND");
+					alert("No data found");
 				}
 			},
 			error: function() {
-				alert("SERVER ERROR");
+				alert("Server error");
 			}
 		});
 	}
@@ -107,7 +107,7 @@ $(document).ready(function() {
                     <td>${item.accountNumber}</td>
                     <td>${item.openingDate}</td>
                     <td>${item.balance}</td>
-                    <td>${item.messageSend == 1 ? "ENABLED" : "DISABLED"}</td>
+                    <td>${item.messageSend == 1 ? "Enabled" : "Disabled"}</td>
                 </tr>
             `);
 		});
@@ -148,14 +148,14 @@ $(document).ready(function() {
 				smsCharge: smsCharge
 			}),
 			success: function(res) {
-				alert("!!!CHARGES DEDUCTED SUCCESSFULLY!!!");
+				alert("!!!Charges Deducted Successfully!!!");
 				// ✅ Update balance in UI instantly
 				//row.find("td:eq(4)").text(res.newBalance);
 				location.reload();
 
 			},
 			error: function() {
-				alert("FAILED TO DEDUCT AMOUNT FOR ID: " + id);
+				alert("Failed to deduct amount for ID: " + id);
 			}
 		});
 	}

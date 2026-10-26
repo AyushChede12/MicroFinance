@@ -52,9 +52,9 @@
 		<div class="header-right-buttons">
 
 			<a href="helpmanual" class="header-btn help-btn"> <i
-				class="fa fa-question-circle"></i> Help
+				class="fa fa-question-circle"></i> HELP
 			</a> <a href="#" class="header-btn logout-btn" onclick="logoutUser()">
-				<i class="fa fa-sign-out"></i> Logout
+				<i class="fa fa-sign-out"></i> LOGOUT
 			</a>
 
 		</div>
@@ -63,12 +63,11 @@
 	<script>
 		function logoutUser() {
 
-			var confirmLogout = confirm("Are you sure you want to logout?");
+			var confirmLogout = confirm("ARE YOU SURE YOU WANT TO LOGOUT?");
 
 			if (confirmLogout) {
-				alert("Logout Successful!");
+				alert("LOGOUT SUCCESSFUL!");
 				window.location.href = "/";
-				-9
 			}
 
 		}
