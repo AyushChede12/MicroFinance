@@ -61,15 +61,20 @@
 
 	</div>
 	<script>
-		function logoutUser() {
-
-			var confirmLogout = confirm("ARE YOU SURE YOU WANT TO LOGOUT?");
-
-			if (confirmLogout) {
-				alert("LOGOUT SUCCESSFUL!");
-				window.location.href = "/";
+		$(document).ready(function() {
+			var u = sessionStorage.getItem("username");
+			if (u) {
+				$("#bindUserName").text(u.toUpperCase());
 			}
+		});
 
+		function logoutUser() {
+			var confirmLogout = confirm("ARE YOU SURE YOU WANT TO LOGOUT?");
+			if (confirmLogout) {
+				sessionStorage.clear();
+				alert("LOGOUT SUCCESSFUL!");
+				window.location.href = "${pageContext.request.contextPath}/loginPage";
+			}
 		}
 	</script>
 </header>

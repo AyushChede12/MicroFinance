@@ -26,7 +26,7 @@
 				<label class="mr-2 mb-0">FIND BY POLICY CODE*</label> <select
 					id="findByPolicyNumber" name="findByPolicyNumber"
 					class="form-control w-50">
-					<option value="">SLECT POLICY CODE</option>
+					<option value="">SELECT POLICY CODE</option>
 				</select>
 			</div>
 
@@ -36,7 +36,7 @@
 
 
 				<button type="button" class="btn btn-dark mr-2"
-					onclick="toggleTransaction()">TRANSCATION</button>
+					onclick="toggleTransaction()">TRANSACTION</button>
 
 				<button type="button" class="btn btn-dark"
 					onclick="printTransactionSection()">

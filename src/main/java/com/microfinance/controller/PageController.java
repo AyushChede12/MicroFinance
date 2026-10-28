@@ -81,7 +81,7 @@ public class PageController {
 	@Autowired
 	GoldDirectoryRepo goldDirectoryRepo;
 
-	@GetMapping("/")
+	@GetMapping({"/", "/loginPage"})
 	public String getIndex() {
 		return "index";
 	}

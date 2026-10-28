@@ -367,9 +367,9 @@
 
 				<div class="col-lg-3 col-md-6">
 					<div class="d-flex flex-column formFields mb-3">
-						<label for="savingPlanName">SAVINGS / CURRENT PLAN</label>
+						<label for="savingPlanName">ACCOUNT TYPE</label>
 						<input type="text" readonly="readonly" name="savingPlanName" id="savingPlanName"
-							placeholder="PLAN / SCHEME NAME" />
+							placeholder="SAVING / CURRENT ACCOUNT" />
 					</div>
 				</div>
 			</div>

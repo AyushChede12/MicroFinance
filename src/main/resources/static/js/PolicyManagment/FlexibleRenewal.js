@@ -868,7 +868,7 @@ $(document).ready(function() {
 
 
 					} else {
-						alert("ELSE")
+						
 
 
 						// =================================================
@@ -893,7 +893,7 @@ $(document).ready(function() {
 
 			error:
 				function(xhr) {
-					alert("ERROR FUNC");
+					
 
 					console.error(
 						"FD Payment Error:",
@@ -916,8 +916,7 @@ $(document).ready(function() {
 
 
 					alert(
-						"❌ " +
-						message
+						"❌ " + String(message).toUpperCase()
 					);
 
 
@@ -1393,7 +1392,7 @@ $(document).ready(function() {
 
 
 				alert(
-					"❌ " + message
+					"❌ " + String(message).toUpperCase()
 				);
 
 

@@ -106,10 +106,13 @@ select {
 		flex: 1 1 100%;
 	}
 }
+
+*, .bold-text, .normal-text, .user-box label, .user-id-box label, select, option, button, h1, h2, div, span, p {
+	text-transform: uppercase !important;
+}
 </style>
 <div class="pagetitle">
-	<h1>User Menu Access</h1>
-
+	<h1>USER MENU ACCESS</h1>
 </div>
 
 <div>
@@ -118,9 +121,9 @@ select {
 
 		<!-- User Selection -->
 		<div class="form-group">
-			<label for="userName">Select User ID:</label>
-			<select id="userName" name="userName" class="form-control selectField" style="width: 100%;">
-				<option value="">-- Select User --</option>
+			<label for="userName">SELECT USER ID:</label>
+			<select id="userName" name="userName" class="form-control selectField" style="width: 100%; text-transform: uppercase;" onchange="retriveINCheckBox()">
+				<option value="">-- SELECT USER ID --</option>
 			</select>
 		</div>
 
@@ -1617,20 +1620,12 @@ select {
 
 
 	<div class="row">
-		<div class="col-12 text-center mt-4" style="margin-center: 300px;">
+		<div class="col-12 text-center my-4">
 			<button type="button" id="saveAccessBtn" class="btnStyle bg-warning"
-				onclick="submitUserServiceMap()">Save</button>
-
+				onclick="submitUserServiceMap()">SAVE</button>
 		</div>
 	</div>
 
-
-</div>
-<div class="row">
-	<div class="col-12 text-center mt-4" style="margin-left: 300px;">
-		<button type="button" id="saveAccessBtn" class="btnStyle bg-warning">Save</button>
-
-	</div>
 </div>
 
 <script

@@ -230,9 +230,9 @@
 		<div class="col-md-4">
 			<div class="bank-summary">
 				<div class="label">TOTAL CURRENT BALANCE</div>
-				<div class="value" id="totalCurrentBalance">Not available</div>
-				<small class="text-muted">Requires backend current-balance
-					data</small>
+				<div class="value" id="totalCurrentBalance">NOT AVAILABLE</div>
+				<small class="text-muted">REQUIRES BACKEND CURRENT-BALANCE
+					DATA</small>
 			</div>
 		</div>
 	</div>
@@ -289,11 +289,11 @@
 		<h4 id="transactionBankTitle">BANK TRANSACTIONS</h4>
 		<div class="row g-2 mb-3">
 			<div class="col-md-3">
-				<label for="transactionFrom">From date</label><input type="date"
+				<label for="transactionFrom">FROM DATE</label><input type="date"
 					id="transactionFrom" class="form-control">
 			</div>
 			<div class="col-md-3">
-				<label for="transactionTo">To date</label><input type="date"
+				<label for="transactionTo">TO DATE</label><input type="date"
 					id="transactionTo" class="form-control">
 			</div>
 			<div class="col-md-3 d-flex align-items-end">
@@ -305,26 +305,26 @@
 				id="bankTransactionsTable">
 				<thead class="table-light">
 					<tr>
-						<th>Date</th>
-						<th>Narration</th>
-						<th>Reference</th>
-						<th>Type</th>
-						<th>Credit</th>
-						<th>Debit</th>
-						<th>Running Balance</th>
-						<th>Branch</th>
+						<th>DATE</th>
+						<th>NARRATION</th>
+						<th>REFERENCE</th>
+						<th>TYPE</th>
+						<th>CREDIT</th>
+						<th>DEBIT</th>
+						<th>RUNNING BALANCE</th>
+						<th>BRANCH</th>
 					</tr>
 				</thead>
 				<tbody id="bankTransactionsBody">
 					<tr>
-						<td colspan="8">Select a bank to load transactions.</td>
+						<td colspan="8">SELECT A BANK TO LOAD TRANSACTIONS.</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
-		<small class="text-muted">Transaction history requires a GET
-			API from the backend. Do not use this screen as a substitute for bank
-			reconciliation.</small>
+		<small class="text-muted">TRANSACTION HISTORY REQUIRES A GET
+			API FROM THE BACKEND. DO NOT USE THIS SCREEN AS A SUBSTITUTE FOR BANK
+			RECONCILIATION.</small>
 	</div>
 </div>
 

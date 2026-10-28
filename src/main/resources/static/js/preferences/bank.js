@@ -57,7 +57,7 @@ function photoUpload() {
     }
 
     if (!file.type.startsWith("image/")) {
-        alert("Please select a valid image file.");
+        alert("PLEASE SELECT A VALID IMAGE FILE.");
         document.getElementById("cancelledCheque").value = "";
         return;
     }
@@ -106,22 +106,22 @@ $(document).ready(function () {
                         response.status === "CREATED"
                     )
                 ) {
-                    alert(response.message || "Bank saved successfully.");
+                    alert((response.message || "BANK SAVED SUCCESSFULLY.").toUpperCase());
 
                     clearBankForm();
                     loadBanks();
 
                 } else {
                     alert(
-                        "Bank save failed: " +
-                        (response?.message || "Unexpected response")
+                        "BANK SAVE FAILED: " +
+                        (response?.message ? response.message.toUpperCase() : "UNEXPECTED RESPONSE")
                     );
                 }
             },
 
             error: function (xhr) {
                 console.error(xhr.responseText);
-                alert("Failed to save bank data.");
+                alert("FAILED TO SAVE BANK DATA.");
             }
         });
     });
@@ -345,7 +345,7 @@ function loadBanks() {
                 xhr.responseText
             );
 
-            alert("Error while loading bank data.");
+            alert("ERROR WHILE LOADING BANK DATA.");
         }
     });
 }
@@ -629,8 +629,8 @@ function viewData(id) {
             } else {
 
                 alert(
-                    "Bank not found: " +
-                    (response?.message || "")
+                    "BANK NOT FOUND: " +
+                    (response?.message ? response.message.toUpperCase() : "")
                 );
             }
         },
@@ -639,7 +639,7 @@ function viewData(id) {
 
             console.error(xhr.responseText);
 
-            alert("Failed to fetch bank details.");
+            alert("FAILED TO FETCH BANK DETAILS.");
         }
     });
 }
@@ -671,8 +671,7 @@ function updateBank() {
                 )
             ) {
                 alert(
-                    response.message ||
-                    "Bank updated successfully."
+                    (response.message || "BANK UPDATED SUCCESSFULLY.").toUpperCase()
                 );
 
                 clearBankForm();
@@ -681,8 +680,8 @@ function updateBank() {
             } else {
 
                 alert(
-                    "Update failed: " +
-                    (response?.message || "Unexpected response")
+                    "UPDATE FAILED: " +
+                    (response?.message ? response.message.toUpperCase() : "UNEXPECTED RESPONSE")
                 );
             }
         },
@@ -691,7 +690,7 @@ function updateBank() {
 
             console.error(xhr.responseText);
 
-            alert("Bank update failed.");
+            alert("BANK UPDATE FAILED.");
         }
     });
 }
@@ -733,7 +732,7 @@ function deleteData(id) {
 
     if (
         !confirm(
-            "Are you sure you want to delete this bank?"
+            "ARE YOU SURE YOU WANT TO DELETE THIS BANK?"
         )
     ) {
         return;
@@ -753,8 +752,7 @@ function deleteData(id) {
                 response.status === "OK"
             ) {
                 alert(
-                    response.message ||
-                    "Bank deleted successfully."
+                    (response.message || "BANK DELETED SUCCESSFULLY.").toUpperCase()
                 );
 
                 loadBanks();
@@ -762,8 +760,8 @@ function deleteData(id) {
             } else {
 
                 alert(
-                    "Delete failed: " +
-                    (response?.message || "Unexpected response")
+                    "DELETE FAILED: " +
+                    (response?.message ? response.message.toUpperCase() : "UNEXPECTED RESPONSE")
                 );
             }
         },
@@ -773,8 +771,8 @@ function deleteData(id) {
             console.error(xhr.responseText);
 
             alert(
-                "Failed to delete bank. " +
-                "If transactions exist, backend should prevent deleting this bank."
+                "FAILED TO DELETE BANK. " +
+                "IF TRANSACTIONS EXIST, BACKEND PREVENTS DELETING THIS BANK."
             );
         }
     });

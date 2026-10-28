@@ -62,7 +62,7 @@ function deleteData(id) {
 			type: "POST",
 			data: { id: id },
 			success: function(response) {
-				if (response.status = "OK") {
+				if (response.status == "OK") {
 					alert("CATEGORY DELETED SUCCESSFULLY");
 					location.reload();
 				} else {
@@ -70,7 +70,7 @@ function deleteData(id) {
 				}
 			},
 			error: function(xhr, status, error) {
-				alert("FAILED TO DELETE CASTE.");
+				alert("FAILED TO DELETE CATEGORY/CASTE.");
 				console.error("Error:", error);
 			}
 		});
@@ -91,7 +91,7 @@ function viewData(id) {
 				$("#category").val(category.category);
 				$("#caste").val(category.caste);
 			} else {
-				alert("BRANCH NOT FOUND: " + response.message);
+				alert("CATEGORY NOT FOUND: " + response.message);
 			}
 		},
 		error: function(xhr) {

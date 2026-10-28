@@ -56,7 +56,7 @@
 <div class="row">
 	<div class="col-12 d-flex justify-content-end">
 		<button type="button" id="editBtn" class="btn btn-outline-secondary"
-			data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
+			data-bs-toggle="tooltip" data-bs-placement="top" title="EDIT">
 			<i class="bi bi-pen-fill"></i>
 		</button>
 	</div>
@@ -121,7 +121,7 @@
 						style="margin-bottom: 30px">
 						<label>INC DATE/REGD DATE <span class="star">*</span></label> <input
 							type="Date" readonly="readonly" name="signUpDate" id="signUpDate"
-							required="required" placeholder="Enter Sign-Up Date"
+							required="required" placeholder="ENTER SIGN-UP DATE"
 							style="text-transform: uppercase;" /> <small id="chksignupdate"
 							style="color: red;"></small>
 					</div>

@@ -26,8 +26,7 @@ $(document).ready(function () {
 	// Load branches dropdown
 	loadBranches();
 
-	// Load Saving Scheme catalog
-	loadSavingSchemeCatalog();
+
 
 	// Load All Accounts Table
 	loadSavingsAccountTable();
@@ -162,26 +161,10 @@ function populateCustomerSelects(customers, isCurrent, selectCode) {
 	}
 }
 
-// Load Savings Scheme Catalog
-function loadSavingSchemeCatalog() {
-	$.ajax({
-		url: "api/customersavings/fetchsavingchemecatalog",
-		type: "GET",
-		success: function (response) {
-			const dropdown = $('#selectPlan');
-			dropdown.empty().append('<option value="">-- SELECT SAVINGS PLAN --</option>');
-
-			if (response && response.status === "FOUND" && response.data) {
-				$.each(response.data, function (index, item) {
-					dropdown.append('<option value="' + item.toString().toUpperCase() + '">' + item.toString().toUpperCase() + '</option>');
-				});
-			}
-		},
-		error: function () {
-			console.warn("Could not load saving schemes.");
-		}
-	});
-}
+// Sync opening fees to internal balance
+$('#openingFees').on('input change', function () {
+	$('#balance').val($(this).val() || '0');
+});
 
 // ==========================================
 // 2. FETCH FROM ADDCUSTOMER ON SELECTION
@@ -322,7 +305,7 @@ function handleAccountTypeChange(selectCode) {
 	const isCurrent = (type === 'currentaccount');
 
 	// Clear validation messages
-	$('#chktypeofaccount, #chkselectcustomer, #chkselectplan').text('');
+	$('#chktypeofaccount, #chkselectcustomer').text('');
 
 	// If not restoring an edit, clear customer fields
 	if (!selectCode) {
@@ -355,8 +338,7 @@ function handleAccountTypeChange(selectCode) {
 		// Auto-enable debit card for Current account
 		$('#toggle-member-status2').prop('checked', true);
 
-		// Clear plan mandatory error if shown
-		$('#chkselectplan').text('');
+		$('#selectPlan').val('CURRENT ACCOUNT');
 
 	} else {
 		// Switch to SAVING mode
@@ -372,6 +354,8 @@ function handleAccountTypeChange(selectCode) {
 			.removeClass('current-accent')
 			.addClass('saving-accent');
 
+		$('#selectPlan').val('SAVING ACCOUNT');
+
 		// Hide Current-only operation types and reset if selected
 		$('.current-only-opt').hide();
 		if ($('#operationType').val() === 'Either or Survivor' || $('#operationType').val() === 'Authorized Signatory') {
@@ -386,28 +370,7 @@ function handleAccountTypeChange(selectCode) {
 	}
 }
 
-// Fetch Minimum Balance on Plan selection (Savings)
-$('#selectPlan').on('change', function () {
-	const selectedName = $(this).val();
-	if (selectedName) {
-		$.ajax({
-			url: 'api/customersavings/fetchpolicyname?policyName=' + encodeURIComponent(selectedName),
-			type: 'GET',
-			success: function (response) {
-				if (response && response.status === "FOUND" && response.data && response.data.length > 0) {
-					const policy = response.data[0];
-					const minBal = policy.monthlyMinimumBalance || policy.minimumBalance || "500";
-					$('#balance').val(minBal);
-					if (!$('#openingFees').val()) {
-						$('#openingFees').val(minBal);
-					}
-				}
-			}
-		});
-	} else {
-		$('#balance').val('');
-	}
-});
+
 
 // Fetch Financial Consultant on Blur
 $('#financialConsultantCode').on('blur', function () {
@@ -627,7 +590,7 @@ function validateNomineeAge(showRequired) {
 
 function submitAccountForm(isUpdate) {
 	// Reset validation errors
-	$('#chktypeofaccount, #chkselectcustomer, #chkselectplan, #chkfinancialcode, #chkopeningfees, #chksuggestedNomineeAge').text('');
+	$('#chktypeofaccount, #chkselectcustomer, #chkfinancialcode, #chkopeningfees, #chksuggestedNomineeAge').text('');
 	$('.is-invalid').removeClass('is-invalid');
 
 	const typeofaccount = $('#typeofaccount').val();
@@ -645,14 +608,6 @@ function submitAccountForm(isUpdate) {
 	if (!selectByCustomer) {
 		$('#chkselectcustomer').text('* PLEASE SELECT A CUSTOMER');
 		isValid = false;
-	}
-
-	if (!isCurrent) {
-		const plan = $('#selectPlan').val();
-		if (!plan) {
-			$('#chkselectplan').text('* PLEASE SELECT SAVINGS PLAN');
-			isValid = false;
-		}
 	}
 
 	// Nominee Age Validation: Must be more than 20 years to create Saving Account successfully
@@ -710,7 +665,7 @@ function submitAccountForm(isUpdate) {
 	formData.append("jointSurvivorCode", ($('#jointSurvivorCode').val() || '').trim().toUpperCase());
 	formData.append("familyRelation", ($('#familyRelation').val() || '').trim().toUpperCase());
 
-	// Scheme & Current specifics in UPPERCASE
+	// Specifics in UPPERCASE (Saving vs Current)
 	if (isCurrent) {
 		formData.append("overdraftLimit", $('#overdraftLimit').val() || "0");
 		formData.append("businessName", ($('#businessName').val() || '').trim().toUpperCase());
@@ -718,8 +673,8 @@ function submitAccountForm(isUpdate) {
 		formData.append("selectPlan", "CURRENT ACCOUNT");
 		formData.append("balance", openingFees || "0");
 	} else {
-		formData.append("selectPlan", ($('#selectPlan').val() || '').trim().toUpperCase());
-		formData.append("balance", $('#balance').val() || openingFees || "0");
+		formData.append("selectPlan", "SAVING ACCOUNT");
+		formData.append("balance", openingFees || "0");
 		formData.append("overdraftLimit", "0");
 	}
 
@@ -904,9 +859,9 @@ function viewData(id) {
 				$('#jointSurvivorCode').val((data.jointSurvivorCode || "").toUpperCase());
 				$('#familyRelation').val((data.familyRelation || "").toUpperCase());
 
-				// Scheme & Current specifics in UPPERCASE
-				$('#selectPlan').val((data.selectPlan || "").toUpperCase());
-				$('#balance').val(data.balance || "0");
+				// Specifics in UPPERCASE
+				$('#selectPlan').val(isCurrent ? "CURRENT ACCOUNT" : "SAVING ACCOUNT");
+				$('#balance').val(data.balance || data.openingFees || "0");
 				$('#overdraftLimit').val(data.overdraftLimit || "0");
 				$('#businessName').val((data.businessName || "").toUpperCase());
 				$('#gstin').val((data.gstin || "").toUpperCase());
