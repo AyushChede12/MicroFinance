@@ -74,6 +74,10 @@ public class LoanManagementService implements org.springframework.beans.factory.
 					stmt.executeUpdate("ALTER TABLE loan_payment ADD COLUMN total_payable_amount VARCHAR(255) NULL");
 				} catch (Exception ignored) {
 				}
+				try {
+					stmt.executeUpdate("DELETE FROM loan_application WHERE loan_id = 'loan_id' OR id = 'id' OR loan_id = 'LOAN_ID'");
+				} catch (Exception ignored) {
+				}
 			} catch (Exception e) {
 				System.err.println("Column initialization note: " + e.getMessage());
 			}
@@ -1134,8 +1138,17 @@ public class LoanManagementService implements org.springframework.beans.factory.
 
 	// Service for getting loan id's for loan payment statement(Vaibhav)
 	public List<String> getStatementLoanId() {
-		return loanApplicationRepo.findAll().stream().map(LoanApplication::getLoanId) // adjust class name if needed
-				.filter(Objects::nonNull).collect(Collectors.toList());
+		try {
+			List<String> ids = loanApplicationRepo.findAllDistinctLoanIds();
+			if (ids != null && !ids.isEmpty()) return ids;
+		} catch (Exception ignored) {
+		}
+		try {
+			return loanApplicationRepo.findAll().stream().map(LoanApplication::getLoanId)
+					.filter(Objects::nonNull).collect(Collectors.toList());
+		} catch (Exception e) {
+			return java.util.Collections.emptyList();
+		}
 	}
 
 	public RegularLoanStatementResponse getRegularLoanStatement(String loanCode) {

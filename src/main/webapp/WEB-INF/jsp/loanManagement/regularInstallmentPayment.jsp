@@ -167,9 +167,9 @@
 
 				<!-- <div class="col-lg-3">
 							<div class="d-flex flex-column formFields mb-4">
-								<label for="">Interest Due </label> <input type="text"
+								<label for="">INTEREST DUE </label> <input type="text"
 									name="dueInterest" id="dueInterest" required="required"
-									placeholder="Enter Location" />
+									placeholder="ENTER AMOUNT" />
 							</div>
 						</div> -->
 
@@ -188,9 +188,9 @@
 
 				<!-- <div class="col-lg-3">
 							<div class="d-flex flex-column formFields mb-4">
-								<label for=""> Principle Due </label> <input type="text"
+								<label for=""> PRINCIPAL DUE </label> <input type="text"
 									name="duePrincipal" id="duePrincipal" required="required"
-									placeholder="Enter Location" />
+									placeholder="ENTER AMOUNT" />
 							</div>
 						</div> -->
 
@@ -284,7 +284,7 @@
 
 				<!-- <div class="col-lg-3">
 							<div class="d-flex flex-column formFields">
-								<label for="">Down Payment</label>
+								<label for="">DOWN PAYMENT</label>
 								<textarea name="downPayment" id="downPayment"
 									style="border: 1px solid rgb(224, 224, 224); border-radius: 5px; outline: none; padding: 5px; font-size: 12px;"></textarea>
 							</div>
@@ -325,8 +325,8 @@
 								CASH NOTE DENOMINATION
 							</div>
 							<div class="d-flex align-items-center gap-3">
-								<span style="font-size: 12px; color: #64748b;">Total Notes: <b id="totalNotesCount" style="color: #1e293b;">0</b></span>
-								<span style="font-size: 13px; font-weight: 700; color: #059669;">Total Cash: <span id="denominationGrandTotal">&#8377; 0.00</span></span>
+								<span style="font-size: 12px; color: #64748b;">TOTAL NOTES: <b id="totalNotesCount" style="color: #1e293b;">0</b></span>
+								<span style="font-size: 13px; font-weight: 700; color: #059669;">TOTAL CASH: <span id="denominationGrandTotal">&#8377; 0.00</span></span>
 								<span id="denominationMatchBadge" style="display: none; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;"></span>
 							</div>
 						</div>
@@ -400,7 +400,7 @@
 
 							<div class="col-lg-2 col-md-4 col-6">
 								<div style="background: #fff8e1; border: 1px solid #ffe082; border-radius: 6px; padding: 8px; text-align: center;">
-									<div style="font-weight: bold; color: #5d4037; font-size: 13px;">&#8377; 5 <span style="font-size:10px; color:#795548;">(Coin)</span></div>
+									<div style="font-weight: bold; color: #5d4037; font-size: 13px;">&#8377; 5 <span style="font-size:10px; color:#795548;">(COIN)</span></div>
 									<div class="d-flex align-items-center justify-content-center gap-1 mt-1">
 										<span style="font-size: 11px; color: #64748b;">×</span>
 										<input type="number" min="0" id="denom5" class="form-control form-control-sm denom-count" placeholder="0" style="width: 75px; text-align: center; height: 28px; font-weight: bold;" />
@@ -411,7 +411,7 @@
 
 							<div class="col-lg-2 col-md-4 col-6">
 								<div style="background: #fff8e1; border: 1px solid #ffe082; border-radius: 6px; padding: 8px; text-align: center;">
-									<div style="font-weight: bold; color: #5d4037; font-size: 13px;">&#8377; 2 <span style="font-size:10px; color:#795548;">(Coin)</span></div>
+									<div style="font-weight: bold; color: #5d4037; font-size: 13px;">&#8377; 2 <span style="font-size:10px; color:#795548;">(COIN)</span></div>
 									<div class="d-flex align-items-center justify-content-center gap-1 mt-1">
 										<span style="font-size: 11px; color: #64748b;">×</span>
 										<input type="number" min="0" id="denom2" class="form-control form-control-sm denom-count" placeholder="0" style="width: 75px; text-align: center; height: 28px; font-weight: bold;" />
@@ -422,7 +422,7 @@
 
 							<div class="col-lg-2 col-md-4 col-6">
 								<div style="background: #fff8e1; border: 1px solid #ffe082; border-radius: 6px; padding: 8px; text-align: center;">
-									<div style="font-weight: bold; color: #5d4037; font-size: 13px;">&#8377; 1 <span style="font-size:10px; color:#795548;">(Coin)</span></div>
+									<div style="font-weight: bold; color: #5d4037; font-size: 13px;">&#8377; 1 <span style="font-size:10px; color:#795548;">(COIN)</span></div>
 									<div class="d-flex align-items-center justify-content-center gap-1 mt-1">
 										<span style="font-size: 11px; color: #64748b;">×</span>
 										<input type="number" min="0" id="denom1" class="form-control form-control-sm denom-count" placeholder="0" style="width: 75px; text-align: center; height: 28px; font-weight: bold;" />

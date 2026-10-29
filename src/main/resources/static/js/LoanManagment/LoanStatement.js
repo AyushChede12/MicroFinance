@@ -1,9 +1,31 @@
 // Regular Loan Statement Handler
 
+let statementCompanyDetails = null;
+
 $(document).ready(function() {
+	loadCompanyDetails();
 	populateLoanIdDropdown();
 	initSearchHandler();
 });
+
+function loadCompanyDetails() {
+	$.ajax({
+		url: "api/preference/getCompanyDetails",
+		type: "GET",
+		dataType: "json",
+		success: function(resp) {
+			if (resp && resp.status === "OK" && resp.data) {
+				statementCompanyDetails = resp.data;
+			} else if (resp && resp.companyName) {
+				statementCompanyDetails = resp;
+			}
+		},
+		error: function(err) {
+			console.warn("COULD NOT LOAD COMPANY DETAILS", err);
+		}
+	});
+}
+
 
 // Populate Loan IDs in dropdown
 function populateLoanIdDropdown() {
@@ -250,6 +272,11 @@ function renderRegularLoanStatement(data) {
 
 function loanStatement() {
 	var printContents = document.getElementById("receiptArea").innerHTML;
+	const compName = (statementCompanyDetails && statementCompanyDetails.companyName ? statementCompanyDetails.companyName : "CO OPERATIVE SOCIETY LTD NAGPUR").trim().toUpperCase();
+	const compAddress = (statementCompanyDetails && statementCompanyDetails.address ? statementCompanyDetails.address : "").trim().toUpperCase();
+	const compCin = (statementCompanyDetails && statementCompanyDetails.cinNo ? "CIN: " + statementCompanyDetails.cinNo : "").trim().toUpperCase();
+	const compPhone = (statementCompanyDetails && statementCompanyDetails.helplineNo ? "HELPLINE: " + statementCompanyDetails.helplineNo : "").trim().toUpperCase();
+
 	var printWindow = window.open('', '', 'height=700,width=900');
 	printWindow.document.write(`
         <html>
@@ -267,6 +294,12 @@ function loanStatement() {
             </style>
         </head>
         <body>
+            <div class="text-center mb-3">
+                <h3 class="fw-bold m-0 text-primary">${compName}</h3>
+                ${compAddress ? `<p class="text-muted small mb-0">${compAddress}</p>` : ''}
+                ${(compCin || compPhone) ? `<small class="text-muted">${[compCin, compPhone].filter(Boolean).join(' | ')}</small>` : ''}
+                <div class="mt-2"><span class="badge bg-secondary">REGULAR LOAN REPAYMENT STATEMENT</span></div>
+            </div>
             ${printContents}
         </body>
         </html>
