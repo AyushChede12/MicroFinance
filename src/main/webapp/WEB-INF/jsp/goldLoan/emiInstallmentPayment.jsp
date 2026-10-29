@@ -85,7 +85,7 @@
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields mb-4">
-						<label for="">Term</label> <input type="text" name="loanTerm"
+						<label for="">TERM</label> <input type="text" name="loanTerm"
 							readonly="readonly" id="loanTerm" required="required"
 							placeholder="ENTER TERM" />
 					</div>
@@ -136,9 +136,9 @@
 
 				<!-- <div class="col-lg-3">
 							<div class="d-flex flex-column formFields mb-4">
-								<label for="">Total Principle Of Loan</label> <input type="text"
+								<label for="">TOTAL PRINCIPLE OF LOAN</label> <input type="text"
 									name="totalPrincipalloan" id="totalPrincipalloan"
-									required="required" placeholder="Enter Total Principle Of Loan" />
+									required="required" placeholder=="ENTER TOTAL PRINCIPLE OF LOAN" />
 							</div>
 						</div> -->
 
@@ -160,7 +160,7 @@
 		<div class="mt-5">
 			<nav>
 				<ol class="breadcrumb breadcrumb-title">
-					<li class="breadcrumb-item action">Payment Details</li>
+					<li class="breadcrumb-item action">PAYMENT DETAILS</li>
 				</ol>
 			</nav>
 			<div class="row">
@@ -179,9 +179,9 @@
 
 				<!-- <div class="col-lg-3">
 							<div class="d-flex flex-column formFields mb-4">
-								<label for="">Interest Due </label> <input type="text"
+								<label for="">INTEREST DUE </label> <input type="text"
 									name="dueInterest" id="dueInterest" required="required"
-									placeholder="Enter Location" />
+									placeholder=="ENTER LOCATION" />
 							</div>
 						</div> -->
 
@@ -272,7 +272,7 @@
 
 				<!-- <div class="col-lg-3">
 							<div class="d-flex flex-column formFields">
-								<label for="">Down Payment</label>
+								<label for="">DOWN PAYMENT</label>
 								<textarea name="downPayment" id="downPayment"
 									style="border: 1px solid rgb(224, 224, 224); border-radius: 5px; outline: none; padding: 5px; font-size: 12px;"></textarea>
 							</div>
@@ -307,7 +307,7 @@
 
 		<div class="row mt-4">
 			<div class="col-12 text-center">
-				<button type="button" id="saveBtn" class="btnStyle bg-success">Save</button>
+				<button type="button" id="saveBtn" class="btnStyle bg-success">SAVE</button>
 			</div>
 		</div>
 	</form>

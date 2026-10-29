@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +30,7 @@ import com.microfinance.model.PolicyRenewal;
 import com.microfinance.model.SecuredGoldPlan;
 import com.microfinance.model.addCustomer;
 import com.microfinance.service.SecuredGoldLoanService;
+import com.microfinance.service.GoldLoanDocumentService;
 
 @RestController
 @RequestMapping("/api/securedGoldLoan")
@@ -36,6 +38,9 @@ public class SecuredGoldLoanController {
 
 	@Autowired
 	private SecuredGoldLoanService secureGoldLoanService;
+
+	@Autowired
+	private GoldLoanDocumentService goldLoanDocumentService;
 
 	// by poonam for saving and updating Gold Secure Plan on 03/09/2025
 	@PostMapping("/saveGoldSecurePlan")
@@ -269,7 +274,7 @@ public class SecuredGoldLoanController {
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<List<ApplyForGold>> response = new ApiResponse<>(HttpStatus.OK,
-					"NO APPROVED POLICY RENEWAL FOUND.", java.util.Collections.emptyList());
+					"NO APPROVED GOLD CUSTOMER FOUND.", java.util.Collections.emptyList());
 			return ResponseEntity.ok(response);
 		}
 	}
@@ -386,5 +391,61 @@ public class SecuredGoldLoanController {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ApiResponse<>(HttpStatus.NO_CONTENT,
 					"NO EMI INSTALLMENT RECORDS FOUND FOR THIS GOLD ID", null));
 		}
+	}
+
+	@GetMapping("/getPrintableGoldLoanIds")
+	public ResponseEntity<ApiResponse<List<String>>> getPrintableGoldLoanIds() {
+		List<String> ids = goldLoanDocumentService.getPrintableGoldLoanIds();
+		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "PRINTABLE GOLD LOAN IDS FETCHED SUCCESSFULLY", ids));
+	}
+
+	@GetMapping("/{goldId}/documents")
+	public ResponseEntity<ApiResponse<List<Map<String, Object>>>> getAvailableDocuments(@PathVariable String goldId) {
+		List<Map<String, Object>> docs = goldLoanDocumentService.getAvailableDocuments(goldId);
+		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "AVAILABLE GOLD LOAN DOCUMENTS FETCHED SUCCESSFULLY", docs));
+	}
+
+	@GetMapping("/{goldId}/documents/{docType}/preview")
+	public ResponseEntity<String> previewDocumentHtml(@PathVariable String goldId, @PathVariable String docType) {
+		String html = goldLoanDocumentService.generateDocumentHtml(goldId, docType);
+		return ResponseEntity.ok()
+				.header(org.springframework.http.HttpHeaders.CONTENT_TYPE, "text/html; charset=UTF-8")
+				.body(html);
+	}
+
+	@PostMapping("/{goldId}/documents/{docType}/generate")
+	public ResponseEntity<ApiResponse<Map<String, Object>>> generateDocument(@PathVariable String goldId, @PathVariable String docType) {
+		try {
+			byte[] pdfBytes = goldLoanDocumentService.generateDocumentPdf(goldId, docType);
+			Map<String, Object> data = new HashMap<>();
+			data.put("goldId", goldId);
+			data.put("documentType", docType.toUpperCase());
+			data.put("sizeBytes", pdfBytes.length);
+			data.put("generatedAt", java.time.LocalDateTime.now().toString());
+			data.put("status", "SUCCESS");
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "GOLD LOAN DOCUMENT GENERATED SUCCESSFULLY", data));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "FAILED TO GENERATE DOCUMENT: " + e.getMessage().toUpperCase()));
+		}
+	}
+
+	@GetMapping("/{goldId}/documents/{docType}/pdf")
+	public ResponseEntity<byte[]> downloadDocumentPdf(@PathVariable String goldId, @PathVariable String docType) {
+		try {
+			byte[] pdfBytes = goldLoanDocumentService.generateDocumentPdf(goldId, docType);
+			return ResponseEntity.ok()
+					.header(org.springframework.http.HttpHeaders.CONTENT_TYPE, "application/pdf")
+					.header(org.springframework.http.HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + docType.toUpperCase() + "_" + goldId + ".pdf\"")
+					.body(pdfBytes);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+
+	@GetMapping("/{goldId}/document-logs")
+	public ResponseEntity<ApiResponse<List<Map<String, Object>>>> getDocumentLogs(@PathVariable String goldId) {
+		List<Map<String, Object>> logs = goldLoanDocumentService.getDocumentLogs(goldId);
+		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "GOLD LOAN DOCUMENT LOGS FETCHED SUCCESSFULLY", logs));
 	}
 }

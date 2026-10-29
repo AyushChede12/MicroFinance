@@ -1,12 +1,12 @@
 
 <div class="pagetitle">
-	<h1>Secured Gold Loan</h1>
+	<h1>SECURED GOLD LOAN</h1>
 	<nav>
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item"><a href="openDashboard"> <i
 					class="bi bi-coin"></i>
 			</a></li>
-			<li class="breadcrumb-item action">Gold Secure Plan</li>
+			<li class="breadcrumb-item action">GOLD SECURE PLAN</li>
 		</ol>
 	</nav>
 </div>
@@ -16,7 +16,7 @@
 		<div>
 			<nav>
 				<ol class="breadcrumb breadcrumb-title">
-					<li class="breadcrumb-item action">Gold Loan Details</li>
+					<li class="breadcrumb-item action">GOLD LOAN DETAILS</li>
 				</ol>
 			</nav>
 			<div class="row">
@@ -27,36 +27,36 @@
 						value="${loanSchemeCode}" />
 
 					<div class="d-flex flex-column formFields mb-4">
-						<label for="loanName">Loan Plan Name</label> <input type="text"
+						<label for="loanName">LOAN PLAN NAME</label> <input type="text"
 							name="loanPlanName" id="loanPlanName" required="required"
-							placeholder="Enter Loan Plan Name"
+							placeholder=="ENTER LOAN PLAN NAME"
 							style="text-transform: uppercase;" />
 					</div>
 				</div>
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields mb-4">
-						<label for="">Type Of Loan</label> <select id="typeOfLoan"
+						<label for="">TYPE OF LOAN</label> <select id="typeOfLoan"
 							name="typeOfLoan" required="required"
 							class="form-control selectField" style="height: 30px;">
-							<option value="">Select Type Of Loan</option>
-							<option value="Gold Loan">Gold Loan</option>
-							<option value="Silver Loan">Silver Loan</option>
+							<option value="">SELECT TYPE OF LOAN</option>
+							<option value="Gold Loan">GOLD LOAN</option>
+							<option value="Silver Loan">SILVER LOAN</option>
 						</select>
 					</div>
 				</div>
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields mb-4">
-						<label for="">Loan Mode</label> <select id="loanMode"
+						<label for="">LOAN MODE</label> <select id="loanMode"
 							name="loanMode" required="required"
 							class="form-control selectField" style="height: 30px;">
-							<option value="">Select Loan Mode</option>
-							<option value="Daily">Daily</option>
-							<option value="Weekly">Weekly</option>
-							<option value="Fortnightly">Fortnightly</option>
-							<option value="Monthly">Monthly</option>
-							<option value="Quarterly">Quarterly</option>
+							<option value="">SELECT LOAN MODE</option>
+							<option value="Daily">DAILY</option>
+							<option value="Weekly">WEEKLY</option>
+							<option value="Fortnightly">FORTNIGHTLY</option>
+							<option value="Monthly">MONTHLY</option>
+							<option value="Quarterly">QUARTERLY</option>
 						</select>
 					</div>
 				</div>
@@ -65,13 +65,13 @@
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields mb-4">
-						<label for=""> Interest Type</label> <select id="interestType"
+						<label for=""> INTEREST TYPE</label> <select id="interestType"
 							name="interestType" required="required"
 							class="form-control selectField" style="height: 30px;">
-							<option value="">Select ROI Type</option>
-							<option value="Flat Interest">Flat Interest</option>
-							<option value="Reducing Interest">Reducing Interest</option>
-							<option value="Rule 78">Rule 78</option>
+							<option value="">SELECT ROI TYPE</option>
+							<option value="Flat Interest">FLAT INTEREST</option>
+							<option value="Reducing Interest">REDUCING INTEREST</option>
+							<option value="Rule 78">RULE 78</option>
 
 						</select>
 					</div>
@@ -79,12 +79,12 @@
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields mb-4">
-						<label for="">EMI Type</label> <select id="emiType" name="emiType"
+						<label for="">EMI TYPE</label> <select id="emiType" name="emiType"
 							required="required" class="form-control selectField"
 							style="height: 30px;">
-							<option value="">Select EMI Type</option>
-							<option value="Regular">Regular</option>
-							<option value="Irregular">Irregular</option>
+							<option value="">SELECT EMI TYPE</option>
+							<option value="Regular">REGULAR</option>
+							<option value="Irregular">IRREGULAR</option>
 
 						</select>
 					</div>
@@ -92,9 +92,9 @@
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields mb-4">
-						<label for="minage">Min Age</label> <input type="text"
+						<label for="minage">MIN AGE</label> <input type="text"
 							name="minAge" id="minAge" required="required"
-							placeholder="Enter Minimum Age"
+							placeholder=="ENTER MINIMUM AGE"
 							style="text-transform: uppercase;" /> <span id="message"></span>
 					</div>
 
@@ -102,9 +102,9 @@
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields mb-4">
-						<label for="maxage">Max Age</label> <input type="text"
+						<label for="maxage">MAX AGE</label> <input type="text"
 							name="maxAge" id="maxAge" required="required"
-							placeholder="Enter Maximum Age"
+							placeholder=="ENTER MAXIMUM AGE"
 							style="text-transform: uppercase;" /> <span id="message"></span>
 					</div>
 
@@ -114,9 +114,9 @@
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
-						<label for="minamt">Loan Amount</label> <input type="text"
+						<label for="minamt">LOAN AMOUNT</label> <input type="text"
 							name="loanAmt" id="loanAmt" required="required"
-							placeholder="Enter Loan Amount"
+							placeholder=="ENTER LOAN AMOUNT"
 							style="text-transform: uppercase;" />
 					</div>
 				</div>
@@ -125,9 +125,9 @@
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
-						<label for="minterm">loanTerm</label> <input type="text"
+						<label for="minterm">LOANTERM</label> <input type="text"
 							name="loanTerm" id="loanTerm" required="required"
-							placeholder="Enter Loan Term" style="text-transform: uppercase;" />
+							placeholder=="ENTER LOAN TERM" style="text-transform: uppercase;" />
 					</div>
 				</div>
 
@@ -138,9 +138,9 @@
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields"
 						style="margin-bottom: 30px;">
-						<label for="rateInteresttype">Rate Interest Type(%p.a.)</label> <input
+						<label for="rateInteresttype">RATE INTEREST TYPE(%P.A.)</label> <input
 							type="text" name="rateInterestType" id="rateInterestType"
-							required="required" placeholder="Enter Rate Interest Type" />
+							required="required" placeholder=="ENTER RATE INTEREST TYPE" />
 					</div>
 				</div>
 
@@ -148,13 +148,13 @@
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields mb-4">
-						<label for="">Security Type</label> <select id="securityType"
+						<label for="">SECURITY TYPE</label> <select id="securityType"
 							name="securityType" required="required"
 							class="form-control selectField" style="height: 30px;">
-							<option value="">Select Security</option>
-							<option value="Pledge">Pledge</option>
-							<option value="Mortgage">Gold Bars</option>
-							<option value="Gold">Gold</option>
+							<option value="">SELECT SECURITY</option>
+							<option value="Pledge">PLEDGE</option>
+							<option value="Mortgage">GOLD BARS</option>
+							<option value="Gold">GOLD</option>
 						</select>
 					</div>
 				</div>
@@ -166,8 +166,8 @@
 						style="margin-bottom: 30px;">
 						<div
 							class="d-flex justify-content-start align-items-center  formFields">
-							<label style="margin-left: 20px;" class="mb-2">Plan
-								Status</label>
+							<label style="margin-left: 20px;" class="mb-2">PLAN
+								STATUS</label>
 							<div class="cont">
 								<div class="toggle">
 									<input type="checkbox" id="toggle-plan-status"
@@ -188,47 +188,47 @@
 		<div class="mt-5">
 			<nav>
 				<ol class="breadcrumb breadcrumb-title">
-					<li class="breadcrumb-item action">Deduction Details</li>
+					<li class="breadcrumb-item action">DEDUCTION DETAILS</li>
 				</ol>
 			</nav>
 			<div class="row">
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields mb-4">
-						<label for="procfee">Processing Fee(%) </label> <input type="text"
+						<label for="procfee">PROCESSING FEE(%) </label> <input type="text"
 							name="procFee" id="procFee" required="required"
-							placeholder="Enter Processing Fee" />
+							placeholder=="ENTER PROCESSING FEE" />
 					</div>
 				</div>
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields mb-4">
-						<label for="legalcharge"> Legal Charges(%)</label> <input
+						<label for="legalcharge"> LEGAL CHARGES(%)</label> <input
 							type="text" name="legalCharge" id="legalCharge"
-							required="required" placeholder="Enter Legal Charges" />
+							required="required" placeholder=="ENTER LEGAL CHARGES" />
 					</div>
 				</div>
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields mb-4">
 						<label for="Gst">GST(%)</label> <input type="text" name="gst"
-							id="gst" required="required" placeholder="Enter GST" />
+							id="gst" required="required" placeholder=="ENTER GST" />
 					</div>
 				</div>
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields mb-4">
-						<label for="insufee">Insurance Fee(%)</label> <input type="text"
+						<label for="insufee">INSURANCE FEE(%)</label> <input type="text"
 							name="insuFee" id="insuFee" required="required"
-							placeholder="Enter Insurance Fee" />
+							placeholder=="ENTER INSURANCE FEE" />
 					</div>
 				</div>
 
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
-						<label for="valufee">Valuation Fee(%) </label> <input type="text"
+						<label for="valufee">VALUATION FEE(%) </label> <input type="text"
 							name="valuFee" id="valuFee" required="required"
-							placeholder="Enter Valuation Fee" />
+							placeholder=="ENTER VALUATION FEE" />
 					</div>
 				</div>
 
@@ -240,31 +240,31 @@
 		<div class="mt-5">
 			<nav>
 				<ol class="breadcrumb breadcrumb-title">
-					<li class="breadcrumb-item action">Late Fine Details</li>
+					<li class="breadcrumb-item action">LATE FINE DETAILS</li>
 				</ol>
 			</nav>
 			<div class="row">
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields mb-4">
-						<label for="lateallowanceDay">Late Allowance Days</label> <input
+						<label for="lateallowanceDay">LATE ALLOWANCE DAYS</label> <input
 							type="text" name="lateAllowanceDay" id="lateAllowanceDay"
-							required="required" placeholder="Enter Late Allowance Days" />
+							required="required" placeholder=="ENTER LATE ALLOWANCE DAYS" />
 					</div>
 				</div>
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields mb-4">
-						<label for="penaltymode">penalty mode</label> <select
+						<label for="penaltymode">PENALTY MODE</label> <select
 							id="penaltyMode" name="penaltyMode" required="required"
 							class="form-control selectField" style="height: 30px;">
-							<option value="">Select Penalty Type</option>
-							<option value="Percentage">Percentage</option>
-							<option value="Amount">Amount</option>
+							<option value="">SELECT PENALTY TYPE</option>
+							<option value="Percentage">PERCENTAGE</option>
+							<option value="Amount">AMOUNT</option>
 						</select>
 					</div>
 				</div>
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields mb-4">
-						<label for="monthlypenalty"> Monthly Penalty </label> <input
+						<label for="monthlypenalty"> MONTHLY PENALTY </label> <input
 							type="text" name="monthlyPenalty" id="monthlyPenalty"
 							required="required" placeholder="" />
 					</div>
@@ -276,11 +276,11 @@
 		<input type="hidden" id="goldLoanId" value="" />
 		<div class="row">
 			<div class="col-12 text-center">
-				<button id="saveBtn" class="btnStyle bg-success">Save</button>
+				<button id="saveBtn" class="btnStyle bg-success">SAVE</button>
 
 
 				<button id="updateBtn" class="btnStyle"
-					style="background-color: #FFA500;">Update</button>
+					style="background-color: #FFA500;">UPDATE</button>
 
 			</div>
 		</div>

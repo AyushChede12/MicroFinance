@@ -88,7 +88,7 @@
 								required="required" placeholder="ENTER RATE"
 								class="form-control"
 								style="text-transform: uppercase; margin-right: 10px;" />
-							<!-- <button id="saveTodaysRateBtn" class="btnStyle bg-success">Save</button> -->
+							<!-- <button id="saveTodaysRateBtn" class="btnStyle bg-success">SAVE</button> -->
 						</div>
 					</div>
 				</div>
@@ -126,7 +126,7 @@
 								required="required" placeholder="ENTER ITEM NAME"
 								class="form-control"
 								style="text-transform: uppercase; margin-right: 10px;" />
-							<!-- <button id="saveItemMasterBtn" class="btnStyle bg-success">Save</button> -->
+							<!-- <button id="saveItemMasterBtn" class="btnStyle bg-success">SAVE</button> -->
 						</div>
 					</div>
 				</div>
@@ -139,7 +139,7 @@
 								required="required" placeholder="ENTER ITEM WEIGHT"
 								class="form-control"
 								style="text-transform: uppercase; margin-right: 10px;" />
-							<!-- <button id="saveItemMasterBtn" class="btnStyle bg-success">Save</button> -->
+							<!-- <button id="saveItemMasterBtn" class="btnStyle bg-success">SAVE</button> -->
 						</div>
 					</div>
 				</div>
@@ -204,7 +204,7 @@
 								placeholder="ENTER LOCKER NUMBER" readonly="readonly"
 								class="form-control"
 								style="text-transform: uppercase; margin-right: 10px;" />
-							<!-- <button id="saveLockerMasterBtn" class="btnStyle bg-success">Save</button> -->
+							<!-- <button id="saveLockerMasterBtn" class="btnStyle bg-success">SAVE</button> -->
 						</div>
 					</div>
 				</div>
@@ -261,7 +261,7 @@
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields mb-4">
-						<label for="purity">Purity (%)</label> <input type="text"
+						<label for="purity">PURITY (%)</label> <input type="text"
 							name="purity" id="purity" required="required"
 							placeholder="ENTER PURITY" style="text-transform: uppercase;" />
 					</div>
@@ -277,7 +277,7 @@
 								<option value="">ITEM TYPE</option>
 								<option value="Gold">GOLD</option>
 							</select>
-							<!-- <button id="saveButtonforGoldDirectory" class="btnStyle bg-success">Save</button> -->
+							<!-- <button id="saveButtonforGoldDirectory" class="btnStyle bg-success">SAVE</button> -->
 						</div>
 					</div>
 				</div>
@@ -398,7 +398,7 @@
 					<div class="d-flex flex-column formFields mb-4">
 						<label for="">EMI PAYMENT</label> <input type="text"
 							name="emiPayment" id="emiPayment" required="required"
-							placeholder="Auto Calculated" readonly="readonly"
+							placeholder=="AUTO CALCULATED" readonly="readonly"
 							style="text-transform: uppercase; background: #f5f5f5;" />
 							<small id="vemipayment" style="color: red;"></small>
 					</div>

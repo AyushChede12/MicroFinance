@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.microfinance.dto.ApiResponse;
 import com.microfinance.model.ApplyForGold;
+import com.microfinance.model.BranchModule;
 import com.microfinance.model.CreateSavingsAccount;
 import com.microfinance.model.EmiInstallmentPaymentGold;
 import com.microfinance.model.GoldDirectory;
@@ -20,6 +21,7 @@ import com.microfinance.model.SecuredGoldPlan;
 import com.microfinance.model.addCustomer;
 import com.microfinance.repository.AddCustomerRepo;
 import com.microfinance.repository.ApplyForGoldRepo;
+import com.microfinance.repository.BranchModuleRepo;
 import com.microfinance.repository.CreateSavingAccountRepo;
 import com.microfinance.repository.EMIInstallmentRepo;
 import com.microfinance.repository.GoldCloseRepo;
@@ -58,12 +60,27 @@ public class SecuredGoldLoanService {
 	@Autowired
 	EMIInstallmentRepo emiRepo;
 
+	@Autowired
+	private CustomerSavingsService customerSavingsService;
+
+	@Autowired
+	private BranchModuleRepo branchModuleRepo;
+
+	private BranchModule resolveBranch(String branchName) {
+		if (branchName == null || branchName.trim().isEmpty()) {
+			return null;
+		}
+		BranchModule bm = branchModuleRepo.findByBranchNameIgnoreCase(branchName.trim()).orElse(null);
+		if (bm == null) {
+			bm = branchModuleRepo.findByBranchName(branchName.trim());
+		}
+		return bm;
+	}
+
 	public SecuredGoldPlan saveLoanManagmentData(SecuredGoldPlan goldLoan) {
 		if (goldLoan.getId() != null && goldSecurePlanRepo.existsById(goldLoan.getId())) {
-			// Perform update
 			SecuredGoldPlan existingGoldLoan = goldSecurePlanRepo.findById(goldLoan.getId()).get();
 
-			// Gold Loan Details
 			existingGoldLoan.setLoanPlanName(goldLoan.getLoanPlanName());
 			existingGoldLoan.setTypeOfLoan(goldLoan.getTypeOfLoan());
 			existingGoldLoan.setLoanMode(goldLoan.getLoanMode());
@@ -77,39 +94,31 @@ public class SecuredGoldLoanService {
 			existingGoldLoan.setSecurityType(goldLoan.getSecurityType());
 			existingGoldLoan.setPlanStatus(goldLoan.getPlanStatus());
 
-			// Deduction Details
 			existingGoldLoan.setProcFee(goldLoan.getProcFee());
 			existingGoldLoan.setLegalCharge(goldLoan.getLegalCharge());
 			existingGoldLoan.setGst(goldLoan.getGst());
 			existingGoldLoan.setInsuFee(goldLoan.getInsuFee());
 			existingGoldLoan.setValuFee(goldLoan.getValuFee());
 
-			// Late Fine Details
 			existingGoldLoan.setLateAllowanceDay(goldLoan.getLateAllowanceDay());
 			existingGoldLoan.setPenaltyMode(goldLoan.getPenaltyMode());
 			existingGoldLoan.setMonthlyPenalty(goldLoan.getMonthlyPenalty());
 
 			return goldSecurePlanRepo.save(existingGoldLoan);
 		} else {
-			// Save new record
 			return goldSecurePlanRepo.save(goldLoan);
 		}
-
 	}
 
 	public List<SecuredGoldPlan> allDataFetchGoldSecurePlan() {
-		// TODO Auto-generated method stub
 		return goldSecurePlanRepo.findAll();
-
 	}
 
 	public SecuredGoldPlan getGoldLoanById(Long id) {
-		// TODO Auto-generated method stub
 		return goldSecurePlanRepo.findById(id).orElse(null);
 	}
 
 	public boolean deleteGoldLoanLoanById(Long id) {
-		// TODO Auto-generated method stub
 		if (goldSecurePlanRepo.existsById(id)) {
 			goldSecurePlanRepo.deleteById(id);
 			return true;
@@ -117,62 +126,31 @@ public class SecuredGoldLoanService {
 		return false;
 	}
 
-	/*
-	 * public GoldDirectory saveGoldDirectory(String karat, String silverRate,
-	 * String goldRate, String itemMasterType, String itemName, String
-	 * lockerLocation, String lockerAddress, String purityName, String purity,
-	 * String itemPurityType) {
-	 * 
-	 * GoldDirectory goldDirectory = new GoldDirectory();
-	 * 
-	 * // Today's Rate goldDirectory.setKarat(karat);
-	 * goldDirectory.setSilverRate(silverRate); goldDirectory.setGoldRate(goldRate);
-	 * 
-	 * // Item Master goldDirectory.setItemMasterType(itemMasterType);
-	 * goldDirectory.setItemName(itemName);
-	 * 
-	 * // Locker Master goldDirectory.setLockerLocation(lockerLocation);
-	 * goldDirectory.setLockerAddress(lockerAddress);
-	 * 
-	 * // Purity Master goldDirectory.setPurityName(purityName);
-	 * goldDirectory.setPurity(purity);
-	 * goldDirectory.setItemPurityType(itemPurityType);
-	 * 
-	 * return goldDirectoryRepo.save(goldDirectory); }
-	 */
-
 	public List<GoldDirectory> getAllGoldDirectories() {
-		// TODO Auto-generated method stub
 		return goldDirectoryRepo.findAll();
 	}
 
 	public List<addCustomer> getgoldApplicationById(String memberCode) {
-		// TODO Auto-generated method stub
 		return addCustomerRepo.findByMemberCode(memberCode);
 	}
 
 	public List<addCustomer> getAllCustomers() {
-		// TODO Auto-generated method stub
 		return addCustomerRepo.findAll();
 	}
 
 	public List<GoldDirectory> getLoanPlanNameApplyForGoldByLoanPlan(String loanPlanName) {
-		// TODO Auto-generated method stub
 		return goldDirectoryRepo.findByloanPlanName(loanPlanName);
 	}
 
 	public GoldDirectory saveGoldDirectory(GoldDirectory goldDirectory) {
-		// TODO Auto-generated method stub
 		return goldDirectoryRepo.save(goldDirectory);
 	}
 
 	public List<GoldDirectory> getByMemberCodeApplyForGoldByLoanPlan(String customerCode) {
-		// TODO Auto-generated method stub
 		return goldDirectoryRepo.findBycustomerCode(customerCode);
 	}
 
 	public boolean saveApplyForGoldData(ApplyForGold applyForGold) {
-		// TODO Auto-generated method stub
 		try {
 			applyForGoldRepo.save(applyForGold);
 			return true;
@@ -183,12 +161,10 @@ public class SecuredGoldLoanService {
 	}
 
 	public List<ApplyForGold> getAllGoldLoanCustomer() {
-		// TODO Auto-generated method stub
 		return applyForGoldRepo.findAll();
 	}
 
 	public List<ApplyForGold> getByGoldIDforApproval(String goldID) {
-		// TODO Auto-generated method stub
 		return applyForGoldRepo.findByGoldID(goldID);
 	}
 
@@ -205,44 +181,79 @@ public class SecuredGoldLoanService {
 
 		// Step 1: Calculate deductions
 		double loanAmount = Double.parseDouble(goldLoan.getLoanAmount());
-		double processingFee = goldLoan.getProcessingFee() != null ? Double.parseDouble(goldLoan.getProcessingFee())
-				: 0;
+		double processingFee = goldLoan.getProcessingFee() != null ? Double.parseDouble(goldLoan.getProcessingFee()) : 0;
 		double legalCharge = goldLoan.getLegalCharges() != null ? Double.parseDouble(goldLoan.getLegalCharges()) : 0;
 		double gst = goldLoan.getGst() != null ? Double.parseDouble(goldLoan.getGst()) : 0;
 		double stampDuty = goldLoan.getStampDuty() != null ? Double.parseDouble(goldLoan.getStampDuty()) : 0;
 		double smsCharges = goldLoan.getSmsCharges() != null ? Double.parseDouble(goldLoan.getSmsCharges()) : 0;
 		double mainCharges = goldLoan.getMainCharges() != null ? Double.parseDouble(goldLoan.getMainCharges()) : 0;
-		double stationaryFee = goldLoan.getStationaryFee() != null ? Double.parseDouble(goldLoan.getStationaryFee())
-				: 0;
+		double stationaryFee = goldLoan.getStationaryFee() != null ? Double.parseDouble(goldLoan.getStationaryFee()) : 0;
 		double insuFee = goldLoan.getInsuFee() != null ? Double.parseDouble(goldLoan.getInsuFee()) : 0;
-		double penaltyCharge = goldLoan.getPenaltyCharge() != null ? Double.parseDouble(goldLoan.getPenaltyCharge())
-				: 0;
-		double valuationFees = goldLoan.getValuationFees() != null ? Double.parseDouble(goldLoan.getValuationFees())
-				: 0;
+		double penaltyCharge = goldLoan.getPenaltyCharge() != null ? Double.parseDouble(goldLoan.getPenaltyCharge()) : 0;
+		double valuationFees = goldLoan.getValuationFees() != null ? Double.parseDouble(goldLoan.getValuationFees()) : 0;
 		double overCharge = goldLoan.getOverCharge() != null ? Double.parseDouble(goldLoan.getOverCharge()) : 0;
-		double collectionCharge = goldLoan.getCollectionCharge() != null
-				? Double.parseDouble(goldLoan.getCollectionCharge())
-				: 0;
+		double collectionCharge = goldLoan.getCollectionCharge() != null ? Double.parseDouble(goldLoan.getCollectionCharge()) : 0;
 
 		double totalDeductions = processingFee + legalCharge + gst + stampDuty + smsCharges + mainCharges
 				+ stationaryFee + insuFee + penaltyCharge + valuationFees + overCharge + collectionCharge;
 
 		double sanctionedAmount = loanAmount - totalDeductions;
+		String today = LocalDate.now().toString();
 
-		// Step 2: Update linked savings account balance
+		// Step 2: Update linked savings account balance & record AccountTransaction
 		List<CreateSavingsAccount> accounts = createSavingRepo.findBySelectByCustomer(goldLoan.getMemberCode());
 		if (accounts != null && !accounts.isEmpty()) {
-			CreateSavingsAccount account = accounts.get(0); // assuming one account per member
-			double existingBalance = Double.parseDouble(account.getBalance());
+			CreateSavingsAccount account = accounts.get(0);
+			double existingBalance = 0.0;
+			try {
+				existingBalance = Double.parseDouble(account.getBalance());
+			} catch (Exception ignored) {}
 			double updatedBalance = existingBalance + sanctionedAmount;
 			account.setBalance(String.valueOf(updatedBalance));
 			createSavingRepo.save(account);
+
+			try {
+				customerSavingsService.recordAccountTransaction(
+					account.getAccountNumber(),
+					account.getEnterCustomerName() != null ? account.getEnterCustomerName() : goldLoan.getCustomerName(),
+					goldLoan.getBranchName(),
+					"SAVING",
+					today,
+					"CREDIT",
+					sanctionedAmount,
+					0.0,
+					"GOLD LOAN DISBURSEMENT - " + goldLoan.getGoldID(),
+					goldLoan.getLoanMode() != null ? goldLoan.getLoanMode().toUpperCase() : "TRANSFER",
+					goldLoan.getGoldID(),
+					updatedBalance,
+					"ADMIN"
+				);
+			} catch (Exception ex) {
+				System.err.println("FAILED TO RECORD DISBURSEMENT ACCOUNT TRANSACTION: " + ex.getMessage());
+			}
+		}
+
+		// Record BankTransaction for disbursement
+		try {
+			BranchModule bm = resolveBranch(goldLoan.getBranchName());
+			customerSavingsService.recordBankTransaction(
+				null,
+				bm,
+				today,
+				"GOLD LOAN DISBURSEMENT - " + goldLoan.getGoldID(),
+				0.0,
+				sanctionedAmount,
+				"DEBIT",
+				goldLoan.getGoldID()
+			);
+		} catch (Exception ex) {
+			System.err.println("FAILED TO RECORD DISBURSEMENT BANK TRANSACTION: " + ex.getMessage());
 		}
 
 		// Step 3: Update gold loan approval
 		goldLoan.setApprovalStatus(true);
 		goldLoan.setSanctionedAmount(String.valueOf(sanctionedAmount));
-		goldLoan.setApprovalDate(LocalDate.now().toString());
+		goldLoan.setApprovalDate(today);
 		goldLoan.setGoldLoanStatus("ACTIVE");
 		applyForGoldRepo.save(goldLoan);
 
@@ -250,21 +261,88 @@ public class SecuredGoldLoanService {
 	}
 
 	public List<ApplyForGold> getApprovedGoldCustomer() {
-		// TODO Auto-generated method stub
 		return applyForGoldRepo.findByApprovalStatusTrue();
 	}
 
 	public GoldLoanClose closeGoldLoan(GoldLoanClose goldLoanCloseRequest) {
-		// TODO Auto-generated method stub
 		goldLoanCloseRequest.setGoldLoanStatus("CLOSED");
 		GoldLoanClose savedCloseData = goldCloseRepo.save(goldLoanCloseRequest);
 
-		// 2. UPDATE ApplyForGold Table Status = CLOSED
+		// UPDATE ApplyForGold Table Status = CLOSED
 		ApplyForGold applyLoan = applyForGoldRepo.findSingleByGoldID(goldLoanCloseRequest.getGoldID());
-
 		if (applyLoan != null) {
 			applyLoan.setGoldLoanStatus("CLOSED");
 			applyForGoldRepo.save(applyLoan);
+		}
+
+		// Process settlement payment & transactions if settlement amount paid
+		double settlementAmount = 0.0;
+		String rawAmount = goldLoanCloseRequest.getNetAmount() != null && !goldLoanCloseRequest.getNetAmount().trim().isEmpty()
+				? goldLoanCloseRequest.getNetAmount()
+				: goldLoanCloseRequest.getPaymentAmount();
+		if (rawAmount != null && !rawAmount.trim().isEmpty()) {
+			try {
+				settlementAmount = Double.parseDouble(rawAmount.replaceAll("[^0-9.]", "").trim());
+			} catch (Exception ignored) {}
+		}
+
+		if (settlementAmount > 0) {
+			String today = goldLoanCloseRequest.getPaymentDate() != null && !goldLoanCloseRequest.getPaymentDate().trim().isEmpty()
+					? goldLoanCloseRequest.getPaymentDate()
+					: LocalDate.now().toString();
+
+			// Debit savings account if customer has savings
+			List<CreateSavingsAccount> accounts = createSavingRepo.findBySelectByCustomer(goldLoanCloseRequest.getCustomerCode());
+			if (accounts != null && !accounts.isEmpty()) {
+				CreateSavingsAccount account = accounts.get(0);
+				double bal = 0.0;
+				try {
+					bal = Double.parseDouble(account.getBalance());
+				} catch (Exception ignored) {}
+
+				if (bal >= settlementAmount) {
+					bal -= settlementAmount;
+					account.setBalance(String.valueOf(bal));
+					createSavingRepo.save(account);
+				}
+
+				try {
+					customerSavingsService.recordAccountTransaction(
+						account.getAccountNumber(),
+						account.getEnterCustomerName() != null ? account.getEnterCustomerName() : goldLoanCloseRequest.getCustomerName(),
+						goldLoanCloseRequest.getBranchName() != null ? goldLoanCloseRequest.getBranchName() : (account.getBranchName() != null ? account.getBranchName().getBranchName() : ""),
+						"SAVING",
+						today,
+						"DEBIT",
+						0.0,
+						settlementAmount,
+						"GOLD LOAN CLOSURE SETTLEMENT - " + goldLoanCloseRequest.getGoldID(),
+						"CLOSURE",
+						goldLoanCloseRequest.getGoldID() + "_CLOSE",
+						bal,
+						"ADMIN"
+					);
+				} catch (Exception ex) {
+					System.err.println("FAILED TO RECORD CLOSURE ACCOUNT TRANSACTION: " + ex.getMessage());
+				}
+			}
+
+			// Record BankTransaction
+			try {
+				BranchModule bm = resolveBranch(goldLoanCloseRequest.getPaymentBranch() != null ? goldLoanCloseRequest.getPaymentBranch() : goldLoanCloseRequest.getBranchName());
+				customerSavingsService.recordBankTransaction(
+					null,
+					bm,
+					today,
+					"GOLD LOAN CLOSURE SETTLEMENT - " + goldLoanCloseRequest.getGoldID(),
+					settlementAmount,
+					0.0,
+					"CREDIT",
+					goldLoanCloseRequest.getGoldID()
+				);
+			} catch (Exception ex) {
+				System.err.println("FAILED TO RECORD CLOSURE BANK TRANSACTION: " + ex.getMessage());
+			}
 		}
 
 		return savedCloseData;
@@ -317,6 +395,46 @@ public class SecuredGoldLoanService {
 		accountBalance -= (emiAmount * noOfInst);
 		savingAcc.setBalance(String.valueOf(accountBalance));
 		createSavingRepo.save(savingAcc);
+
+		String txnDate = request.getPaymentDate() != null && !request.getPaymentDate().trim().isEmpty() ? request.getPaymentDate() : LocalDate.now().toString();
+
+		// Record AccountTransaction
+		try {
+			customerSavingsService.recordAccountTransaction(
+				savingAcc.getAccountNumber(),
+				savingAcc.getEnterCustomerName() != null ? savingAcc.getEnterCustomerName() : request.getCustomerName(),
+				savingAcc.getBranchName() != null ? savingAcc.getBranchName().getBranchName() : goldApp.getBranchName(),
+				"SAVING",
+				txnDate,
+				"DEBIT",
+				0.0,
+				emiAmount * noOfInst,
+				"GOLD LOAN EMI PAYMENT - " + goldID + " (" + noOfInst + " INST)",
+				request.getModeOfPayment() != null ? request.getModeOfPayment().toUpperCase() : "SAVINGS",
+				goldID + "_EMI_" + System.currentTimeMillis(),
+				accountBalance,
+				"ADMIN"
+			);
+		} catch (Exception ex) {
+			System.err.println("FAILED TO RECORD EMI ACCOUNT TRANSACTION: " + ex.getMessage());
+		}
+
+		// Record BankTransaction
+		try {
+			BranchModule bm = resolveBranch(goldApp.getBranchName());
+			customerSavingsService.recordBankTransaction(
+				null,
+				bm,
+				txnDate,
+				"GOLD LOAN EMI PAYMENT - " + goldID,
+				emiAmount * noOfInst,
+				0.0,
+				"CREDIT",
+				goldID
+			);
+		} catch (Exception ex) {
+			System.err.println("FAILED TO RECORD EMI BANK TRANSACTION: " + ex.getMessage());
+		}
 
 		// Step 3: Fetch previous payments
 		List<GoldLoanPayment> allPayments = goldPaymentRepo.findByGoldID(goldID);
@@ -438,7 +556,7 @@ public class SecuredGoldLoanService {
 			payment.setPaymentDate(request.getPaymentDate());
 			payment.setPaymentStatus("Paid");
 			payment.setModeOfPayment(request.getModeOfPayment());
-			payment.setChargeDeductCash("0"); // If any cash deduction needed
+			payment.setChargeDeductCash("0");
 			payment.setRemarks("Installment " + (allPayments.size() + i));
 			payment.setAmountDue(String.valueOf(lastAmountDue));
 
@@ -457,22 +575,18 @@ public class SecuredGoldLoanService {
 	}
 
 	public List<addCustomer> getLoanApplicationById(String memberCode) {
-		// TODO Auto-generated method stub
 		return addCustomerRepo.findByMemberCode(memberCode);
 	}
 
 	public List<ApplyForGold> getAllActiveGoldLoans() {
-		// TODO Auto-generated method stub
 		return applyForGoldRepo.findByGoldLoanStatus("ACTIVE");
 	}
 
 	public List<ApplyForGold> getNotApprovedGoldCustomer() {
-		// TODO Auto-generated method stub
 		return applyForGoldRepo.findByApprovalStatusFalse();
 	}
 
 	public List<GoldLoanPayment> getGoldPaymentByGoldId(String goldID) {
-		// TODO Auto-generated method stub
 		return goldPaymentRepo.findByGoldID(goldID);
 	}
 
@@ -483,15 +597,19 @@ public class SecuredGoldLoanService {
 
 		// 2. Fetch Savings Account
 		List<CreateSavingsAccount> optionalAcc = createSavingRepo.findBySelectByCustomer(emi.getCustomerCode());
-		System.out.println(optionalAcc);
 		if (optionalAcc == null || optionalAcc.isEmpty()) {
 			return new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR, "FAILED", "SAVINGS ACCOUNT NOT FOUND!");
 		}
 
-		// Extract actual entity
 		CreateSavingsAccount acc = optionalAcc.get(0);
 
-		double oldBalance = Double.parseDouble(acc.getBalance());
+		double oldBalance = 0.0;
+		try {
+			oldBalance = Double.parseDouble(acc.getBalance());
+		} catch (Exception e) {
+			oldBalance = 0.0;
+		}
+
 		double payAmount = Double.parseDouble(emi.getPaymentAmount());
 
 		if (oldBalance < payAmount) {
@@ -500,8 +618,47 @@ public class SecuredGoldLoanService {
 
 		double newBalance = oldBalance - payAmount;
 		acc.setBalance(String.valueOf(newBalance));
-
 		createSavingRepo.save(acc);
+
+		String date = emi.getPaymentDate() != null && !emi.getPaymentDate().trim().isEmpty() ? emi.getPaymentDate() : LocalDate.now().toString();
+
+		// Record AccountTransaction
+		try {
+			customerSavingsService.recordAccountTransaction(
+				acc.getAccountNumber(),
+				acc.getEnterCustomerName() != null ? acc.getEnterCustomerName() : emi.getCustomerName(),
+				acc.getBranchName() != null ? acc.getBranchName().getBranchName() : emi.getBranchName(),
+				"SAVING",
+				date,
+				"DEBIT",
+				0.0,
+				payAmount,
+				"GOLD LOAN INSTALLMENT PAYMENT - " + emi.getGoldID() + (emi.getInstallment() != null ? " INST #" + emi.getInstallment() : ""),
+				emi.getPaymentMode() != null ? emi.getPaymentMode().toUpperCase() : "SAVINGS",
+				emi.getGoldID() + "_INST_" + (emi.getInstallment() != null ? emi.getInstallment() : System.currentTimeMillis()),
+				newBalance,
+				"ADMIN"
+			);
+		} catch (Exception ex) {
+			System.err.println("FAILED TO RECORD INSTALLMENT ACCOUNT TRANSACTION: " + ex.getMessage());
+		}
+
+		// Record BankTransaction
+		try {
+			BranchModule bm = acc.getBranchName() != null ? acc.getBranchName() : resolveBranch(emi.getBranchName());
+			customerSavingsService.recordBankTransaction(
+				null,
+				bm,
+				date,
+				"GOLD LOAN INSTALLMENT PAYMENT - " + emi.getGoldID(),
+				payAmount,
+				0.0,
+				"CREDIT",
+				emi.getGoldID()
+			);
+		} catch (Exception ex) {
+			System.err.println("FAILED TO RECORD INSTALLMENT BANK TRANSACTION: " + ex.getMessage());
+		}
 
 		return new ApiResponse(HttpStatus.OK, "SUCCESS", "INSTALLMENT SAVED & BALANCE UPDATED");
 	}
