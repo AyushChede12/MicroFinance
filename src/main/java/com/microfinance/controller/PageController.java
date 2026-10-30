@@ -427,9 +427,9 @@ public class PageController {
 		return "main";
 	}
 
-	@GetMapping("/earlyLoanClosureJointLiability")
+	@GetMapping({"/earlyLoanClosureJointLiability", "/earlyLoanClosure"})
 	public String getEarlyLoanClosure(Model model) {
-		model.addAttribute("contentPage", "jointLiabilityLoan/LoanClosure.jsp");
+		model.addAttribute("contentPage", "jointLiabilityLoan/earlyLoanClosure.jsp");
 		return "main";
 	}
 	

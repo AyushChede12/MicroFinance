@@ -136,18 +136,97 @@
 
 
 			</div>
-			<div class="row">
-				<div class="col-12 text-center">
-					<button type="button" id="approveBtn" class="btnStyle bg-success"
-						style="margin-left: 80%">APPROVE</button>
-
+			<div class="row mt-4">
+				<div class="col-12 text-center d-flex justify-content-end align-items-center gap-2">
+					<button type="button" id="printSanctionBtn" class="btn btn-primary" style="display: none; height: 35px; min-width: 200px; font-weight: 600; text-transform: uppercase;">
+						<i class="bi bi-printer"></i> PRINT SANCTION LETTER
+					</button>
+					<button type="button" id="approveBtn" class="btnStyle bg-success" style="height: 35px; min-width: 140px; font-weight: 600; text-transform: uppercase;">APPROVE</button>
 				</div>
 			</div>
 		</div>
 
-
 	</form>
 
+	<!-- Printable Sanction Letter Area -->
+	<div id="printableSanctionArea" style="display: none;">
+		<div style="font-family: Arial, sans-serif; padding: 30px; color: #000; line-height: 1.5;">
+			<div style="text-align: center; margin-bottom: 25px;">
+				<h2 id="sanctionCompName" style="margin: 0; font-size: 22px; font-weight: bold; color: #0d6efd; letter-spacing: 0.5px; text-transform: uppercase;"></h2>
+				<p id="sanctionCompAddress" style="margin: 4px 0 2px 0; font-size: 12px; color: #444; text-transform: uppercase;"></p>
+				<p id="sanctionCompRegLine" style="margin: 2px 0; font-size: 11px; color: #555; text-transform: uppercase;"></p>
+				<p id="sanctionCompContact" style="margin: 2px 0; font-size: 11px; color: #555; text-transform: uppercase;"></p>
+				<hr style="border: 0; border-top: 2px solid #000; margin: 12px 0 18px 0;">
+				<h3 style="margin: 5px 0; font-size: 16px; font-weight: bold; text-decoration: underline; text-transform: uppercase;">
+					JOINT LIABILITY GROUP LOAN SANCTION / APPROVAL ADVICE
+				</h3>
+			</div>
+
+			<table style="width: 100%; font-size: 12px; margin-bottom: 20px; border-collapse: collapse;">
+				<tr>
+					<td style="width: 20%; padding: 5px 0;"><b>GROUP CODE:</b></td>
+					<td style="width: 30%; padding: 5px 0;"><span id="sanctGroupCode"></span></td>
+					<td style="width: 20%; padding: 5px 0;"><b>DATE OF APPROVAL:</b></td>
+					<td style="width: 30%; padding: 5px 0;"><span id="sanctApprovalDate"></span></td>
+				</tr>
+				<tr>
+					<td style="padding: 5px 0;"><b>COMMUNITY / GROUP:</b></td>
+					<td style="padding: 5px 0;"><span id="sanctCommunityName"></span></td>
+					<td style="padding: 5px 0;"><b>APPLICATION DATE:</b></td>
+					<td style="padding: 5px 0;"><span id="sanctOpeningDate"></span></td>
+				</tr>
+				<tr>
+					<td style="padding: 5px 0;"><b>BRANCH NAME:</b></td>
+					<td style="padding: 5px 0;"><span id="sanctBranchName"></span></td>
+					<td style="padding: 5px 0;"><b>ALLOCATED OFFICER:</b></td>
+					<td style="padding: 5px 0;"><span id="sanctAllocatedStaff"></span></td>
+				</tr>
+				<tr>
+					<td style="padding: 5px 0;"><b>CONTACT NUMBER:</b></td>
+					<td style="padding: 5px 0;"><span id="sanctContactNumber"></span></td>
+					<td style="padding: 5px 0;"><b>COLLECTIONS SCHEDULE:</b></td>
+					<td style="padding: 5px 0;"><span id="sanctCollectionDays"></span></td>
+				</tr>
+				<tr>
+					<td style="padding: 5px 0;"><b>PURPOSE OF LOAN:</b></td>
+					<td style="padding: 5px 0;" colspan="3"><span id="sanctPurpose"></span></td>
+				</tr>
+			</table>
+
+			<div style="font-size: 12px; margin: 20px 0; text-align: justify; line-height: 1.6;">
+				<p>DEAR BORROWERS,</p>
+				<p>
+					WE ARE PLEASED TO CONVEY THAT THE COMPETENT CREDIT SANCTIONING AUTHORITY OF <b><span id="sanctionCompBodyName"></span></b> 
+					HAS APPROVED AND SANCTIONED THE JOINT LIABILITY GROUP LOAN FACILITY IN RESPECT OF GROUP CODE <b><span id="sanctGroupCode2"></span></b> 
+					UNDER MUTUAL JOINT LIABILITY TERMS AND CONDITIONS OF THE SCHEME.
+				</p>
+				<p>
+					THE SANCTION IS SUBJECT TO EXECUTION OF LOAN AGREEMENT, PROMISSORY NOTES, GROUP GUARANTEE, AND COMPLETION OF DISBURSEMENT DOCUMENTATION.
+				</p>
+			</div>
+
+			<div style="margin-top: 60px; display: flex; justify-content: space-between; font-size: 12px; text-align: center; text-transform: uppercase;">
+				<div style="width: 30%;">
+					<div style="border-top: 1px solid #000; padding-top: 5px;">
+						<b>GROUP REPRESENTATIVE</b><br>
+						<span>SIGNATURE / THUMB</span>
+					</div>
+				</div>
+				<div style="width: 30%;">
+					<div style="border-top: 1px solid #000; padding-top: 5px;">
+						<b>LOAN OFFICER / INSPECTOR</b><br>
+						<span>VERIFIED & RECOMMENDED</span>
+					</div>
+				</div>
+				<div style="width: 30%;">
+					<div style="border-top: 1px solid #000; padding-top: 5px;">
+						<b>BRANCH MANAGER</b><br>
+						<span>SANCTIONING AUTHORITY</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 <script
