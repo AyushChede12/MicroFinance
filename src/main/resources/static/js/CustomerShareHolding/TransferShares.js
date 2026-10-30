@@ -4,7 +4,7 @@
 var approvedCustomerList = [];
 var transferShareHistory = [];
 
-$(document).ready(function() {
+$(document).ready(function () {
 	// Initialize UI state
 	$("#fCustomer").hide();
 	$("#availShare").hide();
@@ -27,15 +27,15 @@ $(document).ready(function() {
 	TransferShareTable();
 
 	// Input listeners for auto calculations
-	$("#noOfShare, #baseValue").on("input", function() {
+	$("#noOfShare, #baseValue").on("input", function () {
 		calculateShareAmounts();
 	});
 
-	$("#toCustomerCode").on("change", function() {
+	$("#toCustomerCode").on("change", function () {
 		handleToCustomerChange();
 	});
 
-	$("#fromCustomerCode").on("change", function() {
+	$("#fromCustomerCode").on("change", function () {
 		handleFromCustomerChange();
 	});
 });
@@ -63,7 +63,7 @@ function loadApprovedCustomers() {
 	$.ajax({
 		url: "api/customermanagement/approved",
 		method: "GET",
-		success: function(response) {
+		success: function (response) {
 			if (response.status === "OK" && Array.isArray(response.data)) {
 				approvedCustomerList = response.data;
 				populateCustomerDropdowns();
@@ -71,7 +71,7 @@ function loadApprovedCustomers() {
 				console.warn("NO APPROVED CUSTOMERS RETURNED");
 			}
 		},
-		error: function(err) {
+		error: function (err) {
 			console.error("ERROR FETCHING CUSTOMERS:", err);
 		}
 	});
@@ -84,7 +84,7 @@ function populateCustomerDropdowns() {
 	fromSelect.empty().append('<option value="">SELECT FROM CUSTOMER</option>');
 	toSelect.empty().append('<option value="">SELECT TO CUSTOMER</option>');
 
-	approvedCustomerList.forEach(function(item) {
+	approvedCustomerList.forEach(function (item) {
 		var nameParts = [item.firstName, item.middleName, item.lastName].filter(Boolean);
 		var fullName = nameParts.length > 0 ? nameParts.join(" ") : (item.customerName || "");
 		fullName = fullName.toUpperCase();
@@ -100,18 +100,18 @@ function loadBranches() {
 	$.ajax({
 		url: "api/customershareholdingcontroller/findAllBranch",
 		type: "GET",
-		success: function(response) {
+		success: function (response) {
 			var branchSelect = $('#branch');
 			branchSelect.empty().append('<option value="">SELECT BRANCH</option>');
 
 			if ((response.status === "FOUND" || response.status === "OK") && response.data) {
-				$.each(response.data, function(index, b) {
+				$.each(response.data, function (index, b) {
 					var branchText = (b.branchName || b.branchCode || "").toUpperCase();
 					branchSelect.append('<option value="' + branchText + '">' + branchText + '</option>');
 				});
 			}
 		},
-		error: function(err) {
+		error: function (err) {
 			console.error("ERROR FETCHING BRANCHES:", err);
 		}
 	});
@@ -126,7 +126,7 @@ function handleToCustomerChange() {
 		return;
 	}
 
-	var customer = approvedCustomerList.find(function(c) {
+	var customer = approvedCustomerList.find(function (c) {
 		return c.memberCode === selectedCode;
 	});
 
@@ -157,7 +157,7 @@ function handleFromCustomerChange() {
 	// Calculate customer's available shares from history
 	var totalSharesHeld = 0;
 	if (Array.isArray(transferShareHistory)) {
-		transferShareHistory.forEach(function(ts) {
+		transferShareHistory.forEach(function (ts) {
 			var qty = parseInt(ts.noOfShare || 0, 10);
 			if (ts.findByCode === fromCode) {
 				totalSharesHeld += qty;
@@ -170,7 +170,7 @@ function handleFromCustomerChange() {
 
 	// Fallback check against approvedCustomerList initial shares
 	if (totalSharesHeld <= 0) {
-		var c = approvedCustomerList.find(function(item) {
+		var c = approvedCustomerList.find(function (item) {
 			return item.memberCode === fromCode;
 		});
 		if (c && c.noOfShare) {
@@ -287,7 +287,7 @@ function saveShares() {
 		modeOfPayment: paymentMode.toUpperCase(),
 		comments: ($("#comments").val() || "").toUpperCase(),
 		certificateNo: certNo,
-		approved: true
+		isApproved: false
 	};
 
 	console.log("SAVING TRANSFER SHARE:", payload);
@@ -297,12 +297,12 @@ function saveShares() {
 		type: "POST",
 		contentType: "application/json",
 		data: JSON.stringify(payload),
-		success: function(response) {
+		success: function (response) {
 			alert((response.message || "TRANSFER SHARE SAVED SUCCESSFULLY").toUpperCase());
 			resetTransferForm();
 			TransferShareTable();
 		},
-		error: function(xhr) {
+		error: function (xhr) {
 			console.error("SAVE ERROR:", xhr.responseText);
 			alert("FAILED TO SAVE TRANSFER SHARE! SERVER ERROR.");
 		}
@@ -315,11 +315,11 @@ function TransferShareTable() {
 		url: "api/customershareholdingcontroller/allDataFetchTransferShareInTable",
 		type: "GET",
 		dataType: "json",
-		success: function(response) {
+		success: function (response) {
 			let rows = "";
 			if ((response.status === "OK" || response.status === "FOUND") && Array.isArray(response.data) && response.data.length > 0) {
 				transferShareHistory = response.data;
-				response.data.forEach(function(share, idx) {
+				response.data.forEach(function (share, idx) {
 					rows += `
 						<tr>
 							<td>${idx + 1}</td>
@@ -348,7 +348,7 @@ function TransferShareTable() {
 			}
 			$("#transfersharetable").html(rows);
 		},
-		error: function(xhr) {
+		error: function (xhr) {
 			console.error("AJAX ERROR:", xhr);
 			$("#transfersharetable").html('<tr><td colspan="9" class="text-center">ERROR LOADING DATA</td></tr>');
 		}
@@ -361,7 +361,7 @@ function EditTransfershare(id) {
 		url: "api/customershareholdingcontroller/getTransferShareIdEdite",
 		type: "GET",
 		data: { id: id },
-		success: function(response) {
+		success: function (response) {
 			if (response.status === "OK" && response.data) {
 				var share = response.data;
 				$("#id").val(share.id);
@@ -399,7 +399,7 @@ function EditTransfershare(id) {
 				alert("TRANSFER SHARE RECORD NOT FOUND!");
 			}
 		},
-		error: function(xhr) {
+		error: function (xhr) {
 			alert("ERROR FETCHING TRANSFER SHARE: " + xhr.responseText);
 		}
 	});
@@ -446,12 +446,12 @@ function updateShares() {
 		type: "POST",
 		contentType: "application/json",
 		data: JSON.stringify(payload),
-		success: function(response) {
+		success: function (response) {
 			alert("TRANSFER SHARE UPDATED SUCCESSFULLY!");
 			resetTransferForm();
 			TransferShareTable();
 		},
-		error: function(xhr) {
+		error: function (xhr) {
 			console.error("UPDATE ERROR:", xhr);
 			alert("ERROR UPDATING TRANSFER SHARE!");
 		}
@@ -465,7 +465,7 @@ function deleteTransfershare(id) {
 			url: "api/customershareholdingcontroller/deleteTransferShareById",
 			type: "POST",
 			data: { id: id },
-			success: function(response) {
+			success: function (response) {
 				if (response.status === "OK") {
 					alert("TRANSFER SHARE DELETED SUCCESSFULLY!");
 					TransferShareTable();
@@ -473,7 +473,7 @@ function deleteTransfershare(id) {
 					alert("DELETE FAILED: " + response.message);
 				}
 			},
-			error: function(xhr) {
+			error: function (xhr) {
 				alert("ERROR DELETING SHARE: " + xhr.responseText);
 			}
 		});
