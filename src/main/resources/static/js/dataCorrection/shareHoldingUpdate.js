@@ -289,7 +289,7 @@ $(document).ready(function () {
 
 		let companyHeader = `
             <h1 style="text-align:center; margin-bottom:0;">${(c.companyName || "").toUpperCase()}</h1>
-            <h3 style="text-align:center; margin-top:5px;">(${ (c.shortName || "").toUpperCase() })</h3>
+            <h3 style="text-align:center; margin-top:5px;">(${(c.shortName || "").toUpperCase()})</h3>
             <p style="text-align:center;">
                 ${(c.address || "").toUpperCase()}, ${(c.city || "").toUpperCase()}, ${(c.state || "").toUpperCase()} - ${c.pinCode || ""}<br>
                 CIN: ${(c.cinNo || "").toUpperCase()} | EMAIL: ${(c.emailId || "").toUpperCase()} | HELPLINE: ${c.helplineNo || ""}

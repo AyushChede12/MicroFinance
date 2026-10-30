@@ -874,7 +874,7 @@
 
 				<li><a href="${baseUrl}/partialPaymentStatusMaturityApplication"> <i
 						class="bi bi-circle"></i> <span
-						style="font-family: 'Poppins', sans-serif">PARTIL PAYMENT
+						style="font-family: 'Poppins', sans-serif">PARTIAL PAYMENT
 							STATUS</span>
 				</a></li>
 

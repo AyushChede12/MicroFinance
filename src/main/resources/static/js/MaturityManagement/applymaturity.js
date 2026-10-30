@@ -1,4 +1,31 @@
 $(document).ready(function() {
+
+	// Load branches into dropdown
+	function loadBranches() {
+		$.ajax({
+			url: "api/preference/getAllBranchModule",
+			type: "GET",
+			success: function(response) {
+				if ((response.status === "OK" || response.status === "FOUND" || response.status == 200) && Array.isArray(response.data)) {
+					const $branch = $('#branchName');
+					$branch.empty().append('<option value="">-- SELECT BRANCH --</option>');
+					response.data.forEach(function(branch) {
+						if (branch && branch.branchName) {
+							const bName = branch.branchName.toUpperCase();
+							$branch.append(`<option value="${bName}">${bName}</option>`);
+						}
+					});
+				}
+			},
+			error: function() {
+				console.warn("FAILED TO LOAD BRANCHES.");
+			}
+		});
+	}
+
+	loadBranches();
+
+	// When branch changes, fetch policies for that branch
 	$('#branchName').on('change', function() {
 		let branchName = $(this).val();
 
@@ -9,23 +36,26 @@ $(document).ready(function() {
 				success: function(response) {
 					var dropdown = $('#policyCode');
 					dropdown.empty();
-					dropdown.append('<option value="">SELECT POLICY NO</option>');
+					dropdown.append('<option value="">-- SELECT POLICY CODE --</option>');
 
 					if (response.data && response.data.length > 0) {
-						$.each(response.data, function(index, policyNo) {
-							dropdown.append('<option value="' + policyNo.policyCode + '">' + policyNo.policyCode + '</option>');
+						$.each(response.data, function(index, policy) {
+							dropdown.append('<option value="' + policy.policyCode + '">' + policy.policyCode + ' - ' + (policy.customerName || '').toUpperCase() + '</option>');
 						});
 					} else {
 						dropdown.append('<option value="">NO POLICIES FOUND</option>');
 					}
 				},
 				error: function() {
-					alert("ERROR FETCHING POLICY NUMBERS.");
+					console.warn("ERROR FETCHING POLICY NUMBERS.");
 				}
 			});
+		} else {
+			$('#policyCode').empty().append('<option value="">-- SELECT POLICY CODE --</option>');
 		}
 	});
 
+	// When policy code changes, auto-populate details
 	$('#policyCode').on('change', function() {
 		let policyCode = $(this).val();
 
@@ -34,19 +64,16 @@ $(document).ready(function() {
 				url: 'api/Policymangment/getPolicyByPolicyCode?policyCode=' + encodeURIComponent(policyCode),
 				type: 'GET',
 				success: function(response) {
-					console.log("Response:", response);
-					alert("POLICY CODE: " + policyCode);
-
 					if (response.data) {
 						let data = response.data;
 
-						$('#customerName').val(data.customerName);
-						$('#schemeMode').val(data.schemeMode);
-						$('#schemeType').val(data.schemeType);
-						$('#policyAmount').val(data.policyAmount);
-						$('#depositAmount').val(data.depositAmount);
-						$('#maturityAmount').val(data.maturityAmount);
-						$('#maturityDate').val(data.maturityDate);
+						$('#customerName').val((data.customerName || '').toUpperCase());
+						$('#schemeMode').val((data.schemeMode || '').toUpperCase());
+						$('#schemeType').val((data.schemeType || '').toUpperCase());
+						$('#policyAmount').val(data.policyAmount || '');
+						$('#depositAmount').val(data.depositAmount || '');
+						$('#maturityAmount').val(data.maturityAmount || '');
+						$('#maturityDate').val(data.maturityDate || '');
 					} else {
 						alert("NO DATA FOUND FOR THIS POLICY.");
 					}
@@ -60,119 +87,83 @@ $(document).ready(function() {
 		}
 	});
 
-
-	//saving apply Maturity data
-
+	// Save Apply Maturity data
 	$("#formid").submit(function(event) {
 		event.preventDefault();
 
+		var branchName = $("#branchName").val();
+		var policyCode = $("#policyCode").val();
+		var remark = $("#remark").val();
+
+		if (!branchName) {
+			$('#chkbranch').text('PLEASE SELECT BRANCH');
+			return;
+		} else {
+			$('#chkbranch').text('');
+		}
+
+		if (!policyCode) {
+			$('#chkpolicycode').text('PLEASE SELECT POLICY CODE');
+			return;
+		} else {
+			$('#chkpolicycode').text('');
+		}
+
+		if (!remark) {
+			$('#chkremark').text('PLEASE ENTER REMARK');
+			return;
+		} else {
+			$('#chkremark').text('');
+		}
+
 		var data = {
-			branchName: $("#branchName").val(),
-			policyCode: $("#policyCode").val(),
+			branchName: branchName.toUpperCase(),
+			policyCode: policyCode,
 			maturityDate: $("#maturityDate").val(),
-			customerName: $("#customerName").val(),
-			schemeMode: $("#schemeMode").val(),
+			customerName: ($("#customerName").val() || '').toUpperCase(),
+			schemeType: ($("#schemeType").val() || '').toUpperCase(),
+			schemeMode: ($("#schemeMode").val() || '').toUpperCase(),
 			policyAmount: $("#policyAmount").val(),
 			depositAmount: $("#depositAmount").val(),
 			maturityAmount: $("#maturityAmount").val(),
-			remark: $("#remark").val()
+			remark: remark.toUpperCase()
 		};
 
-
 		$.ajax({
-
 			url: "api/Maturitymanagement/saveApplymaturity",
 			type: "POST",
 			contentType: "application/json",
 			data: JSON.stringify(data),
 			success: function(response) {
-
-				if (response.status === "OK") {
-					alert(" " + response.message);
+				if (response.status === "OK" || response.status === "CREATED") {
+					alert("MATURITY APPLICATION SAVED SUCCESSFULLY.");
 					$("#formid")[0].reset();
+					if (typeof window.loadMaturityTableData === "function") {
+						window.loadMaturityTableData(0, 5);
+					}
 				} else {
-					alert(" " + response.message);
+					alert("FAILED: " + (response.message || "COULD NOT SAVE").toUpperCase());
 				}
 			},
 			error: function(xhr, status, error) {
-				console.error(" Error saving:", error);
-				console.log(" ", response.message);
-				alert(" SOMETHING WENT WRONG WHILE SAVING THE DATA.");
+				console.error("Error saving maturity application:", error);
+				alert("SOMETHING WENT WRONG WHILE SAVING THE DATA.");
 			}
-
 		});
 	});
 
-
+	// View policy detail button
 	$('#viewBtn').on('click', function(e) {
-		e.preventDefault(); // <-- Stop form submission
-
-		$.ajax({
-			url: "api/Maturitymanagement/getApplymaturitydetailswithPage",
-			type: "GET",
-			success: function(response) {
-				if (response.status === "OK" && response.data && response.data.content.length > 0) {
-					var tableBody = $("#table tbody");
-					tableBody.empty();
-
-					$.each(response.data.content, function(index, item) {
-						var row = "<tr>" +
-							"<td>" + item.policyCode + "</td>" +
-							"<td>" + item.branchName + "</td>" +
-							"<td>" + item.maturityDate + "</td>" +
-							"<td>" + item.customerName + "</td>" +
-							"<td>" + item.schemeName + "</td>" +
-							"<td>" + item.schemeType + "</td>" +
-							"<td>" + item.policyAmount + "</td>" +
-							"<td>" + item.maturityAmount + "</td>" +
-							"<td>" + item.remark + "</td>" +
-							"</tr>";
-						tableBody.append(row);
-					});
-				} else {
-					alert("NO MATURITY DETAILS FOUND.");
-				}
-			},
-			error: function(xhr, status, error) {
-				console.error("Error fetching maturity details:", error);
-				alert("FAILED TO LOAD MATURITY DETAILS.");
-			}
-
-
-
-		});
+		e.preventDefault();
+		if (typeof window.loadMaturityTableData === "function") {
+			window.loadMaturityTableData(0, 5);
+		}
 	});
 
 	$("#Add").click(function() {
-
 		$('#chkbranch').text('');
 		$('#chkpolicycode').text('');
 		$('#chkremark').text('');
-
-
-		let branch = $('#branchName').val();
-		let policycode = $('#policyCode').val();
-		let remark = $('#remark').val();
-
-		let isValid = true;
-
-		if (policycode === '') {
-			$('#chkpolicycode').text('* THIS FIELD IS REQUIRED');
-			$('#policyCode').focus();
-			isValid = false;
-		}
-
-		if (branch === '') {
-			$('#chkbranch').text('* THIS FIELD IS REQUIRED');
-			$('#branchName').focus();
-			isValid = false;
-		}
-
-		if (remark === '') {
-			$('#chkremark').text('* THIS FIELD IS REQUIRED');
-			$('#remark').focus();
-			isValid = false;
-		}
 	});
 
 });
