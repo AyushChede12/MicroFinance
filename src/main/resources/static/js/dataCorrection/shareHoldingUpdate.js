@@ -220,7 +220,7 @@ $(document).ready(function () {
 			contentType: 'application/json',
 			data: JSON.stringify(transferData),
 			success: function (response) {
-				if (response.status === "FOUND" || response.status === "OK" || response.status == 200) {
+				if (response.status === "FOUND" || response.status === "OK" || response.status === "CREATED" || response.status == 200 || response.status == 201) {
 					alert("TRANSFER DATA UPDATED SUCCESSFULLY");
 					location.reload();
 				} else {
