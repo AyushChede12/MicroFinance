@@ -1,4 +1,4 @@
-
+﻿
 <style>
 body {
 	font-family: Arial, sans-serif;
@@ -1279,14 +1279,14 @@ select {
 		</div>
 
 		<div class="user-box">
-			<label>Incentive Management</label>
+			<label>INCENTIVE MANAGEMENT</label>
 			<div class="member-row">
 				<div class="checkbox-col">
 					<input type="checkbox" id="myIncentiveSchemeMaster" name="service"
 						value="Incentive Scheme Master">
 				</div>
-				<div class="bold-text">Incentive Management =></div>
-				<div class="normal-text">Incentive Scheme Master</div>
+				<div class="bold-text">INCENTIVE MANAGEMENT =&gt;</div>
+				<div class="normal-text">INCENTIVE SCHEME MASTER</div>
 			</div>
 
 			<div class="member-row">
@@ -1294,8 +1294,8 @@ select {
 					<input type="checkbox" id="myGenerateIncentivePayments"
 						name="service" value="Generate Incentive Payments">
 				</div>
-				<div class="bold-text">Incentive Management =></div>
-				<div class="normal-text">Generate Incentive Payments</div>
+				<div class="bold-text">INCENTIVE MANAGEMENT =&gt;</div>
+				<div class="normal-text">GENERATE INCENTIVE PAYMENTS</div>
 			</div>
 
 			<div class="member-row">
@@ -1303,8 +1303,8 @@ select {
 					<input type="checkbox" id="myIncentivePaymentDetails"
 						name="service" value="Incentive Payment Details">
 				</div>
-				<div class="bold-text">Incentive Management =></div>
-				<div class="normal-text">Incentive Payment Details</div>
+				<div class="bold-text">INCENTIVE MANAGEMENT =&gt;</div>
+				<div class="normal-text">INCENTIVE PAYMENT DETAILS</div>
 			</div>
 
 			<div class="member-row">
@@ -1312,8 +1312,8 @@ select {
 					<input type="checkbox" id="myIncentiveSummaryReport" name="service"
 						value="Incentive Summary Report">
 				</div>
-				<div class="bold-text">Incentive Management =></div>
-				<div class="normal-text">Incentive Summary Report</div>
+				<div class="bold-text">INCENTIVE MANAGEMENT =&gt;</div>
+				<div class="normal-text">INCENTIVE SUMMARY REPORT</div>
 			</div>
 
 		</div>
