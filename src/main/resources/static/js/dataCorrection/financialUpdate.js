@@ -100,7 +100,7 @@ $(document).ready(function() {
 					$("#relationToApplicant").append(option);
 				}
 			} else {
-				alert("ERROR: " + response.message);
+				// handled without alert
 			}
 		},
 		error: function(xhr) {

@@ -317,7 +317,7 @@ $(document).ready(function() {
 					$("#nomineeRelationToApplicant").append(option);
 				}
 			} else {
-				alert("ERROR: " + response.message);
+				// handled without alert
 			}
 		},
 		error: function(xhr) {

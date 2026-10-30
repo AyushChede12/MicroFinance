@@ -137,7 +137,8 @@
 							name="shareIssuedBy" required="required"
 							class="form-control selectField" style="height: 30px;">
 							<option value="">-- SELECT SHARES ISSUED BY --</option>
-							<option value="Tata Motors Ltd.">Tata Motors Ltd.</option>
+							<option value="BANK">BANK</option>
+								<option value="TATA MOTORS LTD.">TATA MOTORS LTD.</option>
 						</select>
 					</div>
 				</div>
@@ -187,8 +188,8 @@
 							name="modeOfPayment" required="required"
 							class="form-control selectField" style="height: 30px;">
 							<option value="">SELECT MODE OF PAYMENT </option>
-							<option value="Cash">CASH</option>
-							<option value="Online">ONLINE</option>
+							<option value="CASH">CASH</option>
+							<option value="ONLINE">ONLINE</option>
 						</select>
 					</div>
 				</div>
@@ -219,3 +220,5 @@
 
 <script
 	src="${pageContext.request.contextPath}/js/dataCorrection/shareHoldingUpdate.js"></script>
+
+
