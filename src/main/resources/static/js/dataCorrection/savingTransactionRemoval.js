@@ -120,11 +120,11 @@ $(document).ready(function() {
 					$("#payBy").val(data.payBy);
 
 				} else {
-					alert("TRANSFER SHARE DETAILS NOT FOUND FOR CUSTOMER");
+					alert("SAVINGS TRANSACTION NOT FOUND FOR ACCOUNT NUMBER");
 				}
 			},
 			error: function() {
-				alert("SHARES NOT FOUND OR SERVER ERROR");
+				alert("SAVINGS TRANSACTION NOT FOUND OR SERVER ERROR");
 			}
 		});
 

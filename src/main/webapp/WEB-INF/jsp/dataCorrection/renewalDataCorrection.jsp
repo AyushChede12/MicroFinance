@@ -27,7 +27,7 @@
 						<label for="policyCode">POLICY CODE</label> <select
 							id="policyCode" name="policyCode" required="required"
 							class="form-control selectField" style="height: 30px;">
-							<option value="">-- SERACH POLICY CODE --</option>
+							<option value="">-- SEARCH POLICY CODE --</option>
 
 						</select>
 					</div>
@@ -125,7 +125,7 @@
 					<div class="d-flex flex-column formFields">
 						<label for="policyAmount">POLICY AMOUNT</label> <input type="text"
 							name="policyAmount" id="policyAmount" required="required"
-							placeholder="ENTER POLICY AMONUT"
+							placeholder="ENTER POLICY AMOUNT"
 							style="text-transform: uppercase;" />
 					</div>
 				</div>
@@ -187,7 +187,7 @@
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
-						<label for="dueDate">DEADLINE </label> <input type="date"
+						<label for="dueDate">DUE DATE </label> <input type="date"
 							name="dueDate" id="dueDate" required="required"
 							placeholder="ENTER MEM CODE" />
 					</div>

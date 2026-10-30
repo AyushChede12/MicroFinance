@@ -94,11 +94,11 @@ $(document).ready(function() {
 						$("#noOfInstPaid").val(data.noOfInstPaid);
 						$("#modeOfPayment").val(data.modeOfPayment);
 					} else {
-						alert("NO CUSTOMER FOUND FOR THIS MEMBER CODE.");
+						alert("NO POLICY RENEWAL FOUND FOR THIS POLICY CODE.");
 					}
 				},
 				error: function() {
-					alert("MEMBER NOT FOUND OR SERVER ERROR.");
+					alert("POLICY RENEWAL NOT FOUND OR SERVER ERROR.");
 				}
 			});
 		}
