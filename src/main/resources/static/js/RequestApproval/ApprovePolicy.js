@@ -1,166 +1,170 @@
-//all unprove data
-
+// ALL UNAPPROVED POLICY DATA
 let allKYCData = [];
 
 $(document).ready(function() {
-	// Load all member data on page load
-	loadCustomerKYCData();
+    loadBranchDropdown();
+    loadCustomerKYCData();
 
-	// Button click filter
-	$('#saveBtn').on('click', function(e) {
-		e.preventDefault(); // Prevent form submission
-		filterKYCData();
-	});
+    $('#saveBtn, #findBtn').on('click', function(e) {
+        e.preventDefault();
+        filterKYCData();
+    });
+
+    $('#approvedBtn').on('click', function(e) {
+        e.preventDefault();
+        const selectedIds = [];
+        $('.approval-checkbox:checked').each(function() {
+            const id = $(this).data('id');
+            if (id) selectedIds.push(id);
+        });
+
+        if (selectedIds.length === 0) {
+            alert("PLEASE SELECT AT LEAST ONE ROW TO APPROVE.");
+            return;
+        }
+
+        const requests = selectedIds.map(function(id) {
+            return $.ajax({
+                url: "api/requestapproval/approveInvestmentData",
+                type: "POST",
+                data: {
+                    id: id,
+                    isApproved: true
+                }
+            });
+        });
+
+        $.when.apply($, requests)
+            .done(function() {
+                alert("POLICIES APPROVED SUCCESSFULLY!");
+                location.reload();
+            })
+            .fail(function(xhr) {
+                console.error("ERROR APPROVING POLICIES:", xhr);
+                alert("FAILED TO APPROVE SELECTED POLICIES.");
+            });
+    });
+
+    $(document).on('change', '#selectAll', function() {
+        $('.approval-checkbox').prop('checked', $(this).prop('checked'));
+    });
 });
-//
 
-function loadCustomerKYCData() {
-	$.ajax({
-		url: "api/requestapproval/unapprovedAddNewInvestment",
-		type: "GET",
-		contentType: "application/json",
-		success: function(response) {
-			if (response.status === "OK" && Array.isArray(response.data)) {
-				allKYCData = response.data;
-				//populateMemberCodeDropdown(allKYCData);
-				renderTable(allKYCData); // Initially show all
-			} else {
-				alert("NO MEMBER DATA FOUND.");
-			}
-		},
-		error: function(xhr, status, error) {
-			console.error("Error fetching data:", error);
-			alert("FAILED TO LOAD DATA.");
-		}
-	});
+function loadBranchDropdown() {
+    $.ajax({
+        url: "api/preference/getAllBranchModule",
+        type: "GET",
+        dataType: "json",
+        success: function(response) {
+            if (response && response.status === "OK" && Array.isArray(response.data)) {
+                const dropdown = $('#branchName');
+                dropdown.empty().append('<option value="">SELECT BRANCH</option>');
+                response.data.forEach(function(item) {
+                    if (item.branchName) {
+                        dropdown.append(`<option value="${item.branchName}">${item.branchName.toUpperCase()}</option>`);
+                    }
+                });
+            }
+        },
+        error: function(xhr) {
+            console.error("FAILED TO LOAD BRANCHES:", xhr);
+        }
+    });
 }
 
-function populateMemberCodeDropdown(data) {
-	const dropdown = $('#branchName');
-	dropdown.empty().append('<option value="">SELECT BRANCH</option>');
-	const uniqueCodes = [...new Set(data.map(item => item.branchName))];
-	uniqueCodes.forEach(code => {
-		dropdown.append(`<option value="${code}">${code}</option>`);
-	});
+function loadCustomerKYCData() {
+    $.ajax({
+        url: "api/requestapproval/unapprovedAddNewInvestment",
+        type: "GET",
+        contentType: "application/json",
+        success: function(response) {
+            if (response && response.status === "OK" && Array.isArray(response.data)) {
+                allKYCData = response.data;
+                renderTable(allKYCData);
+            } else {
+                renderTable([]);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error("ERROR FETCHING DATA:", error);
+            renderTable([]);
+        }
+    });
 }
 
 function renderTable(data) {
-	const tbody = $(".datatable tbody");
-	tbody.empty();
+    const tbody = $(".datatable tbody");
+    tbody.empty();
 
-	if (!data || data.length === 0) {
-		const noDataRow = `
+    if (!data || data.length === 0) {
+        tbody.append(`
             <tr>
                 <td colspan="12" style="text-align:center; font-family: 'Poppins', sans-serif;">
                     NO DATA FOUND
                 </td>
             </tr>
-        `;
-		tbody.append(noDataRow);
-		return;
-	}
+        `);
+        return;
+    }
 
-	data.forEach((item, index) => {
+    data.forEach((item, index) => {
+        const customerFullName =
+            item.customerName ||
+            [item.firstName, item.middleName, item.lastName]
+                .filter(Boolean)
+                .join(' ') ||
+            '-';
 
-		// 🔹 Build customer full name using array
-		const customerFullName =
-			item.customerName ||
-			[item.firstName, item.middleName, item.lastName]
-				.filter(Boolean)
-				.join(' ') ||
-			'-';
-
-
-		const row = `
+        const row = `
             <tr style="font-family: 'Poppins', sans-serif;">
                 <td>
                     <input type="checkbox" class="approval-checkbox"
-                        data-id="${item.id}" ${item.isApproved ? 'checked' : ''} />
+                        data-id="${item.id}" ${item.isApproved ? 'checked disabled' : ''} />
                 </td>
                 <td>${index + 1}</td>
-                <td>${item.policyCode || '-'}</td>
-                <td>${item.policyStartDate || '-'}</td>
-                <td>${customerFullName || '-'}</td>
-                <td>${item.contactNo || '-'}</td>
-                <td>${item.branchName || '-'}</td>
-                <td>${item.suggestedNominee || '-'}</td>
-                <td>${item.schemeType || '-'}</td>
-                <td>${item.schemeTerm || '-'}</td>
+                <td>${(item.policyCode || '-').toUpperCase()}</td>
+                <td>${(item.policyStartDate || item.policyDate || '-').toUpperCase()}</td>
+                <td>${customerFullName.toUpperCase()}</td>
+                <td>${(item.contactNo || '-').toUpperCase()}</td>
+                <td>${(item.branchName || '-').toUpperCase()}</td>
+                <td>${(item.suggestedNominee || '-').toUpperCase()}</td>
+                <td>${(item.schemeType || '-').toUpperCase()}</td>
+                <td>${(item.schemeTerm || '-').toUpperCase()}</td>
             </tr>
         `;
-
-		tbody.append(row);
-	});
+        tbody.append(row);
+    });
 }
 
-
-//approve data anjali
-
-$(document).ready(function() {
-	// Handle Approve button click
-	$('#approvedBtn').on('click', function() {
-		// Collect all checked checkboxes
-		const selectedIds = [];
-
-		$('.approval-checkbox:checked').each(function() {
-			const id = $(this).data('id');
-			selectedIds.push(id);
-		});
-
-		if (selectedIds.length === 0) {
-			alert("PLEASE SELECT AT LEAST ONE ROW TO APPROVE.");
-			return;
-		}
-
-		// Approve each selected investment
-		selectedIds.forEach(function(id) {
-			$.ajax({
-				url: "api/requestapproval/approveInvestmentData",
-				type: "POST",
-				data: {
-					id: id,
-					isApproved: true // Sends 1 to the DB
-				},
-				success: function(response) {
-					if (response.status === "OK") {
-						alert("APPROVED SUCCESSFULLY!");
-						location.reload();
-					}
-				},
-				error: function(xhr) {
-					alert("ERROR APPROVING ID " + id);
-					console.error(xhr);
-				}
-			});
-		});
-	});
-
-	// Optional: reload after approval
-
-});
-
-//filter Data
 function filterKYCData() {
-	const selectedCode = $('#branchName').val();
-	const fromDateVal = $('#fromDate').val();
-	const toDateVal = $('#toDate').val();
+    const selectedCode = ($('#branchName').val() || '').trim().toUpperCase();
+    const fromDateVal = $('#fromDate').val();
+    const toDateVal = $('#toDate').val();
 
-	const fromDate = fromDateVal ? new Date(fromDateVal) : null;
-	const toDate = toDateVal ? new Date(toDateVal) : null;
+    const fromDate = fromDateVal ? new Date(fromDateVal) : null;
+    const toDate = toDateVal ? new Date(toDateVal) : null;
 
-	const filtered = allKYCData.filter(item => {
+    const filtered = allKYCData.filter(item => {
+        const branchName = (item.branchName || '').trim().toUpperCase();
+        const dateStr = item.policyStartDate || item.policyDate;
+        const policyDate = dateStr ? new Date(dateStr) : null;
 
-		const branchName = item.branchName;
-		const dob = item.dob ? new Date(item.dob) : null;
+        const matchesCode = selectedCode ? branchName === selectedCode : true;
 
-		const matchesCode = selectedCode ? branchName === selectedCode : true;
-		const matchesFrom = fromDate && dob ? dob >= fromDate : true;
-		const matchesTo = toDate && dob ? dob <= toDate : true;
+        let matchesFrom = true;
+        let matchesTo = true;
 
+        if (fromDate && policyDate) {
+            matchesFrom = policyDate.getTime() >= fromDate.getTime();
+        }
+        if (toDate && policyDate) {
+            const nextDay = new Date(toDate);
+            nextDay.setDate(nextDay.getDate() + 1);
+            matchesTo = policyDate.getTime() < nextDay.getTime();
+        }
 
+        return matchesCode && matchesFrom && matchesTo;
+    });
 
-		return matchesCode && matchesFrom && matchesTo;
-	});
-
-	renderTable(filtered);
+    renderTable(filtered);
 }

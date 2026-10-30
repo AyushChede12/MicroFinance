@@ -34,7 +34,7 @@
 					<div class="d-flex flex-column formFields">
 						<label for="vehicalNo">DATE FROM</label> <input type="date"
 							name="fromDate" id="fromDate" required="required"
-							placeholder="Enter From Date" style="text-transform: uppercase;" />
+							placeholder="ENTER FROM DATE" style="text-transform: uppercase;" />
 					</div>
 				</div>
 
@@ -42,7 +42,7 @@
 					<div class="d-flex flex-column formFields">
 						<label for="vehicalNo">DATE TO</label> <input type="date"
 							name="toDate" id="toDate" required="required"
-							placeholder="Enter To Date" style="text-transform: uppercase;" />
+							placeholder="ENTER TO DATE" style="text-transform: uppercase;" />
 					</div>
 				</div>
 			</div>
@@ -70,7 +70,7 @@
 							<tr style="font-family: 'Poppins', sans-serif;">
 								<th></th>
 								<th scope="col">SR NO.</th>
-								<th scope="col">ACCOIUNT NUMBER</th>
+								<th scope="col">ACCOUNT NUMBER</th>
 								<th scope="col">CUSTOMER NAME</th>
 								<th scope="col">OPENING DATE</th>
 								<th scope="col">PHONE NO.</th>
@@ -91,7 +91,7 @@
 <div class="row">
 	<div class="col-12 text-center mt-3" style="justify-content: end">
 		<button id="approveSavingTransactionBtn" class="btnStyle"
-			style="background-color: #FFA500;">APPROVED</button>
+			style="background-color: #FFA500;">APPROVE</button>
 	</div>
 </div>
 </div>
@@ -112,13 +112,35 @@
 
 		// Button click Approve
 		$('#approveSavingTransactionBtn').on('click', function(e) {
-			e.preventDefault(); // Prevent form submission
-
-			// Get all checked checkboxes
+			e.preventDefault();
+			const selectedIds = [];
 			$('.member-checkbox:checked').each(function() {
 				const id = $(this).val();
-				updateSavingTransactionApprovalStatus(id, true);
+				if (id) selectedIds.push(id);
 			});
+
+			if (selectedIds.length === 0) {
+				alert("PLEASE SELECT AT LEAST ONE ROW TO APPROVE.");
+				return;
+			}
+
+			const requests = selectedIds.map(function(id) {
+				return $.ajax({
+					url: "api/requestapproval/approvedSavingTransactionData",
+					type: "POST",
+					data: { id: id, isApproved: true }
+				});
+			});
+
+			$.when.apply($, requests)
+				.done(function() {
+					alert("SAVING TRANSACTIONS APPROVED SUCCESSFULLY!");
+					location.reload();
+				})
+				.fail(function(xhr) {
+					console.error("ERROR APPROVING SAVING TRANSACTIONS:", xhr);
+					alert("FAILED TO APPROVE SELECTED TRANSACTIONS.");
+				});
 		});
 
 	});

@@ -1,121 +1,130 @@
-//janvi:Branch Name Dropdown
-function branchNameDropdown() {
-	$.ajax({
-		url: "getAllBranchModule",
-		type: "GET",
-		contentType: "application/json",
-		success: function(response) {
-			if (response.status === "OK" && response.data) {
-				$("#branchName").empty().append("<option value=''>-- SELECT CODE --</option>");
-				response.data.forEach(function(item) {
-					$("#branchName").append(`<option value='${item.branchName}'>${item.branchName}</option>`);
-				});
-			} else {
-				alert("NO BRANCH FOUND.");
-			}
-		}
-	});
-}
-
-// janvi : search In The Savings Transaction on Table
-//Fetch Unapproved Savings Transaction
+// ALL UNAPPROVED SAVING TRANSACTIONS
 let allSavingTransactionData = [];
 
+function branchNameDropdown() {
+    $.ajax({
+        url: "api/preference/getAllBranchModule",
+        type: "GET",
+        contentType: "application/json",
+        success: function(response) {
+            if (response && response.status === "OK" && Array.isArray(response.data)) {
+                $("#branchName").empty().append("<option value=''>SELECT BRANCH</option>");
+                response.data.forEach(function(item) {
+                    if (item.branchName) {
+                        $("#branchName").append(`<option value='${item.branchName}'>${item.branchName.toUpperCase()}</option>`);
+                    }
+                });
+            }
+        },
+        error: function(xhr) {
+            console.error("ERROR LOADING BRANCHES:", xhr);
+        }
+    });
+}
+
 function searchInTheSavingTransaction() {
-	$.ajax({
-		url: "api/requestapproval/getUnapprovedSavingTransaction",
-		type: "POST",
-		contentType: "application/json",
-		success: function(response) {
-			console.log("API Response:", response);
-			if (response.status === "OK" && Array.isArray(response.data)) {
-				allSavingTransactionData = response.data;
-				renderTable(allSavingTransactionData);
-			} else {
-				alert("NO MEMBER DATA FOUND.");
-			}
-		},
-		error: function(xhr, status, error) {
-			console.error("Error fetching data:", error);
-			alert("FAILED TO LOAD DATA.");
-		}
-	});
+    $.ajax({
+        url: "api/requestapproval/getUnapprovedSavingTransaction",
+        type: "POST",
+        contentType: "application/json",
+        success: function(response) {
+            if (response && response.status === "OK" && Array.isArray(response.data)) {
+                allSavingTransactionData = response.data;
+                renderTable(allSavingTransactionData);
+            } else {
+                renderTable([]);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error("ERROR FETCHING DATA:", error);
+            renderTable([]);
+        }
+    });
 }
 
 function renderTable(data) {
-	const tbody = $(".datatable tbody");
-	tbody.empty();
+    const tbody = $(".datatable tbody");
+    tbody.empty();
 
-	data.forEach((item, index) => {
-		const row = `
+    if (!data || data.length === 0) {
+        tbody.append(`
+            <tr>
+                <td colspan="12" style="text-align:center; font-family: 'Poppins', sans-serif;">
+                    NO DATA FOUND
+                </td>
+            </tr>
+        `);
+        return;
+    }
+
+    data.forEach((item, index) => {
+        const row = `
             <tr style="font-family: 'Poppins', sans-serif;">
                 <td><input type="checkbox" class="member-checkbox" value="${item.id}"></td>
-			<td>${index + 1}</td>
-			<td>${item.accountNumber || '-'}</td>
-			<td>${item.enterCustomerName || '-'}</td>
-			<td>${item.openingDate || '-'}</td>
-			<td>${item.contactNumber || '-'}</td>
-			<td>${item.selectByCustomer || '-'}</td>
-			<td>${item.branchName || '-'}</td>
-			<td>${item.openingAmount || '-'}</td>
-			<td>${item.modeOfPayment || '-'}</td>
-
+                <td>${index + 1}</td>
+                <td>${(item.accountNumber || '-').toUpperCase()}</td>
+                <td>${(item.enterCustomerName || '-').toUpperCase()}</td>
+                <td>${(item.openingDate || '-').toUpperCase()}</td>
+                <td>${(item.contactNumber || '-').toUpperCase()}</td>
+                <td>${(item.selectByCustomer || '-').toUpperCase()}</td>
+                <td>${(item.branchName || '-').toUpperCase()}</td>
+                <td>${(item.openingAmount || '0.00')}</td>
+                <td>${(item.modeOfPayment || '-').toUpperCase()}</td>
             </tr>
         `;
-		tbody.append(row);
-	});
+        tbody.append(row);
+    });
 }
 
-//Janvi : Apply filter
 function filterByBranchName() {
-	const selectedbranchName = $('#branchName').val().trim().toLowerCase();
-	const fromDateVal = $('#fromDate').val();
-	const toDateVal = $('#toDate').val();
+    const selectedBranchName = ($('#branchName').val() || '').trim().toUpperCase();
+    const fromDateVal = $('#fromDate').val();
+    const toDateVal = $('#toDate').val();
 
-	const fromDate = fromDateVal ? new Date(fromDateVal) : null;
-	const toDate = toDateVal ? new Date(toDateVal) : null;
+    const fromDate = fromDateVal ? new Date(fromDateVal) : null;
+    const toDate = toDateVal ? new Date(toDateVal) : null;
 
-	const filtered = allSavingTransactionData.filter(item => {
-		const branchName = item.branchName ? item.branchName.trim().toLowerCase() : "";
-		const joiningDate = item.joiningDate ? new Date(item.joiningDate) : null;
+    const filtered = allSavingTransactionData.filter(item => {
+        const branchName = (item.branchName || '').trim().toUpperCase();
+        const dateStr = item.openingDate || item.joiningDate;
+        const openingDate = dateStr ? new Date(dateStr) : null;
 
-		const matchesbranch = selectedbranchName ? branchName === selectedbranchName : true;
+        const matchesBranch = selectedBranchName ? branchName === selectedBranchName : true;
 
-		let matchesFrom = true;
-		let matchesTo = true;
+        let matchesFrom = true;
+        let matchesTo = true;
 
-		if (fromDate && joiningDate) {
-			matchesFrom = joiningDate.getTime() >= fromDate.getTime();
-		}
+        if (fromDate && openingDate) {
+            matchesFrom = openingDate.getTime() >= fromDate.getTime();
+        }
 
-		if (toDate && joiningDate) {
-			matchesTo = joiningDate.getTime() <= toDate.getTime();
-		}
+        if (toDate && openingDate) {
+            const nextDay = new Date(toDate);
+            nextDay.setDate(nextDay.getDate() + 1);
+            matchesTo = openingDate.getTime() < nextDay.getTime();
+        }
 
-		return matchesbranch && matchesFrom && matchesTo;
-	});
+        return matchesBranch && matchesFrom && matchesTo;
+    });
 
-	renderTable(filtered);
+    renderTable(filtered);
 }
 
-//Janvi : Update Status Approved
 function updateSavingTransactionApprovalStatus(id, isApproved) {
-
-	$.ajax({
-		url: "api/requestapproval/approvedSavingTransactionData",
-		type: "POST",
-		data: {
-			id: id,
-			isApproved: isApproved
-		},
-		success: function(response) {
-			console.log("Approval updated for ID:", id, response);
-			alert("APPROVAL STATUS UPDATED SUCCESSFULLY FOR ID: " + id);
-			// Optionally show success toast
-		},
-		error: function(xhr, status, error) {
-			console.error("Error updating approval for ID:", id, error);
-			alert("COULD NOT UPDATE APPROVAL STATUS FOR ID: " + id);
-		}
-	});
+    $.ajax({
+        url: "api/requestapproval/approvedSavingTransactionData",
+        type: "POST",
+        data: {
+            id: id,
+            isApproved: isApproved
+        },
+        success: function(response) {
+            alert("APPROVAL STATUS UPDATED SUCCESSFULLY FOR ID: " + id);
+            location.reload();
+        },
+        error: function(xhr) {
+            console.error("ERROR APPROVING:", xhr);
+            alert("COULD NOT UPDATE APPROVAL STATUS FOR ID: " + id);
+        }
+    });
 }
