@@ -1,11 +1,25 @@
-
 <script type="text/javascript">
-   function calculateAge() {
-	   const dob = new Date(document.getElementById("dateOfBirth").value); // get DOB from the date input field
-	   const age = Math.floor((Date.now() - dob) / (365.25 * 24 * 60 * 60 * 1000)); // calculate age
-	   document.getElementById("age").value = age; // set the calculated age in the age input field
-	 }
+function calculateAge() {
+	const dobVal = document.getElementById("dateOfBirth").value;
+	if (dobVal) {
+		const dob = new Date(dobVal);
+		const age = Math.floor((Date.now() - dob) / (365.25 * 24 * 60 * 60 * 1000));
+		document.getElementById("age").value = (age > 0) ? age : 0;
+	}
+}
 </script>
+
+<style>
+.formFields input, .formFields select, .formFields textarea {
+	text-transform: uppercase;
+}
+.formFields input::placeholder, .formFields textarea::placeholder {
+	text-transform: uppercase;
+}
+.error {
+	border-color: #dc3545 !important;
+}
+</style>
 
 <div class="pagetitle">
 	<h1>TEAM MANAGEMENT</h1>
@@ -20,7 +34,7 @@
 </div>
 
 <div>
-	<form id="formid">
+	<form id="formid" autocomplete="off">
 		<div>
 			<nav>
 				<ol class="breadcrumb breadcrumb-title">
@@ -29,50 +43,26 @@
 			</nav>
 			<div class="row">
 				<div class="col-lg-3">
-					<!-- <div class="d-flex flex-column formFields" style="margin-bottom: 30px">
-                <label>Verify With</label>
-                <div class="position-relative">
-                  <div class="select-btn1" style="cursor: pointer;">
-                    <span name="cityName" id="cityNameId" style="font-size: 12px;">Select</span> <i
-                      class="fa-solid fa-angle-down"></i>
-                  </div>
-                  <div class="content" id="contentCityName" style="display: none;">
-                    <div class="search">
-                      <input type="text" id="city-search" class="m-0" placeholder="Search City" />
-                    </div>
-                    <ul class="options" id="city-options">
-                      <li>ABC</li>
-                      <li>ABC</li>
-                      <li>ABC</li>
-                      <li>ABC</li>
-                      <li>ABC</li>
-                      <li>ABC</li>
-                    </ul>
-                  </div>
-                </div>
-              </div> -->
-					<div class="d-flex flex-column formFields"
-						style="margin-bottom: 30px;">
-						<label for="">TEAM MAMBER CODE</label> <input type="text" readonly="readonly"
-							id="teamMemberCode" name="teamMemberCode"
+					<div class="d-flex flex-column formFields" style="margin-bottom: 30px;">
+						<label for="teamMemberCode">TEAM MEMBER CODE</label> 
+						<input type="text" readonly="readonly" id="teamMemberCode" name="teamMemberCode"
 							value="${teamMemberUniqueNo}" required="required"
-							placeholder="ENTER TEAM MAMBER COD">
+							placeholder="ENTER TEAM MEMBER CODE" />
 					</div>
 				</div>
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
-						<label for="joiningDate">SIGN-UP BRANCH</label> <input type="date"
-							name="signUpDate" id="signUpDate" required="required"
-							placeholder="Enter Sign-Up Date"
-							style="text-transform: uppercase;" />
+						<label for="signUpDate">SIGN-UP DATE</label> 
+						<input type="date" name="signUpDate" id="signUpDate" required="required"
+							placeholder="ENTER SIGN-UP DATE" style="text-transform: uppercase;" />
 					</div>
 				</div>
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
-						<label for="">BRANCH NAME </label> <select id="branchName"
-							name="branchName" required="required"
+						<label for="branchName">BRANCH NAME</label> 
+						<select id="branchName" name="branchName" required="required"
 							class="form-control selectField" style="height: 30px;">
 							<option value="">SELECT BRANCH NAME</option>
 						</select>
@@ -81,200 +71,176 @@
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
-						<label for="">TEAM MEMBER NAME</label> <input type="text"
-							style="text-transform: uppercase;" name="teamMemberName"
+						<label for="teamMemberName">TEAM MEMBER NAME</label> 
+						<input type="text" style="text-transform: uppercase;" name="teamMemberName"
 							id="teamMemberName" required="required"
 							placeholder="ENTER TEAM MEMBER NAME" />
 					</div>
 				</div>
 
 				<div class="col-lg-3">
-					<div class="d-flex flex-column formFields"
-						style="margin-bottom: 30px;">
-						<label for="dob">DATE OF BIRTH </label> <input type="date"
-							name="dateOfBirth" onchange="calculateAge()" id="dateOfBirth"
+					<div class="d-flex flex-column formFields" style="margin-bottom: 30px;">
+						<label for="dateOfBirth">DATE OF BIRTH</label> 
+						<input type="date" name="dateOfBirth" onchange="calculateAge()" id="dateOfBirth"
 							required="required" style="text-transform: uppercase;" />
 					</div>
 				</div>
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
-						<label for="">AGE</label> <input type="number" name="age" id="age"
-							required="required" placeholder="ENTER AGE" />
+						<label for="age">AGE</label> 
+						<input type="number" name="age" id="age" required="required" placeholder="ENTER AGE" />
 					</div>
 				</div>
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
-						<label for="">FAMILY MEMBER NAME </label> <input type="text"
-							style="text-transform: uppercase;" name="familyMemberName"
+						<label for="familyMemberName">FAMILY MEMBER NAME</label> 
+						<input type="text" style="text-transform: uppercase;" name="familyMemberName"
 							id="familyMemberName" required="required"
 							placeholder="ENTER FAMILY MEMBER NAME" />
 					</div>
 				</div>
 
-
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
-						<label for="">RELATION TO APPLICANT </label> <select
-							id="relationToApplicant" name="relationToApplicant"
-							required="required" class="form-control selectField"
-							style="height: 30px;">
-							<option value="">--SELECT RELATION--
-							<option>
+						<label for="relationToApplicant">RELATION TO APPLICANT</label> 
+						<select id="relationToApplicant" name="relationToApplicant"
+							required="required" class="form-control selectField" style="height: 30px;">
+							<option value="">--SELECT RELATION--</option>
 						</select>
 					</div>
 				</div>
 
 				<div class="col-lg-3">
-					<div class="d-flex flex-column formFields"
-						style="margin-bottom: 30px;">
-						<label for="">CONTACT NO </label> <input type="number"
-							name="contactNo" id="contactNo" required="required"
+					<div class="d-flex flex-column formFields" style="margin-bottom: 30px;">
+						<label for="contactNo">CONTACT NO.</label> 
+						<input type="text" maxlength="10" name="contactNo" id="contactNo" required="required"
 							placeholder="ENTER CONTACT NO." />
 					</div>
 				</div>
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
-						<label for="">NOMINEE NAME </label> <input type="text"
-							style="text-transform: uppercase;" name="nomineeName"
-							id="nomineeName" required="required"
-							placeholder="ENTER NOMINEE NAME" />
+						<label for="nomineeName">NOMINEE NAME</label> 
+						<input type="text" style="text-transform: uppercase;" name="nomineeName"
+							id="nomineeName" required="required" placeholder="ENTER NOMINEE NAME" />
 					</div>
 				</div>
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
-						<label for="">NOMINEE AGE</label> <input type="number"
-							name="nomineeAge" id="nomineeAge" required="required"
+						<label for="nomineeAge">NOMINEE AGE</label> 
+						<input type="number" name="nomineeAge" id="nomineeAge" required="required"
 							placeholder="ENTER NOMINEE AGE" />
 					</div>
 				</div>
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
-						<label for="">RETATION WITH NOMINEE </label> <select
-							id="relationWithNominee" name="relationWithNominee"
-							required="required" class="form-control selectField"
-							style="height: 30px;">
+						<label for="relationWithNominee">RELATION WITH NOMINEE</label> 
+						<select id="relationWithNominee" name="relationWithNominee"
+							required="required" class="form-control selectField" style="height: 30px;">
 							<option value="">--SELECT RELATION--</option>
 						</select>
 					</div>
 				</div>
 
-
 				<div class="col-lg-3">
-					<div class="d-flex flex-column formFields"
-						style="margin-bottom: 30px;">
-						<label for="">ADDRESS</label>
-						<textarea name="address" id="address"
-							style="text-transform: uppercase;"
-							style="border: 1px solid rgb(224, 224, 224); border-radius: 5px; outline: none; padding: 5px; font-size: 12px;"></textarea>
+					<div class="d-flex flex-column formFields" style="margin-bottom: 30px;">
+						<label for="address">ADDRESS</label>
+						<textarea name="address" id="address" style="text-transform: uppercase; border: 1px solid rgb(224, 224, 224); border-radius: 5px; outline: none; padding: 5px; font-size: 12px;"></textarea>
 					</div>
 				</div>
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
-						<label for="">PAN</label> <input type="text" name="pan" id="pan"
-							style="text-transform: uppercase;" required="required"
-							placeholder="ENTER PAN" />
+						<label for="pan">PAN</label> 
+						<input type="text" name="pan" id="pan" maxlength="10"
+							style="text-transform: uppercase;" required="required" placeholder="ENTER PAN" />
 					</div>
 				</div>
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
-						<label for="">BANK A/C</label> <input type="text" name="bankAC"
-							style="text-transform: uppercase;" id="bankAC"
+						<label for="bankAC">BANK A/C</label> 
+						<input type="text" name="bankAC" style="text-transform: uppercase;" id="bankAC"
 							required="required" placeholder="ENTER BANK A/C" />
 					</div>
 				</div>
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
-						<label for="">IFSC CODE</label> <input type="text"
-							style="text-transform: uppercase;" name="ifscCode" id="ifscCode"
+						<label for="ifscCode">IFSC CODE</label> 
+						<input type="text" style="text-transform: uppercase;" name="ifscCode" id="ifscCode"
 							required="required" placeholder="ENTER IFSC CODE" />
 					</div>
 				</div>
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
-						<label for="">EXP. DETAILS(IN YEARS)</label> <input type="number"
-							name="expDetails" id="expDetails" required="required"
+						<label for="expDetails">EXP. DETAILS (IN YEARS)</label> 
+						<input type="number" name="expDetails" id="expDetails" required="required"
 							placeholder="ENTER EXP. DETAILS" />
 					</div>
 				</div>
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
-						<label for="">EDUCATIONAL BACKGROUND</label> <input type="text"
-							style="text-transform: uppercase;" name="educationalBackground"
+						<label for="educationalBackground">EDUCATIONAL BACKGROUND</label> 
+						<input type="text" style="text-transform: uppercase;" name="educationalBackground"
 							id="educationalBackground" required="required"
 							placeholder="ENTER EDUCATIONAL BACKGROUND" />
 					</div>
 				</div>
-
-
 			</div>
 		</div>
 
-
-
-
-
-
-
-		<div class="mt-5">
+		<div class="mt-4">
 			<nav>
 				<ol class="breadcrumb breadcrumb-title">
-					<li class="breadcrumb-item action">DESIGNATION DETAILS</li>
+					<li class="breadcrumb-item action">DESIGNATION & DEPARTMENT DETAILS</li>
 				</ol>
 			</nav>
 			<div class="row">
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
-						<label for="">DESIGNATION </label> <select id="designation"
-							name="designation" required="required"
+						<label for="designation">DESIGNATION</label> 
+						<select id="designation" name="designation" required="required"
 							class="form-control selectField" style="height: 30px;">
-							<option value="">SELECT</option>
-						</select>
-					</div>
-				</div>
-
-
-
-				<div class="col-lg-3">
-					<div class="d-flex flex-column formFields">
-						<label for="">DEPARTMENT </label> <select id="department"
-							name="department" required="required"
-							class="form-control selectField" style="height: 30px;">
-							<option value="">SELECT</option>
+							<option value="">SELECT DESIGNATION</option>
 						</select>
 					</div>
 				</div>
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
-						<label for="">SALARY </label> <input type="text" name="salary"
-							id="salary" required="required" placeholder="ENTER SALARY" />
+						<label for="department">DEPARTMENT</label> 
+						<select id="department" name="department" required="required"
+							class="form-control selectField" style="height: 30px;">
+							<option value="">SELECT DEPARTMENT</option>
+						</select>
 					</div>
 				</div>
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
-						<label for="">SAVING ACCOUNT NO. </label> <input type="text"
-							name="savingAccNo" id="savingAccNo" required="required"
+						<label for="salary">SALARY</label> 
+						<input type="text" name="salary" id="salary" required="required" placeholder="ENTER SALARY" />
+					</div>
+				</div>
+
+				<div class="col-lg-3">
+					<div class="d-flex flex-column formFields">
+						<label for="savingAccNo">SAVING ACCOUNT NO.</label> 
+						<input type="text" name="savingAccNo" id="savingAccNo" required="required"
 							placeholder="ENTER SB ACCOUNT NO." />
 					</div>
 				</div>
-
 			</div>
 		</div>
 
-
-
-		<div class="mt-5">
+		<div class="mt-4">
 			<nav>
 				<ol class="breadcrumb breadcrumb-title">
 					<li class="breadcrumb-item action">PAYMENT DETAILS</li>
@@ -283,19 +249,17 @@
 			<div class="row">
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields mb-4">
-						<label for="">FEES(IF ANY) </label> <input type="text" name="fees"
-							id="fees" required="required" placeholder="ENTER FEES" />
+						<label for="fees">FEES (IF ANY)</label> 
+						<input type="text" name="fees" id="fees" required="required" placeholder="ENTER FEES" />
 					</div>
 				</div>
 
-
-
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
-						<label for="">MODE OF PAYMENT </label> <select id="modeofpayment"
-							name="modeofpayment" required="required"
+						<label for="modeofpayment">MODE OF PAYMENT</label> 
+						<select id="modeofpayment" name="modeofpayment" required="required"
 							class="form-control selectField" style="height: 30px;">
-							<option selected="selected" value="">SELECT</option>
+							<option selected="selected" value="">SELECT MODE</option>
 							<option value="Cash">CASH</option>
 							<option value="Cheque">CHEQUE</option>
 							<option value="Online">ONLINE</option>
@@ -306,58 +270,47 @@
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
-						<label for="">COMMENT </label> <input type="text" name="comments" style="text-transform: uppercase;"
+						<label for="comments">COMMENT / REMARKS</label> 
+						<input type="text" name="comments" style="text-transform: uppercase;"
 							id="comments" required="required" placeholder="ENTER REMARKS" />
 					</div>
 				</div>
 
 				<div class="col-lg-3">
-					<div class=" h-100 d-flex justify-content-start align-items-center">
-						<div
-							class="d-flex justify-content-start align-items-center formFields">
-							<label style="margin-left: 20px;" class="mb-2">CUSTOMER
-								STATUS</label>
-							<div class="cont">
+					<div class="h-100 d-flex justify-content-start align-items-center">
+						<div class="d-flex justify-content-start align-items-center formFields">
+							<label style="margin-left: 20px;" class="mb-2">TEAM MEMBER STATUS</label>
+							<div class="cont ms-3">
 								<div class="toggle">
-									<input type="checkbox" id="customerStatus"
-										name="customerStatus" class="toggle__input"
-										data-toggle-type="member-status"> <label
-										for="customerStatus" class="toggle__label"></label>
-
-
+									<input type="checkbox" id="customerStatus" name="customerStatus" checked="checked"
+										class="toggle__input" data-toggle-type="member-status" />
+									<label for="customerStatus" class="toggle__label"></label>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-
 			</div>
+
 			<!-- Cheque input fields -->
 			<div id="chequeInputs" style="display: none;">
 				<div class="row">
 					<div class="col-lg-3">
 						<div class="d-flex flex-column formFields">
-							<label for="">CHEQUE NO. </label> <input type="text"
-								name="chequeNo" id="chequeNo" required="required"
-								placeholder="ENTER CHEQUE NO." />
+							<label for="chequeNo">CHEQUE NO.</label> 
+							<input type="text" name="chequeNo" id="chequeNo" placeholder="ENTER CHEQUE NO." />
 						</div>
 					</div>
-				</div>
-				<div class="row">
 					<div class="col-lg-3">
 						<div class="d-flex flex-column formFields">
-							<label for="">Cheque Date </label> <input type="Date"
-								name="chequeDate" id="chequeDate" required="required"
-								placeholder="ENTER CHEQUE DATE" />
+							<label for="chequeDate">CHEQUE DATE</label> 
+							<input type="date" name="chequeDate" id="chequeDate" placeholder="ENTER CHEQUE DATE" />
 						</div>
 					</div>
-				</div>
-				<div class="row">
 					<div class="col-lg-3">
 						<div class="d-flex flex-column formFields">
-							<label for="">SEPOSIT A/C </label> <input type="text"
-								name="depositAcc1" id="depositAcc1" required="required"
-								placeholder="ENTER SEPOSITE A/C No." />
+							<label for="depositAcc1">DEPOSIT A/C</label> 
+							<input type="text" name="depositAcc1" id="depositAcc1" placeholder="ENTER DEPOSIT A/C NO." />
 						</div>
 					</div>
 				</div>
@@ -368,18 +321,14 @@
 				<div class="row">
 					<div class="col-lg-3">
 						<div class="d-flex flex-column formFields">
-							<label for="">DEPOSIT A/C </label> <input type="text"
-								name="depositAcc2" id="depositAcc2" required="required"
-								placeholder="ENTER DEPOSITE A/C NO." />
+							<label for="depositAcc2">DEPOSIT A/C</label> 
+							<input type="text" name="depositAcc2" id="depositAcc2" placeholder="ENTER DEPOSIT A/C NO." />
 						</div>
 					</div>
-				</div>
-				<div class="row">
 					<div class="col-lg-3">
 						<div class="d-flex flex-column formFields">
-							<label for="">REF. NUMBER </label> <input type="text"
-								name="refNumber1" id="refNumber1" required="required"
-								placeholder="ENTER DEPOSITE REF NO." />
+							<label for="refNumber1">REF. NUMBER</label> 
+							<input type="text" name="refNumber1" id="refNumber1" placeholder="ENTER DEPOSIT REF NO." />
 						</div>
 					</div>
 				</div>
@@ -390,48 +339,70 @@
 				<div class="row">
 					<div class="col-lg-3">
 						<div class="d-flex flex-column formFields">
-							<label for="">DEPOSIT A/C </label> <input type="text"
-								name="depositAcc3" id="depositAcc3" required="required"
-								placeholder="ENTER DEPOSITE A/C NO." />
+							<label for="depositAcc3">DEPOSIT A/C</label> 
+							<input type="text" name="depositAcc3" id="depositAcc3" placeholder="ENTER DEPOSIT A/C NO." />
 						</div>
 					</div>
-				</div>
-				<div class="row">
 					<div class="col-lg-3">
 						<div class="d-flex flex-column formFields">
-							<label for="">REF NUMBER </label> <input type="text"
-								name="refNumber2" id="refNumber2" required="required"
-								placeholder="ENTER DEPOSITE RREFef No." />
+							<label for="refNumber2">REF. NUMBER</label> 
+							<input type="text" name="refNumber2" id="refNumber2" placeholder="ENTER DEPOSIT REF NO." />
 						</div>
 					</div>
 				</div>
 			</div>
-
 		</div>
 
-
-		<div class="row">
-			<div class="col-12">
-				<button id="TeamMemberSaveBtn" class="btnStyle bg-success">SAVE</button>
-				<button id="newBtn" class="btnStyle"
-					style="background-color: #FFA500;">NEW</button>
+		<div class="row mt-4">
+			<div class="col-12 text-start">
+				<button type="button" id="TeamMemberSaveBtn" class="btnStyle bg-success">SAVE TEAM MEMBER</button>
+				<button type="button" id="newBtn" class="btnStyle" style="background-color: #FFA500;">NEW / RESET</button>
 			</div>
 		</div>
 	</form>
+
+	<!-- Connected Financial Consultants Hierarchy Section -->
+	<div class="row mt-5">
+		<div class="col-12">
+			<div class="card recent-sales">
+				<div class="card-body table-responsive">
+					<h5 class="card-title text-primary" style="font-weight: 700;">
+						<i class="bi bi-diagram-3-fill me-2"></i>REPORTING FINANCIAL CONSULTANTS (TEAM HIERARCHY)
+					</h5>
+					<p class="text-muted small">LIST OF FINANCIAL CONSULTANTS ASSIGNED TO AND WORKING UNDER TEAM MEMBER (<span id="teamMemberCodeBadge" class="badge bg-primary">${teamMemberUniqueNo}</span>)</p>
+
+					<table class="table table-bordered table-hover align-middle">
+						<thead class="table-light">
+							<tr style="font-family: 'Poppins', sans-serif;">
+								<th scope="col">S/N</th>
+								<th scope="col">CONSULTANT CODE</th>
+								<th scope="col">CONSULTANT NAME</th>
+								<th scope="col">POSITION</th>
+								<th scope="col">BRANCH</th>
+								<th scope="col">CONTACT NUMBER</th>
+								<th scope="col">JOINING DATE</th>
+								<th scope="col">STATUS</th>
+							</tr>
+						</thead>
+						<tbody id="consultantsTableBody">
+							<tr>
+								<td colspan="8" class="text-center text-muted">LOADING CONNECTED FINANCIAL CONSULTANTS...</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-	
 	const toggles = document.querySelectorAll('.toggle__input');	
 	toggles.forEach((toggle) => {
 		updateToggleColor(toggle);
-
 		toggle.addEventListener('change', () => {
 			updateToggleColor(toggle);
-			//console.log(${toggle.dataset.toggleType} is now ${toggle.checked});
-			console.log(`${toggle.dataset.toggleType} is now ${toggle.checked}`);
-
 		});
 	});
 
@@ -442,25 +413,17 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	}
 });
-</script>
 
-<script>
-    
 document.getElementById('modeofpayment').addEventListener('change', function () {
-    // Get the selected payment mode
     let mode = this.value;
-
-    // Define all input field sections
     const chequeInputs = document.getElementById('chequeInputs');
     const onlineInputs = document.getElementById('onlineInputs');
     const neftInputs = document.getElementById('neftInputs');
 
-    // Reset the display of all sections
     chequeInputs.style.display = 'none';
     onlineInputs.style.display = 'none';
     neftInputs.style.display = 'none';
 
-    // Show the section corresponding to the selected payment mode
     if (mode === 'Cheque') {
         chequeInputs.style.display = 'block';
     } else if (mode === 'Online') {
@@ -470,5 +433,4 @@ document.getElementById('modeofpayment').addEventListener('change', function () 
     }
 });
 </script>
-<script
-	src="${pageContext.request.contextPath}/js/teamManagement/addTeamMember.js"></script>
+<script src="${pageContext.request.contextPath}/js/TeamManagement/addTeamMember.js"></script>
