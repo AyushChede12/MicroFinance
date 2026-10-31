@@ -1,11 +1,9 @@
-
 <div class="pagetitle">
 	<h1>FINANCIAL CONSULTANT</h1>
 	<nav>
 		<ol class="breadcrumb">
-			<li class="breadcrumb-item"><a href="openDashboard"> <i
-					class="bi bi-briefcase text-blue"></i>
-			</a></li>
+			<li class="breadcrumb-item"><a href="openDashboard"> <i class="bi bi-briefcase text-blue"></i>
+				</a></li>
 			<li class="breadcrumb-item action">FINANCIAL CONSULTANT HIERARCHY</li>
 		</ol>
 	</nav>
@@ -23,28 +21,23 @@
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
 						<label for="financialCode">FINANCIAL CONSULTANT CODE <span id="star">*</span></label>
-						<input type="text" name="financialCode" id="financialCode"
-							required="required" placeholder="ENTER FINANCIAL CODE"
-							style="text-transform: uppercase;" />
+						<input type="text" name="financialCode" id="financialCode" required="required"
+							placeholder="ENTER FINANCIAL CODE" style="text-transform: uppercase;" />
 					</div>
 				</div>
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
-						<label for="financialName">FINANCIAL NAME</label> <input
-							type="text" name="financialName" id="financialName"
-							placeholder="FINANCIAL CONSULTANT NAME"
+						<label for="financialName">FINANCIAL NAME</label> <input type="text" name="financialName"
+							id="financialName" placeholder="FINANCIAL CONSULTANT NAME"
 							style="text-transform: uppercase;" readonly />
 					</div>
 				</div>
 
 				<div class="col-lg-3">
-					<div class="d-flex flex-column formFields"
-						style="margin-bottom: 30px">
-						<label>POSITION</label> <input type="text" name="selectPosition"
-							id="selectPosition"
-							placeholder="DESIGNATION / POSITION" style="text-transform: uppercase;"
-							readonly />
+					<div class="d-flex flex-column formFields" style="margin-bottom: 30px">
+						<label>POSITION</label> <input type="text" name="selectPosition" id="selectPosition"
+							placeholder="DESIGNATION / POSITION" style="text-transform: uppercase;" readonly />
 					</div>
 				</div>
 
@@ -82,7 +75,8 @@
 						</thead>
 						<tbody>
 							<tr>
-								<td colspan="10" class="text-center text-muted">PLEASE ENTER FINANCIAL CONSULTANT CODE TO VIEW HIERARCHY</td>
+								<td colspan="10" class="text-center text-muted">PLEASE ENTER FINANCIAL CONSULTANT CODE
+									TO VIEW HIERARCHY</td>
 							</tr>
 						</tbody>
 					</table>
@@ -92,5 +86,4 @@
 	</div>
 
 </div>
-<script
-	src="${pageContext.request.contextPath}/js/FinancialConsultant/financialConsultantHierarchy.js"></script>
+<script src="${pageContext.request.contextPath}/js/FinancialConsultant/financialConsultantHierarchy.js"></script>

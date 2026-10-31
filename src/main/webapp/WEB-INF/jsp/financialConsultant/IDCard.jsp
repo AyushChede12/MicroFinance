@@ -164,8 +164,11 @@ body {
 <div class="container mt-4 d-flex justify-content-center">
 	<div class="id-card">
 		<div class="id-header">
-			MICROFINANCE BANKING SYSTEM
+			<div id="companyNameHeader" style="font-size: 15px; font-weight: bold; letter-spacing: 0.5px; text-transform: uppercase;">
+				LOADING COMPANY...
+			</div>
 			<div class="id-sub-header">FINANCIAL CONSULTANT IDENTITY CARD</div>
+			<div id="companyAddressHeader" style="font-size: 9px; color: #ffeb3b; font-weight: 500; margin-top: 3px; letter-spacing: 0.5px; text-transform: uppercase;"></div>
 		</div>
 
 		<div class="top-section mt-2">
@@ -219,7 +222,7 @@ body {
 			</div>
 
 			<div class="sign-box" style="margin-bottom: 5px;">
-				<div style="font-family: 'Great Vibes', cursive, sans-serif; font-size: 16px; color: #002147; font-weight: bold;">
+				<div id="signatoryTitle" style="font-family: 'Great Vibes', cursive, sans-serif; font-size: 16px; color: #002147; font-weight: bold;">
 					BANK MANAGER
 				</div>
 				<div class="sign-title" style="border-top: 1px solid #333; padding-top: 2px;">AUTHORISED SIGNATORY</div>

@@ -1,7 +1,43 @@
 $(document).ready(function() {
 	const apiUrl = "api/financialconsultant/getAllFinancialConsultantDetails";
 
-	// 1. Render Table
+	// 1. Fetch Company Details from Preference Controller API
+	function loadCompanyDetails() {
+		$.ajax({
+			url: "api/preference/getCompanyDetails",
+			type: "GET",
+			dataType: "json",
+			success: function(response) {
+				if (response) {
+					const cName = (response.companyName || response.shortName || "").trim().toUpperCase();
+					if (cName) {
+						$("#companyNameHeader").text(cName);
+					}
+					let addrParts = [];
+					if (response.address) addrParts.push(response.address.trim().toUpperCase());
+					if (response.city) addrParts.push(response.city.trim().toUpperCase());
+					if (response.state) addrParts.push(response.state.trim().toUpperCase());
+					if (response.pinCode) addrParts.push(response.pinCode.trim());
+					if (addrParts.length > 0) {
+						$("#companyAddressHeader").text(addrParts.join(", "));
+					}
+				}
+			},
+			error: function(xhr, status, error) {
+				console.warn("COULD NOT FETCH COMPANY DETAILS:", error);
+				if (!$("#companyNameHeader").text() || $("#companyNameHeader").text() === "LOADING COMPANY...") {
+					$("#companyNameHeader").text("CO OPERATIVE SOCIETY LTD NAGPUR");
+				}
+			}
+		});
+	}
+
+	// Always load company details if companyNameHeader element is present on ID Card page
+	if ($("#companyNameHeader").length > 0) {
+		loadCompanyDetails();
+	}
+
+	// 2. Render Table on listing page
 	function renderTable(data) {
 		let tableBody = "";
 		if (!data || data.length === 0) {
@@ -39,7 +75,7 @@ $(document).ready(function() {
 		$("table tbody").html(tableBody);
 	}
 
-	// 2. Fetch and Filter Data
+	// 3. Fetch and Filter Data
 	function fetchAndFilter(keyword = "") {
 		$.ajax({
 			url: apiUrl,
@@ -62,18 +98,18 @@ $(document).ready(function() {
 		});
 	}
 
-	// 3. Live Search
+	// 4. Live Search
 	$("#searchKeyword").on("input keyup", function() {
 		let keyword = $(this).val().trim();
 		fetchAndFilter(keyword);
 	});
 
-	// 4. Initial Load (only if search input exists)
+	// 5. Initial Load (only if search input exists)
 	if ($("#searchKeyword").length > 0) {
 		fetchAndFilter();
 	}
 
-	// 5. On Generate Button Click
+	// 6. On Generate Button Click
 	$(document).on('click', '.generateBtn', function() {
 		const financialCode = $(this).data('code');
 		const checkbox = $(`.selectCheckbox[data-code="${financialCode}"]`);
@@ -85,7 +121,7 @@ $(document).ready(function() {
 		}
 	});
 
-	// 6. ID CARD PAGE - POPULATE DETAILS
+	// 7. ID CARD PAGE - POPULATE CONSULTANT DETAILS
 	const urlParams = new URLSearchParams(window.location.search);
 	const finCode = urlParams.get('financialCode');
 
