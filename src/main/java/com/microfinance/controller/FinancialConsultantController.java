@@ -1,7 +1,5 @@
 package com.microfinance.controller;
 
-import java.io.IOException;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -17,33 +15,23 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.microfinance.dto.ApiResponse;
-
 import com.microfinance.dto.FinancialConsultantDto;
 import com.microfinance.model.ConsultantPromotionManagement;
 import com.microfinance.model.addCustomer;
 import com.microfinance.model.addFinancialConsultant;
-
 import com.microfinance.service.FinancialConsultantService;
 
 @RestController
 @RequestMapping("/api/financialconsultant")
 public class FinancialConsultantController {
+
 	@Autowired
 	FinancialConsultantService financialConsultantService;
 
-	/*
-	 * @PostMapping("/getAllCustomerCodes") // Poonam 13-06-2025 public
-	 * ResponseEntity<ApiResponse<List<addCustomer>>> getAllCustomerCodes() {
-	 * List<addCustomer> list = financialConsultantService.getAllCustomerCodes();
-	 * ApiResponse<List<addCustomer>> response =
-	 * ApiResponse.success(HttpStatus.FOUND,"CUSTOMER CODES FETCHED SUCCESSFULLY"
-	 * ,list); return new ResponseEntity<>(response, HttpStatus.OK); }
-	 */
-
-	@PostMapping("/getAllBranch") // poonam 13-06-2025
+	@PostMapping("/getAllBranch")
 	public ResponseEntity<ApiResponse<List<addCustomer>>> getAllBranch() {
 		List<addCustomer> list = financialConsultantService.getAllBranch();
-		ApiResponse<List<addCustomer>> response = ApiResponse.success(HttpStatus.OK, "BRANCH FETCHED SUCCESSFULLY",
+		ApiResponse<List<addCustomer>> response = ApiResponse.success(HttpStatus.OK, "BRANCHES FETCHED SUCCESSFULLY",
 				list);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
@@ -51,53 +39,16 @@ public class FinancialConsultantController {
 	@PostMapping("/getAllRelationToApplicant")
 	public ResponseEntity<ApiResponse<List<addCustomer>>> getAllRelationToApplicant() {
 		List<addCustomer> list = financialConsultantService.getAllRelationToApplicant();
-		ApiResponse<List<addCustomer>> response = ApiResponse.success(HttpStatus.OK, "RELATION FETCHED SUCCESSFULLY",
+		ApiResponse<List<addCustomer>> response = ApiResponse.success(HttpStatus.OK, "RELATIONS FETCHED SUCCESSFULLY",
 				list);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
-
-	/*
-	 * @PostMapping("/getFinancialConsultantByMemberCode") public
-	 * ResponseEntity<ApiResponse<List<addCustomer>>> getMemberByCode(@RequestParam
-	 * String memberCode) {
-	 * 
-	 * List<addCustomer> members =
-	 * financialConsultantService.getByMemberCode(memberCode);
-	 * 
-	 * if (members != null && !members.isEmpty()) { ApiResponse<List<addCustomer>>
-	 * response = ApiResponse.success( HttpStatus.OK,
-	 * "CONSULTANTS FOUND FOR MEMBERCODE: " + memberCode, members ); return new
-	 * ResponseEntity<>(response, HttpStatus.OK); } else {
-	 * ApiResponse<List<addCustomer>> response = ApiResponse.error(
-	 * HttpStatus.NOT_FOUND, "NO MEMBER FOUND WITH THIS CODE" ); return new
-	 * ResponseEntity<>(response, HttpStatus.NOT_FOUND); } }
-	 */
-
-	/*
-	 * @PostMapping("/saveOrUpdateFinancialConsultant") public
-	 * ResponseEntity<ApiResponse<addFinancialConsultant>>
-	 * saveOrUpdateFinancialConsultant(
-	 * 
-	 * @ModelAttribute FinancialConsultantDto financialConsultantDto) {
-	 * 
-	 * ApiResponse<addFinancialConsultant> response = financialConsultantService
-	 * .saveOrUpdateFinancialConsultant(financialConsultantDto);
-	 * 
-	 * return new ResponseEntity<>(response, response.getStatus()); }
-	 */
 
 	@PostMapping("/saveOrUpdateFinancialConsultant")
 	public ResponseEntity<ApiResponse<addFinancialConsultant>> saveOrUpdateFinancialConsultant(
 			@ModelAttribute FinancialConsultantDto financialConsultantDto,
 			@RequestParam(value = "financialPhoto", required = false) MultipartFile financialPhoto,
 			@RequestParam(value = "finnacialSignature", required = false) MultipartFile finnacialSignature) {
-
-		// System.out.println("RECEIVED FILE: " + (signature != null ?
-		// signature.getOriginalFilename() : "NO FILE UPLOADED"));
-
-		System.out.println("RECEIVED FINANCIALPHOTO: " + financialPhoto);
-
-		System.out.println("RECEIVED SIGNATURE: " + finnacialSignature);
 
 		ApiResponse<addFinancialConsultant> response = financialConsultantService
 				.saveOrUpdateFinancialConsultant(financialConsultantDto, financialPhoto, finnacialSignature);
@@ -108,7 +59,7 @@ public class FinancialConsultantController {
 	public ResponseEntity<ApiResponse<List<addFinancialConsultant>>> getAllFinancialConsultantDetails() {
 		List<addFinancialConsultant> list = financialConsultantService.getAllFinancialConsultantDetails();
 		ApiResponse<List<addFinancialConsultant>> response = ApiResponse.success(HttpStatus.OK,
-				"DETAILS FETCHED SUCCESSFULLY", list);
+				"FINANCIAL CONSULTANT DETAILS FETCHED SUCCESSFULLY", list);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
@@ -143,46 +94,43 @@ public class FinancialConsultantController {
 		}
 	}
 
-// For financialConsultantHierarchy
-
 	@GetMapping("/getfinancialHierarchyByFinancialCode")
 	public ResponseEntity<ApiResponse<List<addFinancialConsultant>>> getfinancialHierarchyByFinancialCode(
-			@RequestParam String financialCode) {
+			@RequestParam("financialCode") String financialCode) {
 
 		List<addFinancialConsultant> financialconsultant = financialConsultantService
 				.fetchfinancialHierarchyByFinancialCode(financialCode);
 
 		if (financialconsultant != null && !financialconsultant.isEmpty()) {
 			ApiResponse<List<addFinancialConsultant>> response = ApiResponse.success(HttpStatus.OK,
-					"CONSULTANTS FOUND FOR FINANCIALCODE: " + financialCode, financialconsultant);
+					"FINANCIAL CONSULTANT HIERARCHY FETCHED FOR CODE: " + financialCode.toUpperCase(), financialconsultant);
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} else {
 			ApiResponse<List<addFinancialConsultant>> response = ApiResponse.error(HttpStatus.NOT_FOUND,
-					"NO MEMBER FOUND WITH THIS CODE");
+					"NO FINANCIAL CONSULTANT FOUND WITH THIS CODE");
 			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 		}
 	}
 
-	// janvi: Approved Financial Consultant 30/06/2025
 	@PostMapping("/approvedFinancialConsultantData")
-	public ResponseEntity<ApiResponse<addFinancialConsultant>> updateIsApprovedStatus(@RequestParam Long id,
-			@RequestParam boolean isApproved) {
+	public ResponseEntity<ApiResponse<addFinancialConsultant>> updateIsApprovedStatus(
+			@RequestParam("id") Long id,
+			@RequestParam("isApproved") boolean isApproved) {
 
 		Optional<addFinancialConsultant> optionalCustomer = financialConsultantService.FinancialConsultantById(id);
 
 		if (!optionalCustomer.isPresent()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "CUSTOMER WITH ID " + id + " NOT FOUND."));
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "FINANCIAL CONSULTANT WITH ID " + id + " NOT FOUND."));
 		}
 
 		addFinancialConsultant customer = optionalCustomer.get();
-		customer.setApproved(isApproved); // ✅ Use a proper setter method
+		customer.setApproved(isApproved);
 		addFinancialConsultant updated = financialConsultantService.save(customer);
 
-		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "ISAPPROVED STATUS UPDATED FOR ID " + id, updated));
+		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "FINANCIAL CONSULTANT APPROVAL STATUS UPDATED FOR ID: " + id, updated));
 	}
 
-	// Janvi : get Unapproved Financial Consultants 01/07/2025
 	@PostMapping("/getUnapprovedFinancialConsultants")
 	public ResponseEntity<ApiResponse<List<addFinancialConsultant>>> getUnapprovedFinancialConsultants() {
 		List<addFinancialConsultant> list = financialConsultantService.getUnapprovedFinancialConsultants();
@@ -191,18 +139,17 @@ public class FinancialConsultantController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
-	// poonam : for financial promotion save and update on 16/07/2025
-
 	@PostMapping("/saveOrUpdatePromotionData")
 	public ResponseEntity<ApiResponse<String>> saveOrUpdatePromotionData(
-			@ModelAttribute ConsultantPromotionManagement promotionData, @RequestParam("id") Long id) {
+			@ModelAttribute ConsultantPromotionManagement promotionData,
+			@RequestParam("id") Long id) {
 
 		try {
 			String result = financialConsultantService.savePromotionAndUpdatePosition(promotionData, id);
 			return new ResponseEntity<>(ApiResponse.success(HttpStatus.OK, result, null), HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ResponseEntity<>(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()),
+			return new ResponseEntity<>(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage() != null ? e.getMessage().toUpperCase() : "FAILED TO SAVE PROMOTION DATA"),
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -211,7 +158,7 @@ public class FinancialConsultantController {
 	public ResponseEntity<ApiResponse<List<ConsultantPromotionManagement>>> getAllPromotionManagementDetails() {
 		List<ConsultantPromotionManagement> list = financialConsultantService.getAllPromotionManagementDetail();
 		ApiResponse<List<ConsultantPromotionManagement>> response = ApiResponse.success(HttpStatus.OK,
-				"DETAILS FETCHED SUCCESSFULLY", list);
+				"PROMOTION MANAGEMENT DETAILS FETCHED SUCCESSFULLY", list);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 

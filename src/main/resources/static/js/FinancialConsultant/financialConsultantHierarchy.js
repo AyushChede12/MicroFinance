@@ -1,75 +1,84 @@
 $(document).ready(function() {
-	$("#financialCode").blur(function() {
-		let financialCode = $(this).val().trim().toUpperCase();
 
-		if (financialCode) {
-			$.ajax({
-				url: 'api/financialconsultant/getfinancialHierarchyByFinancialCode',
-				type: 'GET',
-				data: { financialCode: financialCode },
-				success: function(response) {
-					if (response.status === 'OK') {
-						let data = response.data[0]; // taking the first consultant from list
+	function searchHierarchy() {
+		let financialCode = $("#financialCode").val().trim().toUpperCase();
 
-						// Bind data to your form fields
-						$('#financialName').val(data.financialName);
-						$('#selectPosition').val(data.selectPosition);
-
-					} else {
-						alert("NO DATA FOUND FOR THE GIVEN FINANCIAL CODE.");
-						clearFields(); // Optional: Clear form fields if no data
-					}
-				},
-				error: function(xhr, status, error) {
-					alert("ERROR: " + xhr.responseJSON.message || "SOMETHING WENT WRONG.");
-					clearFields();
-				}
-			});
+		if (!financialCode) {
+			alert("PLEASE ENTER A FINANCIAL CONSULTANT CODE.");
+			return;
 		}
 
-	});
-});
+		$.ajax({
+			url: 'api/financialconsultant/getfinancialHierarchyByFinancialCode',
+			type: 'GET',
+			data: { financialCode: financialCode },
+			success: function(response) {
+				if (response.status === 'OK' && response.data && response.data.length > 0) {
+					// Primary consultant is the first matching
+					let primary = response.data[0];
+					$('#financialName').val((primary.financialName || '').toUpperCase());
+					$('#selectPosition').val((primary.selectPosition || '').toUpperCase());
 
+					let tableBody = '';
+					response.data.forEach(function(item, index) {
+						let isPrimary = (item.financialCode && item.financialCode.toUpperCase() === financialCode);
+						let roleTag = isPrimary 
+							? '<span class="badge bg-primary text-white">ROOT / PRIMARY</span>' 
+							: '<span class="badge bg-info text-white">DOWNLINE / TEAM</span>';
 
+						let statusText = (item.financialStatus === "1" || item.financialStatus === "ACTIVE" || item.financialStatus === true) ? "ACTIVE" : "INACTIVE";
+						let statusBadge = statusText === "ACTIVE" 
+							? '<span class="badge bg-success text-white">ACTIVE</span>' 
+							: '<span class="badge bg-danger text-white">INACTIVE</span>';
 
+						tableBody += `
+							<tr style="font-family: 'Poppins', sans-serif;">
+								<td>${index + 1}</td>
+								<td>${roleTag}</td>
+								<td>${(item.financialName || '').toUpperCase()}</td>
+								<td><strong>${item.financialCode || ''}</strong></td>
+								<td>${(item.selectPosition || '').toUpperCase()}</td>
+								<td>${item.contactNo || ''}</td>
+								<td>${item.joiningDate || ''}</td>
+								<td>${(item.branchName || '').toUpperCase()}</td>
+								<td>${(item.referralCode || '-').toUpperCase()}</td>
+								<td>${statusBadge}</td>
+							</tr>
+						`;
+					});
+					$(".datatable tbody").html(tableBody);
+				} else {
+					$('#financialName').val('');
+					$('#selectPosition').val('');
+					$(".datatable tbody").html(`<tr><td colspan="10" class="text-center text-danger">NO FINANCIAL CONSULTANT HIERARCHY RECORDS FOUND FOR THIS CODE.</td></tr>`);
+					alert("NO FINANCIAL CONSULTANT HIERARCHY RECORDS FOUND FOR THIS CODE.");
+				}
+			},
+			error: function(xhr) {
+				$('#financialName').val('');
+				$('#selectPosition').val('');
+				$(".datatable tbody").html(`<tr><td colspan="10" class="text-center text-danger">ERROR FETCHING HIERARCHY DATA.</td></tr>`);
+				alert("ERROR: " + ((xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message.toUpperCase() : "FAILED TO FETCH HIERARCHY DATA."));
+			}
+		});
+	}
 
-$(document).ready(function() {
 	$("#searchBtn").click(function() {
-		let financialCode1 = $('#financialCode').val().trim().toUpperCase();
+		searchHierarchy();
+	});
 
-		if (financialCode1) {
-			$.ajax({
-				url: 'api/financialconsultant/getfinancialHierarchyByFinancialCode',
-				type: 'GET',
-				data: { financialCode: financialCode1 },
-				success: function(response) {
-					if (response.status === 'OK' && response.data.length > 0) {
-						let tableBody = '';
-						response.data.forEach(function(item, index) {
-							tableBody += `
-                                <tr>
-                                    <td>${index + 1}</td>
-                                    <td>${item.financialName || ''}</td>
-                                    <td>${item.financialCode || ''}</td>
-                                    <td>${item.contactNo || ''}</td>
-                                    <td>${item.joiningDate || ''}</td>
-                                    <td>${item.address || ''}</td>
-                                    <td>${item.branchName || ''}</td>
-                                    <td>${item.financialStatus == 0 ? 'ACTIVE' : 'INACTIVE'}</td>
-                                </tr>
-                            `;
-						});
-						$(".datatable tbody").html(tableBody);
-					} else {
-						$(".datatable tbody").html(`<tr><td colspan="8" class="text-center text-danger">NO DATA FOUND FOR THIS FINANCIAL CODE.</td></tr>`);
-					}
-				},
-				error: function(xhr) {
-					$(".datatable tbody").html(`<tr><td colspan="8" class="text-center text-danger">ERROR FETCHING DATA.</td></tr>`);
-				}
-			});
-		} else {
-			alert("PLEASE ENTER A FINANCIAL CODE.");
+	$("#financialCode").keypress(function(e) {
+		if (e.which === 13) {
+			e.preventDefault();
+			searchHierarchy();
 		}
 	});
+
+	$("#financialCode").blur(function() {
+		let code = $(this).val().trim();
+		if (code) {
+			searchHierarchy();
+		}
+	});
+
 });

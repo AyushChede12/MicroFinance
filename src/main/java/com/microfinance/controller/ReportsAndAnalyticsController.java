@@ -34,10 +34,10 @@ public class ReportsAndAnalyticsController {
 	public ResponseEntity<ApiResponse<List<addFinancialConsultant>>> getApprovedFinancialConsultant() {
 		List<addFinancialConsultant> list = reportsAndAnalyticsService.getApprovedFinancialConsultant();
 		if (!list.isEmpty()) {
-			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "APPROVED CUSTOMERS FETCHED", list));
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "APPROVED FINANCIAL CONSULTANTS FETCHED SUCCESSFULLY", list));
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "NO APPROVED CUSTOMERS FOUND"));
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "NO APPROVED FINANCIAL CONSULTANTS FOUND"));
 		}
 	}
 
@@ -49,7 +49,7 @@ public class ReportsAndAnalyticsController {
 					.ok(ApiResponse.success(HttpStatus.OK, "APPROVED SAVING ACCOUNT CUSTOMERS FETCHED", list));
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "NO APPROVED CUSTOMERS FOUND"));
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "NO APPROVED FINANCIAL CONSULTANTS FOUND"));
 		}
 	}
 

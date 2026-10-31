@@ -40,42 +40,25 @@ body {
 		<div>
 			<nav>
 				<ol class="breadcrumb breadcrumb-title">
-					<li class="breadcrumb-item action">SEARCH FINANCIAL</li>
+					<li class="breadcrumb-item action">SEARCH FINANCIAL CONSULTANTS</li>
 				</ol>
 			</nav>
 			<div class="row">
 
-				<!-- <div class="col-lg-3">
-							<div class="d-flex flex-column formFields"
-								style="margin-bottom: 30px;">
-								<label for="">Business Type </label> <select id="businessType"
-									name="businessType" required="required"
-									class="form-contr
-									ol selectField" style="height: 30px;">
-									<option value="">Select</option>
-									<option value="Blue">AAA</option>
-								</select>
-							</div>
-						</div> -->
-
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields"
 						style="margin-bottom: 30px;">
-						<label for="">BRANCH NAME </label> <select id="branchName2"
+						<label for="branchName2">BRANCH NAME</label> <select id="branchName2"
 							name="branchName2" required="required"
-							class="form-control selectField" style="height: 30px;">
-							<option value="">SELECT</option>
+							class="form-control selectField" style="height: 30px; text-transform: uppercase;">
+							<option value="">-- ALL BRANCHES --</option>
 						</select>
 					</div>
 				</div>
 
-
-
-
-
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
-						<label for="">FROM DATE :</label> <input type="date"
+						<label for="fromDate">FROM DATE :</label> <input type="date"
 							name="fromDate" id="fromDate" required="required"
 							placeholder="ENTER FROM DATE" style="text-transform: uppercase;" />
 					</div>
@@ -83,22 +66,18 @@ body {
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
-						<label for="">TO DATE :</label> <input type="date" name="toDate"
+						<label for="toDate">TO DATE :</label> <input type="date" name="toDate"
 							id="toDate" required="required" placeholder="ENTER TO DATE"
 							style="text-transform: uppercase;" />
 					</div>
 				</div>
-
-
-
-
 
 			</div>
 
 			<div class="row">
 				<div class="col-4 text-start mt-3">
 					<button type="submit" id="findFinancialAdvisorBtn" class="btnStyle"
-						style="background-color: #FFA500;">FIND</button>
+						style="background-color: #FFA500;">FIND CONSULTANTS</button>
 				</div>
 			</div>
 
@@ -111,11 +90,7 @@ body {
 			<div class="card recent-sales">
 
 				<div class="card-body table-responsive">
-					<h5 class="card-title">FINANCIAL DATA</h5>
-
-					<h6 class="card-title" style="text-align: center; color: black;">
-						FINANCIAL REPORT</h6>
-
+					<h5 class="card-title">FINANCIAL CONSULTANT RECORDS</h5>
 
 					<table class="table table-borderless datatable overflow-scroll">
 						<thead class="table-light">
@@ -123,14 +98,13 @@ body {
 								<th style="white-space: nowrap;">SR</th>
 								<th style="white-space: nowrap;">FINANCIAL CODE</th>
 								<th style="white-space: nowrap;">FINANCIAL NAME</th>
-								<th style="white-space: nowrap;">JOINING DATE </th>
+								<th style="white-space: nowrap;">JOINING DATE</th>
 								<th style="white-space: nowrap;">BRANCH</th>
 								<th style="white-space: nowrap;">DOB</th>
 								<th style="white-space: nowrap;">CONTACT NUMBER</th>
 								<th style="white-space: nowrap;">ADDRESS</th>
 								<th style="white-space: nowrap;">APPROVED STATUS</th>
-								<th>PRINT</th>
-
+								<th>ACTION</th>
 							</tr>
 						</thead>
 						<tbody class='tablebody' id="fetchFinancialConsultants">
@@ -151,7 +125,7 @@ body {
 			<!-- Header -->
 			<div class="modal-header text-white">
 				<h5 class="modal-title">
-					<i class="bi bi-person-vcard me-2"></i> Financial Consultant Report
+					<i class="bi bi-person-vcard me-2"></i> FINANCIAL CONSULTANT REPORT
 				</h5>
 				<button type="button" class="btn-close btn-close-white"
 					data-bs-dismiss="modal" aria-label="Close"></button>
@@ -165,18 +139,17 @@ body {
 					<div
 						class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
 						<div class="d-flex align-items-center">
-							
 							<div>
-								<h4 id="bankName" class="mb-0 fw-bold text-primary"></h4>
-								<small id="reportTitle" class="text-secondary"></small>
+								<h4 id="bankName" class="mb-0 fw-bold text-primary">MICROFINANCE BANKING SYSTEM</h4>
+								<small id="reportTitle" class="text-secondary">FINANCIAL ADVISOR / CONSULTANT DOSSIER</small>
 							</div>
 						</div>
 						<div>
 							<p class="mb-0">
-								<strong>Consultant Code:</strong> <span id="financialCode"></span>
+								<strong>CONSULTANT CODE:</strong> <span id="financialCode"></span>
 							</p>
 							<p class="mb-0">
-								<strong>Joining Date:</strong> <span id="joiningDate"></span>
+								<strong>JOINING DATE:</strong> <span id="joiningDate"></span>
 							</p>
 						</div>
 					</div>
@@ -187,20 +160,20 @@ body {
 							<div class="border p-3 bg-white rounded shadow-sm">
 								<h6 class="fw-bold mb-3 text-primary">CONSULTANT DETAILS</h6>
 								<p>
-									<strong>Name:</strong> <span id="financialName"></span>
+									<strong>NAME:</strong> <span id="financialName"></span>
 								</p>
 								<p>
 									<strong>DOB:</strong> <span id="dob"></span> (<span id="age"></span>
-									years)
+									YRS)
 								</p>
 								<p>
-									<strong>Contact No:</strong> <span id="contactNo"></span>
+									<strong>CONTACT NO:</strong> <span id="contactNo"></span>
 								</p>
 								<p>
-									<strong>Branch:</strong> <span id="branchName"></span>
+									<strong>BRANCH:</strong> <span id="branchName"></span>
 								</p>
 								<p>
-									<strong>Position:</strong> <span id="selectPosition"></span>
+									<strong>POSITION:</strong> <span id="selectPosition"></span>
 								</p>
 							</div>
 						</div>
@@ -209,20 +182,20 @@ body {
 							<div class="border p-3 bg-white rounded shadow-sm">
 								<h6 class="fw-bold mb-3 text-primary">ADDRESS & OTHER INFO</h6>
 								<p>
-									<strong>Address:</strong> <span id="address"></span>
+									<strong>ADDRESS:</strong> <span id="address"></span>
 								</p>
 								<p>
-									<strong>District:</strong> <span id="district"></span>
+									<strong>DISTRICT:</strong> <span id="district"></span>
 								</p>
 								<p>
-									<strong>State:</strong> <span id="state"></span> - <span
+									<strong>STATE:</strong> <span id="state"></span> - <span
 										id="pinCode"></span>
 								</p>
 								<p>
-									<strong>Profession:</strong> <span id="profession"></span>
+									<strong>PROFESSION:</strong> <span id="profession"></span>
 								</p>
 								<p>
-									<strong>Academic Background:</strong> <span
+									<strong>ACADEMIC BACKGROUND:</strong> <span
 										id="academicBackground"></span>
 								</p>
 							</div>
@@ -235,24 +208,24 @@ body {
 						<div class="row">
 							<div class="col-md-6">
 								<p>
-									<strong>Fees:</strong> &#8377;<span id="fees"></span>
+									<strong>FEES:</strong> &#8377;<span id="fees"></span>
 								</p>
 								<p>
-									<strong>Mode of Payment:</strong> <span id="modeofPayment"></span>
+									<strong>MODE OF PAYMENT:</strong> <span id="modeofPayment"></span>
 								</p>
 								<p>
-									<strong>Cheque No:</strong> <span id="chequeNo"></span>
+									<strong>CHEQUE NO:</strong> <span id="chequeNo"></span>
 								</p>
 							</div>
 							<div class="col-md-6">
 								<p>
-									<strong>Cheque Date:</strong> <span id="chequeDate"></span>
+									<strong>CHEQUE DATE:</strong> <span id="chequeDate"></span>
 								</p>
 								<p>
-									<strong>Deposit Account:</strong> <span id="depositAccount"></span>
+									<strong>DEPOSIT ACCOUNT:</strong> <span id="depositAccount"></span>
 								</p>
 								<p>
-									<strong>Ref No:</strong> <span id="refNo"></span>
+									<strong>REF NO:</strong> <span id="refNo"></span>
 								</p>
 							</div>
 						</div>
@@ -262,10 +235,10 @@ body {
 					<div class="border p-3 bg-white rounded shadow-sm mb-4">
 						<h6 class="fw-bold text-primary mb-3">REFERRAL DETAILS</h6>
 						<p>
-							<strong>Referral Code:</strong> <span id="referralCode"></span>
+							<strong>REFERRAL CODE:</strong> <span id="referralCode"></span>
 						</p>
 						<p>
-							<strong>Referral Name:</strong> <span id="referralName"></span>
+							<strong>REFERRAL NAME:</strong> <span id="referralName"></span>
 						</p>
 					</div>
 
@@ -273,16 +246,16 @@ body {
 					<div class="border p-3 bg-white rounded shadow-sm">
 						<h6 class="fw-bold text-primary mb-3">STATUS</h6>
 						<p>
-							<strong>Comments:</strong> <span id="comments"></span>
+							<strong>COMMENTS:</strong> <span id="comments"></span>
 						</p>
 						<p>
-							<strong>Financial Status:</strong> <span id="financialStatus"></span>
+							<strong>FINANCIAL STATUS:</strong> <span id="financialStatus"></span>
 						</p>
 						<p>
-							<strong>SMS Send:</strong> <span id="smsSend"></span>
+							<strong>SMS SEND:</strong> <span id="smsSend"></span>
 						</p>
 						<p>
-							<strong>Approved:</strong> <span id="isApproved"></span>
+							<strong>APPROVED:</strong> <span id="isApproved"></span>
 						</p>
 					</div>
 
@@ -292,25 +265,15 @@ body {
 			<!-- Footer -->
 			<div class="modal-footer bg-light">
 				<button id="printBankReportBtn"
-        type="button"
-        class="btn btn-success">
-    <i class="bi bi-printer"></i> Print Report
-</button>
+					type="button"
+					class="btn btn-success">
+					<i class="bi bi-printer"></i> PRINT REPORT
+				</button>
 				<button type="button" class="btn btn-secondary"
-					data-bs-dismiss="modal">Close</button>
+					data-bs-dismiss="modal">CLOSE</button>
 			</div>
 		</div>
 	</div>
 </div>
 
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- Your JS -->
 <script src="${pageContext.request.contextPath}/js/ReportsAndAnalytics/FinancialAdvisorReport.js"></script>
-<script
-	src="${pageContext.request.contextPath}/js/ReportsAndAnalytics/FinancialAdvisorReport.js"></script>
-
