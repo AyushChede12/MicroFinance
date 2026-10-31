@@ -22,15 +22,15 @@
 			<div class="row">
 				<div class="col-lg-3">
 					<!-- <div class="d-flex flex-column formFields" style="margin-bottom: 30px">
-                <label>Verify With</label>
+                <label>VERIFY WITH</label>
                 <div class="position-relative">
                   <div class="select-btn1" style="cursor: pointer;">
-                    <span name="cityName" id="cityNameId" style="font-size: 12px;">Select</span> <i
+                    <span name="cityName" id="cityNameId" style="font-size: 12px;">SELECT</span> <i
                       class="fa-solid fa-angle-down"></i>
                   </div>
                   <div class="content" id="contentCityName" style="display: none;">
                     <div class="search">
-                      <input type="text" id="city-search" class="m-0" placeholder="Search City" />
+                      <input type="text" id="city-search" class="m-0" placeholder="SEARCH CITY" />
                     </div>
                     <ul class="options" id="city-options">
                       <li>ABC</li>

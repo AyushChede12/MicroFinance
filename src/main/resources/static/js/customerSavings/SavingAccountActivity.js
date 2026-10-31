@@ -182,8 +182,8 @@ function handleAccountSelection() {
 				const custCode = (customer.selectByCustomer || '').toUpperCase();
 				const custName = (customer.enterCustomerName || '').toUpperCase();
 				const contact = customer.contactNumber || '';
-				const joint = (customer.jointSurvivorCode || customer.jointOperationCode || '').toUpperCase();
-				const plan = (customer.selectPlan || customer.typeofaccount || 'SAVING ACCOUNT').toUpperCase();
+				const isCurrentAcc = (customer.typeofaccount === 'currentaccount' || customer.accountType === 'CURRENT');
+				const plan = isCurrentAcc ? 'CURRENT ACCOUNT' : 'SAVING ACCOUNT';
 				const balance = (customer.balance !== undefined && customer.balance !== null && customer.balance !== "")
 					? parseFloat(customer.balance).toFixed(2)
 					: (parseFloat(customer.openingFees) || 0).toFixed(2);

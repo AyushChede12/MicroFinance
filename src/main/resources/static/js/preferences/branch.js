@@ -67,7 +67,7 @@ $(document).ready(function() {
 		}
 		else if (!pinPattern.test(pin)) {
 			alert("PLEASE ENTER A VALID 6-DIGIT PIN CODE (FIRST DIGIT CANNOT BE 0).");
-			pin.focus();
+			$('#pin').focus();
 			isValid = false;
 		}
 
@@ -84,7 +84,7 @@ $(document).ready(function() {
 		}
 		else if (!contactPattern.test(branchManagerContactNo)) {
 			alert("PLEASE ENTER A VALID 10-DIGIT BRANCH MANAGER CONTACT NUMBER.");
-			branchManagerContactNo.focus();
+			$('#branchManagerContactNo').focus();
 			isValid = false;
 		}
 
@@ -95,7 +95,7 @@ $(document).ready(function() {
 		}
 		else if (!contactPattern.test(accountDepartmentContactNo)) {
 			alert("PLEASE ENTER A VALID 10-DIGIT ACCOUNT DEPARTMENT CONTACT NUMBER.");
-			accountDepartmentContactNo.focus();
+			$('#accountDepartmentContactNo').focus();
 			isValid = false;
 		}
 
@@ -387,7 +387,7 @@ function updateBranch() {
 	}
 	else if (!pinPattern.test(pin)) {
 		alert("PLEASE ENTER A VALID 6-DIGIT PIN CODE (FIRST DIGIT CANNOT BE 0).");
-		pin.focus();
+		$('#pin').focus();
 		isValid = false;
 	}
 
@@ -404,7 +404,7 @@ function updateBranch() {
 	}
 	else if (!contactPattern.test(branchManagerContactNo)) {
 		alert("PLEASE ENTER A VALID 10-DIGIT BRANCH MANAGER CONTACT NUMBER.");
-		branchManagerContactNo.focus();
+		$('#branchManagerContactNo').focus();
 		isValid = false;
 	}
 
@@ -415,7 +415,7 @@ function updateBranch() {
 	}
 	else if (!contactPattern.test(accountDepartmentContactNo)) {
 		alert("PLEASE ENTER A VALID 10-DIGIT ACCOUNT DEPARTMENT CONTACT NUMBER.");
-		accountDepartmentContactNo.focus();
+		$('#accountDepartmentContactNo').focus();
 		isValid = false;
 	}
 
@@ -453,29 +453,6 @@ function updateBranch() {
 		}
 	});
 }
-
-
-$(document).ready(function() {
-
-	$.ajax({
-		url: "api/preference/getAllBranchModule",
-		method: "GET",
-		success: function(data) {
-			console.log("Fetched Branches:", data);
-			data.forEach(function(branch) {
-				$('#branchName').append(
-					$('<option>', {
-						value: branch.branchName,
-						text: branch.branchName
-					})
-				);
-			});
-		},
-		error: function(err) {
-			console.error("ERROR FETCHING BRANCHES:", err);
-		}
-	});
-});
 
 // Convert all form fields to uppercase before sending to backend
 function convertFormToUpperCase() {

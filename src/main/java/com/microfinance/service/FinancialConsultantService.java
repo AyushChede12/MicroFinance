@@ -2,8 +2,11 @@ package com.microfinance.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.microfinance.dto.ApiResponse;
-import com.microfinance.dto.CustomerDto;
 import com.microfinance.dto.FinancialConsultantDto;
 import com.microfinance.model.ConsultantPromotionManagement;
 import com.microfinance.model.addCustomer;
@@ -37,118 +39,117 @@ public class FinancialConsultantService {
 	private String uploadDirectory;
 
 	public List<addCustomer> getAllCustomerCodes() {
-		// TODO Auto-generated method stub
 		return addCustomerRepo.findAll();
 	}
 
 	public List<addCustomer> getAllBranch() {
-		// TODO Auto-generated method stub
 		return addCustomerRepo.findAll();
 	}
 
 	public List<addCustomer> getByMemberCode(String memberCode) {
-		// TODO Auto-generated method stub
 		return addCustomerRepo.findByMemberCodeIgnoreCase(memberCode);
 	}
 
 	public List<addCustomer> getAllRelationToApplicant() {
-		// TODO Auto-generated method stub
 		return addCustomerRepo.findAll();
 	}
 
 	public ApiResponse<addFinancialConsultant> saveOrUpdateFinancialConsultant(
 			FinancialConsultantDto financialConsultantDto, MultipartFile financialPhoto,
 			MultipartFile finnacialSignature) {
-		// TODO Auto-generated method stub
 
 		addFinancialConsultant addFinancialConsultant = new addFinancialConsultant();
 		boolean isNew = true;
 
-		// Check if the ClientMaster is being updated
 		if (financialConsultantDto.getId() != null) {
 			addFinancialConsultant = financialConsultationRepo.findById(financialConsultantDto.getId())
 					.orElse(new addFinancialConsultant());
 			isNew = false;
 		}
 
-		// Map fields from DTO to entity
-		addFinancialConsultant.setFinancialCode(financialConsultantDto.getFinancialCode());
+		// Map fields from DTO to entity with uppercase normalization
+		addFinancialConsultant.setFinancialCode(financialConsultantDto.getFinancialCode() != null ? financialConsultantDto.getFinancialCode().trim().toUpperCase() : null);
 		addFinancialConsultant.setJoiningDate(financialConsultantDto.getJoiningDate());
-		addFinancialConsultant.setFinancialName(financialConsultantDto.getFinancialName());
-		// advisorCollectorDetails.setMemberId(advisorCollectorDto.getMemberId());
+		addFinancialConsultant.setFinancialName(financialConsultantDto.getFinancialName() != null ? financialConsultantDto.getFinancialName().trim().toUpperCase() : null);
 		addFinancialConsultant.setDob(financialConsultantDto.getDob());
 		addFinancialConsultant.setAge(financialConsultantDto.getAge());
-		addFinancialConsultant.setTeamMemberCode(financialConsultantDto.getTeamMemberCode());
+		addFinancialConsultant.setTeamMemberCode(financialConsultantDto.getTeamMemberCode() != null ? financialConsultantDto.getTeamMemberCode().trim().toUpperCase() : null);
 		addFinancialConsultant.setContactNo(financialConsultantDto.getContactNo());
-		addFinancialConsultant.setBranchName(financialConsultantDto.getBranchName());
-		addFinancialConsultant.setAddress(financialConsultantDto.getAddress());
-		addFinancialConsultant.setDistrict(financialConsultantDto.getDistrict());
-		addFinancialConsultant.setState(financialConsultantDto.getState());
+		addFinancialConsultant.setBranchName(financialConsultantDto.getBranchName() != null ? financialConsultantDto.getBranchName().trim().toUpperCase() : null);
+		addFinancialConsultant.setAddress(financialConsultantDto.getAddress() != null ? financialConsultantDto.getAddress().trim().toUpperCase() : null);
+		addFinancialConsultant.setDistrict(financialConsultantDto.getDistrict() != null ? financialConsultantDto.getDistrict().trim().toUpperCase() : null);
+		addFinancialConsultant.setState(financialConsultantDto.getState() != null ? financialConsultantDto.getState().trim().toUpperCase() : null);
 		addFinancialConsultant.setPinCode(financialConsultantDto.getPinCode());
-		addFinancialConsultant.setProfession(financialConsultantDto.getProfession());
-		addFinancialConsultant.setAcademicBackground(financialConsultantDto.getAcademicBackground());
-		addFinancialConsultant.setSelectPosition(financialConsultantDto.getSelectPosition());
-		addFinancialConsultant.setReferralCode(financialConsultantDto.getReferralCode());
-		addFinancialConsultant.setReferralName(financialConsultantDto.getReferralName());
+		addFinancialConsultant.setProfession(financialConsultantDto.getProfession() != null ? financialConsultantDto.getProfession().trim().toUpperCase() : null);
+		addFinancialConsultant.setAcademicBackground(financialConsultantDto.getAcademicBackground() != null ? financialConsultantDto.getAcademicBackground().trim().toUpperCase() : null);
+		addFinancialConsultant.setSelectPosition(financialConsultantDto.getSelectPosition() != null ? financialConsultantDto.getSelectPosition().trim().toUpperCase() : null);
+		addFinancialConsultant.setReferralCode(financialConsultantDto.getReferralCode() != null ? financialConsultantDto.getReferralCode().trim().toUpperCase() : null);
+		addFinancialConsultant.setReferralName(financialConsultantDto.getReferralName() != null ? financialConsultantDto.getReferralName().trim().toUpperCase() : null);
 		addFinancialConsultant.setFees(financialConsultantDto.getFees());
-		addFinancialConsultant.setModeofPayment(financialConsultantDto.getModeofPayment());
-		addFinancialConsultant.setChequeNo(financialConsultantDto.getChequeNo());
+		addFinancialConsultant.setModeofPayment(financialConsultantDto.getModeofPayment() != null ? financialConsultantDto.getModeofPayment().trim().toUpperCase() : null);
+		addFinancialConsultant.setChequeNo(financialConsultantDto.getChequeNo() != null ? financialConsultantDto.getChequeNo().trim().toUpperCase() : null);
 		addFinancialConsultant.setChequeDate(financialConsultantDto.getChequeDate());
-		addFinancialConsultant.setDepositAccount(financialConsultantDto.getDepositAccount());
-		addFinancialConsultant.setRefNo(financialConsultantDto.getRefNo());
-		addFinancialConsultant.setComments(financialConsultantDto.getComments());
-		addFinancialConsultant.setFinancialStatus(financialConsultantDto.getFinancialStatus());
-		addFinancialConsultant.setSmsSend(financialConsultantDto.getSmsSend());
+		addFinancialConsultant.setDepositAccount(financialConsultantDto.getDepositAccount() != null ? financialConsultantDto.getDepositAccount().trim().toUpperCase() : null);
+		addFinancialConsultant.setRefNo(financialConsultantDto.getRefNo() != null ? financialConsultantDto.getRefNo().trim().toUpperCase() : null);
+		addFinancialConsultant.setComments(financialConsultantDto.getComments() != null ? financialConsultantDto.getComments().trim().toUpperCase() : null);
+
+		String status = financialConsultantDto.getFinancialStatus();
+		if (status != null && (status.equals("1") || status.equalsIgnoreCase("true") || status.equalsIgnoreCase("ACTIVE"))) {
+			addFinancialConsultant.setFinancialStatus("1");
+		} else {
+			addFinancialConsultant.setFinancialStatus("0");
+		}
+
+		String sms = financialConsultantDto.getSmsSend();
+		if (sms != null && (sms.equals("1") || sms.equalsIgnoreCase("true") || sms.equalsIgnoreCase("YES"))) {
+			addFinancialConsultant.setSmsSend("1");
+		} else {
+			addFinancialConsultant.setSmsSend("0");
+		}
 
 		if (financialPhoto != null && !financialPhoto.isEmpty()) {
 			try {
 				String fileName = saveFile(financialPhoto);
 				addFinancialConsultant.setFinancialPhoto(fileName);
 			} catch (IOException e) {
-				return ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "File upload failed");
+				return ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "FILE UPLOAD FAILED. PLEASE TRY AGAIN.");
 			}
 		}
 
 		if (finnacialSignature != null && !finnacialSignature.isEmpty()) {
 			try {
-				String fileName1 = saveFile1(finnacialSignature); // Save the signature
-				addFinancialConsultant.setFinnacialSignature(fileName1); // ✅ Correctly set it in entity
+				String fileName1 = saveFile1(finnacialSignature);
+				addFinancialConsultant.setFinnacialSignature(fileName1);
 			} catch (IOException e) {
-				return ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "File upload failed");
+				return ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "FILE UPLOAD FAILED. PLEASE TRY AGAIN.");
 			}
 		}
 
-		// Save entity to the database
 		addFinancialConsultant addfinancialConsultant = financialConsultationRepo.save(addFinancialConsultant);
 
-		// Return response
 		if (isNew) {
 			return ApiResponse.success(HttpStatus.CREATED,
-					"Saved successfully. Financial Code: " + addfinancialConsultant.getFinancialCode(),
+					"FINANCIAL CONSULTANT SAVED SUCCESSFULLY. FINANCIAL CODE: " + addfinancialConsultant.getFinancialCode(),
 					addfinancialConsultant);
 		} else {
 			return ApiResponse.success(HttpStatus.OK,
-					"Updated successfully. Finnacial Code: " + addfinancialConsultant.getFinancialCode(),
+					"FINANCIAL CONSULTANT UPDATED SUCCESSFULLY. FINANCIAL CODE: " + addfinancialConsultant.getFinancialCode(),
 					addfinancialConsultant);
 		}
 	}
 
 	private String saveFile1(MultipartFile finnacialSignature) throws IOException {
-		// TODO Auto-generated method stub
 		if (finnacialSignature != null && !finnacialSignature.isEmpty()) {
-			ensureUploadDirectoryExists(); // Ensure the upload directory exists
-			String fileName = System.currentTimeMillis() + "_" + finnacialSignature.getOriginalFilename(); // Generate a
-																											// unique
-																											// filename
+			ensureUploadDirectoryExists();
+			String fileName = System.currentTimeMillis() + "_" + finnacialSignature.getOriginalFilename();
 			File destinationFile = new File(uploadDirectory + File.separator + fileName);
-
 			try {
-				finnacialSignature.transferTo(destinationFile); // Save the file to the destination path
+				finnacialSignature.transferTo(destinationFile);
 				System.out.println("FILE SUCCESSFULLY SAVED AT: " + destinationFile.getAbsolutePath());
-				return fileName; // Return the saved file's name
+				return fileName;
 			} catch (IOException e) {
 				System.err.println("FILE SAVING FAILED: " + e.getMessage());
-				throw e; // Rethrow the exception to handle errors
+				throw e;
 			}
 		}
 		return null;
@@ -159,7 +160,6 @@ public class FinancialConsultantService {
 			ensureUploadDirectoryExists();
 			String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
 			File destinationFile = new File(uploadDirectory + File.separator + fileName);
-
 			try {
 				file.transferTo(destinationFile);
 				System.out.println("FILE SUCCESSFULLY SAVED AT: " + destinationFile.getAbsolutePath());
@@ -185,17 +185,14 @@ public class FinancialConsultantService {
 	}
 
 	public List<addFinancialConsultant> getAllFinancialConsultantDetails() {
-		// TODO Auto-generated method stub
 		return financialConsultationRepo.findAll();
 	}
 
 	public Optional<addFinancialConsultant> FinancialConsultantById(Long id) {
-		// TODO Auto-generated method stub
 		return financialConsultationRepo.findById(id);
 	}
 
 	public boolean deleteFinancialConsultant(Long id) {
-		// TODO Auto-generated method stub
 		if (financialConsultationRepo.existsById(id)) {
 			financialConsultationRepo.deleteById(id);
 			return true;
@@ -204,39 +201,55 @@ public class FinancialConsultantService {
 	}
 
 	public List<addFinancialConsultant> fetchfinancialHierarchyByFinancialCode(String financialCode) {
-		// TODO Auto-generated method stub
-		return financialConsultationRepo.findByFinancialCode(financialCode);
+		if (financialCode == null || financialCode.trim().isEmpty()) {
+			return new ArrayList<>();
+		}
+		String code = financialCode.trim().toUpperCase();
+		Set<addFinancialConsultant> resultSet = new LinkedHashSet<>();
+		
+		// 1. Primary consultant matching code
+		List<addFinancialConsultant> selfList = financialConsultationRepo.findByFinancialCode(code);
+		resultSet.addAll(selfList);
+		
+		// 2. Direct downline team (referrals where referralCode == code)
+		List<addFinancialConsultant> downlineList = financialConsultationRepo.findByReferralCode(code);
+		resultSet.addAll(downlineList);
+		
+		return new ArrayList<>(resultSet);
 	}
 
 	public addFinancialConsultant save(addFinancialConsultant customer) {
-		// TODO Auto-generated method stub
 		return financialConsultationRepo.save(customer);
 	}
 
 	public List<addFinancialConsultant> getUnapprovedFinancialConsultants() {
-		// TODO Auto-generated method stub
 		return financialConsultationRepo.findByIsApprovedFalse();
 	}
 
 	public String savePromotionAndUpdatePosition(ConsultantPromotionManagement promotionData, Long id) {
-		// TODO Auto-generated method stub
-		consultantpromotionRepo.save(promotionData);
+		if (promotionData != null) {
+			if (promotionData.getBranchName() != null) promotionData.setBranchName(promotionData.getBranchName().trim().toUpperCase());
+			if (promotionData.getOldPosition() != null) promotionData.setOldPosition(promotionData.getOldPosition().trim().toUpperCase());
+			if (promotionData.getNewPosition() != null) promotionData.setNewPosition(promotionData.getNewPosition().trim().toUpperCase());
+			if (promotionData.getSeniorCode() != null) promotionData.setSeniorCode(promotionData.getSeniorCode().trim().toUpperCase());
+			if (promotionData.getSeniorName() != null) promotionData.setSeniorName(promotionData.getSeniorName().trim().toUpperCase());
+			if (promotionData.getSeniorPosition() != null) promotionData.setSeniorPosition(promotionData.getSeniorPosition().trim().toUpperCase());
+			consultantpromotionRepo.save(promotionData);
+		}
 
 		// Step 2: Find consultant and update position
 		Optional<addFinancialConsultant> optional = financialConsultationRepo.findById(id);
 		if (optional.isPresent()) {
 			addFinancialConsultant consultant = optional.get();
-			consultant.setSelectPosition(promotionData.getNewPosition());
+			consultant.setSelectPosition(promotionData != null ? promotionData.getNewPosition() : null);
 			financialConsultationRepo.save(consultant);
-			return "PROMOTION SAVED AND CONSULTANT POSITION UPDATED.";
+			return "PROMOTION RECORD SAVED AND CONSULTANT POSITION UPDATED SUCCESSFULLY.";
 		} else {
-			throw new RuntimeException("CONSULTANT NOT FOUND WITH ID: " + id);
+			throw new RuntimeException("FINANCIAL CONSULTANT NOT FOUND WITH ID: " + id);
 		}
 	}
 
 	public List<ConsultantPromotionManagement> getAllPromotionManagementDetail() {
-		// TODO Auto-generated method stub
 		return consultantpromotionRepo.findAll();
 	}
-
 }

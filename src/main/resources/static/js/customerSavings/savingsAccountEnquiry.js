@@ -25,25 +25,12 @@ function AccNoDropdown() {
 	});
 }
 
-// Scheme Name Dropdown
+// Account Type Dropdown
 function schemeNameDropdown() {
-	$.ajax({
-		url: "api/customersavings/fetchsavingchemecatalog",
-		type: "GET",
-		success: function(response) {
-			const dropdown = $('#schemename');
-			dropdown.empty().append('<option value="">--SELECT PLAN NAME--</option>');
-
-			if (response.status === "FOUND" && response.data) {
-				response.data.forEach(item => {
-					dropdown.append(`<option value="${item}">${item}</option>`);
-				});
-			}
-		},
-		error: function() {
-			alert("Failed to fetch Scheme Name.");
-		}
-	});
+	const dropdown = $('#schemename');
+	dropdown.empty().append('<option value="">--ALL ACCOUNT TYPES--</option>');
+	dropdown.append('<option value="SAVING ACCOUNT">SAVING ACCOUNT</option>');
+	dropdown.append('<option value="CURRENT ACCOUNT">CURRENT ACCOUNT</option>');
 }
 
 /*******************************
@@ -125,9 +112,12 @@ function applyAllFilters() {
 		if (financialCode && !item.financialConsultantCode.toLowerCase().includes(financialCode))
 			return false;
 
-		// Scheme / Plan
-		if (planName && item.selectPlan !== planName)
-			return false;
+		// Account Type
+		if (planName) {
+			const typeStr = (item.selectPlan || (item.typeofaccount === 'currentaccount' ? 'CURRENT ACCOUNT' : 'SAVING ACCOUNT')).toUpperCase();
+			if (!typeStr.includes(planName.toUpperCase()))
+				return false;
+		}
 
 		return true; // sab conditions match
 	});
@@ -187,8 +177,7 @@ function renderTable(data) {
 				<td>${item.district.toUpperCase()}</td>
 				<td>${item.state.toUpperCase()}</td>
 				<td>${item.openingDate}</td>
-				<td>${item.financialConsultantCode}</td>
-				<td>${item.selectPlan.toUpperCase()}</td>
+				<td>${(item.selectPlan || (item.typeofaccount === 'currentaccount' ? 'CURRENT ACCOUNT' : 'SAVING ACCOUNT')).toUpperCase()}</td>
 				<td>${approvalStatus}</td>
 			</tr>
 		`;

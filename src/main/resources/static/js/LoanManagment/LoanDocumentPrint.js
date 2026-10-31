@@ -159,7 +159,7 @@ function loadLoanDetails(loanId) {
 		},
 		error: function(xhr) {
 			console.error("Error fetching loan details:", xhr);
-			alert("ERROR LOADING LOAN DETAILS: " + (xhr.responseJSON?.message || xhr.statusText));
+			alert("ERROR LOADING LOAN DETAILS: " + String(xhr.responseJSON?.message || xhr.statusText).toUpperCase());
 		}
 	});
 }
@@ -332,7 +332,7 @@ function generateAndDownloadPdf(loanId, docType) {
 		})
 		.catch(function(err) {
 			console.error("PDF generation failed:", err);
-			alert("ERROR GENERATING DOCUMENT: " + err.message);
+			alert("ERROR GENERATING DOCUMENT: " + String(err.message).toUpperCase());
 		})
 		.finally(function() {
 			$spinner.addClass("d-none");
@@ -358,6 +358,6 @@ function showToastAlert(msg, type) {
    `);
 	$("body").append(alertDiv);
 	setTimeout(function() {
-		alertDiv.alert('close');
+		alertDiv.alert('CLOSE');
 	}, 4000);
 }

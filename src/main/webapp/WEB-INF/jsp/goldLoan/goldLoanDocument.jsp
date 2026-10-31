@@ -33,14 +33,17 @@
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields mb-4">
-						<label for="">SELECT LOAN DOCUMENT</label> <select
-							id="loanDocument" name="loanDocument" required="required"
+						<label for="loanDocument">SELECT LOAN DOCUMENT</label>
+						<select id="loanDocument" name="loanDocument" required="required"
 							class="form-control selectField" style="height: 30px;">
-							<option>SELECT DOCUMENT</option>
-							<option value="applicantForm">APPLICANT FROM</option>
-							<option value="sanctionLetter">SANCTION LETTER </option>
-							<option value="loanAgreement">LOAN AGREEMENT </option>
-
+							<option value="">-- SELECT DOCUMENT --</option>
+							<option value="applicantForm">APPLICANT FORM</option>
+							<option value="sanctionLetter">SANCTION LETTER</option>
+							<option value="loanAgreement">LOAN AGREEMENT</option>
+							<option value="repaymentSchedule">REPAYMENT SCHEDULE</option>
+							<option value="disbursementReceipt">DISBURSEMENT RECEIPT</option>
+							<option value="guarantorDeclaration">GUARANTOR DECLARATION</option>
+							<option value="noc">NO OBJECTION CERTIFICATE (NOC)</option>
 						</select> <span id="docTypeError"
 							style="color: red; font-size: 13px; display: none;">
 							PLEASE SELECT A DOCUMENT TYPE TO PRINT </span>

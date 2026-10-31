@@ -86,10 +86,12 @@
 				</div>
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields mb-4">
-						<label for="">PLAN NAME</label> <select id="schemename"
+						<label for="">ACCOUNT TYPE</label> <select id="schemename"
 							name="schemename" required="required"
 							class="form-control selectField" style="height: 30px;">
-							<option value="">--SELECT PLAN NAME--</option>
+							<option value="">--ALL ACCOUNT TYPES--</option>
+							<option value="SAVING ACCOUNT">SAVING ACCOUNT</option>
+							<option value="CURRENT ACCOUNT">CURRENT ACCOUNT</option>
 						</select>
 					</div>
 				</div>

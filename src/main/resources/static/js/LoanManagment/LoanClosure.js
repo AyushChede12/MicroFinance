@@ -218,7 +218,7 @@ function fetchLoanDetails(loanId, installmentCount) {
 			}
 		},
 		error: function(xhr) {
-			alert("ERROR FETCHING LOAN DATA: " + xhr.responseText);
+			alert("ERROR FETCHING LOAN DATA: " + (xhr.responseText ? xhr.responseText.toUpperCase() : "SERVER ERROR"));
 		}
 	});
 }
@@ -323,7 +323,7 @@ $(document).ready(function() {
 				} catch (e) {
 					if (xhr.statusText) errMsg = xhr.statusText;
 				}
-				alert(errMsg);
+				alert(String(errMsg).toUpperCase());
 			}
 		});
 	});

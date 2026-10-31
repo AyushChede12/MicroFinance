@@ -37,6 +37,9 @@ public interface LoanApplicationRepo extends JpaRepository<LoanApplication,Long>
 	@Query("SELECT DISTINCT l.loanId FROM LoanApplication l WHERE UPPER(l.loanStatus) = 'CLOSED' AND l.loanId IS NOT NULL ORDER BY l.loanId DESC")
 	List<String> findClosedLoanIds();
 
+	@Query("SELECT DISTINCT l.loanId FROM LoanApplication l WHERE l.loanId IS NOT NULL AND LOWER(l.loanId) != 'loan_id' ORDER BY l.loanId DESC")
+	List<String> findAllDistinctLoanIds();
+
 	long countByFinancialConsultantIdInAndLoanDateContaining(List<String> financialConsultantCode, String yearMonth);
 
 	List<LoanApplication> findByFinancialConsultantIdIn(List<String> financialCodes);

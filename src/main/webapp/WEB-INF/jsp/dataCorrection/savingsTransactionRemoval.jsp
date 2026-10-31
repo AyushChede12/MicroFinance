@@ -180,7 +180,7 @@
 							id="transactionType" name="transactionType" required="required"
 							class="form-control selectField" style="height: 30px;">
 							<option value="">SELECT</option>
-							<option value="Deposit">DEPOSITE</option>
+							<option value="Deposit">DEPOSIT</option>
 							<option value="Withdraw">WITHDRAW</option>
 						</select>
 					</div>
@@ -199,7 +199,7 @@
 						<label for="">MODE OF PAYMENT </label> <select id="payBy"
 							name="payBy" required="required" class="form-control selectField"
 							style="height: 30px;">
-							<option value="">SELECT PAYMENT BY</option>
+							<option value="">-- SELECT PAYMENT MODE --</option>
 							<option value="Cash">CASH</option>
 							<option value="Online">ONLINE</option>
 						</select>

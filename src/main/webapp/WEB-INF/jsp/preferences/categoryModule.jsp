@@ -1,6 +1,6 @@
 
 <div class="pagetitle">
-	<h1>PREFERNCES</h1>
+	<h1>PREFERENCES</h1>
 	<nav>
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item"><a href="openDashboard"> <i
@@ -104,7 +104,7 @@
 									<div class="input-group" style="width: 250px;">
 										<span class="input-group-text"><i class="bi bi-search"></i></span>
 										<input type="text" id="searchCategory" class="form-control"
-											placeholder="Search..." />
+											placeholder="SEARCH..." style="text-transform: uppercase;" />
 									</div>
 								</div>
 

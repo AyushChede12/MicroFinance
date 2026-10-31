@@ -1,4 +1,3 @@
-
 <style>
 body {
 	background-color: #e6e6e6;
@@ -6,36 +5,45 @@ body {
 }
 
 .id-card {
-	width: 450px;
-	height: 300px;
-	border: 2px solid #333;
-	padding: 12px;
-	padding-bottom: 80px;
+	width: 500px;
+	min-height: 330px;
+	border: 2px solid #002147;
+	padding: 16px;
 	background: white;
-	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-	border-radius: 10px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+	border-radius: 12px;
 	position: relative;
 }
 
 .id-header {
-	background-color: #002147;
+	background: linear-gradient(135deg, #002147, #0d6efd);
 	color: white;
-	padding: 8px;
+	padding: 10px;
 	font-weight: bold;
 	text-align: center;
 	border-radius: 6px;
-	font-size: 18px;
+	font-size: 15px;
+	letter-spacing: 0.5px;
+	text-transform: uppercase;
+}
+
+.id-sub-header {
+	font-size: 11px;
+	color: #ffc107;
+	text-align: center;
+	margin-top: 2px;
+	letter-spacing: 1px;
 }
 
 .id-photo-label {
-	width: 100px;
+	width: 110px;
 	height: 140px;
-	border: 1px solid #aaa;
+	border: 2px solid #002147;
 	cursor: pointer;
 	display: inline-block;
 	overflow: hidden;
 	background-color: #f8f8f8;
-	border-radius: 5px;
+	border-radius: 6px;
 }
 
 .id-photo-label img {
@@ -45,20 +53,20 @@ body {
 }
 
 .signature-label {
-	width: 100px;
-	height: 45px;
-	border: 1px solid #aaa;
+	width: 130px;
+	height: 48px;
+	border: 1px dashed #aaa;
 	cursor: pointer;
 	display: inline-block;
 	overflow: hidden;
-	background-color: #f8f8f8;
-	border-radius: 5px;
+	background-color: #fafafa;
+	border-radius: 4px;
 }
 
 .signature-label img {
 	width: 100%;
 	height: 100%;
-	object-fit: cover;
+	object-fit: contain;
 }
 
 #financialPhoto, #signature {
@@ -72,34 +80,53 @@ body {
 }
 
 .info {
-	font-size: 13px;
-	margin-right: 10px;
-	margin: 20px;
+	font-size: 12px;
+	margin-right: 15px;
+	margin-top: 10px;
+	flex: 1;
 }
 
 .info p {
-	margin: 4px 0;
+	margin: 5px 0;
+	text-transform: uppercase;
 }
 
 .info label {
-	font-weight: 600;
-	color: #333;
+	font-weight: 700;
+	color: #002147;
+	min-width: 120px;
+	display: inline-block;
 }
 
 .info span {
-	color: #0d6efd;
-	font-weight: bold;
+	color: #111;
+	font-weight: 600;
 }
 
 .photo-section {
-	margin-right: 5px;
-	margin-top: 20px;
+	margin-top: 10px;
+	text-align: center;
 }
 
 .signature-section {
-	position: absolute;
-	bottom: 12px;
-	right: 17px;
+	margin-top: 15px;
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+	border-top: 1px solid #ddd;
+	padding-top: 8px;
+}
+
+.sign-box {
+	text-align: center;
+}
+
+.sign-title {
+	font-size: 10px;
+	font-weight: 700;
+	color: #555;
+	text-transform: uppercase;
+	margin-top: 2px;
 }
 
 @media print {
@@ -111,71 +138,104 @@ body {
 	}
 	.id-card {
 		position: absolute;
-		top: 0;
-		left: 0;
+		top: 20px;
+		left: 20px;
 		box-shadow: none;
+	}
+	.no-print {
+		display: none !important;
 	}
 }
 </style>
 
+<div class="pagetitle no-print">
+	<h1>FINANCIAL CONSULTANT</h1>
+	<nav>
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a href="openDashboard"> <i
+					class="bi bi-briefcase text-blue"></i>
+			</a></li>
+			<li class="breadcrumb-item"><a href="consultantIDCardGenerator">CONSULTANT ID CARD GENERATOR</a></li>
+			<li class="breadcrumb-item action">CONSULTANT IDENTITY CARD</li>
+		</ol>
+	</nav>
+</div>
 
-
-<div class="container mt-5 d-flex justify-content-center">
+<div class="container mt-4 d-flex justify-content-center">
 	<div class="id-card">
-		<div class="id-header">Financial Services</div>
+		<div class="id-header">
+			MICROFINANCE BANKING SYSTEM
+			<div class="id-sub-header">FINANCIAL CONSULTANT IDENTITY CARD</div>
+		</div>
 
-		<div class="top-section mt-3">
+		<div class="top-section mt-2">
 			<div class="info">
 				<p>
-					<label>ID No</label> : <span id="financialCode"></span>
+					<label>CONSULTANT ID:</label> <span id="financialCode">—</span>
 				</p>
 				<p>
-					<label>Financial Name</label> : <span id="financialName"></span>
+					<label>NAME:</label> <span id="financialName">—</span>
 				</p>
 				<p>
-					<label>DOB</label> : <span id="dob"></span>
+					<label>POSITION:</label> <span id="selectPosition">—</span>
 				</p>
 				<p>
-					<label>Age</label> : <span id="age"></span>
+					<label>DOB / AGE:</label> <span id="dob">—</span> (<span id="age">—</span> YRS)
 				</p>
 				<p>
-					<label>Contact No</label> : <span id="contactNo"></span>
+					<label>CONTACT NO.:</label> <span id="contactNo">—</span>
 				</p>
 				<p>
-					<label>District</label> : <span id="district"></span>
+					<label>BRANCH:</label> <span id="branchName">—</span>
 				</p>
 				<p>
-					<label>Branch</label> : <span id="branchName"></span>
+					<label>DISTRICT / STATE:</label> <span id="district">—</span>, <span id="state">—</span>
 				</p>
 			</div>
 
 			<div class="photo-section">
 				<label for="financialPhoto" class="id-photo-label"
-					title="Click to upload photo"> <img
-					src="../images/upload/upload.png" alt="upload icon"
+					title="PHOTO PREVIEW"> <img
+					src="Uploads/upload.png" alt="CONSULTANT PHOTO"
 					id="idCardPhoto" />
-				</label> <input type="file" accept="image/*" name="financialPhoto"
+				</label>
+				<input type="file" accept="image/*" name="financialPhoto"
 					id="financialPhoto" onchange="photoUpload();" /> <input
 					type="hidden" name="photoHidden" id="photoHidden">
 			</div>
 		</div>
 
 		<div class="signature-section">
-			<label for="signature" class="signature-label"
-				title="Click to upload signature"> <img
-				src="../images/upload/signature.png" alt="Signature"
-				id="idCardSignature" />
-			</label> <input type="file" accept="image/*" name="financialSignature"
-				id="signature" onchange="signatureUpload();" /> <input
-				type="hidden" name="signatureHidden" id="signatureHidden">
+			<div class="sign-box">
+				<label for="signature" class="signature-label"
+					title="CONSULTANT SIGNATURE"> <img
+					src="Uploads/upload.png" alt="SIGNATURE"
+					id="idCardSignature" />
+				</label>
+				<input type="file" accept="image/*" name="financialSignature"
+					id="signature" onchange="signatureUpload();" /> <input
+					type="hidden" name="signatureHidden" id="signatureHidden">
+				<div class="sign-title">CONSULTANT SIGNATURE</div>
+			</div>
+
+			<div class="sign-box" style="margin-bottom: 5px;">
+				<div style="font-family: 'Great Vibes', cursive, sans-serif; font-size: 16px; color: #002147; font-weight: bold;">
+					BANK MANAGER
+				</div>
+				<div class="sign-title" style="border-top: 1px solid #333; padding-top: 2px;">AUTHORISED SIGNATORY</div>
+			</div>
 		</div>
 	</div>
 </div>
 
 <!-- Print Button -->
-<div class="text-center mt-3">
-	<button class="btn btn-primary" onclick="printIDCard()">Print
-		ID Card</button>
+<div class="text-center mt-3 mb-5 no-print">
+	<button class="btn btn-primary" onclick="printIDCard()">
+		<i class="bi bi-printer"></i> PRINT ID CARD
+	</button>
+	<a href="consultantIDCardGenerator" class="btn btn-secondary ms-2">
+		BACK TO GENERATOR
+	</a>
 </div>
 
 <script>

@@ -35,7 +35,7 @@
 						style="margin-bottom: 30px">
 						<label>RENEWAL DATE<span class="star">*</span></label> <input
 							type="date" name="fromDate" id="fromDate"
-							required="required" placeholder="Enter Vehicle No"
+							required="required" placeholder="SELECT RENEWAL DATE"
 							style="text-transform: uppercase;" />
 					</div>
 				</div>
@@ -182,9 +182,9 @@
 
 					<!-- <div class="col-lg-3">
 						<div class="d-flex flex-column formFields mt-4">
-							<label for="">Last Payment Date <span class="star">*</span></label>
+							<label for="">LAST PAYMENT DATE <span class="star">*</span></label>
 							<input type="text" name="lastPaymentDate" id="lastPaymentDate"
-								required="required" placeholder="Enter Education" />
+								required="required" placeholder="ENTER LAST PAYMENT DATE" />
 						</div>
 					</div> -->
 

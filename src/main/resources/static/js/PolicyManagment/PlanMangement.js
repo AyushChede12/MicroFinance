@@ -219,7 +219,7 @@ $(document).ready(function() {
 
 		for (let i = startIndex; i < endIndex; i++) {
 			let person = totalDataDD[i];
-			const statusText = person.statusOfPlan == 1 ? 'Active' : 'Inactive';
+			const statusText = person.statusOfPlan == 1 ? 'ACTIVE' : 'INACTIVE';
 			let row = `<tr>
 					<td>${i + 1}</td>
 	                <td>${person.planCodeDD}</td>
@@ -670,11 +670,11 @@ $(document).ready(function() {
 
 		for (let i = startIndex; i < endIndex; i++) {
 			let person = totalDataRD[i];
-			const statusText = person.statusOfPlanRD == 1 ? 'Active' : 'Inactive';
+			const statusText = person.statusOfPlanRD == 1 ? 'ACTIVE' : 'INACTIVE';
 			let row = `<tr>
 						<td>${i + 1}</td>
 		                <td>${person.planCodeRD}</td>
-		                <td>${person.planNameRD}</td>
+		                <td>${(person.planNameRD || "").toUpperCase()}</td>
 		                <td>${person.minimumAmountRD}</td>
 		                <td>${person.rateOfInterestRD}</td>
 		                <td>${person.installmentTypeRD.toUpperCase()}</td>
@@ -1033,11 +1033,11 @@ $(document).ready(function() {
 
 		for (let i = startIndex; i < endIndex; i++) {
 			let person = totalDataFD[i];
-			const statusText = person.statusOfPlanFD == 1 ? 'Active' : 'Inactive';
+			const statusText = person.statusOfPlanFD == 1 ? 'ACTIVE' : 'INACTIVE';
 			let row = `<tr>
 							<td>${i + 1}</td>
 			                <td>${person.planCodeFD}</td>
-			                <td>${person.planNameFD}</td>
+			                <td>${(person.planNameFD || "").toUpperCase()}</td>
 			                <td>${person.minimumAmountFD}</td>
 			                <td>${person.rateOfInterestFD}</td>
 			                <td>${person.installmentTypeFD.toUpperCase()}</td>
@@ -1379,11 +1379,11 @@ $(document).ready(function() {
 
 		for (let i = startIndex; i < endIndex; i++) {
 			let person = totalDataMIS[i];
-			const statusText = person.statusOfPlanMDRD2 == 1 ? 'Active' : 'Inactive';
+			const statusText = person.statusOfPlanMDRD2 == 1 ? 'ACTIVE' : 'INACTIVE';
 			let row = `<tr>
 								<td>${i + 1}</td>
 				                <td>${person.planCodeMD}</td>
-				                <td>${person.planNameMD}</td>
+				                <td>${(person.planNameMD || "").toUpperCase()}</td>
 				                <td>${person.minimumAmountMD}</td>
 				                <td>${person.rateOfInterestMD}</td>
 				                <td>${person.installmentTypeMD.toUpperCase()}</td>

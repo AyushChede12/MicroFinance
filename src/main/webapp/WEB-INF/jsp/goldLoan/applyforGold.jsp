@@ -91,7 +91,7 @@
 					<div class="d-flex flex-column formFields mb-4">
 						<label for="pinCode">PIN CODE</label> <input type="number"
 							name="pinCode" id="pinCode" required="required"
-							placeholder="Enter Pin Code" style="text-transform: uppercase;"
+							placeholder=="ENTER PIN CODE" style="text-transform: uppercase;"
 							readonly="readonly" />
 					</div>
 				</div>
@@ -380,7 +380,7 @@
 		<div class="mt-5">
 			<nav>
 				<ol class="breadcrumb breadcrumb-title">
-					<li class="breadcrumb-item action">Guarantor Details</li>
+					<li class="breadcrumb-item action">GUARANTOR DETAILS</li>
 				</ol>
 			</nav>
 			<div class="row">
@@ -487,7 +487,7 @@
 							id="coApplicantIdentity" name="coApplicantIdentity"
 							required="required" class="form-control selectField"
 							style="height: 30px;">
-							<option value=" ">Select</option>
+							<option value=" ">SELECT</option>
 							<option value="Aadhar">AADHAR</option>
 							<option value="PAN">PAN</option>
 						</Select> <small id="vcoApplicantIdentity" style="color: red;"></small>
@@ -498,7 +498,7 @@
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
-						<label for="">CO-APPLICANT Address</label>
+						<label for="">CO-APPLICANT ADDRESS</label>
 						<textarea name="coApplicantAddress" id="coApplicantAddress"
 							placeholder="ENTER ADDRESS"
 							style="border: 1px solid rgb(224, 224, 224); border-radius: 5px; outline: none; padding: 5px; font-size: 12px;"
@@ -706,8 +706,8 @@
 			<div class="col-12 text-center">
 				<button type="button" id="saveBtn" class="btnStyle bg-success"
 					onclick="saveGoldapplication()">SAVE</button>
-				<!-- <button id="saveBtn" class="btnStyle" style="background-color: #FFA500;">Update</button>
-                        <button id="saveBtn" class="btnStyle bg-primary">Print</button> -->
+				<!-- <button id="saveBtn" class="btnStyle" style="background-color: #FFA500;">UPDATE</button>
+                        <button id="saveBtn" class="btnStyle bg-primary">PRINT</button> -->
 			</div>
 		</div>
 	</form>

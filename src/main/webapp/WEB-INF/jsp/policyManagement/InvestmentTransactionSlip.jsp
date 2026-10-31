@@ -249,25 +249,25 @@
 
 								<thead>
 									<tr>
-										<th>Policy Code</th>
-										<th>Customer Name</th>
-										<th>Policy Amount</th>
-										<th>Renewal Date</th>
-										<th>Policy Type</th>
-										<th>Maturity Amount</th>
-										<th>Deposit Amount</th>
-										<th>Start Date</th>
-										<th>Policy Term</th>
-										<th>Maturity Date</th>
-										<th>Customer Code</th>
-										<th>Contact No</th>
-										<th>Total Deposit</th>
-										<th>Payment Due</th>
-										<th>Total Installments</th>
-										<th>Installments Paid</th>
-										<th>Approved</th>
-										<th>Branch Name</th>
-										<th>Action</th>
+										<th>POLICY CODE</th>
+										<th>CUSTOMER NAME</th>
+										<th>POLICY AMOUNT</th>
+										<th>RENEWAL DATE</th>
+										<th>POLICY TYPE</th>
+										<th>MATURITY AMOUNT</th>
+										<th>DEPOSIT AMOUNT</th>
+										<th>START DATE</th>
+										<th>POLICY TERM</th>
+										<th>MATURITY DATE</th>
+										<th>CUSTOMER CODE</th>
+										<th>CONTACT NO</th>
+										<th>TOTAL DEPOSIT</th>
+										<th>PAYMENT DUE</th>
+										<th>TOTAL INSTALLMENTS</th>
+										<th>INSTALLMENTS PAID</th>
+										<th>APPROVED</th>
+										<th>BRANCH NAME</th>
+										<th>ACTION</th>
 									</tr>
 								</thead>
 
@@ -286,97 +286,97 @@
 
 			<!-- <div id="transactionSection" class="transaction-section">
 						<div style="width: 70%; margin: auto">
-							<h1>Microfinance Services</h1>
-							<p>Address : Nagpur(440024) - Maharashtra</p>
+							<h1>MICROFINANCE SERVICES</h1>
+							<p>ADDRESS : NAGPUR(440024) - MAHARASHTRA</p>
 							<hr />
 
 							<div class="d-flex justify-content-between">
 								<p>
-									Branch Name: <span id="branchCodeSpan"
+									BRANCH NAME: <span id="branchCodeSpan"
 										style="width: 12vw; display: inline-block;"></span>
 								</p>
 								<p>
-									Start Date: <span id="docSpan"
+									START DATE: <span id="docSpan"
 										style="width: 15vw; display: inline-block;"></span>
 								</p>
 							</div>
 
 							<div class="d-flex justify-content-between">
 								<p>
-									Policy Code: <span id="policyNoSpan"
+									POLICY CODE: <span id="policyNoSpan"
 										style="width: 12vw; display: inline-block;"></span>
 								</p>
 								<p>
-									Customer Code: <span id="memberCodeSpan"
+									CUSTOMER CODE: <span id="memberCodeSpan"
 										style="width: 12vw; display: inline-block;"></span>
 								</p>
 							</div>
 
 							<p>
-								Customer Name: <span id="applicantNameSpan"
+								CUSTOMER NAME: <span id="applicantNameSpan"
 									style="width: 12vw; display: inline-block;"></span>
 							</p>
 							<p>
-								Contact No: <span id="mobileSpan"
+								CONTACT NO: <span id="mobileSpan"
 									style="width: 12vw; display: inline-block;"></span>
 							</p>
 
 							<div class="d-flex justify-content-between">
 								<p>
-									Policy Type: <span id="planSpan"
+									POLICY TYPE: <span id="planSpan"
 										style="width: 12vw; display: inline-block;"></span>
 								</p>
 								<p>
-									Policy Term: <span id="termSpan"
+									POLICY TERM: <span id="termSpan"
 										style="width: 12vw; display: inline-block;"></span>
 								</p>
 								<p>
-									Approved: <span id="approvedSpan"
-										style="width: 12vw; display: inline-block;"></span>
-								</p>
-							</div>
-
-							<div class="d-flex justify-content-between">
-								<p>
-									Policy Amount: <span id="renewalAmountSpan"
-										style="width: 12vw; display: inline-block;"></span>
-								</p>
-								<p>
-									Total Deposit: <span id="totalValueSpan"
-										style="width: 12vw; display: inline-block;"></span>
-								</p>
-								<p>
-									Payment Due: <span id="paymentDueSpan"
+									APPROVED: <span id="approvedSpan"
 										style="width: 12vw; display: inline-block;"></span>
 								</p>
 							</div>
 
 							<div class="d-flex justify-content-between">
 								<p>
-									Maturity Amount: <span id="maturitySpan"
+									POLICY AMOUNT: <span id="renewalAmountSpan"
 										style="width: 12vw; display: inline-block;"></span>
 								</p>
 								<p>
-									Maturity Date: <span id="maturityDateSpan"
+									TOTAL DEPOSIT: <span id="totalValueSpan"
 										style="width: 12vw; display: inline-block;"></span>
 								</p>
 								<p>
-									No. of Installments Paid: <span id="installmentsPaidSpan"
+									PAYMENT DUE: <span id="paymentDueSpan"
+										style="width: 12vw; display: inline-block;"></span>
+								</p>
+							</div>
+
+							<div class="d-flex justify-content-between">
+								<p>
+									MATURITY AMOUNT: <span id="maturitySpan"
+										style="width: 12vw; display: inline-block;"></span>
+								</p>
+								<p>
+									MATURITY DATE: <span id="maturityDateSpan"
+										style="width: 12vw; display: inline-block;"></span>
+								</p>
+								<p>
+									NO. OF INSTALLMENTS PAID: <span id="installmentsPaidSpan"
 										style="width: 12vw; display: inline-block;"></span>
 								</p>
 							</div>
 
 							<div class="d-flex justify-content-end">
 								<hr style="border-color: black; width: 20vw;">
-								<p style="position: relative; top: 23px; right: 17rem">Authorized
-									Signature</p>
+								<p style="position: relative; top: 23px; right: 17rem">AUTHORIZED
+									SIGNATURE</p>
 							</div>
 						</div>
 					</div> -->
 					<br><br><br><br>
 			<!-- <div class="mb-4"
 				style="display: flex; justify-content: center; margin-top: -55px;">
-				<button id="printBtn" class="btn btn-success">Print</button>
+				<button id="printBtn" class="btn btn-success">PRINT</button>
 			</div> -->
 
 
@@ -422,7 +422,7 @@
         const printContent = document.getElementById("transactionSection").innerHTML;
 
         const printWindow = window.open('', '', 'width=800,height=600');
-        printWindow.document.write('<html><head><title>Print</title>');
+        printWindow.document.write('<html><head><title>PRINT</title>');
         printWindow.document.write('<style>');
         printWindow.document.write(`
             body {

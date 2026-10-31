@@ -29,6 +29,9 @@ import com.microfinance.model.addCustomer;
 import com.microfinance.model.addFinancialConsultant;
 import com.microfinance.model.partialMaturityPayment;
 import com.microfinance.model.savingAccountFundTransfer;
+import com.microfinance.model.AccountTransaction;
+import com.microfinance.model.IncomingReceiptEntry;
+import com.microfinance.model.LoanPayment;
 import com.microfinance.service.RequestApprovalsService;
 
 @RestController
@@ -390,4 +393,76 @@ public class RequestApprovalsController {
 //
 //		         return response;
 //		     }
+
+	// Inter-Branch Cash Transfer Approvals
+	@GetMapping("/getUnapprovedInterBranchTransfers")
+	public ResponseEntity<ApiResponse<List<AccountTransaction>>> getUnapprovedInterBranchTransfers() {
+		List<AccountTransaction> list = requestApprovalsService.getInterBranchCashTransfers();
+		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "INTER BRANCH TRANSFERS FETCHED SUCCESSFULLY", list));
+	}
+
+	@PostMapping("/approveInterBranchTransfer")
+	public ResponseEntity<ApiResponse<AccountTransaction>> approveInterBranchTransfer(
+			@RequestParam("id") Long id, @RequestParam("isApproved") boolean isApproved) {
+		Optional<AccountTransaction> opt = requestApprovalsService.approveInterBranchCashTransfer(id, isApproved);
+		if (!opt.isPresent()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "TRANSACTION NOT FOUND"));
+		}
+		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "TRANSACTION APPROVAL UPDATED SUCCESSFULLY", opt.get()));
+	}
+
+	// Regular EMI Payments Approvals
+	@GetMapping("/getUnapprovedRegularEmiPayments")
+	public ResponseEntity<ApiResponse<List<LoanPayment>>> getUnapprovedRegularEmiPayments() {
+		List<LoanPayment> list = requestApprovalsService.getRegularEmiPayments();
+		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "REGULAR EMI PAYMENTS FETCHED SUCCESSFULLY", list));
+	}
+
+	@PostMapping("/approveRegularEmiPayment")
+	public ResponseEntity<ApiResponse<LoanPayment>> approveRegularEmiPayment(
+			@RequestParam("id") Long id, @RequestParam("isApproved") boolean isApproved) {
+		Optional<LoanPayment> opt = requestApprovalsService.approveRegularEmiPayment(id, isApproved);
+		if (!opt.isPresent()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "PAYMENT RECORD NOT FOUND"));
+		}
+		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "EMI PAYMENT APPROVAL UPDATED SUCCESSFULLY", opt.get()));
+	}
+
+	// Irregular EMI Payments Approvals
+	@GetMapping("/getUnapprovedIrregularEmiPayments")
+	public ResponseEntity<ApiResponse<List<LoanPayment>>> getUnapprovedIrregularEmiPayments() {
+		List<LoanPayment> list = requestApprovalsService.getIrregularEmiPayments();
+		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "IRREGULAR EMI PAYMENTS FETCHED SUCCESSFULLY", list));
+	}
+
+	@PostMapping("/approveIrregularEmiPayment")
+	public ResponseEntity<ApiResponse<LoanPayment>> approveIrregularEmiPayment(
+			@RequestParam("id") Long id, @RequestParam("isApproved") boolean isApproved) {
+		Optional<LoanPayment> opt = requestApprovalsService.approveIrregularEmiPayment(id, isApproved);
+		if (!opt.isPresent()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "PAYMENT RECORD NOT FOUND"));
+		}
+		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "EMI PAYMENT APPROVAL UPDATED SUCCESSFULLY", opt.get()));
+	}
+
+	// Manual Payment Entries Approvals
+	@GetMapping("/getUnapprovedManualPaymentEntries")
+	public ResponseEntity<ApiResponse<List<IncomingReceiptEntry>>> getUnapprovedManualPaymentEntries() {
+		List<IncomingReceiptEntry> list = requestApprovalsService.getManualPaymentEntries();
+		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "MANUAL PAYMENT ENTRIES FETCHED SUCCESSFULLY", list));
+	}
+
+	@PostMapping("/approveManualPaymentEntry")
+	public ResponseEntity<ApiResponse<IncomingReceiptEntry>> approveManualPaymentEntry(
+			@RequestParam("id") Long id, @RequestParam("isApproved") boolean isApproved) {
+		Optional<IncomingReceiptEntry> opt = requestApprovalsService.approveManualPaymentEntry(id, isApproved);
+		if (!opt.isPresent()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "RECEIPT ENTRY NOT FOUND"));
+		}
+		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "RECEIPT ENTRY APPROVAL UPDATED SUCCESSFULLY", opt.get()));
+	}
 }

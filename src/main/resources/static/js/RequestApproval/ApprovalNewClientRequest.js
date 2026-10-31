@@ -142,7 +142,7 @@ function loadBranchDropdown() {
 
 			} else {
 				console.error("BRANCH DATA NOT FOUND:", response);
-				alert("ERROR: " + (response.message || "BRANCH DATA NOT FOUND."));
+				alert("ERROR: " + (RESPONSE.MESSAGE || "BRANCH DATA NOT FOUND."));
 			}
 		},
 
@@ -256,7 +256,8 @@ function filterKYCData() {
 
 		const branchName = item.branchName || "";
 		const accountNumber = String(item.accountNumber || "").trim().toLowerCase();
-		const dob = item.dob ? new Date(item.dob) : null;
+		const dateStr = item.signupDate || item.dob;
+		const dob = dateStr ? new Date(dateStr) : null;
 
 		// BRANCH FILTER
 		const matchesBranch = selectedCode

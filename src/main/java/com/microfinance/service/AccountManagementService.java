@@ -75,6 +75,8 @@ import com.microfinance.repository.BankTransactionRepo;
 import com.microfinance.repository.BranchModuleRepo;
 import com.microfinance.repository.CreateSavingAccountRepo;
 import com.microfinance.repository.FinancialConsultantRepo;
+import com.microfinance.model.GenerateIncentivePayments;
+import com.microfinance.repository.GenerateIncentivePaymentsRepo;
 import com.microfinance.repository.IncentiveRepo;
 import com.microfinance.repository.IncomingReceiptRepo;
 import com.microfinance.repository.JournalEntryReportRepo;
@@ -148,6 +150,9 @@ public class AccountManagementService {
 
 	@Autowired
 	private IncentiveRepo incentiveRepo;
+
+	@Autowired
+	private GenerateIncentivePaymentsRepo generateIncentivePaymentsRepo;
 
 	@Autowired
 	private MandateDepositRepository mandateDepositRepo;
@@ -2184,6 +2189,36 @@ public class AccountManagementService {
 		// =========================================================
 
 		IncentivePayment saved = incentiveRepo.save(request);
+
+		try {
+			AccountTransaction tx = new AccountTransaction();
+			tx.setBranchName(request.getPaymentBranch() != null ? request.getPaymentBranch().toUpperCase() : "HEAD OFFICE");
+			tx.setAccountCode(request.getAgentCode());
+			tx.setCustomerName(request.getFullName() != null ? request.getFullName().toUpperCase() : "INCENTIVE RECIPIENT");
+			tx.setAccountNumber(paymentLedger.getAccountCode() != null ? paymentLedger.getAccountCode() : "LEDGER-" + paymentLedger.getAccountId());
+			tx.setTransactionDate(request.getPaymentDate() != null ? request.getPaymentDate() : LocalDate.now().toString());
+			tx.setNarration(("INCENTIVE PAYOUT FOR " + request.getMonth() + " TO " + request.getAgentCode()).toUpperCase());
+			tx.setDebit(amount.doubleValue());
+			tx.setCredit(0.0);
+			tx.setBalance(newPaymentBalance.doubleValue());
+			tx.setTransactionType("INCENTIVE_PAYOUT");
+			tx.setPaymentBy(request.getPaymentMode() != null ? request.getPaymentMode().toUpperCase() : "BANK");
+			tx.setReferenceNo("INC-" + saved.getId());
+			tx.setStatus("SUCCESS");
+			transactionRepository.save(tx);
+		} catch (Exception ex) {
+			System.err.println("ACCOUNT TRANSACTION ERROR: " + ex.getMessage());
+		}
+
+		try {
+			String mName = request.getMonth() != null ? request.getMonth().toUpperCase() : "";
+			Optional<GenerateIncentivePayments> gipOpt = generateIncentivePaymentsRepo.findFirstByTeamCodeAndIncentiveMonth(request.getAgentCode(), mName);
+			if (gipOpt.isPresent()) {
+				GenerateIncentivePayments gip = gipOpt.get();
+				gip.setStatus("PAID");
+				generateIncentivePaymentsRepo.save(gip);
+			}
+		} catch (Exception ignored) {}
 
 		// =========================================================
 		// 13. RETURN RESPONSE

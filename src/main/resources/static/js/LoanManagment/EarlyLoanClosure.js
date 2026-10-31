@@ -6,6 +6,7 @@ let currentSettlementData = null;
 
 $(document).ready(function() {
 	populateApprovedLoanIds();
+	loadCompanyDetailsForReceipt();
 	populateFinancialConsultants();
 	initializeDateDefaults();
 	bindEventHandlers();
@@ -167,7 +168,7 @@ function fetchForeclosureSettlement(loanId) {
 		dataType: "json",
 		success: function(response) {
 			if (response.status !== "OK" || !response.data) {
-				alert("FAILED TO CALCULATE FORECLOSURE: " + (response.message || "UNKNOWN ERROR").toUpperCase());
+				alert("FAILED TO CALCULATE FORECLOSURE: " + (RESPONSE.MESSAGE || "UNKNOWN ERROR").toUpperCase());
 				return;
 			}
 
@@ -514,7 +515,7 @@ function executeLoanClosure() {
 			const successMessage = (response && response.message) ? response.message.toUpperCase() : `LOAN ${payload.loanId} CLOSED AND SETTLED SUCCESSFULLY.`;
 
 			// 2. Alert popup as requested by user
-			alert(successMessage);
+			alert(String(successMessage).toUpperCase());
 
 			// 3. Ensure modals and lingering backdrops are completely removed from screen
 			hideModal('#closureConfirmModal');
@@ -525,6 +526,7 @@ function executeLoanClosure() {
 			// 4. Reset form inputs and refresh approved active loan list
 			resetEarlyClosureForm();
 			populateApprovedLoanIds();
+	loadCompanyDetailsForReceipt();
 		},
 		error: function(xhr) {
 			$btn.prop('disabled', false).html('<i class="bi bi-check-circle me-1"></i> YES, EXECUTE CLOSURE');
@@ -537,7 +539,7 @@ function executeLoanClosure() {
 			} catch (e) {
 				if (xhr.statusText) errMsg = xhr.statusText.toUpperCase();
 			}
-			alert(errMsg);
+			alert(String(errMsg).toUpperCase());
 		}
 	});
 }
@@ -558,4 +560,17 @@ function printForeclosureReceipt() {
 		win.print();
 		win.close();
 	}, 500);
+}
+function loadCompanyDetailsForReceipt() {
+	$.ajax({
+		url: "api/preference/getCompanyDetails",
+		type: "GET",
+		dataType: "json",
+		success: function(res) {
+			const comp = res.data || res;
+			if (comp && comp.companyName) {
+				$("#recCompanyName").text(comp.companyName.trim().toUpperCase());
+			}
+		}
+	});
 }

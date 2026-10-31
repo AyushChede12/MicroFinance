@@ -89,6 +89,15 @@ public class UserCreationController {
 		/* String createdBy = session.getAttribute("ID").toString(); */
 
 		UserToServiceMap obj = userToServiceMapRepo.findByuserName(userToServiceMap.getUserName());
+		if (obj == null && userToServiceMap.getUserName() != null) {
+			List<UserToServiceMap> all = userToServiceMapRepo.findAll();
+			for (UserToServiceMap m : all) {
+				if (m.getUserName() != null && m.getUserName().equalsIgnoreCase(userToServiceMap.getUserName().trim())) {
+					obj = m;
+					break;
+				}
+			}
+		}
 
 		if (obj != null) {
 			System.out.println("if");
@@ -149,7 +158,19 @@ public class UserCreationController {
 
 	@PostMapping("/findTheUserIdByUserMasterService")
 	public UserToServiceMap findTheUserIdByUserMasterService(@RequestBody UserToServiceMap userToServiceMap) {
-		return userToServiceMapRepo.findByuserName(userToServiceMap.getUserName());
+		if (userToServiceMap == null || userToServiceMap.getUserName() == null) {
+			return null;
+		}
+		UserToServiceMap map = userToServiceMapRepo.findByuserName(userToServiceMap.getUserName());
+		if (map == null) {
+			List<UserToServiceMap> list = userToServiceMapRepo.findAll();
+			for (UserToServiceMap m : list) {
+				if (m.getUserName() != null && m.getUserName().equalsIgnoreCase(userToServiceMap.getUserName().trim())) {
+					return m;
+				}
+			}
+		}
+		return map;
 	}
 
 }

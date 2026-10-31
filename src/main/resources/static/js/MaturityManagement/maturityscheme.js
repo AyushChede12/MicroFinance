@@ -5,494 +5,280 @@ function getMonthNames() {
 	];
 }
 
-function populateAllDropdownsWithCurrentMonth(className) {
+function populateAllDropdownsWithMonths(className) {
 	const dropdowns = document.querySelectorAll(`.${className}`);
 	const months = getMonthNames();
 	const currentMonthIndex = new Date().getMonth();
 
 	dropdowns.forEach(dropdown => {
 		dropdown.innerHTML = "";
+		const defaultOpt = document.createElement("option");
+		defaultOpt.value = "";
+		defaultOpt.textContent = "-- SELECT MONTH --";
+		dropdown.appendChild(defaultOpt);
+
 		months.forEach((month, index) => {
 			const option = document.createElement("option");
 			option.value = month;
 			option.textContent = month;
-
 			if (index === currentMonthIndex) {
 				option.selected = true;
 			}
-
 			dropdown.appendChild(option);
 		});
 	});
 }
 
-
-
-
 $(document).ready(function() {
 
-	populateAllDropdownsWithCurrentMonth("monthname");
+	populateAllDropdownsWithMonths("monthname");
 
-
-	//for fixed deposit
+	// 1. Fixed Deposit Policy Codes
 	$.ajax({
 		url: "api/Policymangment/fixed-depositview",
 		type: "GET",
 		success: function(response) {
 			var dropdown = $('#fdPolicyCode');
 			dropdown.empty();
-			dropdown.append('<option value="">SELECT POLICY CODE</option>');
+			dropdown.append('<option value="">-- SELECT POLICY CODE --</option>');
 
-			if (response.status == "OK" && response.data) {
+			if ((response.status === "OK" || response.status === "FOUND") && Array.isArray(response.data)) {
 				$.each(response.data, function(index, plan) {
-					// Concatenate planCode + " - " + planName
-					var displayText = plan.planCodeFD + " - " + plan.planNameFD;
-					dropdown.append('<option value="' + plan.planCodeFD + '">' + displayText + '</option>');
+					var pCode = plan.planCodeFD || "";
+					var pName = plan.planNameFD || "";
+					var displayText = (pCode + " - " + pName).toUpperCase();
+					dropdown.append('<option value="' + pCode + '">' + displayText + '</option>');
 				});
-			} else {
-				dropdown.append('<option value="">NO POLICY CODE FOUND</option>');
 			}
 		},
 		error: function() {
-			alert("NO POLICY CODE FOUND.");
+			console.warn("NO FIXED DEPOSIT POLICIES FOUND.");
 		}
 	});
-	// for fixed deposit saving
+
+	// Save Fixed Deposit Scheme
 	$("#formfd").submit(function(event) {
 		event.preventDefault();
 
 		var data = {
 			policyCode: $("#fdPolicyCode").val(),
+			schemeType: "FIXED_DEPOSIT",
 			instFrom: $("#fdInstFrom").val(),
 			instTo: $("#fdInstTo").val(),
 			interestRate: $("#fdInterestRate").val(),
 			deduction: $("#fdDeduction").val()
 		};
 
-		console.log("Data" + data.instFrom);
-		$.ajax({
+		if (!data.policyCode) {
+			alert("PLEASE SELECT A POLICY CODE.");
+			return;
+		}
 
+		$.ajax({
 			url: "api/Maturitymanagement/savematurityscheme",
 			type: "POST",
 			contentType: "application/json",
 			data: JSON.stringify(data),
 			success: function(response) {
-
-				if (response.status === "OK") {
-					alert(" " + response.message);
+				if (response.status === "OK" || response.status === "CREATED") {
+					alert("FIXED DEPOSIT MATURITY SCHEME SAVED SUCCESSFULLY.");
 					$("#formfd")[0].reset();
+					populateAllDropdownsWithMonths("monthname");
 				} else {
-					alert(" " + response.message);
+					alert("FAILED: " + (response.message || "COULD NOT SAVE").toUpperCase());
 				}
 			},
 			error: function(xhr, status, error) {
-				console.error(" Error saving:", error);
-				console.log(" ", response.message);
-				alert(" SOMETHING WENT WRONG WHILE SAVING THE DATA.");
+				console.error("Error saving FD scheme:", error);
+				alert("SOMETHING WENT WRONG WHILE SAVING THE DATA.");
 			}
-
 		});
 	});
 
-
-	//recurring deposit
+	// 2. Recurring Deposit Policy Codes
 	$.ajax({
 		url: "api/Policymangment/recurring-depositview",
 		type: "GET",
 		success: function(response) {
 			var dropdown = $('#rdPolicyCode');
 			dropdown.empty();
-			dropdown.append('<option value="">SELECT POLICY CODE</option>');
+			dropdown.append('<option value="">-- SELECT POLICY CODE --</option>');
 
-			if (response.status == "OK" && response.data) {
+			if ((response.status === "OK" || response.status === "FOUND") && Array.isArray(response.data)) {
 				$.each(response.data, function(index, plan) {
-					// Concatenate planCode + " - " + planName
-					var displayText = plan.planCodeRD + " - " + plan.planNameRD;
-					dropdown.append('<option value="' + plan.planCodeRD + '">' + displayText + '</option>');
+					var pCode = plan.planCodeRD || "";
+					var pName = plan.planNameRD || "";
+					var displayText = (pCode + " - " + pName).toUpperCase();
+					dropdown.append('<option value="' + pCode + '">' + displayText + '</option>');
 				});
-			} else {
-				dropdown.append('<option value="">NO POLICY CODE FOUND</option>');
 			}
 		},
 		error: function() {
-			alert("NO POLICY CODE FOUND.");
+			console.warn("NO RECURRING DEPOSIT POLICIES FOUND.");
 		}
 	});
 
-	//save recurring deposit
+	// Save Recurring Deposit Scheme
 	$("#formrd").submit(function(event) {
 		event.preventDefault();
 
 		var data = {
 			policyCode: $("#rdPolicyCode").val(),
+			schemeType: "RECURRING_DEPOSIT",
 			instFrom: $("#rdInstFrom").val(),
 			instTo: $("#rdInstTo").val(),
 			interestRate: $("#rdInterestRate").val(),
 			deduction: $("#rdDeduction").val()
 		};
 
-		console.log("Data" + data.instFrom);
-		$.ajax({
+		if (!data.policyCode) {
+			alert("PLEASE SELECT A POLICY CODE.");
+			return;
+		}
 
+		$.ajax({
 			url: "api/Maturitymanagement/savematurityscheme",
 			type: "POST",
 			contentType: "application/json",
 			data: JSON.stringify(data),
 			success: function(response) {
-
-				if (response.status === "OK") {
-					alert(" " + response.message);
+				if (response.status === "OK" || response.status === "CREATED") {
+					alert("RECURRING DEPOSIT MATURITY SCHEME SAVED SUCCESSFULLY.");
 					$("#formrd")[0].reset();
+					populateAllDropdownsWithMonths("monthname");
 				} else {
-					alert(" " + response.message);
+					alert("FAILED: " + (response.message || "COULD NOT SAVE").toUpperCase());
 				}
 			},
 			error: function(xhr, status, error) {
-				console.error(" Error saving:", error);
-				console.log(" ", response.message);
-				alert(" SOMETHING WENT WRONG WHILE SAVING THE DATA.");
+				console.error("Error saving RD scheme:", error);
+				alert("SOMETHING WENT WRONG WHILE SAVING THE DATA.");
 			}
-
 		});
 	});
 
-
-	//for Daily Deposit
-
+	// 3. Daily Deposit Policy Codes
 	$.ajax({
 		url: "api/Policymangment/daily-deposit/view",
 		type: "GET",
 		success: function(response) {
 			var dropdown = $('#ddPolicyCode');
 			dropdown.empty();
-			dropdown.append('<option value="">SELECT POLICY CODE</option>');
+			dropdown.append('<option value="">-- SELECT POLICY CODE --</option>');
 
-			if (response.status == "OK" && response.data) {
+			if ((response.status === "OK" || response.status === "FOUND") && Array.isArray(response.data)) {
 				$.each(response.data, function(index, plan) {
-					// Concatenate planCode + " - " + planName
-					var displayText = plan.planCodeDD + " - " + plan.planNameDD;
-					dropdown.append('<option value="' + plan.planCode + '">' + displayText + '</option>');
+					var pCode = plan.planCodeDD || "";
+					var pName = plan.planNameDD || "";
+					var displayText = (pCode + " - " + pName).toUpperCase();
+					dropdown.append('<option value="' + pCode + '">' + displayText + '</option>');
 				});
-			} else {
-				dropdown.append('<option value="">NO POLICY CODE FOUND</option>');
 			}
 		},
 		error: function() {
-			alert("NO POLICY CODE FOUND.");
+			console.warn("NO DAILY DEPOSIT POLICIES FOUND.");
 		}
 	});
 
-
-
+	// Save Daily Deposit Scheme
 	$("#formdd").submit(function(event) {
 		event.preventDefault();
 
 		var data = {
 			policyCode: $("#ddPolicyCode").val(),
+			schemeType: "DAILY_DEPOSIT",
 			instFrom: $("#ddInstFrom").val(),
 			instTo: $("#ddInstTo").val(),
 			interestRate: $("#ddInterestRate").val(),
 			deduction: $("#ddDeduction").val()
 		};
 
+		if (!data.policyCode) {
+			alert("PLEASE SELECT A POLICY CODE.");
+			return;
+		}
 
 		$.ajax({
-
 			url: "api/Maturitymanagement/savematurityscheme",
 			type: "POST",
 			contentType: "application/json",
 			data: JSON.stringify(data),
 			success: function(response) {
-
-				if (response.status === "OK") {
-					alert(" " + response.message);
+				if (response.status === "OK" || response.status === "CREATED") {
+					alert("DAILY DEPOSIT MATURITY SCHEME SAVED SUCCESSFULLY.");
 					$("#formdd")[0].reset();
+					populateAllDropdownsWithMonths("monthname");
 				} else {
-					alert(" " + response.message);
+					alert("FAILED: " + (response.message || "COULD NOT SAVE").toUpperCase());
 				}
 			},
 			error: function(xhr, status, error) {
-				console.error(" Error saving:", error);
-				console.log(" ", response.message);
-				alert(" SOMETHING WENT WRONG WHILE SAVING THE DATA.");
+				console.error("Error saving DD scheme:", error);
+				alert("SOMETHING WENT WRONG WHILE SAVING THE DATA.");
 			}
-
 		});
 	});
 
-	// for mis deposit
+	// 4. MIS Deposit Policy Codes
 	$.ajax({
 		url: "api/Policymangment/mis-deposit/view",
 		type: "GET",
 		success: function(response) {
 			var dropdown = $('#mPolicyCode');
 			dropdown.empty();
-			dropdown.append('<option value="">SELECT POLICY CODE</option>');
+			dropdown.append('<option value="">-- SELECT POLICY CODE --</option>');
 
-			if (response.status == "OK" && response.data) {
+			if ((response.status === "OK" || response.status === "FOUND") && Array.isArray(response.data)) {
 				$.each(response.data, function(index, plan) {
-					// Concatenate planCode + " - " + planName
-					var displayText = plan.planCodeMD + " - " + plan.planNameMD;
-					dropdown.append('<option value="' + plan.planCodeMD + '">' + displayText + '</option>');
+					var pCode = plan.planCodeMD || "";
+					var pName = plan.planNameMD || "";
+					var displayText = (pCode + " - " + pName).toUpperCase();
+					dropdown.append('<option value="' + pCode + '">' + displayText + '</option>');
 				});
-			} else {
-				dropdown.append('<option value="">NO POLICY CODE FOUND</option>');
 			}
 		},
 		error: function() {
-			alert("NO POLICY CODE FOUND.");
+			console.warn("NO MIS DEPOSIT POLICIES FOUND.");
 		}
 	});
 
-
+	// Save MIS Deposit Scheme
 	$("#formmis").submit(function(event) {
 		event.preventDefault();
 
 		var data = {
 			policyCode: $("#mPolicyCode").val(),
+			schemeType: "MIS_DEPOSIT",
 			instFrom: $("#misInstFrom").val(),
 			instTo: $("#misInstTo").val(),
 			interestRate: $("#misInterestRate").val(),
 			deduction: $("#misDeduction").val()
 		};
 
-		console.log("Data" + data.policyCode);
-		$.ajax({
+		if (!data.policyCode) {
+			alert("PLEASE SELECT A POLICY CODE.");
+			return;
+		}
 
+		$.ajax({
 			url: "api/Maturitymanagement/savematurityscheme",
 			type: "POST",
 			contentType: "application/json",
 			data: JSON.stringify(data),
 			success: function(response) {
-
-				if (response.status === "OK") {
-					alert(" " + response.message);
+				if (response.status === "OK" || response.status === "CREATED") {
+					alert("MIS DEPOSIT MATURITY SCHEME SAVED SUCCESSFULLY.");
 					$("#formmis")[0].reset();
+					populateAllDropdownsWithMonths("monthname");
 				} else {
-					alert(" " + response.message);
+					alert("FAILED: " + (response.message || "COULD NOT SAVE").toUpperCase());
 				}
 			},
 			error: function(xhr, status, error) {
-				console.error(" Error saving:", error);
-				console.log(" ", response.message);
-				alert(" SOMETHING WENT WRONG WHILE SAVING THE DATA.");
+				console.error("Error saving MIS scheme:", error);
+				alert("SOMETHING WENT WRONG WHILE SAVING THE DATA.");
 			}
-
 		});
 	});
-
-	//Applying validation on fields
-	const monthMap = {
-		"January": 1, "February": 2, "March": 3, "April": 4,
-		"May": 5, "June": 6, "July": 7, "August": 8,
-		"September": 9, "October": 10, "November": 11, "December": 12
-	};
-
-
-
-	$("#ddsaveBtn").click(function() {
-
-		$('#chkpolicycodeD').text('');
-		$('#finstallD').text('');
-		$('#tinstallD').text('');
-		$('#chkintrestD').text('');
-		$('#chkdeductionD').text('');
-
-		var policyCode = $('#ddPolicyCode').val().trim();
-		let fromMonth = $('#ddInstFrom').val();
-		let toMonth = $('#ddInstTo').val();
-		let intrest = $('#ddInterestRate').val();
-		let deduction = $('#ddInterestRate').val();
-
-		let isValid = true;
-
-
-		if (policyCode === '') {
-			$('#chkpolicycodeD').text('* THIS FIELD IS REQUIRED');
-			$('#ddPolicyCode').focus();
-			isValid = false;
-		}
-
-		if (fromMonth !== "" && toMonth !== "") {
-			let from = monthMap[fromMonth];
-			let to = monthMap[toMonth];
-
-			if ((to - from) < 1) {
-				$('#tinstallD').text("* THERE MUST BE AT LEAST ONE MONTH DIFFERENCE.");
-				isValid = false;
-			}
-		}
-
-		if (intrest === '') {
-			$('#chkintrestD').text('* THIS FIELD IS REQUIRED');
-			$('#ddInterestRate').focus();
-			isValid = false;
-		}
-
-		if (deduction === '') {
-			$('#chkdeductionD').text('* THIS FIELD IS REQUIRED');
-			$('#ddDeduction').focus();
-			isValid = false;
-		}
-
-		if (!isValid) {
-			e.preventDefault(); // Stops form submission
-		}
-
-	});
-
-	$("#rdsaveBtn").click(function() {
-		$('#chkpolicycodeR').text('');
-		$('#finstallR').text('');
-		$('#tinstallR').text('');
-		$('#chkintrestR').text('');
-		$('#chkdeductionR').text('');
-
-		var policyCode = $('#rdPolicyCode').val().trim();
-		let fromMonth = $('#rdInstFrom').val();
-		let toMonth = $('#rdInstTo').val();
-		let intrest = $('#rdInterestRate').val();
-		let deduction = $('#rdInterestRate').val();
-
-		let isValid = true;
-
-
-		if (policyCode === '') {
-			$('#chkpolicycodeR').text('* THIS FIELD IS REQUIRED');
-			$('#rdPolicyCode').focus();
-			isValid = false;
-		}
-
-		if (fromMonth !== "" && toMonth !== "") {
-			let from = monthMap[fromMonth];
-			let to = monthMap[toMonth];
-
-			if ((to - from) < 1) {
-				$('#tinstallR').text("* THERE MUST BE AT LEAST ONE MONTH DIFFERENCE.");
-				isValid = false;
-			}
-		}
-
-		if (intrest === '') {
-			$('#chkintrestR').text('* THIS FIELD IS REQUIRED');
-			$('#rdInterestRate').focus();
-			isValid = false;
-		}
-
-		if (deduction === '') {
-			$('#chkdeductionR').text('* THIS FIELD IS REQUIRED');
-			$('#rdDeduction').focus();
-			isValid = false;
-		}
-
-		if (!isValid) {
-			e.preventDefault(); // Stops form submission
-		}
-
-	});
-
-	$("#fdsaveBtn").click(function() {
-
-		$('#chkpolicycodeF').text('');
-		$('#finstallF').text('');
-		$('#tinstallF').text('');
-		$('#chkintrestF').text('');
-		$('#chkdeductionF').text('');
-
-		var policyCode = $('#ddPolicyCode').val().trim();
-		let fromMonth = $('#ddInstFrom').val();
-		let toMonth = $('#ddInstTo').val();
-		let intrest = $('#ddInterestRate').val();
-		let deduction = $('#ddInterestRate').val();
-
-		let isValid = true;
-
-
-		if (policyCode === '') {
-			$('#chkpolicycodeF').text('* THIS FIELD IS REQUIRED');
-			$('#ddPolicyCode').focus();
-			isValid = false;
-		}
-
-		if (fromMonth !== "" && toMonth !== "") {
-			let from = monthMap[fromMonth];
-			let to = monthMap[toMonth];
-
-			if ((to - from) < 1) {
-				$('#tinstallF').text("* THERE MUST BE AT LEAST ONE MONTH DIFFERENCE.");
-				isValid = false;
-			}
-		}
-
-		if (intrest === '') {
-			$('#chkintrestF').text('* THIS FIELD IS REQUIRED');
-			$('#ddInterestRate').focus();
-			isValid = false;
-		}
-
-		if (deduction === '') {
-			$('#chkdeductionF').text('* THIS FIELD IS REQUIRED');
-			$('#ddDeduction').focus();
-			isValid = false;
-		}
-
-		if (!isValid) {
-			e.preventDefault(); // Stops form submission
-		}
-
-	});
-
-	$("#missaveBtn").click(function() {
-
-		$('#chkpolicycodeM').text('');
-		$('#finstallM').text('');
-		$('#tinstallM').text('');
-		$('#chkintrestM').text('');
-		$('#chkdeductionM').text('');
-
-		var policyCode = $('#ddPolicyCode').val().trim();
-		let fromMonth = $('#ddInstFrom').val();
-		let toMonth = $('#ddInstTo').val();
-		let intrest = $('#ddInterestRate').val();
-		let deduction = $('#ddInterestRate').val();
-
-		let isValid = true;
-
-
-		if (policyCode === '') {
-			$('#chkpolicycodeM').text('* THIS FIELD IS REQUIRED');
-			$('#ddPolicyCode').focus();
-			isValid = false;
-		}
-
-		if (fromMonth !== "" && toMonth !== "") {
-			let from = monthMap[fromMonth];
-			let to = monthMap[toMonth];
-
-			if ((to - from) < 1) {
-				$('#tinstallM').text("* THERE MUST BE AT LEAST ONE MONTH DIFFERENCE.");
-				isValid = false;
-			}
-		}
-
-		if (intrest === '') {
-			$('#chkintrestM').text('* THIS FIELD IS REQUIRED');
-			$('#ddInterestRate').focus();
-			isValid = false;
-		}
-
-		if (deduction === '') {
-			$('#chkdeductionM').text('* THIS FIELD IS REQUIRED');
-			$('#ddDeduction').focus();
-			isValid = false;
-		}
-
-		if (!isValid) {
-			e.preventDefault(); // Stops form submission
-		}
-
-	});
-
-
 
 });

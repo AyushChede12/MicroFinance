@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
 	if (window.financialConsultantInitialized) {
-		console.warn("Financial Consultant JS already initialized");
+		console.warn("FINANCIAL CONSULTANT JS ALREADY INITIALIZED");
 		return;
 	}
 	window.financialConsultantInitialized = true;
@@ -16,7 +16,7 @@ $(document).ready(function() {
 		state: "MAHARASHTRA",
 		pin: "440024",
 		cin: "ASJ#567",
-		email: "example@gmail.com",
+		email: "EXAMPLE@GMAIL.COM",
 		helpline: "9566200223",
 		branchManager: "9558712001"
 	};
@@ -28,35 +28,52 @@ $(document).ready(function() {
 		method: "GET",
 		contentType: "application/json; charset=ISO-8859-1",
 		success: function(response) {
-
-			if (response && Array.isArray(response.data)) {
+			if (response && Array.isArray(response.data) && response.data.length > 0) {
 				allFinancialConsultants = response.data;
 				populateBranchDropdown(allFinancialConsultants);
 				renderTable(allFinancialConsultants);
 			} else {
-				$("#fetchFinancialConsultants")
-					.html("<tr><td colspan='10'>NO APPROVED CONSULTANTS FOUND.</td></tr>");
+				// Fallback to fetch all consultants so table is populated
+				fetchAllConsultantsFallback();
 			}
 		},
 		error: function() {
-			alert("ERROR WHILE FETCHING FINANCIAL CONSULTANT DATA.");
+			fetchAllConsultantsFallback();
 		}
 	});
 
+	function fetchAllConsultantsFallback() {
+		$.ajax({
+			url: "api/financialconsultant/getAllFinancialConsultantDetails",
+			type: "POST",
+			contentType: "application/json",
+			success: function(response) {
+				if (response && Array.isArray(response.data) && response.data.length > 0) {
+					allFinancialConsultants = response.data;
+					populateBranchDropdown(allFinancialConsultants);
+					renderTable(allFinancialConsultants);
+				} else {
+					$("#fetchFinancialConsultants")
+						.html("<tr><td colspan='10' class='text-center'>NO FINANCIAL CONSULTANTS FOUND.</td></tr>");
+				}
+			},
+			error: function() {
+				alert("ERROR WHILE FETCHING FINANCIAL CONSULTANT DATA.");
+			}
+		});
+	}
+
 	function normalize(text) {
-		return text?.toString().replace(/\s+/g, " ").trim().toUpperCase();
+		return text ? text.toString().replace(/\s+/g, " ").trim().toUpperCase() : "";
 	}
 
 	/* ================= BRANCH DROPDOWN ================= */
 
 	function populateBranchDropdown(data) {
-
 		var select = $("#branchName2");
-
-		select.empty().append('<option value="">SELECT</option>');
+		select.empty().append('<option value="">-- ALL BRANCHES --</option>');
 
 		let branchSet = new Set();
-
 		data.forEach(f => {
 			if (f.branchName) {
 				branchSet.add(normalize(f.branchName));
@@ -71,29 +88,26 @@ $(document).ready(function() {
 	/* ================= TABLE ================= */
 
 	function renderTable(data) {
-
 		var tbody = $("#fetchFinancialConsultants");
 		tbody.empty();
 
 		if (!data || data.length === 0) {
-			tbody.append("<tr><td colspan='10'>NO MATCHING CONSULTANTS FOUND.</td></tr>");
+			tbody.append("<tr><td colspan='10' class='text-center'>NO MATCHING CONSULTANTS FOUND.</td></tr>");
 			return;
 		}
 
 		$.each(data, function(i, f) {
-
 			let approvedStatus = '-';
-
 			if (f.approved === true) {
-				approvedStatus = '<span style="color: green; font-weight:600;">APPROVED</span>';
-			} else if (f.approved === false) {
-				approvedStatus = '<span style="color:red; font-weight:600;">NOT APPROVED</span>';
+				approvedStatus = '<span class="badge bg-success text-white">APPROVED</span>';
+			} else {
+				approvedStatus = '<span class="badge bg-warning text-dark">PENDING APPROVAL</span>';
 			}
 
 			tbody.append(`
-                <tr>
+                <tr style="font-family: 'Poppins', sans-serif;">
                     <td>${i + 1}</td>
-                    <td>${f.financialCode || '-'}</td>
+                    <td><strong>${f.financialCode || '-'}</strong></td>
                     <td>${(f.financialName || '-').toUpperCase()}</td>
                     <td>${f.joiningDate || '-'}</td>
                     <td>${(f.branchName || '-').toUpperCase()}</td>
@@ -102,11 +116,9 @@ $(document).ready(function() {
                     <td>${(f.address || '-').toUpperCase()}</td>
                     <td>${approvedStatus}</td>
                     <td>
-                        <button class="btn btn-outline-success btn-sm viewReportBtn"
-                            data-id="${f.id}"
-                            data-bs-toggle="modal"
-                            data-bs-target="#bankReportModal">
-                            <i class="bi bi-printer"></i>
+                        <button class="btn btn-outline-primary btn-sm viewReportBtn"
+                            data-id="${f.id}" title="VIEW DOSSIER">
+                            <i class="bi bi-printer"></i> VIEW
                         </button>
                     </td>
                 </tr>
@@ -119,51 +131,59 @@ $(document).ready(function() {
 	/* ================= MODAL DATA SET ================= */
 
 	function bindModalEvents() {
-
 		$(".viewReportBtn").off("click").on("click", function() {
-
 			var id = $(this).data("id");
-			var f = allFinancialConsultants.find(x => x.id === id);
+			var f = allFinancialConsultants.find(x => x.id == id);
 			if (!f) return;
 
-			$("#financialCode").text(f.financialCode || "N/A");
-			$("#joiningDate").text(f.joiningDate || "N/A");
-			$("#financialName").text(f.financialName || "N/A");
-			$("#dob").text(f.dob || "N/A");
-			$("#age").text(f.age || "N/A");
-			$("#contactNo").text(f.contactNo || "N/A");
-			$("#branchName").text(f.branchName || "N/A");
+			$("#financialCode").text(f.financialCode || "-");
+			$("#joiningDate").text(f.joiningDate || "-");
+			$("#financialName").text((f.financialName || "-").toUpperCase());
+			$("#dob").text(f.dob || "-");
+			$("#age").text(f.age || "-");
+			$("#contactNo").text(f.contactNo || "-");
+			$("#branchName").text((f.branchName || "-").toUpperCase());
 
-			$("#selectPosition").text(f.selectPosition || "N/A");
+			$("#selectPosition").text((f.selectPosition || "-").toUpperCase());
 
-			$("#address").text(f.address || "N/A");
-			$("#district").text(f.district || "N/A");
-			$("#state").text(f.state || "N/A");
-			$("#pinCode").text(f.pinCode || "N/A");
-			$("#profession").text(f.profession || "N/A");
-			$("#academicBackground").text(f.academicBackground || "N/A");
+			$("#address").text((f.address || "-").toUpperCase());
+			$("#district").text((f.district || "-").toUpperCase());
+			$("#state").text((f.state || "-").toUpperCase());
+			$("#pinCode").text(f.pinCode || "-");
+			$("#profession").text((f.profession || "-").toUpperCase());
+			$("#academicBackground").text((f.academicBackground || "-").toUpperCase());
 
 			$("#fees").text(f.fees || "0");
-			$("#modeofPayment").text(f.modeofPayment || "N/A");
-			$("#chequeNo").text(f.chequeNo || "N/A");
-			$("#chequeDate").text(f.chequeDate || "N/A");
-			$("#depositAccount").text(f.depositAccount || "N/A");
-			$("#refNo").text(f.refNo || "N/A");
+			$("#modeofPayment").text((f.modeofPayment || "-").toUpperCase());
+			$("#chequeNo").text((f.chequeNo || "-").toUpperCase());
+			$("#chequeDate").text(f.chequeDate || "-");
+			$("#depositAccount").text((f.depositAccount || "-").toUpperCase());
+			$("#refNo").text((f.refNo || "-").toUpperCase());
 
-			$("#referralCode").text(f.referralCode || "N/A");
-			$("#referralName").text(f.referralName || "N/A");
+			$("#referralCode").text((f.referralCode || "-").toUpperCase());
+			$("#referralName").text((f.referralName || "-").toUpperCase());
 
-			$("#comments").text(f.comments || "N/A");
-			$("#financialStatus").text(f.financialStatus || "N/A");
-			$("#smsSend").text(f.smsSend || "N/A");
-			$("#isApproved").text(f.approved ? "APPROVED" : "NOT APPROVED");
+			$("#comments").text((f.comments || "-").toUpperCase());
+			let statusStr = (f.financialStatus === "1" || f.financialStatus === "ACTIVE" || f.financialStatus === true) ? "ACTIVE" : "INACTIVE";
+			$("#financialStatus").text(statusStr);
+			$("#smsSend").text(f.smsSend === "1" || f.smsSend === "YES" ? "YES" : "NO");
+			$("#isApproved").text(f.approved ? "APPROVED" : "PENDING APPROVAL");
+
+			// Show modal
+			try {
+				$('#bankReportModal').modal('show');
+			} catch (e) {
+				var modalEl = document.getElementById('bankReportModal');
+				if (window.bootstrap && bootstrap.Modal) {
+					new bootstrap.Modal(modalEl).show();
+				}
+			}
 		});
 	}
 
 	/* ================= FILTER ================= */
 
 	$("#findFinancialAdvisorBtn").on("click", function(e) {
-
 		e.preventDefault();
 
 		var branch = $("#branchName2").val();
@@ -192,55 +212,66 @@ $(document).ready(function() {
 	/* ================= PRINT ================= */
 
 	$(document).off("click", "#printBankReportBtn").on("click", "#printBankReportBtn", function() {
-
 		var newWindow = window.open('', '', 'width=900,height=700');
 
-		// Fetch values from modal
-		let getText = (id) => document.getElementById(id).innerText || '-';
+		let getText = (id) => {
+			let el = document.getElementById(id);
+			return el ? (el.innerText || '-').toUpperCase() : '-';
+		};
 
 		newWindow.document.write(`
         <html>
         <head>
-            <title>CONSULTANT REPORT</title>
+            <title>FINANCIAL CONSULTANT REPORT</title>
 
             <style>
-                body{
-                    font-family: Arial;
-                    padding:20px;
+                body {
+                    font-family: Arial, sans-serif;
+                    padding: 20px;
                 }
 
-                h2, h4{
-                    text-align:center;
-                    margin:5px;
+                h2, h4 {
+                    text-align: center;
+                    margin: 5px;
                 }
 
-                .company{
-                    font-size:20px;
-                    font-weight:bold;
+                .company {
+                    font-size: 20px;
+                    font-weight: bold;
+                    text-align: center;
                 }
 
-                table{
-                    width:100%;
+                .company-sub {
+                    text-align: center;
+                    font-size: 12px;
+                    color: #555;
+                    margin-bottom: 15px;
+                }
+
+                table {
+                    width: 100%;
                     border-collapse: collapse;
-                    margin-top:20px;
+                    margin-top: 15px;
                 }
 
-                th, td{
-                    border:1px solid #000;
-                    padding:8px;
-                    font-size:14px;
-                    text-align:left;
+                th, td {
+                    border: 1px solid #000;
+                    padding: 6px 10px;
+                    font-size: 13px;
+                    text-align: left;
                 }
 
-                th{
-                    background:#f2f2f2;
+                th {
+                    background: #f2f2f2;
+                    width: 25%;
                 }
 
-                .section-title{
-                    background:#0d6efd;
-                    color:#fff;
-                    font-weight:bold;
-                    text-align:center;
+                .section-title {
+                    background: #002147;
+                    color: #fff;
+                    font-weight: bold;
+                    text-align: center;
+                    font-size: 14px;
                 }
             </style>
         </head>
@@ -249,71 +280,83 @@ $(document).ready(function() {
 
             <!-- Company Header -->
             <div class="company">${companyDetails.name}</div>
-            <div>${companyDetails.address}, ${companyDetails.state} - ${companyDetails.pin}</div>
-            <div>EMAIL: ${companyDetails.email} | HELPLINE: ${companyDetails.helpline}</div>
+            <div class="company-sub">${companyDetails.address}, ${companyDetails.state} - ${companyDetails.pin} | EMAIL: ${companyDetails.email} | HELPLINE: ${companyDetails.helpline}</div>
 
-            <h4>FINANCIAL CONSULTANT REPORT</h4>
+            <h4>FINANCIAL CONSULTANT DOSSIER</h4>
 
             <!-- Table -->
             <table>
 
                 <tr class="section-title"><td colspan="4">CONSULTANT DETAILS</td></tr>
                 <tr>
-                    <th>CODE</th><td>${getText("financialCode")}</td>
-                    <th>NAME</th><td>${getText("financialName")}</td>
+                    <th>FINANCIAL CODE</th><td>${getText("financialCode")}</td>
+                    <th>FULL NAME</th><td>${getText("financialName")}</td>
                 </tr>
                 <tr>
                     <th>JOINING DATE</th><td>${getText("joiningDate")}</td>
-                    <th>DOB</th><td>${getText("dob")}</td>
+                    <th>DATE OF BIRTH</th><td>${getText("dob")}</td>
                 </tr>
                 <tr>
-                    <th>AGE</th><td>${getText("age")}</td>
-                    <th>CONTACT</th><td>${getText("contactNo")}</td>
+                    <th>AGE</th><td>${getText("age")} YRS</td>
+                    <th>CONTACT NO.</th><td>${getText("contactNo")}</td>
                 </tr>
                 <tr>
                     <th>BRANCH</th><td>${getText("branchName")}</td>
                     <th>POSITION</th><td>${getText("selectPosition")}</td>
                 </tr>
 
-                <tr class="section-title"><td colspan="4">ADDRESS DETAILS</td></tr>
+                <tr class="section-title"><td colspan="4">ADDRESS & BACKGROUND DETAILS</td></tr>
                 <tr>
                     <th>ADDRESS</th><td colspan="3">${getText("address")}</td>
                 </tr>
                 <tr>
                     <th>DISTRICT</th><td>${getText("district")}</td>
-                    <th>STATE</th><td>${getText("state")} - ${getText("pinCode")}</td>
+                    <th>STATE & PIN</th><td>${getText("state")} - ${getText("pinCode")}</td>
+                </tr>
+                <tr>
+                    <th>PROFESSION</th><td>${getText("profession")}</td>
+                    <th>ACADEMIC BACKGROUND</th><td>${getText("academicBackground")}</td>
                 </tr>
 
                 <tr class="section-title"><td colspan="4">PAYMENT DETAILS</td></tr>
                 <tr>
-                    <th>FEES</th><td>₹${getText("fees")}</td>
-                    <th>MODE</th><td>${getText("modeofPayment")}</td>
+                    <th>FEES</th><td>INR ${getText("fees")}</td>
+                    <th>MODE OF PAYMENT</th><td>${getText("modeofPayment")}</td>
                 </tr>
                 <tr>
-                    <th>CHEQUE NO</th><td>${getText("chequeNo")}</td>
+                    <th>CHEQUE NO.</th><td>${getText("chequeNo")}</td>
                     <th>CHEQUE DATE</th><td>${getText("chequeDate")}</td>
                 </tr>
                 <tr>
                     <th>DEPOSIT ACCOUNT</th><td>${getText("depositAccount")}</td>
-                    <th>REF NO</th><td>${getText("refNo")}</td>
+                    <th>REF NO / UPI</th><td>${getText("refNo")}</td>
                 </tr>
 
-                <tr class="section-title"><td colspan="4">REFERRAL</td></tr>
+                <tr class="section-title"><td colspan="4">REFERRAL / INTRODUCER DETAILS</td></tr>
                 <tr>
                     <th>REFERRAL CODE</th><td>${getText("referralCode")}</td>
                     <th>REFERRAL NAME</th><td>${getText("referralName")}</td>
                 </tr>
 
-                <tr class="section-title"><td colspan="4">STATUS</td></tr>
+                <tr class="section-title"><td colspan="4">STATUS & APPROVAL</td></tr>
                 <tr>
                     <th>COMMENTS</th><td colspan="3">${getText("comments")}</td>
                 </tr>
                 <tr>
-                    <th>STATUS</th><td>${getText("financialStatus")}</td>
-                    <th>APPROVED</th><td>${getText("isApproved")}</td>
+                    <th>FINANCIAL STATUS</th><td>${getText("financialStatus")}</td>
+                    <th>APPROVAL STATUS</th><td>${getText("isApproved")}</td>
                 </tr>
 
             </table>
+
+            <div style="margin-top: 50px; display: flex; justify-content: space-between;">
+                <div style="text-align: center; border-top: 1px solid #333; width: 200px; padding-top: 5px;">
+                    CONSULTANT SIGNATURE
+                </div>
+                <div style="text-align: center; border-top: 1px solid #333; width: 200px; padding-top: 5px;">
+                    AUTHORISED OFFICER
+                </div>
+            </div>
 
         </body>
         </html>

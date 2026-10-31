@@ -777,38 +777,23 @@
 						</div>
 					</div>
 
-					<!-- SECTION 4: ACCOUNT SCHEME & SPECIFIC RULES (SAVING vs CURRENT) -->
+					<!-- SECTION 4: ACCOUNT TYPE & BANKING RULES (SAVING vs CURRENT) -->
 					<div class="section-divider saving-accent" id="secSchemeRules">
-						<i class="bi bi-4-circle-fill"></i> ACCOUNT SCHEME &amp; BANKING RULES
+						<i class="bi bi-4-circle-fill"></i> ACCOUNT TYPE &amp; BANKING RULES
 					</div>
 
-					<!-- SAVING ACCOUNT SPECIFIC FIELDS -->
+					<!-- HIDDEN PLAN AND BALANCE (HANDLED INTERNALLY BASED ON SAVING / CURRENT) -->
+					<input type="hidden" id="selectPlan" name="selectPlan" value="SAVING ACCOUNT" />
+					<input type="hidden" id="balance" name="balance" />
+
+					<!-- SAVING ACCOUNT SPECIFIC RULES -->
 					<div id="savingFieldsSection">
 						<div class="row g-3">
-							<div class="col-lg-4 col-md-6">
-								<div class="formFields">
-									<label>SELECT SAVINGS PLAN / SCHEME <span class="text-danger">*</span></label>
-									<select id="selectPlan" name="selectPlan" class="form-control selectField"
-										style="height: 34px;">
-										<option value="">-- SELECT SAVINGS PLAN --</option>
-									</select>
-									<small id="chkselectplan" class="text-danger"></small>
-								</div>
-							</div>
-
-							<div class="col-lg-3 col-md-6">
-								<div class="formFields">
-									<label>MINIMUM OPENING BALANCE (₹)</label>
-									<input type="text" id="balance" name="balance" readonly
-										placeholder="AUTO FROM SCHEME" style="font-weight: 700; color: #0284c7;" />
-								</div>
-							</div>
-
-							<div class="col-lg-5 col-md-12">
-								<div class="alert alert-primary py-2 px-3 mb-0"
-									style="font-size: 11px; font-family: 'Poppins', sans-serif; border-radius: 6px; text-transform: uppercase;">
-									<i class="bi bi-info-circle-fill"></i> <strong>SAVING RULE:</strong> EARNS QUARTERLY
-									COMPOUNDING INTEREST. OVERDRAFT FACILITY IS STRICTLY PROHIBITED UNDER BANKING NORMS.
+							<div class="col-12">
+								<div class="alert alert-primary py-3 px-3 mb-0"
+									style="font-size: 12px; font-family: 'Poppins', sans-serif; border-radius: 6px; text-transform: uppercase;">
+									<i class="bi bi-info-circle-fill"></i> <strong>SAVING ACCOUNT:</strong> EARNS QUARTERLY
+									COMPOUNDING INTEREST. OVERDRAFT FACILITY IS STRICTLY PROHIBITED UNDER BANKING NORMS. OPENING DEPOSIT ENTERED BELOW WILL BE CREDITED AS INITIAL BALANCE.
 								</div>
 							</div>
 						</div>

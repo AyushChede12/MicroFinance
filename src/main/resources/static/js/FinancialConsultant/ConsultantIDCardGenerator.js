@@ -4,24 +4,34 @@ $(document).ready(function() {
 	// 1. Render Table
 	function renderTable(data) {
 		let tableBody = "";
+		if (!data || data.length === 0) {
+			$("table tbody").html(`<tr><td colspan="13" class="text-center">NO FINANCIAL CONSULTANTS FOUND</td></tr>`);
+			return;
+		}
+
 		$.each(data, function(index, item) {
+			let statusText = (item.financialStatus === "1" || item.financialStatus === "ACTIVE" || item.financialStatus === true) ? "ACTIVE" : "INACTIVE";
+			let statusBadge = statusText === "ACTIVE" 
+				? '<span class="badge bg-success text-white">ACTIVE</span>' 
+				: '<span class="badge bg-danger text-white">INACTIVE</span>';
+
 			tableBody += `
-                <tr>
+                <tr style="font-family: 'Poppins', sans-serif;">
                     <td>${index + 1}</td>
-                    <td><input type="checkbox" class="selectCheckbox" data-code="${item.financialCode}"></td>
-                    <td>${item.financialCode || ''}</td>
-                    <td>${item.financialName || ''}</td>
+                    <td class="text-center"><input type="checkbox" class="selectCheckbox" data-code="${item.financialCode}"></td>
+                    <td><strong>${item.financialCode || ''}</strong></td>
+                    <td>${(item.financialName || '').toUpperCase()}</td>
                     <td>${item.contactNo || ''}</td>
-                    <td>${item.branchName || ''}</td>
-                    <td>${item.customerAddress || ''}</td>
-                    <td>${item.district || ''}</td>
-                    <td>${item.state || ''}</td>
+                    <td>${(item.branchName || '').toUpperCase()}</td>
+                    <td>${(item.address || item.customerAddress || '').toUpperCase()}</td>
+                    <td>${(item.district || '').toUpperCase()}</td>
+                    <td>${(item.state || '').toUpperCase()}</td>
                     <td>${item.pinCode || ''}</td>
-                    <td>${item.profession || ''}</td>
-                    <td>${item.selectPosition || ''}</td>
+                    <td>${(item.selectPosition || 'CONSULTANT').toUpperCase()}</td>
+                    <td>${statusBadge}</td>
                     <td>
-                        <button class="iconbutton generateBtn" data-code="${item.financialCode}" title="GENERATE">
-                            <i class="fa-solid fa-id-card text-success"></i>
+                        <button class="btn btn-sm btn-outline-primary generateBtn" data-code="${item.financialCode}" title="GENERATE ID CARD">
+                            <i class="fa-solid fa-id-card"></i> GENERATE
                         </button>
                     </td>
                 </tr>`;
@@ -39,24 +49,29 @@ $(document).ready(function() {
 				let data = response.data || [];
 				if (keyword) {
 					keyword = keyword.toUpperCase();
-					data = data.filter(c => c.financialCode && c.financialCode.toUpperCase().includes(keyword));
+					data = data.filter(c => 
+						(c.financialCode && c.financialCode.toUpperCase().includes(keyword)) ||
+						(c.financialName && c.financialName.toUpperCase().includes(keyword))
+					);
 				}
 				renderTable(data);
 			},
 			error: function() {
-				alert("ERROR FETCHING DATA.");
+				alert("ERROR FETCHING FINANCIAL CONSULTANT DATA.");
 			}
 		});
 	}
 
 	// 3. Live Search
-	$("#searchKeyword").on("input", function() {
-		let keyword = $(this).val();
+	$("#searchKeyword").on("input keyup", function() {
+		let keyword = $(this).val().trim();
 		fetchAndFilter(keyword);
 	});
 
-	// 4. Initial Load
-	fetchAndFilter();
+	// 4. Initial Load (only if search input exists)
+	if ($("#searchKeyword").length > 0) {
+		fetchAndFilter();
+	}
 
 	// 5. On Generate Button Click
 	$(document).on('click', '.generateBtn', function() {
@@ -64,31 +79,33 @@ $(document).ready(function() {
 		const checkbox = $(`.selectCheckbox[data-code="${financialCode}"]`);
 
 		if (checkbox.is(':checked')) {
-			window.location.href = `/IDCardFinancial?financialCode=${financialCode}`;
+			window.location.href = `IDCardFinancial?financialCode=${financialCode}`;
 		} else {
 			alert("PLEASE CHECK THE CHECKBOX TO GENERATE THE ID CARD.");
 		}
 	});
 
-	// 6. ID CARD PAGE - ONLY FINANCIAL CODE SPAN FILL
+	// 6. ID CARD PAGE - POPULATE DETAILS
 	const urlParams = new URLSearchParams(window.location.search);
 	const finCode = urlParams.get('financialCode');
 
-	if (finCode) {
+	if (finCode && $("#financialCode").length > 0) {
 		$.ajax({
 			url: `api/financialconsultant/getfinancialHierarchyByFinancialCode?financialCode=${finCode}`,
 			type: "GET",
 			success: function(response) {
-				console.log("API RESPONSE:", response);
-				const data = response.data?.[0]; // using optional chaining for safety
+				const data = response.data && response.data.length > 0 ? response.data[0] : null;
 				if (data) {
 					$("#financialCode").text(data.financialCode || '—');
-					$("#financialName").text(data.financialName || '—');
+					$("#financialName").text((data.financialName || '—').toUpperCase());
+					$("#selectPosition").text((data.selectPosition || 'FINANCIAL CONSULTANT').toUpperCase());
 					$("#dob").text(data.dob || '—');
 					$("#age").text(data.age || '—');
 					$("#contactNo").text(data.contactNo || '—');
-					$("#district").text(data.district || '—');
-					$("#branchName").text(data.branchName || '—');
+					$("#district").text((data.district || '—').toUpperCase());
+					$("#state").text((data.state || '—').toUpperCase());
+					$("#branchName").text((data.branchName || '—').toUpperCase());
+
 					if (data.financialPhoto) {
 						const img = `Uploads/${data.financialPhoto}`;
 						$("#idCardPhoto").attr("src", img);
@@ -101,11 +118,11 @@ $(document).ready(function() {
 					}
 
 				} else {
-					$("#financialCode").text('—');
+					alert("NO DATA FOUND FOR FINANCIAL CODE: " + finCode.toUpperCase());
 				}
 			},
 			error: function() {
-				alert("COULD NOT LOAD FINANCIALCODE.");
+				alert("COULD NOT LOAD FINANCIAL CONSULTANT DETAILS FOR ID CARD.");
 			}
 		});
 	}

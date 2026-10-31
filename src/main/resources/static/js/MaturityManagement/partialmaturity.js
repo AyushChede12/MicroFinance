@@ -1,10 +1,43 @@
 let policyid = 0;
+
 $(document).ready(function() {
+
+	// Set default today's closing date
+	const today = new Date().toISOString().split('T')[0];
+	if ($('#closingDate').length) {
+		$('#closingDate').val(today);
+	}
+
+	// Load Team Members into User Approver dropdown
+	$.ajax({
+		url: "api/teammember/getAllteamMember",
+		type: "GET",
+		success: function(response) {
+			if ((response.status === "FOUND" || response.status === "OK") && Array.isArray(response.data)) {
+				const teamOptions = response.data.map(function(team) {
+					return {
+						id: team.teamMemberCode,
+						text: ((team.teamMemberCode || '') + " - " + (team.teamMemberName || '')).toUpperCase()
+					};
+				});
+
+				$('#userApprover').empty().append('<option value="">-- SELECT TEAM MEMBER --</option>').select2({
+					placeholder: '-- SELECT TEAM MEMBER --',
+					data: teamOptions
+				});
+			}
+		},
+		error: function() {
+			console.warn("FAILED TO LOAD TEAM MEMBERS.");
+		}
+	});
+
+	// When Plan Type changes, load Policy Codes
 	$('#plantype').on('change', function() {
 		let plantype = $(this).val();
 
 		if (!plantype) {
-			alert("PLEASE SELECT A VALID PLAN TYPE.");
+			$('#policyCode').empty().append('<option value="">-- SELECT POLICY CODE --</option>');
 			return;
 		}
 
@@ -13,74 +46,81 @@ $(document).ready(function() {
 			type: 'GET',
 			data: { planType: plantype },
 			success: function(response) {
-				if (response.status === "OK" && response.data && response.data.length > 0) {
-					// Filter policyCodes starting with selected planType (e.g., DD...)
+				if ((response.status === "OK" || response.status === "FOUND") && response.data && response.data.length > 0) {
 					const filteredData = response.data.filter(item =>
-						item.policyCode && item.policyCode.startsWith(plantype)
+						item.policyCode && item.policyCode.toUpperCase().startsWith(plantype.toUpperCase())
 					);
 
-					const transferOptions = filteredData.map(function(item) {
-						return {
-							id: item.policyCode,
-							text: item.policyCode
-						};
-					});
+					const transferOptions = [
+						{ id: '', text: '-- SELECT POLICY CODE --' },
+						...filteredData.map(function(item) {
+							return {
+								id: item.policyCode,
+								text: (item.policyCode + " - " + (item.customerName || '')).toUpperCase()
+							};
+						})
+					];
 
 					$('#policyCode').empty().select2({
-						placeholder: '-- SEARCH POLICY CODE --',
-						data: transferOptions,
-						matcher: function(params, data) {
-							if ($.trim(params.term) === '') return data;
-
-							if (typeof data.text === 'undefined') return null;
-
-							const term = params.term.toLowerCase();
-							const text = data.text.toLowerCase();
-
-							return text.includes(term) ? data : null;
-						}
+						placeholder: '-- SELECT POLICY CODE --',
+						data: transferOptions
 					});
+
+					$('#policyCode').val('').trigger('change');
 				} else {
-					alert("NO POLICY CODES FOUND.");
+					$('#policyCode').empty().append('<option value="">-- NO POLICY CODES FOUND --</option>');
 				}
 			},
 			error: function() {
-				alert("FAILED TO LOAD POLICY CODES.");
+				console.warn("FAILED TO LOAD POLICY CODES.");
 			}
 		});
 	});
 
+	// When Policy Code changes, fetch details
 	$('#policyCode').on('change', function() {
 		let policyCode = $(this).val();
 
-		if (policyCode !== "") {
+		if (policyCode) {
 			$.ajax({
 				url: 'api/Policymangment/getPolicyByPolicyCode?policyCode=' + encodeURIComponent(policyCode),
 				type: 'GET',
 				success: function(response) {
-					console.log("Response:", response);
-
 					if (response.data) {
 						let data = response.data;
-						$('#planCode').val(data.schemeCode);
-						$('#customerName').val(data.customerName);
-						$('#policyName').val(data.schemeName);
-						$('#schemeType').val(data.schemeType);
-						$('#policyAmount').val(data.policyAmount);
-						$('#depositAmount').val(data.depositAmount);
-						$('#maturityAmount').val(data.maturityAmount);
-						$('#maturityDate').val(data.maturityDate);
-						$('#Approvebranch').val(data.branchName);
-						$('#duration').val(calDuration(data)); //function calDuration(data)
-						$('#sysPayable').val(sysPayable(data)); //function sysPayable(data)
-						$('#deduction').val(Deduction(data)); //function Deduction(data)
-						$('#netPayable').val(netPayment(data)); //dunction netpay(data)
-						$('#dueAmount').val(DueAmount(data)); //function DueAmount(data)
-						let id = parseInt(data.id);
-						policyid = id;
+						policyid = parseInt(data.id) || 0;
 
+						$('#planCode').val((data.schemeCode || '').toUpperCase());
+						$('#customerName').val((data.customerName || '').toUpperCase());
+						$('#policyName').val((data.schemeName || '').toUpperCase());
+						$('#policyAmount').val(data.policyAmount || '0.00');
+						$('#maturityAmount').val(data.maturityAmount || '0.00');
+						$('#maturityDate').val(data.maturityDate || '');
+						$('#Approvebranch').val((data.branchName || '').toUpperCase());
 
+						// Duration
+						let dur = calDuration(data);
+						$('#duration').val(dur);
 
+						// Sys Payable
+						let sp = sysPayable(data);
+						$('#sysPayable').val(sp.toFixed(2));
+
+						// Deduction
+						let deduct = Deduction(data);
+						$('#deduction').val(deduct.toFixed(2));
+
+						// Net Payable
+						let np = Math.max(0, sp - deduct);
+						$('#netPayable').val(np.toFixed(2));
+
+						// Paid Amount
+						let depAmt = parseFloat(data.depositAmount) || 0;
+						$('#depositAmount').val(depAmt.toFixed(2));
+
+						// Due Amount
+						let due = DueAmount(data);
+						$('#dueAmount').val(due.toFixed(2));
 					} else {
 						alert("NO DATA FOUND FOR THIS POLICY.");
 					}
@@ -90,79 +130,59 @@ $(document).ready(function() {
 				}
 			});
 		} else {
-			$('#customerName, #schemeMode, #schemeType, #policyAmount, #depositAmount, #maturityAmount, #maturityDate, #duration').val('');
+			$('#planCode, #customerName, #policyName, #policyAmount, #depositAmount, #maturityAmount, #maturityDate, #duration, #sysPayable, #deduction, #netPayable, #dueAmount').val('');
+			policyid = 0;
 		}
 	});
 
-	$.ajax({
-		url: "getAllteamMember",
-		type: "GET",
-		success: function(response) {
-			if (response && response.length > 0) {
-
-				const teamOptions = response.map(function(team) {
-					return {
-						id: team.teamMemberCode,
-						text: team.teamMemberCode + " - " + team.teamMemberName
-					};
-				});
-
-
-				$('#userApprover').empty().select2({
-					placeholder: '-- SELECT TEAM MEMBER --',
-					data: teamOptions,
-					matcher: function(params, data) {
-						if ($.trim(params.term) === '') return data;
-
-						if (typeof data.text === 'undefined') return null;
-
-						const term = params.term.toLowerCase();
-						const text = data.text.toLowerCase();
-
-						return text.includes(term) ? data : null;
-					}
-				});
-			} else {
-				alert("NO TEAM MEMBERS FOUND.");
-			}
-		},
-		error: function() {
-			alert("FAILED TO LOAD TEAM MEMBERS.");
-		}
+	// Deduction recalculates Net Payable
+	$('#deduction').on('input', function() {
+		let sp = parseFloat($('#sysPayable').val()) || 0;
+		let deduct = parseFloat($(this).val()) || 0;
+		let np = Math.max(0, sp - deduct);
+		$('#netPayable').val(np.toFixed(2));
 	});
 
+	// Form Submit -> Save Partial Maturity
 	$("#formid").submit(function(event) {
 		event.preventDefault();
 
-		const selectedCode = $('#userApprover').val(); // Will give "TM0001"
-		const selectedText = $('#userApprover option:selected').text(); // Will give "TM0001 - Ashwini Rajurkar"
+		if (!$("#policyCode").val()) {
+			alert("PLEASE SELECT A POLICY CODE.");
+			return;
+		}
+		if (!$("#userApprover").val()) {
+			alert("PLEASE SELECT USER APPROVER.");
+			return;
+		}
+		if (!$("#Comment").val()) {
+			alert("PLEASE ENTER COMMENT.");
+			return;
+		}
 
-		let teamMemberCode = selectedCode;
-		let teamMemberName = selectedText.split(" - ")[1].trim();
-
-		console.log("Parsed Code:", teamMemberCode);
-		console.log("Parsed Name:", teamMemberName);
-
+		const selectedCode = $('#userApprover').val();
+		const selectedText = $('#userApprover option:selected').text();
+		let teamMemberName = selectedText.includes(" - ") ? selectedText.split(" - ")[1].trim() : selectedText;
 
 		var data = {
 			policyCode: $("#policyCode").val(),
 			planCode: $("#planCode").val(),
 			maturityDate: $("#maturityDate").val(),
-			customerName: $("#customerName").val(),
-			policyName: $("#policyName").val(),
+			customerName: ($("#customerName").val() || '').toUpperCase(),
+			policyName: ($("#policyName").val() || '').toUpperCase(),
 			duration: $("#duration").val(),
 			policyAmount: $("#policyAmount").val(),
 			maturityAmount: $("#maturityAmount").val(),
 			sysPayable: $("#sysPayable").val(),
 			deduction: $("#deduction").val(),
 			netPayable: $("#netPayable").val(),
-			approveBranch: $("#Approvebranch").val(),
-			teamMemberCode: teamMemberCode,
-			teamMemberName: teamMemberName,
+			approveBranch: ($("#Approvebranch").val() || '').toUpperCase(),
+			teamMemberCode: selectedCode,
+			teamMemberName: teamMemberName.toUpperCase(),
 			closingDate: $("#closingDate").val(),
 			depositAmount: $("#depositAmount").val(),
 			dueAmount: $("#dueAmount").val(),
-			Comment: $("#Comment").val(),
+			Comment: ($("#Comment").val() || '').toUpperCase()
 		};
 
 		$.ajax({
@@ -171,16 +191,13 @@ $(document).ready(function() {
 			contentType: "application/json",
 			data: JSON.stringify(data),
 			success: function(response) {
-				alert(response.status === "OK"
-					? "SAVED: " + response.message
-					: "FAILED: " + response.message
-				);
-				if (response.status === "OK") {
-					updateAddNewInvestmentAmount(data);
+				if (response.status === "OK" || response.status === "CREATED") {
+					alert("PARTIAL MATURITY PAYMENT PROCESSED SUCCESSFULLY.");
 					$("#formid")[0].reset();
-
+					location.reload();
+				} else {
+					alert("FAILED: " + (response.message || "COULD NOT SAVE").toUpperCase());
 				}
-
 			},
 			error: function(xhr, status, error) {
 				console.error("Save error:", error, xhr.responseText);
@@ -189,124 +206,41 @@ $(document).ready(function() {
 		});
 	});
 
-
-
 });
 
-/*function calculateDepositAmount(){
-	let amount = parseFloat($('#amount').val()) || 0;
-	let paidAmount = parseFloat($('#depositAmount').val()) || 0;
-	let deposit=0;
-
-	if (!isNaN(amount) && !isNaN(paidAmount)) {
-		deposit = amount + paidAmount;
-		alert("depositAmount " + deposit);
-	}
-	return deposit;
-
-}*/
-
-
-function updateAddNewInvestmentAmount(data) {
-
-	//let policyCode = $("#policyCode").val();
-	//let policyid=parseInt(data.id);
-	alert(policyid);
-
-	// Validate before sending (optional)
-	if (!policyid) {
-		alert("PLEASE ENTER BOTH POLICY CODE");
-		return;
-	}
-
-	// Make the AJAX call
-	$.ajax({
-		url: "api/Policymangment/deletePolicyDataById?id=" + policyid,
-		type: "POST",
-		success: function(response) {
-			alert("DELETED SUCCESSFUL!");
-			console.log("deleted record:", response);
-		},
-		error: function(xhr, status, error) {
-			console.error("delete failed:", error);
-			alert("FAILED TO DELETE INSTALLMENT DETAILS.");
-		}
-	});
-}
-
+// Calculations
 function calDuration(data) {
+	if (!data.policyStartDate || !data.maturityDate) return "-";
 	let openingDate = new Date(data.policyStartDate);
 	let maturityDate = new Date(data.maturityDate);
-	let schemeMode = data.schemeMode;
+	let schemeMode = data.schemeMode || "MONTHLY";
 
 	let duration = 0;
-	let durationText = "-";
-
-	if (schemeMode && openingDate && maturityDate) {
-		if (schemeMode.toLowerCase() === "monthly") {
-			duration = (maturityDate.getFullYear() - openingDate.getFullYear()) * 12 + (maturityDate.getMonth() - openingDate.getMonth());
-			durationText = duration + (duration === 1 ? " MONTH" : " MONTHS");
-		}
-		else
-			if (schemeMode.toLowerCase() === "yearly") {
-				duration = maturityDate.getFullYear() - openingDate.getFullYear();
-				if (
-					maturityDate.getMonth() < openingDate.getMonth() ||
-					(maturityDate.getMonth() === openingDate.getMonth() &&
-						maturityDate.getDate() < openingDate.getDate())
-				) {
-					duration--;
-				}
-				durationText = duration + (duration === 1 ? " YEAR" : " YEARS");
-			}
+	if (schemeMode.toUpperCase() === "MONTHLY") {
+		duration = (maturityDate.getFullYear() - openingDate.getFullYear()) * 12 + (maturityDate.getMonth() - openingDate.getMonth());
+		return duration + (duration === 1 ? " MONTH" : " MONTHS");
+	} else if (schemeMode.toUpperCase() === "YEARLY") {
+		duration = maturityDate.getFullYear() - openingDate.getFullYear();
+		return duration + (duration === 1 ? " YEAR" : " YEARS");
 	}
-	return durationText;
+	return (data.schemeTerm || "-") + " MONTHS";
 }
 
 function sysPayable(data) {
-
-	let depositAmount = parseFloat(data.depositAmount);
-	let rateOfIntrest = parseFloat(data.roi);
-	let syspayable = 0;
-	let intrest = 0;
-
-
-	intrest = (depositAmount * rateOfIntrest * 1) / 100;
-	syspayable = depositAmount + intrest;
-
-	return syspayable;
-
+	let depositAmount = parseFloat(data.depositAmount) || 0;
+	let rateOfIntrest = parseFloat(data.roi) || 0;
+	let interest = (depositAmount * rateOfIntrest * 1) / 100;
+	return depositAmount + interest;
 }
 
 function Deduction(data) {
-
-	let deduct = (200 * 18) / 100;
-
-	return deduct;
-}
-
-function netPayment(data) {
-	let sysPayable = parseFloat($('#sysPayable').val()) || 0;
-	let deduction = parseFloat($('#deduction').val()) || 0;
-	let netpay = 0;
-
-	if (!isNaN(sysPayable) && !isNaN(deduction)) {
-		netpay = sysPayable - deduction;
-		alert("NET PAYABLE: " + netpay);
-	}
-	return netpay;
+	return 0.00;
 }
 
 function DueAmount(data) {
-	let amount = parseFloat($('#amount').val()) || 0;
-	let paidAmount = parseInt(data.depositAmount);
-	let policyAmount = parseInt(data.policyAmount);
-	let dueamount = 0;
-
-	if (!isNaN(amount) && !isNaN(paidAmount) && !isNaN(policyAmount)) {
-		dueamount = policyAmount - (amount + paidAmount);
-		alert(dueamount);
-	}
-	return dueamount;
-
+	let paidAmount = parseFloat(data.depositAmount) || 0;
+	let policyAmount = parseFloat(data.policyAmount) || 0;
+	let schemeterm = parseFloat(data.schemeTerm) || 12;
+	let totalExpected = policyAmount * schemeterm;
+	return Math.max(0, totalExpected - paidAmount);
 }

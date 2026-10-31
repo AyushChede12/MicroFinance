@@ -94,6 +94,7 @@ public class CustomerShareholdingController {
 	// Save Code
 	@PostMapping("/saveTransferShare")
 	public ResponseEntity<ApiResponse<TransferShare>> saveTransferShare(@RequestBody TransferShare transfer) {
+		transfer.setApproved(false);
 		TransferShare saveTS = customershareholdingservice.saveAllTransferShare(transfer);
 		if (saveTS != null) {
 			ApiResponse<TransferShare> response = ApiResponse.success(HttpStatus.FOUND,

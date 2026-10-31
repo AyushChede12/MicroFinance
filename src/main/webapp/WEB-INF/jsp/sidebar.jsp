@@ -405,20 +405,20 @@
 							CERTIFICATE</span>
 				</a></li>
 
-				<!-- <li><a href="reissueCertificate"> <i class="bi bi-circle"></i>
-							<span style="font-family: 'Poppins', sans-serif">ReIssue
-								Certificate</span>
-					</a></li>
+				<li><a href="${baseUrl}/reissueCertificate"> <i class="bi bi-circle"></i>
+						<span style="font-family: 'Poppins', sans-serif">RE-ISSUE
+							CERTIFICATE</span>
+				</a></li>
 
-					<li><a href="interestDetails"> <i class="bi bi-circle"></i>
-							<span style="font-family: 'Poppins', sans-serif">Interest
-								Details</span>
-					</a></li>
+				<li><a href="${baseUrl}/interestDetails"> <i class="bi bi-circle"></i>
+						<span style="font-family: 'Poppins', sans-serif">INTEREST
+							DETAILS</span>
+				</a></li>
 
-					<li><a href="interestPayable"> <i class="bi bi-circle"></i>
-							<span style="font-family: 'Poppins', sans-serif">Interest
-								Payable</span>
-					</a></li> -->
+				<li><a href="${baseUrl}/interestPayable"> <i class="bi bi-circle"></i>
+						<span style="font-family: 'Poppins', sans-serif">INTEREST
+							PAYABLE</span>
+				</a></li>
 
 				<li><a href="${baseUrl}/investmentDataSearch"> <i class="bi bi-circle"></i>
 						<span style="font-family: 'Poppins', sans-serif">SEARCH
@@ -874,7 +874,7 @@
 
 				<li><a href="${baseUrl}/partialPaymentStatusMaturityApplication"> <i
 						class="bi bi-circle"></i> <span
-						style="font-family: 'Poppins', sans-serif">PARTIL PAYMENT
+						style="font-family: 'Poppins', sans-serif">PARTIAL PAYMENT
 							STATUS</span>
 				</a></li>
 
@@ -1160,3 +1160,138 @@
       </li> -->
 	</ul>
 </aside>
+
+<script>
+(function() {
+	function applySidebarPermissions() {
+		var currentUser = sessionStorage.getItem("username") || "${sessionScope.username}";
+		if (!currentUser) {
+			console.warn("No logged in user found for sidebar filtering.");
+			return;
+		}
+
+		console.log("Applying sidebar permissions for user:", currentUser);
+
+		// ADMIN / Senior Bank Manager has unrestricted access
+		var upperUser = currentUser.trim().toUpperCase();
+		if (upperUser === "ADMIN" || upperUser === "ADMIN123" || upperUser.indexOf("ADMIN") !== -1) {
+			$("#sidebar .sidebar-nav > .nav-item").show();
+			$("#sidebar .sidebar-nav .nav-content li").show();
+			console.log("Admin account detected: full menu access granted.");
+			return;
+		}
+
+		function norm(s) {
+			return (s || "").toString().toUpperCase().replace(/[^A-Z0-9]/g, "");
+		}
+
+		function checkMatch(text, href, allowedSet) {
+			if (!text && !href) return false;
+			// Exact match by text or href
+			if (text && allowedSet[text]) return true;
+			if (href && allowedSet[href]) return true;
+
+			for (var key in allowedSet) {
+				if (!key) continue;
+				if (href && (href === key || href.endsWith(key))) {
+					return true;
+				}
+				if (text === key) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		$.ajax({
+			type: "POST",
+			url: "${baseUrl}/api/userCreation/findTheUserIdByUserMasterService",
+			contentType: "application/json",
+			data: JSON.stringify({ userName: currentUser }),
+			success: function(data) {
+				if (!data || !data.service || data.service.trim() === "") {
+					console.log("No services assigned to user:", currentUser);
+					$("#sidebar .sidebar-nav .nav-content li").hide();
+					$("#sidebar .sidebar-nav > .nav-item").each(function() {
+						if ($(this).find('a[href*="openDashboard"]').length > 0) {
+							$(this).show();
+						} else {
+							$(this).hide();
+						}
+					});
+					return;
+				}
+
+				console.log("User services assigned:", data.service);
+
+				var allowedSet = {};
+				var list = data.service.split(",");
+				for (var i = 0; i < list.length; i++) {
+					var item = norm(list[i]);
+					if (item) {
+						allowedSet[item] = true;
+					}
+				}
+
+				// Iterate over each top-level menu (.nav-item)
+				$("#sidebar .sidebar-nav > .nav-item").each(function() {
+					var $navItem = $(this);
+
+					// Always show DASHBOARD
+					if ($navItem.find('a[href*="openDashboard"]').length > 0) {
+						$navItem.show();
+						return;
+					}
+
+					var $subItems = $navItem.find("ul.nav-content li");
+					if ($subItems.length === 0) {
+						// Single nav link without dropdown
+						var text = norm($navItem.find("span").text() || $navItem.text());
+						var href = norm($navItem.find("a").attr("href") || "");
+						if (checkMatch(text, href, allowedSet)) {
+							$navItem.show();
+						} else {
+							$navItem.hide();
+						}
+						return;
+					}
+
+					// Dropdown menu: check if parent module itself or any child is allowed
+					var parentText = norm($navItem.children("a").find("span").text() || $navItem.children("a").text());
+					var parentAllowed = checkMatch(parentText, "", allowedSet);
+
+					var allowedChildCount = 0;
+					$subItems.each(function() {
+						var $li = $(this);
+						var text = norm($li.find("span").text() || $li.text());
+						var href = norm($li.find("a").attr("href") || "");
+
+						if (parentAllowed || checkMatch(text, href, allowedSet)) {
+							$li.show();
+							allowedChildCount++;
+						} else {
+							$li.hide();
+						}
+					});
+
+					// If this menu has at least one allowed submenu, display it
+					if (allowedChildCount > 0) {
+						$navItem.show();
+					} else {
+						$navItem.hide();
+					}
+				});
+			},
+			error: function(err) {
+				console.warn("Could not load user sidebar permissions:", err);
+			}
+		});
+	}
+
+	if (typeof $ !== "undefined") {
+		$(document).ready(applySidebarPermissions);
+	} else {
+		document.addEventListener("DOMContentLoaded", applySidebarPermissions);
+	}
+})();
+</script>

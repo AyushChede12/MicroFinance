@@ -1,6 +1,6 @@
 
 <div class="pagetitle">
-	<h1>Preferences</h1>
+	<h1>PREFERENCES</h1>
 	<nav>
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item"><a href="openDashboard"> <i
@@ -21,39 +21,17 @@
 			</nav>
 			<div class="row">
 				<div class="col-lg-3">
-					<!-- <div class="d-flex flex-column formFields" style="margin-bottom: 30px">
-                <label>Verify With</label>
-                <div class="position-relative">
-                  <div class="select-btn1" style="cursor: pointer;">
-                    <span name="cityName" id="cityNameId" style="font-size: 12px;">Select</span> <i
-                      class="fa-solid fa-angle-down"></i>
-                  </div>
-                  <div class="content" id="contentCityName" style="display: none;">
-                    <div class="search">
-                      <input type="text" id="city-search" class="m-0" placeholder="Search City" />
-                    </div>
-                    <ul class="options" id="city-options">
-                      <li>ABC</li>
-                      <li>ABC</li>
-                      <li>ABC</li>
-                      <li>ABC</li>
-                      <li>ABC</li>
-                      <li>ABC</li>
-                    </ul>
-                  </div>
-                </div>
-              </div> -->
 					<input type="hidden" name="id" id="id">
 					<div class="d-flex flex-column formFields">
-						<label for="">TYPE <span class="star">*</span></label> <select
+						<label for="type">TYPE <span class="star">*</span></label> <select
 							id="type" name="type" required="required"
 							class="form-control selectField" style="height: 30px;">
 							<option value="">SELECT TYPE</option>
-							<option value="Blue">FOUNDER</option>
-							<option value="Blue">CO-FOUNDER</option>
-							<option value="Blue">CEO</option>
-							<option value="Blue">MD</option>
-							<option value="Blue">CHAIRMAN</option>
+							<option value="FOUNDER">FOUNDER</option>
+							<option value="CO-FOUNDER">CO-FOUNDER</option>
+							<option value="CEO">CEO</option>
+							<option value="MD">MD</option>
+							<option value="CHAIRMAN">CHAIRMAN</option>
 						</select> <small id="chkexetype" style="color: red;"></small>
 					</div>
 				</div>
@@ -124,7 +102,7 @@
 				<div class="col-lg-3 mt-4">
 					<div class="d-flex flex-column formFields"
 						style="margin-bottom: 30px">
-						<label>Relation to Applicant <span class="star">*</span></label> <select
+						<label>RELATION TO APPLICANT <span class="star">*</span></label> <select
 							id="relationToApplicant" name="relationToApplicant"
 							required="required" class="form-control selectField"
 							style="height: 30px;">
@@ -134,9 +112,9 @@
 
 				<div class="col-lg-3 ">
 					<div class="d-flex flex-column formFields">
-						<label for="">Address <span class="star">*</span></label>
+						<label for="address">ADDRESS <span class="star">*</span></label>
 						<textarea name="address" id="address"
-							style="border: 1px solid rgb(224, 224, 224); border-radius: 5px; outline: none; padding: 5px; font-size: 12px; text-transform: uppercase;'"></textarea>
+							style="border: 1px solid rgb(224, 224, 224); border-radius: 5px; outline: none; padding: 5px; font-size: 12px; text-transform: uppercase;"></textarea>
 						<small id="chkaddress" style="color: red;"></small>
 					</div>
 				</div>

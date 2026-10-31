@@ -1,4 +1,3 @@
-
 <div class="pagetitle">
 	<h1>JOINT LIABILITY LOAN</h1>
 	<nav>
@@ -12,177 +11,101 @@
 </div>
 
 <div>
-	<form id="formid">
+	<form id="completedLoanFilterForm">
 		<div>
 			<nav>
 				<ol class="breadcrumb breadcrumb-title">
 					<li class="breadcrumb-item action">LOAN SEARCH</li>
 				</ol>
 			</nav>
-			<div class="row">
-				<div class="col-lg-3">
-					<div class="d-flex flex-column formFields"
-						style="margin-bottom: 30px">
-						<label>LOAN BRANCH*</label>
-						<div class="position-relative">
-							<div class="select-btn1" style="cursor: pointer;">
-								<span name="loanName" id="loanNameId" style="font-size: 12px;">SELECT
-									GROUPID</span> <i class="fa-solid fa-angle-down"></i>
-							</div>
-							<div class="content" id="contentCityName" style="display: none;">
-								<div class="search">
-									<input type="text" id="city-search" class="m-0"
-										placeholder="Search" />
-								</div>
-								<ul class="options" id="city-options">
-									<!-- Options will be dynamically added here -->
-
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="col-lg-3">
+			<div class="row align-items-end">
+				<div class="col-lg-3 mb-3">
 					<div class="d-flex flex-column formFields">
-						<label for="vehicalNo">START DATE</label> <input type="date"
-							name="vehicalNo" id="vehicalNo" required="required"
-							placeholder="" style="text-transform: uppercase;" />
+						<label for="branchName">LOAN BRANCH</label>
+						<select id="branchName" name="branchName" class="form-control selectField" style="height: 35px;">
+							<option value="ALL">ALL BRANCHES</option>
+						</select>
 					</div>
 				</div>
 
-				<div class="col-lg-3">
+				<div class="col-lg-3 mb-3">
 					<div class="d-flex flex-column formFields">
-						<label for="vehicalNo">END DATE </label> <input type="date"
-							name="vehicalNo" id="vehicalNo" required="required"
-							placeholder="Enter Vehicle No" style="text-transform: uppercase;" />
+						<label for="startDate">START DATE</label>
+						<input type="date" name="startDate" id="startDate" style="text-transform: uppercase;" />
 					</div>
 				</div>
 
+				<div class="col-lg-3 mb-3">
+					<div class="d-flex flex-column formFields">
+						<label for="endDate">END DATE</label>
+						<input type="date" name="endDate" id="endDate" style="text-transform: uppercase;" />
+					</div>
+				</div>
 
-
-			</div>
-			<div class="row">
-				<div class="col-12 text-center">
-
-					<button id="saveBtn" class="btnStyle"
-						style="background-color: #FFA500;">
-						<i class="bi bi-search"></i>SEARCH
+				<div class="col-lg-3 mb-3 d-flex gap-2">
+					<button type="button" id="searchBtn" class="btnStyle" style="background-color: #FFA500; height: 35px; width: 50%;">
+						<i class="bi bi-search"></i> SEARCH
 					</button>
-
+					<button type="button" id="printReportBtn" class="btn btn-success" style="height: 35px; width: 50%;">
+						<i class="bi bi-printer"></i> PRINT REPORT
+					</button>
 				</div>
 			</div>
-
-
 		</div>
-
-
-
-
 	</form>
-	<div class="row mt-5">
+
+	<div class="row mt-4">
 		<div class="col-12">
-			<div class="card recent-sales">
+			<div class="card recent-sales p-4" id="printableCompletedLoansReportArea">
+				<!-- Dynamic Company Header for Report -->
+				<div id="compHeaderReport" class="text-center mb-4 border-bottom pb-3">
+					<h3 id="reportCompName" class="fw-bold mb-1" style="text-transform: uppercase;"></h3>
+					<div id="reportCompAddress" class="text-muted small" style="text-transform: uppercase;"></div>
+					<div id="reportCompReg" class="text-muted small" style="text-transform: uppercase;"></div>
+					<div id="reportCompContact" class="text-muted small" style="text-transform: uppercase;"></div>
+					<h4 class="mt-3 fw-bold text-decoration-underline" style="text-transform: uppercase;">COMPLETED JOINT LIABILITY LOANS REPORT</h4>
+					<div id="reportFilterMeta" class="small text-muted mt-1" style="text-transform: uppercase;"></div>
+				</div>
 
-				<div class="card-body table-responsive">
-					<h5 class="card-title">SEARCH RESULT</h5>
-
-					<table class="table table-borderless datatable overflow-scroll">
+				<div class="card-body table-responsive p-0">
+					<table class="table table-bordered table-striped text-center">
 						<thead class="table-light">
-							<tr style="font-family: 'Poppins', sans-serif;">
-								<th scope="col">#</th>
-								<th scope="col">CUSTOMER</th>
-								<th scope="col">PRODUCT</th>
-								<th scope="col">PRICE</th>
-								<th scope="col">STATUS</th>
-								<th scope="col">ACTION</th>
+							<tr>
+								<th>#</th>
+								<th>GROUP CODE</th>
+								<th>COMMUNITY NAME</th>
+								<th>COMMUNITY LEADER</th>
+								<th>BRANCH</th>
+								<th>LOAN SCHEME</th>
+								<th>LOAN AMOUNT</th>
+								<th>OPENING DATE</th>
+								<th>CLOSURE DATE</th>
+								<th>STATUS</th>
 							</tr>
 						</thead>
-						<tbody>
-							<tr style="font-family: 'Poppins', sans-serif;">
-								<th scope="row"><a href="#">1</a></th>
-								<td>Arun Kumar</td>
-								<td><a href="#" className="text-primary">Milk</a></td>
-								<td>$29</td>
-								<td><span class="badge bg-success text-white">Approved</span>
-								</td>
-								<td class="d-flex" style="gap: .7rem;">
-									<button class="iconbutton">
-										<i class="fa-solid fa-pen-to-square text-success"></i>
-									</button>
-									<button class="iconbutton">
-										<i class="fa-solid fa-eye text-primary"></i>
-									</button>
-									<button class="iconbutton">
-										<i class="fa-solid fa-trash text-danger"></i>
-									</button>
-								</td>
-							</tr>
-
+						<tbody id="completedLoansTableBody">
 							<tr>
-								<th scope="row"><a href="#">2</a></th>
-								<td>Deepak Dalwe</td>
-								<td><a href="#" className="text-primary">Ghee</a></td>
-								<td>$16.5</td>
-								<td><span class="badge bg-danger text-white">Rejected</span>
-								</td>
-								<td class="d-flex" style="gap: .7rem;">
-									<button class="iconbutton">
-										<i class="fa-solid fa-pen-to-square text-success"></i>
-									</button>
-									<button class="iconbutton">
-										<i class="fa-solid fa-eye text-primary"></i>
-									</button>
-									<button class="iconbutton">
-										<i class="fa-solid fa-trash text-danger"></i>
-									</button>
-								</td>
-							</tr>
-							<tr>
-								<th scope="row"><a href="#">2</a></th>
-								<td>Deepak Dalwe</td>
-								<td><a href="#" className="text-primary">Ghee</a></td>
-								<td>$16.5</td>
-								<td><span class="badge bg-danger text-white">Rejected</span>
-								</td>
-								<td class="d-flex" style="gap: .7rem;">
-									<button class="iconbutton">
-										<i class="fa-solid fa-pen-to-square text-success"></i>
-									</button>
-									<button class="iconbutton">
-										<i class="fa-solid fa-eye text-primary"></i>
-									</button>
-									<button class="iconbutton">
-										<i class="fa-solid fa-trash text-danger"></i>
-									</button>
-								</td>
-							</tr>
-							<tr>
-								<th scope="row"><a href="#">2</a></th>
-								<td>Deepak Dalwe</td>
-								<td><a href="#" className="text-primary">Ghee</a></td>
-								<td>$16.5</td>
-								<td><span class="badge bg-danger text-white">Rejected</span>
-								</td>
-								<td class="d-flex" style="gap: .7rem;">
-									<button class="iconbutton">
-										<i class="fa-solid fa-pen-to-square text-success"></i>
-									</button>
-									<button class="iconbutton">
-										<i class="fa-solid fa-eye text-primary"></i>
-									</button>
-									<button class="iconbutton">
-										<i class="fa-solid fa-trash text-danger"></i>
-									</button>
-								</td>
+								<td colspan="10">CLICK SEARCH TO LOAD COMPLETED LOANS</td>
 							</tr>
 						</tbody>
 					</table>
 				</div>
+
+				<!-- Signature Section for Print -->
+				<div class="row mt-5 pt-4 text-center print-signatures" style="display: none;">
+					<div class="col-4">
+						<div class="border-top pt-2 fw-bold">PREPARED BY</div>
+					</div>
+					<div class="col-4">
+						<div class="border-top pt-2 fw-bold">CHECKED BY</div>
+					</div>
+					<div class="col-4">
+						<div class="border-top pt-2 fw-bold">BRANCH MANAGER / SEAL</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
-
 </div>
-<script
-	src="${pageContext.request.contextPath}/js/Joinlibiliy/completedLoanRecords.js"></script>
+
+<script src="${pageContext.request.contextPath}/js/Joinlibiliy/completedLoanRecords.js"></script>

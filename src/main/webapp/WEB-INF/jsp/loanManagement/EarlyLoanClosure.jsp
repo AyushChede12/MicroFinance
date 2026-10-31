@@ -431,10 +431,10 @@
 						<label for="reasonForClosure">REASON FOR CLOSURE <span style="color:red">*</span></label>
 						<select id="reasonForClosure" name="reasonForClosure" required="required"
 							class="form-control selectField" style="height: 30px;">
-							<option value="Voluntary Prepayment">Voluntary Prepayment</option>
-							<option value="Society-Initiated Recovery">Society-Initiated Recovery</option>
-							<option value="Restructuring/Transfer">Restructuring/Transfer</option>
-							<option value="Other">Other</option>
+							<option value="Voluntary Prepayment">VOLUNTARY PREPAYMENT</option>
+							<option value="Society-Initiated Recovery">SOCIETY-INITIATED RECOVERY</option>
+							<option value="Restructuring/Transfer">RESTRUCTURING / TRANSFER</option>
+							<option value="Other">OTHER</option>
 						</select>
 					</div>
 				</div>
@@ -548,40 +548,40 @@
 		<div class="modal-content" style="border-radius: 12px; border: none; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);">
 			<div class="modal-header" style="background: #0f172a; color: #fff; border-radius: 12px 12px 0 0;">
 				<h5 class="modal-title fw-bold"><i class="bi bi-exclamation-triangle text-warning me-2"></i>CONFIRM EARLY LOAN CLOSURE</h5>
-				<button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close" style="background:transparent; border:none; font-size:24px; line-height:1;">&times;</button>
+				<button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal" aria-label="CLOSE" style="background:transparent; border:none; font-size:24px; line-height:1;">&times;</button>
 			</div>
 			<div class="modal-body p-4">
-				<p class="text-muted mb-3">You are about to foreclose and permanently settle this loan account. Please verify settlement summary:</p>
+				<p class="text-muted mb-3">YOU ARE ABOUT TO FORECLOSE AND PERMANENTLY SETTLE THIS LOAN ACCOUNT. PLEASE VERIFY SETTLEMENT SUMMARY:</p>
 				<table class="table table-bordered table-sm mb-3">
 					<tbody>
 						<tr>
-							<td class="text-muted fw-semibold">Loan ID</td>
+							<td class="text-muted fw-semibold">LOAN ID</td>
 							<td id="modalConfLoanId" class="fw-bold"></td>
 						</tr>
 						<tr>
-							<td class="text-muted fw-semibold">Borrower Name</td>
+							<td class="text-muted fw-semibold">BORROWER NAME</td>
 							<td id="modalConfBorrower" class="fw-bold"></td>
 						</tr>
 						<tr>
-							<td class="text-muted fw-semibold">Payment Mode</td>
+							<td class="text-muted fw-semibold">PAYMENT MODE</td>
 							<td id="modalConfPayMode" class="fw-bold text-primary"></td>
 						</tr>
 						<tr>
-							<td class="text-muted fw-semibold">Payoff Settlement Amount</td>
+							<td class="text-muted fw-semibold">PAYOFF SETTLEMENT AMOUNT</td>
 							<td id="modalConfPayoff" class="fw-bold text-success fs-5"></td>
 						</tr>
 						<tr>
-							<td class="text-muted fw-semibold">Reason for Closure</td>
+							<td class="text-muted fw-semibold">REASON FOR CLOSURE</td>
 							<td id="modalConfReason" class="fst-italic"></td>
 						</tr>
 					</tbody>
 				</table>
 				<div class="alert alert-warning py-2 mb-0" style="font-size: 13px;">
-					<i class="bi bi-info-circle me-1"></i> This action is non-reversible. It will mark the loan as <strong>CLOSED</strong>, discharge liabilities, and balance the ledger.
+					<i class="bi bi-info-circle me-1"></i> THIS ACTION IS NON-REVERSIBLE. IT WILL MARK THE LOAN AS <strong>CLOSED</strong>, DISCHARGE LIABILITIES, AND BALANCE THE LEDGER.
 				</div>
 			</div>
 			<div class="modal-footer" style="background: #f8fafc; border-radius: 0 0 12px 12px;">
-				<button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">Cancel</button>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">CANCEL</button>
 				<button type="button" id="confirmProceedCloseBtn" class="btn btn-warning fw-bold px-4">
 					<i class="bi bi-check-circle me-1"></i> YES, EXECUTE CLOSURE
 				</button>
@@ -599,15 +599,15 @@
 			<div class="settlement-modal-header d-flex justify-content-between align-items-center">
 				<div>
 					<h4 class="m-0 fw-bold"><i class="bi bi-check2-circle me-2"></i>LOAN CLOSED SUCCESSFULLY!</h4>
-					<small style="opacity: 0.9;">Early Foreclosure & Account Settlement Executed</small>
+					<small style="opacity: 0.9;">EARLY FORECLOSURE & ACCOUNT SETTLEMENT EXECUTED</small>
 				</div>
-				<button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close" style="background:transparent; border:none; font-size:24px; line-height:1;">&times;</button>
+				<button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal" aria-label="CLOSE" style="background:transparent; border:none; font-size:24px; line-height:1;">&times;</button>
 			</div>
 			<div class="modal-body p-4">
 				<div class="alert alert-success d-flex align-items-center mb-4" role="alert">
 					<i class="bi bi-shield-check fs-3 me-3"></i>
 					<div>
-						<h6 class="mb-0 fw-bold" id="succModalMsg">Loan successfully foreclosed and closed.</h6>
+						<h6 class="mb-0 fw-bold" id="succModalMsg">LOAN SUCCESSFULLY FORECLOSED AND CLOSED.</h6>
 						<small id="succModalCollateralMsg" class="text-success fw-semibold"></small>
 					</div>
 				</div>
@@ -615,30 +615,30 @@
 				<!-- Printable Receipt Preview -->
 				<div class="printable-receipt mb-4" id="printableReceiptArea">
 					<div class="text-center pb-2 border-bottom mb-2">
-						<h5 class="fw-bold mb-0">SAMITHA URBAN COOPERATIVE</h5>
+						<h5 class="fw-bold mb-0" id="recCompanyName">CO OPERATIVE SOCIETY LTD NAGPUR</h5>
 						<small>EARLY LOAN CLOSURE & FORECLOSURE SETTLEMENT RECEIPT</small>
 					</div>
 					<div class="row g-2 mb-2" style="font-size: 13px;">
-						<div class="col-6"><strong>Receipt No:</strong> <span id="recReceiptNo"></span></div>
-						<div class="col-6 text-end"><strong>Date:</strong> <span id="recDate"></span></div>
-						<div class="col-6"><strong>Loan ID:</strong> <span id="recLoanId"></span></div>
-						<div class="col-6 text-end"><strong>Branch:</strong> <span id="recBranch"></span></div>
-						<div class="col-6"><strong>Borrower:</strong> <span id="recBorrower"></span></div>
-						<div class="col-6 text-end"><strong>Payment Mode:</strong> <span id="recMode"></span></div>
+						<div class="col-6"><strong>RECEIPT NO:</strong> <span id="recReceiptNo"></span></div>
+						<div class="col-6 text-end"><strong>DATE:</strong> <span id="recDate"></span></div>
+						<div class="col-6"><strong>LOAN ID:</strong> <span id="recLoanId"></span></div>
+						<div class="col-6 text-end"><strong>BRANCH:</strong> <span id="recBranch"></span></div>
+						<div class="col-6"><strong>BORROWER:</strong> <span id="recBorrower"></span></div>
+						<div class="col-6 text-end"><strong>PAYMENT MODE:</strong> <span id="recMode"></span></div>
 					</div>
 					<table class="table table-sm table-bordered mb-2" style="font-size: 12px;">
 						<thead>
 							<tr class="table-light">
-								<th>Description</th>
-								<th class="text-end">Amount (₹)</th>
+								<th>DESCRIPTION</th>
+								<th class="text-end">AMOUNT (₹)</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr><td>Principal Outstanding Settled</td><td class="text-end" id="recPrincipal">0.00</td></tr>
-							<tr><td>Accrued Interest till Closure</td><td class="text-end" id="recInterest">0.00</td></tr>
-							<tr><td>Overdue Arrears / Penalties</td><td class="text-end" id="recFines">0.00</td></tr>
-							<tr><td>Foreclosure Charges</td><td class="text-end" id="recFee">0.00</td></tr>
-							<tr><td>Less: Concession / Waiver</td><td class="text-end text-danger" id="recWaiver">-0.00</td></tr>
+							<tr><td>PRINCIPAL OUTSTANDING SETTLED</td><td class="text-end" id="recPrincipal">0.00</td></tr>
+							<tr><td>ACCRUED INTEREST TILL CLOSURE</td><td class="text-end" id="recInterest">0.00</td></tr>
+							<tr><td>OVERDUE ARREARS / PENALTIES</td><td class="text-end" id="recFines">0.00</td></tr>
+							<tr><td>FORECLOSURE CHARGES</td><td class="text-end" id="recFee">0.00</td></tr>
+							<tr><td>LESS: CONCESSION / WAIVER</td><td class="text-end text-danger" id="recWaiver">-0.00</td></tr>
 							<tr class="table-secondary fw-bold">
 								<td>TOTAL NET SETTLEMENT AMOUNT RECEIVED</td>
 								<td class="text-end" id="recTotal">₹0.00</td>
@@ -646,31 +646,31 @@
 						</tbody>
 					</table>
 					<div class="d-flex justify-content-between mt-3 pt-2 border-top" style="font-size: 11px;">
-						<div>Loan Status: <strong>CLOSED</strong> | Ledger: <strong>ZERO BALANCE</strong></div>
-						<div>Authorized Signatory</div>
+						<div>LOAN STATUS: <strong>CLOSED</strong> | LEDGER: <strong>ZERO BALANCE</strong></div>
+						<div>AUTHORIZED SIGNATORY</div>
 					</div>
 				</div>
 
 				<div class="row g-2">
 					<div class="col-md-4">
 						<button type="button" id="printReceiptBtn" class="btn btn-outline-primary w-100 py-2 fw-bold">
-							<i class="bi bi-printer me-1"></i> Print Foreclosure Receipt
+							<i class="bi bi-printer me-1"></i> PRINT FORECLOSURE RECEIPT
 						</button>
 					</div>
 					<div class="col-md-4">
 						<button type="button" id="downloadNocBtn" class="btn btn-success w-100 py-2 fw-bold">
-							<i class="bi bi-file-earmark-check me-1"></i> Download NOC Certificate
+							<i class="bi bi-file-earmark-check me-1"></i> DOWNLOAD NOC CERTIFICATE
 						</button>
 					</div>
 					<div class="col-md-4">
 						<button type="button" id="viewStatementBtn" class="btn btn-outline-secondary w-100 py-2 fw-bold">
-							<i class="bi bi-receipt me-1"></i> View Loan Statement
+							<i class="bi bi-receipt me-1"></i> VIEW LOAN STATEMENT
 						</button>
 					</div>
 				</div>
 			</div>
 			<div class="modal-footer" style="background: #f8fafc; border-radius: 0 0 12px 12px;">
-				<button type="button" class="btn btn-primary" onclick="location.reload();">Done & Refresh</button>
+				<button type="button" class="btn btn-primary" onclick="location.reload();">DONE & REFRESH</button>
 			</div>
 		</div>
 	</div>

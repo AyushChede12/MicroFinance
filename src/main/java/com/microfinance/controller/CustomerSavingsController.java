@@ -812,6 +812,40 @@ public class CustomerSavingsController {
 				crAct.setPayBy("TRANSFER");
 				crAct.setApproved(true);
 				savingAccountActivityRepo.save(crAct);
+
+				// Record AccountTransaction for Debit Account
+				customersaving.recordAccountTransaction(
+						debitAccount.getAccountNumber(),
+						debitAccount.getEnterCustomerName(),
+						debitAccount.getBranchName() != null ? debitAccount.getBranchName().getBranchName() : "",
+						isDebitCurrent ? "CURRENT" : "SAVING",
+						drAct.getTransactionDate(),
+						"TRANSFER",
+						0.0,
+						amount,
+						drDesc,
+						"TRANSFER",
+						drAct.getSelectSavingTransactionId(),
+						newDebitBalance,
+						"ADMIN"
+				);
+
+				// Record AccountTransaction for Credit Account
+				customersaving.recordAccountTransaction(
+						creditAccount.getAccountNumber(),
+						creditAccount.getEnterCustomerName(),
+						creditAccount.getBranchName() != null ? creditAccount.getBranchName().getBranchName() : "",
+						isCreditCurrent ? "CURRENT" : "SAVING",
+						crAct.getTransactionDate(),
+						"TRANSFER",
+						amount,
+						0.0,
+						crDesc,
+						"TRANSFER",
+						crAct.getSelectSavingTransactionId(),
+						newCreditBalance,
+						"ADMIN"
+				);
 			} catch (Exception actEx) {
 				System.err.println("Failed to record fund transfer activities: " + actEx.getMessage());
 			}
@@ -974,6 +1008,32 @@ public class CustomerSavingsController {
 		Map<String, Object> res = new HashMap<>();
 		res.put("newBalance", newBalance);
 		return res;
+	}
+
+	@PostMapping("/getServiceChargeData")
+	public ResponseEntity<ApiResponse<List<CreateSavingsAccount>>> getServiceChargeData(
+			@RequestBody DateRangeRequest request) {
+
+		List<CreateSavingsAccount> list = customersaving.getServiceChargeData(request.getStartDate(),
+				request.getEndDate());
+
+		ApiResponse<List<CreateSavingsAccount>> response = ApiResponse.success(HttpStatus.OK,
+				"Data fetched successfully", list);
+
+		return ResponseEntity.ok(response);
+	}
+
+	@PostMapping("/deduct-service-charges")
+	public ResponseEntity<Map<String, Object>> deductServiceCharges(@RequestBody Map<String, Object> payload) {
+
+		Long id = Long.valueOf(payload.get("id").toString());
+		double newBalance = customersaving.deductServiceCharges(id);
+
+		Map<String, Object> res = new HashMap<>();
+		res.put("status", "OK");
+		res.put("newBalance", newBalance);
+		res.put("message", "Service Charge Successfully Deducted!");
+		return ResponseEntity.ok(res);
 	}
 
 	@GetMapping("/getAccountNumbers")
