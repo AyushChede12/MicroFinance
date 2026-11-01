@@ -46,10 +46,10 @@ public class ReportsAndAnalyticsController {
 		List<CreateSavingsAccount> list = reportsAndAnalyticsService.getApprovedSavingAccount();
 		if (!list.isEmpty()) {
 			return ResponseEntity
-					.ok(ApiResponse.success(HttpStatus.OK, "APPROVED SAVING ACCOUNT CUSTOMERS FETCHED", list));
+					.ok(ApiResponse.success(HttpStatus.OK, "APPROVED SAVING ACCOUNT CUSTOMERS FETCHED SUCCESSFULLY", list));
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "NO APPROVED FINANCIAL CONSULTANTS FOUND"));
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "NO APPROVED SAVING ACCOUNT CUSTOMERS FOUND"));
 		}
 	}
 
@@ -58,10 +58,10 @@ public class ReportsAndAnalyticsController {
 		List<LoanApplication> list = reportsAndAnalyticsService.getUnapprovedLoanApplication();
 
 		if (!list.isEmpty()) {
-			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "UNAPPROVED LOAN FETCHED", list));
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "UNAPPROVED LOAN APPLICATIONS FETCHED SUCCESSFULLY", list));
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "NO UNAPPROVED INVESTMENTS FOUND"));
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "NO UNAPPROVED LOAN APPLICATIONS FOUND"));
 		}
 	}
 
@@ -69,10 +69,10 @@ public class ReportsAndAnalyticsController {
 	public ResponseEntity<ApiResponse<List<LoanPayment>>> getLoanPaymentReport() {
 		List<LoanPayment> list = reportsAndAnalyticsService.getLoanPaymentReport();
 		if (!list.isEmpty()) {
-			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "LOAN PAYMENT FETCHED SUCCESFULLY", list));
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "LOAN PAYMENTS FETCHED SUCCESSFULLY", list));
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "NO LOAN PAYMENT FOUND"));
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "NO LOAN PAYMENTS FOUND"));
 		}
 	}
 
@@ -81,10 +81,10 @@ public class ReportsAndAnalyticsController {
 		List<LoanApplication> list = reportsAndAnalyticsService.getLoanConfirmationDocument();
 		if (!list.isEmpty()) {
 			return ResponseEntity
-					.ok(ApiResponse.success(HttpStatus.OK, "LOAN CONFIRMATION DOCUMENT FETCH SUCCESFULLY", list));
+					.ok(ApiResponse.success(HttpStatus.OK, "LOAN CONFIRMATION DOCUMENTS FETCHED SUCCESSFULLY", list));
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "NO LOAN CONFIRMATION DOCUMENT FOUND"));
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "NO LOAN CONFIRMATION DOCUMENTS FOUND"));
 		}
 	}
 
@@ -167,8 +167,8 @@ public class ReportsAndAnalyticsController {
 
 		Optional<AddnewinvestmentPM> policy = reportsAndAnalyticsService.getPolicyById(id);
 
-		if (policy != null) {
-			return ResponseEntity.ok(policy);
+		if (policy != null && policy.isPresent()) {
+			return ResponseEntity.ok(policy.get());
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("POLICY NOT FOUND");
 		}

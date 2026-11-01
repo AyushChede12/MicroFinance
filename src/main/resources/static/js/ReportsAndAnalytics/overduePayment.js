@@ -1,287 +1,204 @@
 $(document).ready(function() {
+	let allLoanData = [];
 
 	/* ------------------ LOAD DROPDOWNS ------------------ */
-
 	$.ajax({
 		url: "api/datacorrection/fetchAllApprovedLoanApplications",
 		type: "GET",
 		success: function(response) {
-
-			if (response.status === "OK") {
-
-				const list = response.data;
+			if (response.status === "OK" || response.status === "SUCCESS" || Array.isArray(response.data)) {
+				allLoanData = response.data || [];
 
 				const uniqueBranches = new Set();
 				const uniquePlans = new Set();
 
-				list.forEach(item => {
-
-					if (item.branchName) {
-						uniqueBranches.add(item.branchName.trim());
-					}
-
-					if (item.loanPlanName) {
-						uniquePlans.add(item.loanPlanName.trim());
-					}
-
+				allLoanData.forEach(item => {
+					if (item.branchName) uniqueBranches.add(item.branchName.trim().toUpperCase());
+					if (item.loanPlanName) uniquePlans.add(item.loanPlanName.trim().toUpperCase());
+					if (item.typeOfLoan) uniquePlans.add(item.typeOfLoan.trim().toUpperCase());
 				});
 
-				/* Branch */
-
-				$("#branchName1").empty();
-				$("#branchName1").append("<option value=''>-- SELECT BRANCH NAME --</option>");
-
+				$("#branchName1").html("<option value=''>ALL BRANCHES</option>");
 				uniqueBranches.forEach(branch => {
 					$("#branchName1").append(`<option value="${branch}">${branch}</option>`);
 				});
 
-
-				/* Loan Plan */
-
-				$("#loanPlanName").empty();
-				$("#loanPlanName").append("<option value=''>-- SELECT LOAN NAME --</option>");
-
+				$("#loanPlanName").html("<option value=''>ALL PLANS</option>");
 				uniquePlans.forEach(plan => {
 					$("#loanPlanName").append(`<option value="${plan}">${plan}</option>`);
 				});
 
+				bindLoanTable(allLoanData);
+			} else {
+				alert("ERROR: " + (response.message || "DROPDOWN LOADING FAILED"));
 			}
-
 		},
 		error: function(xhr) {
-
 			console.log(xhr);
 			alert("DROPDOWN LOADING FAILED");
-
 		}
 	});
-
-
-	/* ------------------ INITIAL TABLE LOAD ------------------ */
-
-	loadApprovedLoanApplications();
-
 
 	/* ------------------ FIND BUTTON ------------------ */
-
 	$('#findBtn').click(function(e) {
-
 		e.preventDefault();
-
-		let branch = $('#branchName1').val();
-		let policy = $('#loanPlanName').val();
-		let financialCode = $('#financialCode').val().trim().toUpperCase();
-		let toDate = $('#toDate').val();
-
-		loadApprovedLoanApplications(branch, policy, financialCode, toDate);
-
+		filterData();
 	});
 
-});
+	/* ------------------ RESET BUTTON ------------------ */
+	$('#resetBtn').click(function(e) {
+		e.preventDefault();
+		$('#branchName1').val('');
+		$('#loanPlanName').val('');
+		$('#financialCode').val('');
+		$('#toDate').val('');
+		bindLoanTable(allLoanData);
+	});
 
+	/* ------------------ PRINT FULL REPORT ------------------ */
+	$('#printFullReportBtn').click(function(e) {
+		e.preventDefault();
+		const branch = $('#branchName1').val() || 'ALL BRANCHES';
+		const plan = $('#loanPlanName').val() || 'ALL PLANS';
+		const finCode = $('#financialCode').val() || 'ALL';
+		const toDate = $('#toDate').val() || 'ALL DATES';
+		const subTitle = `FILTERS: BRANCH: ${branch} | PLAN: ${plan} | ADVISOR: ${finCode} | AS OF DATE: ${toDate}`;
+		ReportPrintUtil.printTable('.datatable', 'OVERDUE RE-PAYMENT ANALYSIS REPORT', subTitle);
+	});
 
-/* ------------------ FETCH DATA ------------------ */
+	function filterData() {
+		const branch = ($('#branchName1').val() || '').trim().toUpperCase();
+		const policy = ($('#loanPlanName').val() || '').trim().toUpperCase();
+		const financialCode = ($('#financialCode').val() || '').trim().toUpperCase();
+		const toDate = $('#toDate').val();
 
-function loadApprovedLoanApplications(branch = '', policy = '', financialCode = '', toDate = '') {
+		const filtered = allLoanData.filter(item => {
+			const itemBranch = (item.branchName || '').toUpperCase();
+			const itemPlan = (item.loanPlanName || item.typeOfLoan || '').toUpperCase();
+			const itemFin = (item.financialConsultantId || item.financialConsultantName || '').toUpperCase();
 
-	$.ajax({
-		url: 'api/datacorrection/fetchAllApprovedLoanApplications',
-		method: 'GET',
-		dataType: 'json',
+			const matchesBranch = !branch || itemBranch.includes(branch);
+			const matchesPlan = !policy || itemPlan.includes(policy);
+			const matchesFin = !financialCode || itemFin.includes(financialCode);
 
-		success: function(response) {
-
-			if (response && response.data) {
-
-				let filteredData = response.data;
-
-				if (branch) {
-					filteredData = filteredData.filter(item => item.branchName === branch);
+			let matchesDate = true;
+			if (toDate) {
+				const approvalDate = parseDate(item.approvalDate || item.loanDate);
+				const tDate = new Date(toDate);
+				if (approvalDate && !isNaN(approvalDate.getTime())) {
+					matchesDate = approvalDate <= tDate;
 				}
-
-				if (policy) {
-					filteredData = filteredData.filter(item => item.loanPlanName === policy);
-				}
-
-				if (financialCode) {
-					filteredData = filteredData.filter(item =>
-						item.financialConsultantId &&
-						item.financialConsultantId.toUpperCase().includes(financialCode)
-					);
-				}
-
-				if (toDate) {
-
-					filteredData = filteredData.filter(item => {
-
-						let approvalDate = parseDate(item.approvalDate);
-						let tDate = new Date(toDate);
-
-						return approvalDate <= tDate;
-
-					});
-
-				}
-
-				bindLoanTable(filteredData);
-
 			}
 
-		},
+			return matchesBranch && matchesPlan && matchesFin && matchesDate;
+		});
 
-		error: function() {
+		bindLoanTable(filtered);
+	}
 
-			$('table tbody').html(`<tr>
-                <td colspan="12" class="text-center text-danger">
-                    ERROR FETCHING DATA
-                </td>
-            </tr>`);
+	/* ------------------ BIND TABLE ------------------ */
+	function bindLoanTable(data) {
+		let tbody = $('.datatable tbody');
+		tbody.empty();
 
+		if (!data || data.length === 0) {
+			tbody.append(`<tr>
+				<td colspan="12" class="text-center text-danger fw-bold">
+					NO OVERDUE RECORDS FOUND
+				</td>
+			</tr>`);
+			return;
 		}
 
-	});
+		let sn = 1;
+		data.forEach(item => {
+			let loanAmount = parseFloat(item.loanAmount || 0);
+			let totalPaid = parseFloat(item.sanctionedAmount || item.totalPaid || 0);
+			let emiPayment = parseFloat(item.emiPayment || 0);
 
-}
+			let overdue = (loanAmount - totalPaid) > 0 ? (loanAmount - totalPaid) : 0;
+			let currentDue = emiPayment;
 
-
-/* ------------------ BIND TABLE ------------------ */
-
-function bindLoanTable(data) {
-
-	let tbody = $('.datatable tbody');
-	tbody.empty();
-
-	if (!data || data.length === 0) {
-
-		tbody.append(`<tr>
-            <td colspan="12" class="text-center text-danger">
-                NO RECORDS FOUND
-            </td>
-        </tr>`);
-
-		return;
-
+			let row = `
+			<tr>
+				<td class="text-center font-monospace">${sn++}</td>
+				<td class="fw-bold">${(item.loanId || '').toUpperCase()}</td>
+				<td>${(item.memberId || '').toUpperCase()}</td>
+				<td class="fw-semibold">${(item.memberName || '').toUpperCase()}</td>
+				<td>${(item.loanDate || '').toUpperCase()}</td>
+				<td>${(item.branchName || '').toUpperCase()}</td>
+				<td>${(item.contactNo || '').toUpperCase()}</td>
+				<td>${(item.loanPlanName || item.typeOfLoan || '').toUpperCase()}</td>
+				<td class="text-success fw-bold">₹${totalPaid.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+				<td class="text-danger fw-bold">₹${overdue.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+				<td class="fw-bold">₹${currentDue.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+				<td class="text-center no-print">
+					<button class="btn btn-sm btn-outline-primary printBtn" data-loan-id="${item.loanId || ''}">
+						<i class="bi bi-printer"></i> PRINT
+					</button>
+				</td>
+			</tr>`;
+			tbody.append(row);
+		});
 	}
 
-	let sn = 1;
+	/* ------------------ PRINT SINGLE OVERDUE DOSSIER ------------------ */
+	$(document).on("click", ".printBtn", function() {
+		let row = $(this).closest("tr");
 
-	data.forEach(item => {
+		let loanId = row.find("td:eq(1)").text();
+		let memberCode = row.find("td:eq(2)").text();
+		let memberName = row.find("td:eq(3)").text();
+		let loanDate = row.find("td:eq(4)").text();
+		let branch = row.find("td:eq(5)").text();
+		let mobile = row.find("td:eq(6)").text();
+		let loanName = row.find("td:eq(7)").text();
+		let totalPaid = row.find("td:eq(8)").text();
+		let overdue = row.find("td:eq(9)").text();
+		let currentDue = row.find("td:eq(10)").text();
 
-		let loanAmount = parseFloat(item.loanAmount || 0);
-		let totalPaid = parseFloat(item.sanctionedAmount || 0);
-		let emiPayment = parseFloat(item.emiPayment || 0);
+		let html = `
+			<table class="table table-bordered text-uppercase">
+				<thead class="table-dark">
+					<tr><th style="width:40%;">PARAMETER</th><th style="width:60%;">DETAILS</th></tr>
+				</thead>
+				<tbody>
+					<tr><td class="fw-bold">LOAN ID</td><td class="fw-bold">${loanId}</td></tr>
+					<tr><td>MEMBER CODE</td><td>${memberCode}</td></tr>
+					<tr><td>MEMBER NAME</td><td class="fw-bold">${memberName}</td></tr>
+					<tr><td>LOAN DATE</td><td>${loanDate}</td></tr>
+					<tr><td>BRANCH</td><td>${branch}</td></tr>
+					<tr><td>MOBILE NO.</td><td>${mobile}</td></tr>
+					<tr><td>PLAN NAME</td><td>${loanName}</td></tr>
+					<tr><td>TOTAL PRINCIPAL PAID</td><td class="text-success fw-bold">${totalPaid}</td></tr>
+					<tr><td>OVERDUE AMOUNT</td><td class="text-danger fw-bold">${overdue}</td></tr>
+					<tr><td>CURRENT MONTH DUE</td><td class="fw-bold">${currentDue}</td></tr>
+				</tbody>
+			</table>
+		`;
 
-		let overdue = (loanAmount - totalPaid) > 0
-			? (loanAmount - totalPaid).toFixed(2)
-			: '0.00';
-
-		let currentDue = emiPayment.toFixed(2);
-
-		let row = `
-        <tr>
-            <td>${sn++}</td>
-            <td>${item.loanId || ''}</td>
-            <td>${item.memberId || ''}</td>
-            <td>${item.memberName || ''}</td>
-            <td>${item.loanDate || ''}</td>
-            <td>${item.branchName || ''}</td>
-            <td>${item.contactNo || ''}</td>
-            <td>${item.loanPlanName || ''}</td>
-            <td>${totalPaid}</td>
-            <td>${overdue}</td>
-            <td>${currentDue}</td>
-            <td>
-                <button class="btn btn-sm btn-primary printBtn">
-                    PRINT
-                </button>
-            </td>
-        </tr>`;
-
-		tbody.append(row);
-
+		ReportPrintUtil.printHtml("LOAN OVERDUE RE-PAYMENT NOTICE", html);
 	});
 
-}
-
-
-/* ------------------ PRINT BUTTON ------------------ */
-
-$(document).on("click", ".printBtn", function() {
-
-	let row = $(this).closest("tr");
-
-	let loanId = row.find("td:eq(1)").text();
-	let memberCode = row.find("td:eq(2)").text();
-	let memberName = row.find("td:eq(3)").text();
-	let loanDate = row.find("td:eq(4)").text();
-	let branch = row.find("td:eq(5)").text();
-	let mobile = row.find("td:eq(6)").text();
-	let loanName = row.find("td:eq(7)").text();
-	let totalPaid = row.find("td:eq(8)").text();
-	let overdue = row.find("td:eq(9)").text();
-	let currentDue = row.find("td:eq(10)").text();
-
-	let printWindow = window.open('', '', 'width=900,height=700');
-
-	printWindow.document.write(`
-        <html>
-        <head>
-            <title>LOAN REPORT</title>
-            <style>
-                body{font-family:Arial;padding:20px}
-                h2{text-align:center;margin-bottom:5px}
-                h4{text-align:center;margin-top:0}
-                p{text-align:center;margin:2px}
-                table{width:100%;border-collapse:collapse;margin-top:20px}
-                td,th{border:1px solid #000;padding:8px;text-align:left}
-            </style>
-        </head>
-        <body>
-
-            <h2>CO OPERATIVE SOCIETY LTD NAGPUR</h2>
-            <p>PLOT NO 497 NEW NANDANWAN</p>
-            <p>MAHARASHTRA - 440024</p>
-            <p>CIN : ASJ#567 | EMAIL : example@gmail.com | HELPLINE : 9566200223</p>
-
-            <h4>LOAN OVERDUE REPORT</h4>
-
-            <table>
-                <tr><th>LOAN ID</th><td>${loanId}</td></tr>
-                <tr><th>MEMBER CODE</th><td>${memberCode}</td></tr>
-                <tr><th>MEMBER NAME</th><td>${memberName}</td></tr>
-                <tr><th>LOAN DATE</th><td>${loanDate}</td></tr>
-                <tr><th>BRANCH</th><td>${branch}</td></tr>
-                <tr><th>MOBILE</th><td>${mobile}</td></tr>
-                <tr><th>LOAN NAME</th><td>${loanName}</td></tr>
-                <tr><th>TOTAL PAID</th><td>${totalPaid}</td></tr>
-                <tr><th>OVER DUE</th><td>${overdue}</td></tr>
-                <tr><th>CURRENT DUE</th><td>${currentDue}</td></tr>
-            </table>
-
-        </body>
-        </html>
-    `);
-
-	printWindow.document.close();
-	printWindow.print();
-
+	/* ------------------ DATE PARSER ------------------ */
+	function parseDate(dateStr) {
+		if (!dateStr) return new Date('');
+		let str = String(dateStr).trim();
+		if (str.includes('/')) {
+			let parts = str.split('/');
+			if (parts.length === 3) {
+				return new Date(parts[2], parts[1] - 1, parts[0]);
+			}
+		} else if (str.includes('-')) {
+			let parts = str.split('-');
+			if (parts.length === 3) {
+				if (parts[0].length === 4) {
+					return new Date(str);
+				} else {
+					return new Date(parts[2], parts[1] - 1, parts[0]);
+				}
+			}
+		}
+		return new Date(str);
+	}
 });
-
-
-/* ------------------ DATE PARSER ------------------ */
-
-function parseDate(dateStr) {
-
-	if (!dateStr) return new Date('');
-
-	let parts = dateStr.split('/');
-
-	if (parts.length === 3) {
-
-		return new Date(parts[2], parts[1] - 1, parts[0]);
-
-	}
-
-	return new Date(dateStr);
-
-}

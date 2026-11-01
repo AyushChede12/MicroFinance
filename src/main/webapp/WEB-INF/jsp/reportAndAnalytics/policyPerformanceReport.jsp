@@ -1,82 +1,93 @@
+<style>
+.formFields input, .formFields select {
+	text-transform: uppercase;
+}
+@media print {
+	.pagetitle, #formid, .btnStyle, .modal-footer, .no-print {
+		display: none !important;
+	}
+}
+</style>
 
-<div class="pagetitle">
-	<h1>Reports & Analytics</h1>
+<div class="pagetitle no-print">
+	<h1>REPORTS & ANALYTICS</h1>
 	<nav>
 		<ol class="breadcrumb">
-			<li class="breadcrumb-item"><a href="openDashboard"> <i
-					class="bi bi-file-earmark-text"></i>
-			</a></li>
-			<li class="breadcrumb-item action">Policy Performance Report</li>
+			<li class="breadcrumb-item"><a href="openDashboard"> <i class="bi bi-file-earmark-text"></i></a></li>
+			<li class="breadcrumb-item action">POLICY PERFORMANCE REPORT</li>
 		</ol>
 	</nav>
 </div>
-<div>
-	<nav>
-		<ol class="breadcrumb breadcrumb-title">
-			<li class="breadcrumb-item action">Find Box</li>
-		</ol>
-	</nav>
-	<div class="row">
-		<div class="col-lg-3">
-			<div class="d-flex flex-column formFields">
-				<label for="">select by policy no.:</label> <select id="colour"
-					name="colour" required="required"
-					class="form-control selectField mb-4" style="height: 30px;">
-					<option value="">Select Colour</option>
-					<option value="Blue">Blue</option>
-				</select>
+
+<div class="no-print">
+	<form id="formid" autocomplete="off">
+		<div>
+			<nav>
+				<ol class="breadcrumb breadcrumb-title">
+					<li class="breadcrumb-item action">SEARCH FILTERS</li>
+				</ol>
+			</nav>
+			<div class="row">
+				<div class="col-lg-3">
+					<div class="d-flex flex-column formFields" style="margin-bottom: 20px;">
+						<label for="policyNo">POLICY CODE / NO.</label> 
+						<input type="text" id="policyNo" name="policyNo" class="form-control selectField" style="height: 30px; text-transform: uppercase;" placeholder="ENTER POLICY CODE">
+					</div>
+				</div>
+
+				<div class="col-lg-3">
+					<div class="d-flex flex-column formFields" style="margin-bottom: 20px;">
+						<label for="branch">BRANCH</label> 
+						<select id="branch" name="branch" class="form-control selectField" style="height: 30px;">
+							<option value="">ALL BRANCHES</option>
+						</select>
+					</div>
+				</div>
+			</div>
+
+			<div class="row mt-3 mb-2">
+				<div class="col-12 text-start">
+					<button type="button" id="findBtn" class="btn btn-dark">
+						<i class="bi bi-search"></i> FIND
+					</button>
+					<button type="button" id="resetBtn" class="btn btn-secondary ms-2">
+						<i class="bi bi-arrow-counterclockwise"></i> RESET
+					</button>
+					<button type="button" id="printFullReportBtn" class="btn btn-primary ms-2">
+						<i class="bi bi-printer"></i> PRINT FULL REPORT
+					</button>
+				</div>
 			</div>
 		</div>
-
-
-	</div>
-</div>
-<div class="row">
-	<div class="col-4 text-start mt-3">
-		<button id="findBtn" class="btn btn-dark">Find</button>
-	</div>
+	</form>
 </div>
 
-<div class="row mt-5">
+<div class="row mt-4">
 	<div class="col-12">
 		<div class="card recent-sales">
 			<div class="card-body table-responsive">
-				<div class="d-flex justify-content-between align-items-center">
-					<h5 class="card-title">
-						Find Result <span></span>
-					</h5>
-				</div>
+				<h5 class="card-title text-uppercase" style="font-weight: 700;">POLICY PERFORMANCE & ACCOUNT PROFILE REPORT</h5>
+
 				<div style="overflow-x: auto; white-space: nowrap;">
-					<table class="table table-borderless datatable">
+					<table class="table table-bordered table-hover datatable align-middle">
 						<thead class="table-light">
 							<tr style="font-family: 'Poppins', sans-serif;">
-								<th scope="col">CSP NAME</th>
-								<th scope="col">ADDRESS</th>
+								<th scope="col">SR NO.</th>
+								<th scope="col">POLICY CODE</th>
+								<th scope="col">MEMBER NAME</th>
+								<th scope="col">BRANCH</th>
 								<th scope="col">ADVISOR CODE</th>
 								<th scope="col">ADVISOR NAME</th>
-								<th scope="col">AGE</th>
-								<th scope="col">CHKIS SMS</th>
-								<th scope="col">SISTRICT</th>
-								<th scope="col">DOB</th>
-								<th scope="col">JOINT CODE</th>
-								<th scope="col">JOINT NAME</th>
-								<th scope="col">MATURITY DATE</th>
-								<th scope="col">MIS INTEREST</th>
-								<th scope="col">MATURITY AMOUNT</th>
-								<th scope="col">MEMBER NAME</th>
-								<th scope="col">MIS MODE</th>
-								<th scope="col">MODE</th>
-								<th scope="col">MODE OF OP</th>
-								<th scope="col">NOMINEE AGE</th>
-								<th scope="col">NOMINEE NAME</th>
-								<th scope="col">NOMINEE RELATION</th>
-								<th scope="col">PAYMODE</th>
-								<th scope="col">PHONE NO.</th>
-								<th scope="col">PIN</th>
+								<th scope="col">SCHEME NAME</th>
 								<th scope="col">POLICY AMOUNT</th>
+								<th scope="col">TOTAL DEPOSIT</th>
+								<th scope="col">MATURITY DATE</th>
+								<th scope="col">MATURITY AMOUNT</th>
+								<th scope="col">STATUS</th>
 							</tr>
 						</thead>
-						<tbody>
+						<tbody id="performanceTableBody">
+							<tr><td colspan="12" class="text-center text-muted">LOADING POLICY PERFORMANCE DATA...</td></tr>
 						</tbody>
 					</table>
 				</div>
@@ -84,3 +95,7 @@
 		</div>
 	</div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/ReportsAndAnalytics/ReportPrintUtil.js"></script>
+<script src="${pageContext.request.contextPath}/js/ReportsAndAnalytics/PolicyPerformanceReport.js"></script>

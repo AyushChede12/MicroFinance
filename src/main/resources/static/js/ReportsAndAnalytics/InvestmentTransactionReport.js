@@ -1,15 +1,14 @@
 $(document).ready(function() {
 
-	// 🔒 PREVENT MULTIPLE EXECUTION
 	if (window.investmentTxnReportLoaded) {
-		console.warn("JS already initialized, skipping...");
+		console.warn("JS ALREADY INITIALIZED, SKIPPING...");
 		return;
 	}
 	window.investmentTxnReportLoaded = true;
 
 	let allPolicies = [];
 
-	// ================= LOAD APPROVED POLICIES =================
+	// Fetch Approved Policies
 	fetchApprovedPolicies();
 
 	function fetchApprovedPolicies() {
@@ -17,50 +16,33 @@ $(document).ready(function() {
 			url: "api/Policymangment/getApprovedPolicies",
 			type: "GET",
 			success: function(response) {
-
 				if (response && Array.isArray(response.data)) {
 					allPolicies = response.data;
 					buildBranchDropdown(allPolicies);
-					fillTable(allPolicies); // ✅ INITIAL LOAD (LIKE FIRST TABLE)
+					fillTable(allPolicies);
 				} else {
-					$("table tbody").html(
-						"<tr><td colspan='10'>NO APPROVED POLICIES FOUND</td></tr>"
-					);
+					$("table tbody").html("<tr><td colspan='10' class='text-center text-muted'>NO APPROVED POLICIES FOUND</td></tr>");
 				}
 			},
 			error: function() {
-				alert("ERROR WHILE FETCHING POLICY DATA");
+				alert("ERROR WHILE FETCHING POLICY DATA.");
+				$("table tbody").html("<tr><td colspan='10' class='text-center text-danger'>FAILED TO LOAD APPROVED POLICIES</td></tr>");
 			}
 		});
 	}
 
-	// ================= NORMALIZE =================
 	function normalize(value) {
-		return value
-			?.toString()
-			.replace(/[\n\r\t]/g, "")
-			.replace(/\s+/g, " ")
-			.trim()
-			.toUpperCase();
+		return value ? value.toString().replace(/[\n\r\t]/g, "").replace(/\s+/g, " ").trim().toUpperCase() : "";
 	}
 
-	// ================= BRANCH DROPDOWN =================
 	function buildBranchDropdown(data) {
-
 		let $branch = $("#branchName2");
-		$branch.empty().append('<option value="">SELECT</option>');
+		$branch.empty().append('<option value="">ALL BRANCHES</option>');
 
 		let branchSet = new Set();
-
 		data.forEach(p => {
-			let branch =
-				p.branchName ||
-				(p.branch && p.branch.branchName) ||
-				"";
-
-			if (branch) {
-				branchSet.add(normalize(branch));
-			}
+			let branch = p.branchName || (p.branch && p.branch.branchName) || "";
+			if (branch) branchSet.add(normalize(branch));
 		});
 
 		[...branchSet].sort().forEach(b => {
@@ -68,17 +50,8 @@ $(document).ready(function() {
 		});
 	}
 
-	// ================= DATE PARSER =================
-	function parseDate(dateStr) {
-		if (!dateStr) return null;
-		let d = new Date(dateStr);
-		return isNaN(d) ? null : d;
-	}
-
-	// ================= FIND BUTTON =================
-	$("#findBtn").on("click", function(e) {
-		e.preventDefault();
-
+	// Filter
+	function applyFilter() {
 		let branch = $("#branchName2").val();
 		let fromDate = $("#fromDate").val();
 		let toDate = $("#toDate").val();
@@ -87,10 +60,7 @@ $(document).ready(function() {
 
 		if (branch) {
 			filtered = filtered.filter(p => {
-				let b =
-					p.branchName ||
-					(p.branch && p.branch.branchName) ||
-					"";
+				let b = p.branchName || (p.branch && p.branch.branchName) || "";
 				return normalize(b) === normalize(branch);
 			});
 		}
@@ -98,373 +68,156 @@ $(document).ready(function() {
 		if (fromDate && toDate) {
 			let from = new Date(fromDate);
 			let to = new Date(toDate);
-			to.setHours(23, 59, 59, 999);
-
 			filtered = filtered.filter(p => {
-				let d = parseDate(
-					p.policyStartDate ||
-					p.policyDate ||
-					p.createdDate ||
-					p.investmentDate
-				);
+				let d = p.policyStartDate ? new Date(p.policyStartDate) : null;
 				return d && d >= from && d <= to;
 			});
 		}
 
 		fillTable(filtered);
+	}
+
+	$("#findBtn").on("click", function(e) {
+		e.preventDefault();
+		applyFilter();
 	});
 
-	// ================= TABLE RENDER =================
-	function fillTable(data) {
+	$("#resetBtn").on("click", function(e) {
+		e.preventDefault();
+		$("#formid")[0].reset();
+		fillTable(allPolicies);
+	});
 
-		let $tbody = $("table tbody");
+	// Print Full Report Table
+	$("#printFullReportBtn").on("click", function(e) {
+		e.preventDefault();
+		let branch = $("#branchName2").val() || "ALL BRANCHES";
+		let subTitle = "BRANCH: " + branch.toUpperCase();
+		if ($("#fromDate").val() && $("#toDate").val()) {
+			subTitle += " | PERIOD: " + $("#fromDate").val() + " TO " + $("#toDate").val();
+		}
+		ReportPrintUtil.printTable('.datatable', 'INVESTMENT TRANSACTION REPORT', subTitle);
+	});
+
+	// Fill Table
+	function fillTable(data) {
+		let $tbody = $(".datatable tbody");
 		$tbody.empty();
 
 		if (!data || data.length === 0) {
-			$tbody.append(`
-                <tr>
-                    <td colspan="10" class="text-center text-danger">
-                        NO MATCHING DATA FOUND
-                    </td>
-                </tr>
-            `);
+			$tbody.html("<tr><td colspan='10' class='text-center text-muted'>NO MATCHING POLICIES FOUND</td></tr>");
 			return;
 		}
 
 		data.forEach((p, i) => {
+			let policyCode = (p.policyCode || p.policyNumber || "").toUpperCase();
+			let customerName = (p.customerName || (p.customer && p.customer.customerName) || "").toUpperCase();
+			let schemeType = (p.schemeType || "").toUpperCase();
+			let policyDate = p.policyStartDate || p.policyDate || "";
+			let amount = p.policyAmount || 0;
+			let contactNo = p.contactNo || (p.customer && p.customer.contactNo) || "";
+			let branch = (p.branchName || (p.branch && p.branch.branchName) || "").toUpperCase();
 
-			let branch =
-				p.branchName ||
-				(p.branch && p.branch.branchName) ||
-				"-";
+			let row = `
+				<tr style="font-family: 'Poppins', sans-serif;">
+					<td>${i + 1}</td>
+					<td><strong>${policyCode}</strong></td>
+					<td>${customerName}</td>
+					<td>${schemeType}</td>
+					<td>${policyDate}</td>
+					<td>₹${parseFloat(amount).toFixed(2)}</td>
+					<td>${contactNo}</td>
+					<td>${branch}</td>
+					<td><span class="badge bg-success">APPROVED</span></td>
+					<td class="no-print">
+						<button class="btn btn-sm btn-outline-primary printBtn" data-id="${p.id}" title="PRINT STATEMENT">
+							<i class="bi bi-printer"></i>
+						</button>
+					</td>
+				</tr>
+			`;
+			$tbody.append(row);
+		});
+	}
 
-			let policyDate =
-				p.policyStartDate ||
-				p.policyDate ||
-				"-";
+	// Single Policy Print & Modal
+	$(document).on("click", ".printBtn", function() {
+		let id = $(this).data("id");
+		let selectedPolicy = allPolicies.find(p => p.id == id);
+		if (!selectedPolicy) {
+			viewData(id);
+			return;
+		}
 
-			let approvedStatus =
-				p.approved === true
-					? '<span class="badge bg-success">APPROVED</span>'
-					: '<span class="badge bg-danger">NOT APPROVED</span>';
+		ReportPrintUtil.getCompanyDetails(function(company) {
+			$("#bankName").text(company.companyName);
+			$("#bankAddress").text(company.address + ", " + company.city + ", " + company.state + " - " + company.pinCode);
+			$("#bankContact").text("CIN: " + company.cinNo + " | HELPLINE: " + company.helplineNo);
 
-			$tbody.append(`
-                <tr>
-                    <td>${i + 1}</td>
-                    <td>${p.policyCode || "-"}</td>
-                    <td>${(p.customerName || "-").toUpperCase()}</td>
-                    <td>${p.schemeType || "-"}</td>
-                    <td>${policyDate}</td>
-                    <td>${p.policyAmount || "-"}</td>
-                    <td>${p.contactNo || "-"}</td>
-                    <td>${branch.toUpperCase()}</td>
-                    <td>${approvedStatus}</td>
-                    <td>
-                        <button class="btn btn-sm btn-primary"
-                            onclick="openPrintModal(${p.id})">
-                            <i class="bi bi-printer"></i>
-                        </button>
-                    </td>
-                </tr>
-            `);
+			$("#accountNumber").text((selectedPolicy.customerCode || selectedPolicy.policyCode || "").toUpperCase());
+			$("#periodCovered").text(new Date().toLocaleDateString("en-GB"));
+
+			$("#customerName").text((selectedPolicy.customerName || "-").toUpperCase());
+			$("#customerAddress1").text((selectedPolicy.address || company.city || "").toUpperCase());
+			$("#customerAddress2").text("CONTACT: " + (selectedPolicy.contactNo || "-"));
+
+			$("#modalPolicyCode").text((selectedPolicy.policyCode || "-").toUpperCase());
+			$("#modalSchemeType").text((selectedPolicy.schemeType || "-").toUpperCase());
+			$("#modalPaymentMode").text((selectedPolicy.paymentMode || "ONLINE").toUpperCase());
+			$("#modalPolicyAmount").text("₹" + parseFloat(selectedPolicy.policyAmount || 0).toFixed(2));
+
+			let txnRow = `
+				<tr>
+					<td>${(selectedPolicy.policyCode || "-").toUpperCase()}</td>
+					<td>${selectedPolicy.policyStartDate || "-"}</td>
+					<td>₹${parseFloat(selectedPolicy.policyAmount || 0).toFixed(2)}</td>
+					<td>${(selectedPolicy.schemeType || "-").toUpperCase()}</td>
+					<td>${(selectedPolicy.paymentMode || "ONLINE").toUpperCase()}</td>
+				</tr>
+			`;
+			$("#transactionTableBody").html(txnRow);
+
+			const modalEl = document.getElementById("bankReportModal");
+			const bsModal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+			bsModal.show();
+		});
+	});
+
+	$("#printBankReportBtn").on("click", function() {
+		let content = document.getElementById("bankReportContent").innerHTML;
+		ReportPrintUtil.printHtml("POLICY INVESTMENT TRANSACTION STATEMENT", content);
+	});
+
+	function viewData(id) {
+		$.ajax({
+			url: "api/reports/getPolicyForPrint/" + id,
+			type: "GET",
+			success: function(data) {
+				if (!data) {
+					alert("DATA NOT FOUND");
+					return;
+				}
+				let contentHtml = `
+					<div style="font-family: Arial, sans-serif;">
+						<table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+							<tr><th colspan="2" style="background:#f2f2f2; padding:8px;">CUSTOMER & POLICY INFORMATION</th></tr>
+							<tr><td style="width: 30%; font-weight: bold;">CUSTOMER NAME</td><td>${(data.customerName || "-").toUpperCase()}</td></tr>
+							<tr><td style="font-weight: bold;">CONTACT NUMBER</td><td>${data.contactNo || "-"}</td></tr>
+							<tr><td style="font-weight: bold;">POLICY CODE</td><td>${(data.policyCode || "-").toUpperCase()}</td></tr>
+							<tr><td style="font-weight: bold;">POLICY DATE</td><td>${data.policyStartDate || "-"}</td></tr>
+							<tr><td style="font-weight: bold;">SCHEME TYPE</td><td>${(data.schemeType || "-").toUpperCase()}</td></tr>
+							<tr><td style="font-weight: bold;">POLICY AMOUNT</td><td>₹${parseFloat(data.policyAmount || 0).toFixed(2)}</td></tr>
+							<tr><td style="font-weight: bold;">PAYMENT MODE</td><td>${(data.paymentMode || "CASH").toUpperCase()}</td></tr>
+							<tr><td style="font-weight: bold;">BRANCH</td><td>${(data.branchName || "-").toUpperCase()}</td></tr>
+						</table>
+					</div>
+				`;
+				ReportPrintUtil.printHtml("POLICY INVESTMENT REPORT", contentHtml);
+			},
+			error: function() {
+				alert("FAILED TO LOAD PRINT DATA");
+			}
 		});
 	}
 
 });
-
-function openPrintModal(id) {
-
-	if (!id) {
-		alert("INVALID POLICY ID");
-		return;
-	}
-
-	$.ajax({
-		url: "api/reports/getPolicyForPrint/" + id,
-		type: "GET",
-		success: function(data) {
-
-			// ================= HEADER =================
-			$("#bankName").text("MICROFINANCE BANK");
-			$("#reportTitle").text("INVESTMENT STATEMENT");
-			$("#accountNumber").text(data.policyCode || "-");
-			$("#periodCovered").text(data.policyStartDate || "-");
-
-			// ================= CUSTOMER =================
-			$("#customerName").text(data.customerName || "-");
-			$("#customerAddress1").text(data.address || "-");
-			$("#customerAddress2").text(data.city || "-");
-
-			// ================= SUMMARY =================
-			$("#startingBalance").text("0");
-			$("#incomeAmount").text(data.policyAmount || "0");
-			$("#expensesAmount").text("0");
-			$("#closingBalance").text(data.policyAmount || "0");
-
-			// ================= TABLE =================
-			let row = `
-                <tr>
-                    <td>${data.policyCode || "-"}</td>
-                    <td>${data.policyStartDate || "-"}</td>
-                    <td>${data.policyAmount || "-"}</td>
-                    <td>${data.schemeType || "-"}</td>
-                    <td>${data.paymentMode || "-"}</td>
-                </tr>
-            `;
-			$("#transactionTableBody").html(row);
-
-			// ================= OPEN MODAL (BOOTSTRAP 5) =================
-			const modal = new bootstrap.Modal(
-				document.getElementById('bankReportModal')
-			);
-			modal.show();
-		},
-		error: function() {
-			alert("FAILED TO LOAD PRINT DATA");
-		}
-	});
-}
-
-function openPrintModal(id) {
-
-	if (!id) {
-		alert("INVALID POLICY ID");
-		return;
-	}
-
-	$.ajax({
-		url: "api/reports/getPolicyForPrint/" + id,
-		type: "GET",
-		success: function(data) {
-
-			let printWindow = window.open('', '', 'width=900,height=700');
-
-			printWindow.document.write(`
-
-<html>
-<head>
-<title>POLICY REPORT</title>
-
-<style>
-
-body{
-font-family: Arial;
-padding:40px;
-color:#000;
-}
-
-.header{
-text-align:center;
-line-height:1.6;
-}
-
-.company{
-font-size:24px;
-font-weight:bold;
-}
-
-.address{
-font-size:14px;
-}
-
-.hr{
-border-top:2px solid black;
-margin:15px 0 25px;
-}
-
-.title{
-text-align:center;
-font-size:18px;
-font-weight:bold;
-margin-bottom:25px;
-}
-
-.section{
-font-size:16px;
-font-weight:bold;
-margin:20px 0 10px;
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-margin-bottom:20px;
-}
-
-td,th{
-border:1px solid #000;
-padding:8px;
-font-size:14px;
-}
-
-.label{
-font-weight:bold;
-background:#f3f3f3;
-width:220px;
-}
-
-.footer{
-margin-top:60px;
-display:flex;
-justify-content:space-between;
-}
-
-.sign{
-text-align:center;
-width:200px;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="header">
-
-<div class="company">
-CO OPERATIVE SOCIETY LTD NAGPUR
-</div>
-
-<div class="address">
-PLOT NO 497 NEW NANDANWAN
-</div>
-
-<div class="address">
-MAHARASHTRA - 440024
-</div>
-
-<div class="address">
-CIN : ASJ#567 | EMAIL : example@gmail.com | HELPLINE : 9566200223
-</div>
-
-</div>
-
-<div class="hr"></div>
-
-<div class="title">
-POLICY INVESTMENT REPORT
-</div>
-
-
-<div class="section">CUSTOMER DETAILS</div>
-
-<table>
-
-<tr>
-<td class="label">CUSTOMER NAME</td>
-<td>${data.customerName || "-"}</td>
-</tr>
-
-<tr>
-<td class="label">CONTACT NUMBER</td>
-<td>${data.contactNo || "-"}</td>
-</tr>
-
-<tr>
-<td class="label">ADDRESS</td>
-<td>${data.address || "-"}</td>
-</tr>
-
-<tr>
-<td class="label">CITY</td>
-<td>${data.city || "-"}</td>
-</tr>
-
-</table>
-
-
-
-<div class="section">POLICY DETAILS</div>
-
-<table>
-
-<tr>
-<td class="label">POLICY CODE</td>
-<td>${data.policyCode || "-"}</td>
-</tr>
-
-<tr>
-<td class="label">POLICY DATE</td>
-<td>${data.policyStartDate || "-"}</td>
-</tr>
-
-<tr>
-<td class="label">SCHEME TYPE</td>
-<td>${data.schemeType || "-"}</td>
-</tr>
-
-<tr>
-<td class="label">POLICY AMOUNT</td>
-<td>₹ ${data.policyAmount || "0"}</td>
-</tr>
-
-<tr>
-<td class="label">PAYMENT MODE</td>
-<td>${data.paymentMode || "-"}</td>
-</tr>
-
-</table>
-
-
-
-<div class="section">TRANSACTION SUMMARY</div>
-
-<table>
-
-<thead>
-<tr>
-<th>POLICY CODE</th>
-<th>DATE</th>
-<th>AMOUNT</th>
-<th>SCHEME</th>
-<th>PAYMENT MODE</th>
-</tr>
-</thead>
-
-<tbody>
-
-<tr>
-<td>${data.policyCode || "-"}</td>
-<td>${data.policyStartDate || "-"}</td>
-<td>${data.policyAmount || "-"}</td>
-<td>${data.schemeType || "-"}</td>
-<td>${data.paymentMode || "-"}</td>
-</tr>
-
-</tbody>
-
-</table>
-
-
-
-<div class="footer">
-
-<div class="sign">
-______________________  
-BRANCH MANAGER
-</div>
-
-<div class="sign">
-______________________  
-AUTHORIZED SIGNATORY
-</div>
-
-</div>
-
-<script>
-window.print();
-</script>
-
-</body>
-</html>
-
-            `);
-
-			printWindow.document.close();
-		},
-		error: function() {
-			alert("FAILED TO LOAD PRINT DATA");
-		}
-	});
-}

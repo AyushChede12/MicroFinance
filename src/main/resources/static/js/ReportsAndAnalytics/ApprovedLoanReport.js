@@ -1,37 +1,36 @@
 $(document).ready(function() {
 	let allApprovedData = [];
 
-	// ✅ 1. Fetch all approved loan applications on page load
+	// Fetch all approved loan applications on page load
 	$.ajax({
 		url: "api/datacorrection/fetchAllApprovedLoanApplications",
 		method: "GET",
 		success: function(response) {
-			console.log("API Response:", response);
-
 			if (response && response.data && Array.isArray(response.data)) {
 				allApprovedData = response.data;
 
-				// ✅ Fill branch dropdown
+				// Fill branch dropdown
 				let branches = new Set();
 				allApprovedData.forEach(loan => {
-					if (loan.branchName) branches.add(loan.branchName);
+					if (loan.branchName) branches.add(loan.branchName.trim().toUpperCase());
 				});
+				let $branchSelect = $('#branchName1');
+				$branchSelect.empty().append('<option value="">ALL BRANCHES</option>');
 				branches.forEach(branch => {
-					$('#branchName1').append(`<option value="${branch}">${branch}</option>`);
+					$branchSelect.append(`<option value="${branch}">${branch}</option>`);
 				});
 
-				// ✅ Render full table initially
 				renderTable(allApprovedData);
 			} else {
-				$(".datatable tbody").html("<tr><td colspan='10'>NO APPROVED LOANS FOUND.</td></tr>");
+				$(".datatable tbody").html("<tr><td colspan='10' class='text-center text-muted'>NO APPROVED LOANS FOUND.</td></tr>");
 			}
 		},
 		error: function() {
-			alert("ERROR WHILE FETCHING LOAN DATA.");
+			$(".datatable tbody").html("<tr><td colspan='10' class='text-center text-danger'>ERROR WHILE FETCHING LOAN DATA.</td></tr>");
 		}
 	});
 
-	// ✅ 2. Filter on Find button click
+	// Filter on Find button click
 	$('#findBtn').click(function(e) {
 		e.preventDefault();
 
@@ -39,311 +38,144 @@ $(document).ready(function() {
 		const fromDate = $('#fromDate').val();
 		const toDate = $('#toDate').val();
 
-		if (!fromDate || !toDate) {
-			alert("PLEASE SELECT BOTH FROM AND TO DATES.");
-			return;
-		}
-
 		const filtered = allApprovedData.filter(loan => {
 			const loanDate = loan.loanDate;
-			return (
-				(!selectedBranch || loan.branchName === selectedBranch) &&
-				loanDate >= fromDate &&
-				loanDate <= toDate
-			);
+			let matchBranch = !selectedBranch || (loan.branchName && loan.branchName.toUpperCase() === selectedBranch.toUpperCase());
+			let matchDate = true;
+			if (fromDate && loanDate) matchDate = matchDate && (loanDate >= fromDate);
+			if (toDate && loanDate) matchDate = matchDate && (loanDate <= toDate);
+			return matchBranch && matchDate;
 		});
 
 		renderTable(filtered);
 	});
 
-	// ✅ 3. Render the table and handle print popup
+	$('#resetBtn').click(function(e) {
+		e.preventDefault();
+		$('#formid')[0].reset();
+		renderTable(allApprovedData);
+	});
+
+	// Print Full Report Table
+	$('#printFullReportBtn').click(function(e) {
+		e.preventDefault();
+		let branch = $('#branchName1').val() || "ALL BRANCHES";
+		let subTitle = "BRANCH: " + branch.toUpperCase();
+		if ($('#fromDate').val() && $('#toDate').val()) {
+			subTitle += " | PERIOD: " + $('#fromDate').val() + " TO " + $('#toDate').val();
+		}
+		ReportPrintUtil.printTable('.datatable', 'APPROVED LOAN REPORT', subTitle);
+	});
+
+	// Render Table
 	function renderTable(data) {
 		let tableBody = $(".datatable tbody");
 		tableBody.empty();
 
-		if (!data.length) {
-			tableBody.append("<tr><td colspan='10'>NO MATCHING LOAN APPLICATIONS FOUND.</td></tr>");
+		if (!data || !data.length) {
+			tableBody.append("<tr><td colspan='10' class='text-center text-muted'>NO MATCHING LOAN APPLICATIONS FOUND.</td></tr>");
 			return;
 		}
 
 		data.forEach((loan, index) => {
 			let row = `
-				<tr>
+				<tr style="font-family: 'Poppins', sans-serif;">
 					<td>${index + 1}</td>
-					<td>${loan.loanId || ''}</td>
-					<td>${loan.loanPlanName || ''}</td>
-					<td>${loan.interestType || ''}</td>
+					<td><strong>${(loan.loanId || '').toUpperCase()}</strong></td>
+					<td>${(loan.loanPlanName || '').toUpperCase()}</td>
+					<td>${(loan.interestType || '').toUpperCase()}</td>
 					<td>${loan.loanDate || ''}</td>
-					<td>${loan.loanAmount || ''}</td>
+					<td>₹${parseFloat(loan.loanAmount || 0).toFixed(2)}</td>
 					<td>${loan.contactNo || ''}</td>
-					<td>${loan.branchName || ''}</td>
-					<td>${loan.approvalStatus ? 'YES' : 'NO'}</td>
-					<td>
-						<button class="iconbutton printPopupBtn" data-id="${loan.id}" data-bs-toggle="modal" data-bs-target="#printModal">
-							<i class="bi bi-printer" style="color: green;"></i>
+					<td>${(loan.branchName || '').toUpperCase()}</td>
+					<td><span class="badge bg-success">APPROVED</span></td>
+					<td class="no-print">
+						<button class="btn btn-sm btn-outline-success printPopupBtn" data-id="${loan.id}" title="PRINT SANCTION LETTER">
+							<i class="bi bi-printer"></i>
 						</button>
 					</td>
 				</tr>
 			`;
 			tableBody.append(row);
 		});
+	}
 
-		// ✅ Handle print popup
-		$(".printPopupBtn").click(function() {
-			const id = $(this).data("id");
-			const selectedPolicy = allApprovedData.find(p => p.id === id);
+	// Single Sanction Letter Modal
+	$(document).on("click", ".printPopupBtn", function() {
+		const id = $(this).data("id");
+		const loan = allApprovedData.find(p => p.id === id);
+		if (!loan) return;
 
-			if (selectedPolicy) {
-				let html = `
-					<h4 class="text-center mb-4">LOAN APPLICATION FULL DETAILS</h4>
+		ReportPrintUtil.getCompanyDetails(function(company) {
+			let html = `
+				<div style="font-family: Arial, sans-serif;">
+					<div style="text-align: center; margin-bottom: 20px;">
+						<h4 style="color: #002147; font-weight: bold; text-transform: uppercase; margin-bottom: 3px;">
+							${company.companyName}
+						</h4>
+						<p style="margin: 0; font-size: 12px; text-transform: uppercase;">
+							${company.address}, ${company.city}, ${company.state} - ${company.pinCode}
+						</p>
+						<p style="margin: 2px 0 0 0; font-size: 11px; text-transform: uppercase; color: #555;">
+							CIN: ${company.cinNo} | HELPLINE: ${company.helplineNo} | EMAIL: ${company.emailId}
+						</p>
+						<hr style="margin: 15px 0;">
+						<h5 style="color: #002147; font-weight: bold; text-transform: uppercase;">
+							LOAN SANCTION & APPROVAL DOSSIER
+						</h5>
+					</div>
 
-					<table class="table table-bordered">
-						<tr><th>FIELD</th><th>DETAILS</th></tr>
-
-						<tr><td>LOAN ID</td><td>${selectedPolicy.loanId || ''}</td></tr>
-						<tr><td>LOAN DATE</td><td>${selectedPolicy.loanDate || ''}</td></tr>
-						<tr><td>MEMBER ID</td><td>${selectedPolicy.memberId || ''}</td></tr>
-						<tr><td>RELATIVE DETAILS</td><td>${selectedPolicy.relativeDetails || ''}</td></tr>
-						<tr><td>DATE OF BIRTH</td><td>${selectedPolicy.dateOfBirth || ''}</td></tr>
-						<tr><td>AGE</td><td>${selectedPolicy.age || ''}</td></tr>
-						<tr><td>CONTACT NO</td><td>${selectedPolicy.contactNo || ''}</td></tr>
-						<tr><td>ADDRESS</td><td>${selectedPolicy.address || ''}</td></tr>
-						<tr><td>PIN CODE</td><td>${selectedPolicy.pinCode || ''}</td></tr>
-						<tr><td>BRANCH NAME</td><td>${selectedPolicy.branchName || ''}</td></tr>
-
-						<tr><td>LOAN PLAN NAME</td><td>${selectedPolicy.loanPlanName || ''}</td></tr>
-						<tr><td>TYPE OF LOAN</td><td>${selectedPolicy.typeOfLoan || ''}</td></tr>
-						<tr><td>LOAN MODE</td><td>${selectedPolicy.loanMode || ''}</td></tr>
-						<tr><td>LOAN TERM</td><td>${selectedPolicy.loanTerm || ''}</td></tr>
-						<tr><td>RATE OF INTEREST</td><td>${selectedPolicy.rateOfInterest || ''}</td></tr>
-						<tr><td>LOAN AMOUNT</td><td>${selectedPolicy.loanAmount || ''}</td></tr>
-						<tr><td>INTEREST TYPE</td><td>${selectedPolicy.interestType || ''}</td></tr>
-						<tr><td>EMI PAYMENT</td><td>${selectedPolicy.emiPayment || ''}</td></tr>
-
-						<tr><td>APPROVAL DATE</td><td>${selectedPolicy.approvalDate || ''}</td></tr>
-						<tr><td>APPROVAL STATUS</td><td>${selectedPolicy.approvalStatus ? "YES" : "NO"}</td></tr>
-
-						<tr><td>PAYMENT MODE</td><td>${selectedPolicy.paymentMode || ''}</td></tr>
-						<tr><td>ACCOUNT NO</td><td>${selectedPolicy.accountNo || ''}</td></tr>
-						<tr><td>REF/UPI ID</td><td>${selectedPolicy.ref_UpiId || ''}</td></tr>
-						<tr><td>REMARKS</td><td>${selectedPolicy.remarks || ''}</td></tr>
-
-						<tr><td>CHEQUE DATE</td><td>${selectedPolicy.chequeDate || ''}</td></tr>
-						<tr><td>CHEQUE NO</td><td>${selectedPolicy.chequeNo || ''}</td></tr>
-
+					<table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+						<tr style="background: #0d6efd; color: #fff;">
+							<th colspan="4" style="padding: 8px; border: 1px solid #333; text-transform: uppercase;">
+								LOAN APPLICATION & BORROWER DETAILS
+							</th>
+						</tr>
+						<tr>
+							<th style="border: 1px solid #333; padding: 8px; width: 25%; background: #f2f2f2; text-transform: uppercase;">LOAN ID</th>
+							<td style="border: 1px solid #333; padding: 8px; width: 25%;"><strong>${(loan.loanId || '-').toUpperCase()}</strong></td>
+							<th style="border: 1px solid #333; padding: 8px; width: 25%; background: #f2f2f2; text-transform: uppercase;">BORROWER NAME</th>
+							<td style="border: 1px solid #333; padding: 8px; width: 25%;"><strong>${(loan.memberName || loan.customerName || '-').toUpperCase()}</strong></td>
+						</tr>
+						<tr>
+							<th style="border: 1px solid #333; padding: 8px; background: #f2f2f2; text-transform: uppercase;">LOAN PLAN NAME</th>
+							<td style="border: 1px solid #333; padding: 8px;">${(loan.loanPlanName || '-').toUpperCase()}</td>
+							<th style="border: 1px solid #333; padding: 8px; background: #f2f2f2; text-transform: uppercase;">INTEREST TYPE</th>
+							<td style="border: 1px solid #333; padding: 8px;">${(loan.interestType || '-').toUpperCase()}</td>
+						</tr>
+						<tr>
+							<th style="border: 1px solid #333; padding: 8px; background: #f2f2f2; text-transform: uppercase;">SANCTION AMOUNT</th>
+							<td style="border: 1px solid #333; padding: 8px;"><strong>₹${parseFloat(loan.loanAmount || 0).toFixed(2)}</strong></td>
+							<th style="border: 1px solid #333; padding: 8px; background: #f2f2f2; text-transform: uppercase;">SANCTION DATE</th>
+							<td style="border: 1px solid #333; padding: 8px;">${loan.loanDate || '-'}</td>
+						</tr>
+						<tr>
+							<th style="border: 1px solid #333; padding: 8px; background: #f2f2f2; text-transform: uppercase;">BRANCH</th>
+							<td style="border: 1px solid #333; padding: 8px;">${(loan.branchName || '-').toUpperCase()}</td>
+							<th style="border: 1px solid #333; padding: 8px; background: #f2f2f2; text-transform: uppercase;">CONTACT NUMBER</th>
+							<td style="border: 1px solid #333; padding: 8px;">${loan.contactNo || '-'}</td>
+						</tr>
+						<tr>
+							<th style="border: 1px solid #333; padding: 8px; background: #f2f2f2; text-transform: uppercase;">APPROVAL STATUS</th>
+							<td style="border: 1px solid #333; padding: 8px; color: green; font-weight: bold;">APPROVED</td>
+							<th style="border: 1px solid #333; padding: 8px; background: #f2f2f2; text-transform: uppercase;">TERM / TENURE</th>
+							<td style="border: 1px solid #333; padding: 8px;">${loan.loanTerm || '-'} MONTHS</td>
+						</tr>
 					</table>
-				`;
-				$("#modalDataContainer").html(html);
-			}
-		});
-	}
-
-	// ✅ Helper to render label-value field
-	function createField(label, value) {
-		return `
-			<div class="col-md-6 mb-3">
-				<strong>${label}:</strong> <span>${value || ''}</span>
-			</div>
-		`;
-	}
-
-	// ✅ 4. Print modal data
-	$("#printBtn").click(function() {
-		const content = document.getElementById("modalDataContainer").innerHTML;
-		const printWindow = window.open('', '', 'width=900,height=700');
-
-		printWindow.document.write(`
-			<html>
-			<head>
-				<title>PRINT</title>
-				<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-				<style>
-					body { font-family: Arial; padding: 30px; background: #fff; color: #000; }
-					.print-container { width: 100%; margin: auto; }
-					.heading { text-align: center; margin-bottom: 30px; font-size: 24px; font-weight: bold; border-bottom: 2px solid #000; padding-bottom: 10px; }
-					.row { display: flex; flex-wrap: wrap; }
-					.col-md-6 { width: 50%; padding: 10px 15px; box-sizing: border-box; }
-				</style>
-			</head>
-			<body>
-				<div class="print-container">
-					<div class="heading">LOAN APPLICATION FULL DETAILS</div>
-					${content}
 				</div>
-			</body>
-			</html>
-		`);
-		printWindow.document.close();
-		printWindow.focus();
-		printWindow.print();
-		printWindow.close();
-	});
+			`;
 
-	// ✅ 5. Download as PDF
-	$("#downloadBtn").click(function() {
-		const { jsPDF } = window.jspdf;
-		const doc = new jsPDF({
-			orientation: "portrait",
-			unit: "pt",
-			format: "a4"
-		});
-		const content = document.getElementById("modalDataContainer");
-
-		doc.html(content, {
-			callback: function(doc) {
-				doc.save("LoanApplicationDetails.pdf");
-			},
-			x: 10,
-			y: 10,
-			autoPaging: 'text',
-			html2canvas: { scale: 0.5 }
+			$("#modalDataContainer").html(html);
+			const modalEl = document.getElementById("printModal");
+			const bsModal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+			bsModal.show();
 		});
 	});
-});
-$("#printBtn").click(function() {
 
-	const selectedPolicyHTML = document.getElementById("modalDataContainer").innerHTML;
-
-	const printWindow = window.open('', '', 'width=1000,height=800');
-
-	printWindow.document.write(`
-
-<html>
-<head>
-<title>LOAN APPLICATION REPORT</title>
-
-<style>
-
-body{
-font-family: Arial;
-padding:40px;
-color:#000;
-}
-
-.header{
-text-align:center;
-line-height:1.6;
-}
-
-.company{
-font-size:24px;
-font-weight:bold;
-}
-
-.address{
-font-size:14px;
-}
-
-.title{
-text-align:center;
-margin-top:20px;
-font-size:18px;
-font-weight:bold;
-}
-
-hr{
-margin:20px 0;
-border:1px solid #000;
-}
-
-.section{
-font-size:16px;
-font-weight:bold;
-margin:20px 0 10px;
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-margin-bottom:15px;
-}
-
-td,th{
-border:1px solid #000;
-padding:8px;
-font-size:14px;
-}
-
-.label{
-font-weight:bold;
-background:#f2f2f2;
-width:250px;
-}
-
-.footer{
-margin-top:60px;
-display:flex;
-justify-content:space-between;
-}
-
-.sign{
-text-align:center;
-width:200px;
-}
-
-</style>
-
-</head>
-
-<body>
-
-
-<div class="header">
-
-<div class="company">
-CO OPERATIVE SOCIETY LTD NAGPUR
-</div>
-
-<div class="address">
-PLOT NO 497 NEW NANDANWAN
-</div>
-
-<div class="address">
-MAHARASHTRA - 440024
-</div>
-
-<div class="address">
-HELPLINE : 9566200223
-</div>
-
-</div>
-
-<hr>
-
-<div class="title">
-LOAN APPLICATION REPORT
-</div>
-
-
-<div class="section">APPLICATION DETAILS</div>
-
-${selectedPolicyHTML}
-
-
-<div class="footer">
-
-<div class="sign">
-______________________ 
-BRANCH MANAGER
-</div>
-
-<div class="sign">
-______________________ 
-AUTHORIZED SIGNATORY
-</div>
-
-</div>
-
-<script>
-window.print();
-</script>
-
-</body>
-</html>
-
-`);
-
-	printWindow.document.close();
-	printWindow.focus();
+	// Print single loan sanction letter
+	$("#printBtn").click(function() {
+		const printContent = document.getElementById("modalDataContainer").innerHTML;
+		ReportPrintUtil.printHtml("LOAN SANCTION LETTER", printContent);
+	});
 
 });

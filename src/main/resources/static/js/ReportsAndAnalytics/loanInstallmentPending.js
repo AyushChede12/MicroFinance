@@ -1,355 +1,234 @@
 $(document).ready(function() {
+	let allLoanData = [];
 
 	// ==============================
-	// Load Branch Dropdown
+	// Load Dropdowns & Initial Data
 	// ==============================
 	$.ajax({
 		url: "api/datacorrection/fetchAllApprovedLoanApplications",
 		type: "GET",
 		success: function(response) {
-			if (response.status === "OK") {
+			if (response.status === "OK" || response.status === "SUCCESS" || Array.isArray(response.data)) {
+				allLoanData = response.data || [];
 
 				const uniqueBranches = new Set();
+				const uniquePlans = new Set();
 
-				response.data.forEach(item => {
-					if (item.branchName) {
-						uniqueBranches.add(item.branchName.trim());
-					}
+				allLoanData.forEach(item => {
+					if (item.branchName) uniqueBranches.add(item.branchName.trim().toUpperCase());
+					if (item.loanPlanName) uniquePlans.add(item.loanPlanName.trim().toUpperCase());
+					if (item.typeOfLoan) uniquePlans.add(item.typeOfLoan.trim().toUpperCase());
 				});
 
-				$("#branchName1").empty();
-				$("#branchName1").append("<option value=''>-- SELECT BRANCH NAME --</option>");
-
+				$("#branchName1").html("<option value=''>ALL BRANCHES</option>");
 				uniqueBranches.forEach(branchName => {
 					$("#branchName1").append(`<option value="${branchName}">${branchName}</option>`);
 				});
 
-			} else {
-				alert("Error: " + response.message);
-			}
-		},
-		error: function(xhr) {
-			console.error("Error loading branches:", xhr.responseText);
-			alert("FAILED TO LOAD DROPDOWN DATA.");
-		}
-	});
-
-
-	// ==============================
-	// Load Loan Plan Dropdown
-	// ==============================
-	$.ajax({
-		url: "api/datacorrection/fetchAllApprovedLoanApplications",
-		type: "GET",
-		success: function(response) {
-
-			if (response.status === "OK") {
-
-				const uniquePlans = new Set();
-
-				response.data.forEach(item => {
-					if (item.loanPlanName) {
-						uniquePlans.add(item.loanPlanName.trim());
-					}
-				});
-
-				$("#loanPlanName").empty();
-				$("#loanPlanName").append("<option value=''>-- SELECT LOAN NAME --</option>");
-
+				$("#loanPlanName").html("<option value=''>ALL PLANS</option>");
 				uniquePlans.forEach(planName => {
 					$("#loanPlanName").append(`<option value="${planName}">${planName}</option>`);
 				});
 
+				bindLoanTable(allLoanData);
+			} else {
+				alert("ERROR: " + (response.message || "FAILED TO LOAD DROPDOWN DATA"));
 			}
-
+		},
+		error: function(xhr) {
+			console.error("Error loading approved loans:", xhr.responseText);
+			alert("FAILED TO LOAD DROPDOWN DATA.");
 		}
 	});
-
-
-	// ==============================
-	// Load Data On Page Load
-	// ==============================
-	loadApprovedLoanApplications();
-
 
 	// ==============================
 	// Find Button Click
 	// ==============================
 	$('#findBtn').click(function(e) {
-
 		e.preventDefault();
+		filterLoans();
+	});
 
-		let branch = $('#branchName1').val();
-		let policy = $('#loanPlanName').val();
-		let financialCode = $('#financialCode').val().trim().toUpperCase();
+	// ==============================
+	// Reset Button Click
+	// ==============================
+	$('#resetBtn').click(function(e) {
+		e.preventDefault();
+		$('#branchName1').val('');
+		$('#loanPlanName').val('');
+		$('#financialCode').val('');
+		$('#toDate').val('');
+		bindLoanTable(allLoanData);
+	});
+
+	// ==============================
+	// Print Full Report
+	// ==============================
+	$('#printFullReportBtn').click(function(e) {
+		e.preventDefault();
+		const branch = $('#branchName1').val() || 'ALL BRANCHES';
+		const plan = $('#loanPlanName').val() || 'ALL PLANS';
+		const finCode = $('#financialCode').val() || 'ALL';
+		const toDate = $('#toDate').val() || 'ALL DATES';
+		const subTitle = `FILTERS: BRANCH: ${branch} | PLAN: ${plan} | ADVISOR: ${finCode} | UP TO DATE: ${toDate}`;
+		ReportPrintUtil.printTable('.datatable', 'LOAN INSTALLMENT PENDING REPORT', subTitle);
+	});
+
+	function filterLoans() {
+		let branch = ($('#branchName1').val() || '').trim().toUpperCase();
+		let policy = ($('#loanPlanName').val() || '').trim().toUpperCase();
+		let financialCode = ($('#financialCode').val() || '').trim().toUpperCase();
 		let toDate = $('#toDate').val();
 
-		loadApprovedLoanApplications(branch, policy, financialCode, toDate);
+		let filtered = allLoanData.filter(item => {
+			const itemBranch = (item.branchName || '').toUpperCase();
+			const itemPlan = (item.loanPlanName || item.typeOfLoan || '').toUpperCase();
+			const itemFin = (item.financialConsultantId || item.financialConsultantName || '').toUpperCase();
 
-	});
+			const branchMatch = !branch || itemBranch.includes(branch);
+			const planMatch = !policy || itemPlan.includes(policy);
+			const codeMatch = !financialCode || itemFin.includes(financialCode);
 
-});
-
-
-// =============================================
-// Fetch & Filter Data
-// =============================================
-function loadApprovedLoanApplications(branch = '', policy = '', financialCode = '', toDate = '') {
-
-	$.ajax({
-		url: 'api/datacorrection/fetchAllApprovedLoanApplications',
-		method: 'GET',
-		dataType: 'json',
-
-		success: function(response) {
-
-			if (response && response.data) {
-
-				let loans = response.data;
-
-				if (branch) {
-					loans = loans.filter(item => item.branchName === branch);
+			let dateMatch = true;
+			if (toDate) {
+				let loanDate = parseDate(item.loanDate || item.approvalDate);
+				let tDate = new Date(toDate);
+				if (loanDate && !isNaN(loanDate.getTime())) {
+					dateMatch = loanDate <= tDate;
 				}
-
-				if (policy) {
-					loans = loans.filter(item => item.loanPlanName === policy);
-				}
-
-				if (financialCode) {
-					loans = loans.filter(item =>
-						item.financialConsultantId &&
-						item.financialConsultantId.toUpperCase().includes(financialCode)
-					);
-				}
-
-				if (toDate) {
-
-					loans = loans.filter(item => {
-
-						let loanDate = parseDate(item.loanDate);
-						let tDate = parseDate(toDate);
-
-						return loanDate <= tDate;
-
-					});
-
-				}
-
-				bindLoanTable(loans);
-
-			} else {
-
-				bindLoanTable([]);
-
 			}
 
-		},
+			return branchMatch && planMatch && codeMatch && dateMatch;
+		});
 
-		error: function() {
-
-			$('table tbody').html(
-				`<tr><td colspan="15" class="text-center text-danger">ERROR FETCHING DATA.</td></tr>`
-			);
-
-		}
-
-	});
-
-}
-
-
-// =============================================
-// Bind Data To Table
-// =============================================
-function bindLoanTable(data) {
-
-	let tbody = $('.datatable tbody');
-	tbody.empty();
-
-	if (!data || data.length === 0) {
-
-		tbody.append(`<tr><td colspan="15" class="text-center text-danger">NO RECORDS FOUND</td></tr>`);
-		return;
-
+		bindLoanTable(filtered);
 	}
 
-	let sn = 1;
+	// =============================================
+	// Bind Data To Table
+	// =============================================
+	function bindLoanTable(data) {
+		let tbody = $('.datatable tbody');
+		tbody.empty();
 
-	data.forEach(item => {
+		if (!data || data.length === 0) {
+			tbody.append(`<tr><td colspan="15" class="text-center text-danger fw-bold">NO PENDING INSTALLMENT RECORDS FOUND</td></tr>`);
+			return;
+		}
 
-		let loanAmount = parseFloat(item.loanAmount || 0);
-		let roi = parseFloat(item.rateOfInterest || 0);
-		let loanTerm = parseInt(item.loanTerm || 1);
+		let sn = 1;
+		data.forEach(item => {
+			let loanAmount = parseFloat(item.loanAmount || 0);
+			let roi = parseFloat(item.rateOfInterest || 0);
+			let loanTerm = parseInt(item.loanTerm || 1);
 
-		let monthlyInterest = (loanAmount * roi / 100) / loanTerm;
-		let installmentAmount = (loanAmount / loanTerm) + monthlyInterest;
+			let monthlyInterest = (loanAmount * roi / 100) / loanTerm;
+			let installmentAmount = (loanAmount / loanTerm) + monthlyInterest;
 
-		let totalInstallments = loanTerm;
+			let totalInstallments = loanTerm;
+			let paidInstallments = (item.paymentStatus && item.paymentStatus.toLowerCase() === "paid")
+				? totalInstallments
+				: Math.floor(totalInstallments / 2);
 
-		let paidInstallments = (item.paymentStatus === "Paid")
-			? totalInstallments
-			: Math.floor(totalInstallments / 2);
+			let pendingInstallments = totalInstallments - paidInstallments;
+			let outstandingBalance = pendingInstallments * installmentAmount;
+			let lastPaymentDate = (item.paymentDate || item.loanDate || "-").toUpperCase();
+			let loanStatus = (item.loanStatus || 'ACTIVE').toUpperCase();
+			let remarks = (item.remarks || 'INSTALLMENT SCHEDULE REGULAR').toUpperCase();
 
-		let pendingInstallments = totalInstallments - paidInstallments;
+			let statusBadge = `<span class="badge bg-success">${loanStatus}</span>`;
+			if (loanStatus.includes('PEND') || pendingInstallments > 0) {
+				statusBadge = `<span class="badge bg-warning text-dark">${loanStatus}</span>`;
+			}
 
-		let outstandingBalance = pendingInstallments * installmentAmount;
+			let row = `
+			<tr>
+				<td class="text-center font-monospace">${sn++}</td>
+				<td class="fw-bold">${(item.loanId || '').toUpperCase()}</td>
+				<td>${(item.branchName || '').toUpperCase()}</td>
+				<td class="fw-semibold">${(item.memberName || '').toUpperCase()}</td>
+				<td>${(item.financialConsultantId || '-').toUpperCase()}</td>
+				<td>₹${loanAmount.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+				<td class="text-primary fw-bold">₹${installmentAmount.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+				<td class="text-center">${totalInstallments}</td>
+				<td class="text-center text-success fw-bold">${paidInstallments}</td>
+				<td class="text-center text-danger fw-bold">${pendingInstallments}</td>
+				<td class="text-danger fw-bold">₹${outstandingBalance.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+				<td>${lastPaymentDate}</td>
+				<td>${statusBadge}</td>
+				<td>${remarks}</td>
+				<td class="text-center no-print">
+					<button class="btn btn-sm btn-outline-primary printBtn">
+						<i class="bi bi-printer"></i> PRINT
+					</button>
+				</td>
+			</tr>
+			`;
 
-		let lastPaymentDate = item.paymentDate || "-";
+			tbody.append(row);
+		});
+	}
 
-		let row = `
-        <tr>
-            <td>${sn++}</td>
-            <td>${item.loanId || ''}</td>
-            <td>${item.branchName || ''}</td>
-            <td>${item.memberName || ''}</td>
-            <td>${item.financialConsultantId || ''}</td>
-            <td>${loanAmount.toFixed(2)}</td>
-            <td>${installmentAmount.toFixed(2)}</td>
-            <td>${totalInstallments}</td>
-            <td>${paidInstallments}</td>
-            <td>${pendingInstallments}</td>
-            <td>${outstandingBalance.toFixed(2)}</td>
-            <td>${lastPaymentDate}</td>
-            <td>${item.loanStatus || ''}</td>
-            <td>${item.remarks || ''}</td>
-            <td>
-                <button class="btn btn-sm btn-primary printBtn">
-                    PRINT
-                </button>
-            </td>
-        </tr>
-        `;
+	// =============================================
+	// PRINT SINGLE RECORD
+	// =============================================
+	$(document).on("click", ".printBtn", function() {
+		let row = $(this).closest("tr");
 
-		tbody.append(row);
+		let loanId = row.find("td:eq(1)").text();
+		let branch = row.find("td:eq(2)").text();
+		let customer = row.find("td:eq(3)").text();
+		let financialCode = row.find("td:eq(4)").text();
+		let loanAmount = row.find("td:eq(5)").text();
+		let installmentAmount = row.find("td:eq(6)").text();
+		let totalInst = row.find("td:eq(7)").text();
+		let paidInst = row.find("td:eq(8)").text();
+		let pendingInst = row.find("td:eq(9)").text();
+		let outstandingBalance = row.find("td:eq(10)").text();
+		let lastPaymentDate = row.find("td:eq(11)").text();
+		let status = row.find("td:eq(12)").text();
 
+		let html = `
+			<table class="table table-bordered text-uppercase">
+				<thead class="table-dark">
+					<tr><th style="width:40%;">PARAMETER</th><th style="width:60%;">DETAILS</th></tr>
+				</thead>
+				<tbody>
+					<tr><td class="fw-bold">LOAN ID</td><td class="fw-bold">${loanId}</td></tr>
+					<tr><td>BRANCH NAME</td><td>${branch}</td></tr>
+					<tr><td>CUSTOMER NAME</td><td class="fw-bold">${customer}</td></tr>
+					<tr><td>FINANCIAL CONSULTANT CODE</td><td>${financialCode}</td></tr>
+					<tr><td>TOTAL LOAN AMOUNT</td><td class="fw-bold">${loanAmount}</td></tr>
+					<tr><td>MONTHLY INSTALLMENT</td><td class="text-primary fw-bold">${installmentAmount}</td></tr>
+					<tr><td>TOTAL INSTALLMENTS</td><td>${totalInst}</td></tr>
+					<tr><td>PAID INSTALLMENTS</td><td class="text-success fw-bold">${paidInst}</td></tr>
+					<tr><td>PENDING INSTALLMENTS</td><td class="text-danger fw-bold">${pendingInst}</td></tr>
+					<tr><td>OUTSTANDING BALANCE</td><td class="text-danger fw-bold">${outstandingBalance}</td></tr>
+					<tr><td>LAST PAYMENT DATE</td><td>${lastPaymentDate}</td></tr>
+					<tr><td>STATUS</td><td>${status}</td></tr>
+				</tbody>
+			</table>
+		`;
+
+		ReportPrintUtil.printHtml("LOAN INSTALLMENT PENDING NOTICE", html);
 	});
 
-}
-
-
-// =============================================
-// PRINT BUTTON
-// =============================================
-$(document).on("click", ".printBtn", function() {
-
-	let row = $(this).closest("tr");
-
-	let printWindow = window.open('', '', 'width=900,height=700');
-
-	printWindow.document.write(`
-        <html>
-        <head>
-            <title>LOAN INSTALLMENT PENDING REPORT</title>
-
-            <style>
-
-                body{
-                    font-family:Arial;
-                    padding:20px;
-                }
-
-                h2{
-                    text-align:center;
-                    margin-bottom:5px;
-                }
-
-                p{
-                    text-align:center;
-                    margin:2px;
-                }
-
-                table{
-                    width:100%;
-                    border-collapse:collapse;
-                    margin-top:20px;
-                }
-
-                th,td{
-                    border:1px solid #000;
-                    padding:8px;
-                    text-align:left;
-                }
-
-            </style>
-
-        </head>
-
-        <body>
-
-            <h2>CO OPERATIVE SOCIETY LTD NAGPUR</h2>
-            <p>PLOT NO 497 NEW NANDANWAN</p>
-            <p>MAHARASHTRA - 440024</p>
-            <p>CIN : ASJ#567 | EMAIL : example@gmail.com | HELPLINE : 9566200223</p>
-
-            <h3 style="text-align:center;margin-top:20px;">
-                LOAN INSTALLMENT PENDING REPORT
-            </h3>
-
-            <table>
-
-                <tr>
-                    <th>LOAN ID</th>
-                    <td>${row.find("td:eq(1)").text()}</td>
-                </tr>
-
-                <tr>
-                    <th>BRANCH</th>
-                    <td>${row.find("td:eq(2)").text()}</td>
-                </tr>
-
-                <tr>
-                    <th>CUSTOMER</th>
-                    <td>${row.find("td:eq(3)").text()}</td>
-                </tr>
-
-                <tr>
-                    <th>FINANCIAL CODE</th>
-                    <td>${row.find("td:eq(4)").text()}</td>
-                </tr>
-
-                <tr>
-                    <th>LOAN AMOUNT</th>
-                    <td>${row.find("td:eq(5)").text()}</td>
-                </tr>
-
-                <tr>
-                    <th>INSTALLMENT AMOUNT</th>
-                    <td>${row.find("td:eq(6)").text()}</td>
-                </tr>
-
-                <tr>
-                    <th>PENDING INSTALLMENTS</th>
-                    <td>${row.find("td:eq(9)").text()}</td>
-                </tr>
-
-                <tr>
-                    <th>OUTSTANDING BALANCE</th>
-                    <td>${row.find("td:eq(10)").text()}</td>
-                </tr>
-
-            </table>
-
-        </body>
-
-        </html>
-    `);
-
-	printWindow.document.close();
-	printWindow.focus();
-	printWindow.print();
-
+	// =============================================
+	// Date Parser
+	// =============================================
+	function parseDate(dateStr) {
+		if (!dateStr) return null;
+		let str = String(dateStr).trim();
+		if (str.includes('/')) {
+			let parts = str.split('/');
+			if (parts.length === 3) return new Date(parts[2], parts[1] - 1, parts[0]);
+		} else if (str.includes('-')) {
+			let parts = str.split('-');
+			if (parts.length === 3) {
+				if (parts[0].length === 4) return new Date(str);
+				return new Date(parts[2], parts[1] - 1, parts[0]);
+			}
+		}
+		return new Date(str);
+	}
 });
-
-
-// =============================================
-// Date Parser
-// =============================================
-function parseDate(dateStr) {
-
-	if (!dateStr) return new Date(0);
-
-	let parts = dateStr.split('-');
-
-	return new Date(parts[0], parts[1] - 1, parts[2]);
-
-}

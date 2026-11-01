@@ -1,132 +1,127 @@
+<style>
+.formFields input, .formFields select {
+	text-transform: uppercase;
+}
+@media print {
+	.pagetitle, #formid, .btnStyle, .modal-footer, .no-print {
+		display: none !important;
+	}
+}
+</style>
 
-<div class="pagetitle">
-	<h1>Reports & Analytics</h1>
+<div class="pagetitle no-print">
+	<h1>REPORTS & ANALYTICS</h1>
 	<nav>
 		<ol class="breadcrumb">
-			<li class="breadcrumb-item"><a href="openDashboard"> <i
-					class="bi bi-file-earmark-text"></i>
-			</a></li>
-			<li class="breadcrumb-item action">UnApproved Loan Application</li>
+			<li class="breadcrumb-item"><a href="openDashboard"> <i class="bi bi-file-earmark-text"></i></a></li>
+			<li class="breadcrumb-item action">UNAPPROVED LOAN APPLICATIONS</li>
 		</ol>
 	</nav>
 </div>
 
-<div>
-	<form id="formid">
+<div class="no-print">
+	<form id="formid" autocomplete="off">
 		<div>
 			<nav>
 				<ol class="breadcrumb breadcrumb-title">
-					<li class="breadcrumb-item action">Find Box</li>
+					<li class="breadcrumb-item action">SEARCH FILTERS</li>
 				</ol>
 			</nav>
 			<div class="row">
-
-
 				<div class="col-lg-3">
-					<div class="d-flex flex-column formFields"
-						style="margin-bottom: 30px;">
-						<label for="">Branch </label> <select id="branchName1"
-							name="branchName" required="required"
-							class="form-control selectField">
-							<option value="">Select Branch
-								</opt.ion>
+					<div class="d-flex flex-column formFields" style="margin-bottom: 20px;">
+						<label for="branchName1">BRANCH</label>
+						<select id="branchName1" name="branchName" class="form-control selectField" style="height: 30px;">
+							<option value="">ALL BRANCHES</option>
 						</select>
 					</div>
 				</div>
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
-						<label for="">From Date :</label> <input type="date"
-							name="fromDate" id="fromDate" required="required"
-							placeholder="Enter fDate" style="text-transform: uppercase;" />
+						<label for="fromDate">FROM APPLICATION DATE</label>
+						<input type="date" name="fromDate" id="fromDate" style="text-transform: uppercase;" />
 					</div>
 				</div>
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
-						<label for="">TO Date :</label> <input type="date" name="toDate"
-							id="toDate" required="required" placeholder="Enter tDate"
-							style="text-transform: uppercase;" />
+						<label for="toDate">TO APPLICATION DATE</label>
+						<input type="date" name="toDate" id="toDate" style="text-transform: uppercase;" />
 					</div>
 				</div>
-
 			</div>
 
-			<div class="row">
-				<div class="col-4 text-start mt-3">
-					<button id="findBtn" class="btn btn-dark">Find</button>
+			<div class="row mt-3 mb-2">
+				<div class="col-12 text-start">
+					<button type="button" id="findBtn" class="btn btn-dark">
+						<i class="bi bi-search"></i> FIND
+					</button>
+					<button type="button" id="resetBtn" class="btn btn-secondary ms-2">
+						<i class="bi bi-arrow-counterclockwise"></i> RESET
+					</button>
+					<button type="button" id="printFullReportBtn" class="btn btn-primary ms-2">
+						<i class="bi bi-printer"></i> PRINT FULL REPORT
+					</button>
 				</div>
 			</div>
-
 		</div>
-
 	</form>
+</div>
 
-	<div class="row mt-5">
-		<div class="col-12">
-			<div class="card recent-sales">
+<div class="row mt-4">
+	<div class="col-12">
+		<div class="card recent-sales">
+			<div class="card-body table-responsive">
+				<h5 class="card-title text-uppercase" style="font-weight: 700;">UNAPPROVED & REJECTED LOAN APPLICATIONS</h5>
 
-				<div class="card-body table-responsive">
-					<h5 class="card-title">Find Result</h5>
-
-					<h6 class="card-title" style="text-align: center; color: black;">
-						Loan Rejection Report</h6>
-
-
-
-					<div style="overflow-x: auto; white-space: nowrap;">
-						<table class="table table-borderless datatable">
-							<thead class="table-light">
-								<tr style="font-family: 'Poppins', sans-serif;">
-									<th scope="col">SN</th>
-									<th scope="col">Loan ID</th>
-									<th scope="col">Loan Name</th>
-									<th scope="col">Interest Type</th>
-									<th scope="col">Loan Date</th>
-									<th scope="col">Loan Amount</th>
-									<th scope="col">Contact No</th>
-									<th scope="col">Branch Name</th>
-									<th scope="col">Approval Status</th>
-									<th scope="col">Print</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr style="font-family: 'Poppins', sans-serif;">
-									<td>001</td>
-									<td>Umrer</td>
-									<td>11-04-2024</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
+				<div style="overflow-x: auto; white-space: nowrap;">
+					<table class="table table-bordered table-hover datatable align-middle">
+						<thead class="table-light">
+							<tr style="font-family: 'Poppins', sans-serif;">
+								<th scope="col">SR NO.</th>
+								<th scope="col">LOAN ID</th>
+								<th scope="col">MEMBER NAME</th>
+								<th scope="col">PLAN NAME</th>
+								<th scope="col">INTEREST TYPE</th>
+								<th scope="col">APPLICATION DATE</th>
+								<th scope="col">APPLIED AMOUNT</th>
+								<th scope="col">CONTACT NO.</th>
+								<th scope="col">BRANCH NAME</th>
+								<th scope="col">APPROVAL STATUS</th>
+								<th scope="col" class="no-print">ACTION</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr><td colspan="11" class="text-center text-muted">LOADING UNAPPROVED LOAN APPLICATIONS...</td></tr>
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>
 	</div>
-
 </div>
 
-
-<!-- Modal -->
-<div class="modal fade" id="printModal" tabindex="-1"
-	aria-labelledby="printModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-xl modal-dialog-scrollable">
+<!-- Modal for viewing/printing single loan dossier -->
+<div class="modal fade" id="printModal" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered">
 		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="printModalLabel">Loan Details</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal"
-					aria-label="Close"></button>
+			<div class="modal-header bg-primary text-white">
+				<h5 class="modal-title text-uppercase"><i class="bi bi-file-earmark-text me-2"></i>UNAPPROVED LOAN APPLICATION DOSSIER</h5>
+				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
 			</div>
-			<div class="modal-body" id="modalDataContainer">
-				<!-- Policy details will be populated here -->
+			<div class="modal-body p-4" id="modalDataContainer">
 			</div>
 			<div class="modal-footer">
-				<button type="button" id="printBtn" class="btn btn-primary">Print</button>
-				<button type="button" id="downloadBtn" class="btn btn-success">Download
-					PDF</button>
-				<button type="button" class="btn btn-secondary"
-					data-bs-dismiss="modal">Close</button>
+				<button type="button" id="modalPrintBtn" class="btn btn-success text-uppercase">
+					<i class="bi bi-printer"></i> PRINT DOSSIER
+				</button>
+				<button type="button" class="btn btn-secondary text-uppercase" data-bs-dismiss="modal">CLOSE</button>
 			</div>
 		</div>
 	</div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/ReportsAndAnalytics/ReportPrintUtil.js"></script>
+<script src="${pageContext.request.contextPath}/js/ReportsAndAnalytics/UNApprovedLoanApplications.js"></script>
