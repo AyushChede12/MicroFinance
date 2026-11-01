@@ -7,6 +7,58 @@ $(document).ready(function() {
 	window.investmentTxnReportLoaded = true;
 
 	let allPolicies = [];
+	let currentFilteredData = [];
+
+	function showModalSafely(modalId) {
+		let $m = $("#" + modalId);
+		if (typeof $m.modal === "function") {
+			$m.modal("show");
+			return;
+		}
+		let el = document.getElementById(modalId);
+		if (el && typeof bootstrap !== "undefined" && bootstrap.Modal) {
+			try {
+				if (typeof bootstrap.Modal.getOrCreateInstance === "function") {
+					bootstrap.Modal.getOrCreateInstance(el).show();
+					return;
+				}
+				if (typeof bootstrap.Modal.getInstance === "function") {
+					let inst = bootstrap.Modal.getInstance(el) || new bootstrap.Modal(el);
+					inst.show();
+					return;
+				}
+				let inst = new bootstrap.Modal(el);
+				inst.show();
+				return;
+			} catch (err) {
+				console.warn("Bootstrap 5 modal failed:", err);
+			}
+		}
+		if (el) {
+			el.classList.add("show");
+			el.style.display = "block";
+			document.body.classList.add("modal-open");
+		}
+	}
+
+	function hideModalSafely(modalId) {
+		let $m = $("#" + modalId);
+		if (typeof $m.modal === "function") {
+			$m.modal("hide");
+			return;
+		}
+		let el = document.getElementById(modalId);
+		if (el) {
+			el.classList.remove("show");
+			el.style.display = "none";
+			document.body.classList.remove("modal-open");
+			$(".modal-backdrop").remove();
+		}
+	}
+
+	$(document).on("click", '[data-dismiss="modal"], [data-bs-dismiss="modal"]', function() {
+		hideModalSafely("bankReportModal");
+	});
 
 	// Fetch Approved Policies
 	fetchApprovedPolicies();
@@ -18,15 +70,16 @@ $(document).ready(function() {
 			success: function(response) {
 				if (response && Array.isArray(response.data)) {
 					allPolicies = response.data;
+					currentFilteredData = allPolicies;
 					buildBranchDropdown(allPolicies);
 					fillTable(allPolicies);
 				} else {
-					$("table tbody").html("<tr><td colspan='10' class='text-center text-muted'>NO APPROVED POLICIES FOUND</td></tr>");
+					$(".datatable tbody").html("<tr><td colspan='10' class='text-center text-muted'>NO APPROVED POLICIES FOUND</td></tr>");
 				}
 			},
 			error: function() {
 				alert("ERROR WHILE FETCHING POLICY DATA.");
-				$("table tbody").html("<tr><td colspan='10' class='text-center text-danger'>FAILED TO LOAD APPROVED POLICIES</td></tr>");
+				$(".datatable tbody").html("<tr><td colspan='10' class='text-center text-danger'>FAILED TO LOAD APPROVED POLICIES</td></tr>");
 			}
 		});
 	}
@@ -101,6 +154,7 @@ $(document).ready(function() {
 
 	// Fill Table
 	function fillTable(data) {
+		currentFilteredData = data || [];
 		let $tbody = $(".datatable tbody");
 		$tbody.empty();
 
@@ -113,25 +167,25 @@ $(document).ready(function() {
 			let policyCode = (p.policyCode || p.policyNumber || "").toUpperCase();
 			let customerName = (p.customerName || (p.customer && p.customer.customerName) || "").toUpperCase();
 			let schemeType = (p.schemeType || "").toUpperCase();
-			let policyDate = p.policyStartDate || p.policyDate || "";
-			let amount = p.policyAmount || 0;
-			let contactNo = p.contactNo || (p.customer && p.customer.contactNo) || "";
+			let policyDate = (p.policyStartDate || p.policyDate || "").toUpperCase();
+			let amount = parseFloat(p.policyAmount || 0);
+			let contactNo = (p.contactNo || (p.customer && p.customer.contactNo) || "").toUpperCase();
 			let branch = (p.branchName || (p.branch && p.branch.branchName) || "").toUpperCase();
 
 			let row = `
 				<tr style="font-family: 'Poppins', sans-serif;">
-					<td>${i + 1}</td>
-					<td><strong>${policyCode}</strong></td>
-					<td>${customerName}</td>
+					<td class="text-center font-monospace">${i + 1}</td>
+					<td class="fw-bold">${policyCode}</td>
+					<td class="fw-semibold">${customerName}</td>
 					<td>${schemeType}</td>
 					<td>${policyDate}</td>
-					<td>₹${parseFloat(amount).toFixed(2)}</td>
+					<td class="fw-bold">₹${amount.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
 					<td>${contactNo}</td>
 					<td>${branch}</td>
 					<td><span class="badge bg-success">APPROVED</span></td>
-					<td class="no-print">
-						<button class="btn btn-sm btn-outline-primary printBtn" data-id="${p.id}" title="PRINT STATEMENT">
-							<i class="bi bi-printer"></i>
+					<td class="text-center no-print">
+						<button type="button" class="btn btn-sm btn-outline-primary printBtn" data-id="${p.id}" data-index="${i}" title="PRINT STATEMENT">
+							<i class="bi bi-printer"></i> PRINT
 						</button>
 					</td>
 				</tr>
@@ -141,49 +195,50 @@ $(document).ready(function() {
 	}
 
 	// Single Policy Print & Modal
-	$(document).on("click", ".printBtn", function() {
+	$(document).off("click", ".printBtn").on("click", ".printBtn", function(e) {
+		e.preventDefault();
 		let id = $(this).data("id");
-		let selectedPolicy = allPolicies.find(p => p.id == id);
+		let idx = $(this).data("index");
+		let selectedPolicy = (currentFilteredData && currentFilteredData[idx]) || allPolicies.find(p => p.id == id);
 		if (!selectedPolicy) {
 			viewData(id);
 			return;
 		}
 
 		ReportPrintUtil.getCompanyDetails(function(company) {
-			$("#bankName").text(company.companyName);
-			$("#bankAddress").text(company.address + ", " + company.city + ", " + company.state + " - " + company.pinCode);
-			$("#bankContact").text("CIN: " + company.cinNo + " | HELPLINE: " + company.helplineNo);
+			$("#bankName").text((company.companyName || "").toUpperCase());
+			$("#bankAddress").text(((company.address || "") + ", " + (company.city || "") + ", " + (company.state || "") + " - " + (company.pinCode || "")).toUpperCase());
+			$("#bankContact").text(("CIN: " + (company.cinNo || "") + " | HELPLINE: " + (company.helplineNo || "")).toUpperCase());
 
-			$("#accountNumber").text((selectedPolicy.customerCode || selectedPolicy.policyCode || "").toUpperCase());
+			$("#accountNumber").text((selectedPolicy.customerCode || selectedPolicy.policyCode || "-").toUpperCase());
 			$("#periodCovered").text(new Date().toLocaleDateString("en-GB"));
 
 			$("#customerName").text((selectedPolicy.customerName || "-").toUpperCase());
 			$("#customerAddress1").text((selectedPolicy.address || company.city || "").toUpperCase());
-			$("#customerAddress2").text("CONTACT: " + (selectedPolicy.contactNo || "-"));
+			$("#customerAddress2").text(("CONTACT: " + (selectedPolicy.contactNo || "-")).toUpperCase());
 
 			$("#modalPolicyCode").text((selectedPolicy.policyCode || "-").toUpperCase());
 			$("#modalSchemeType").text((selectedPolicy.schemeType || "-").toUpperCase());
 			$("#modalPaymentMode").text((selectedPolicy.paymentMode || "ONLINE").toUpperCase());
-			$("#modalPolicyAmount").text("₹" + parseFloat(selectedPolicy.policyAmount || 0).toFixed(2));
+			$("#modalPolicyAmount").text("₹" + parseFloat(selectedPolicy.policyAmount || 0).toLocaleString('en-IN', {minimumFractionDigits: 2}));
 
 			let txnRow = `
 				<tr>
-					<td>${(selectedPolicy.policyCode || "-").toUpperCase()}</td>
-					<td>${selectedPolicy.policyStartDate || "-"}</td>
-					<td>₹${parseFloat(selectedPolicy.policyAmount || 0).toFixed(2)}</td>
+					<td class="fw-bold">${(selectedPolicy.policyCode || "-").toUpperCase()}</td>
+					<td>${(selectedPolicy.policyStartDate || "-").toUpperCase()}</td>
+					<td class="fw-bold text-success">₹${parseFloat(selectedPolicy.policyAmount || 0).toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
 					<td>${(selectedPolicy.schemeType || "-").toUpperCase()}</td>
 					<td>${(selectedPolicy.paymentMode || "ONLINE").toUpperCase()}</td>
 				</tr>
 			`;
 			$("#transactionTableBody").html(txnRow);
 
-			const modalEl = document.getElementById("bankReportModal");
-			const bsModal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-			bsModal.show();
+			showModalSafely("bankReportModal");
 		});
 	});
 
-	$("#printBankReportBtn").on("click", function() {
+	$(document).off("click", "#printBankReportBtn").on("click", "#printBankReportBtn", function(e) {
+		e.preventDefault();
 		let content = document.getElementById("bankReportContent").innerHTML;
 		ReportPrintUtil.printHtml("POLICY INVESTMENT TRANSACTION STATEMENT", content);
 	});
@@ -198,21 +253,35 @@ $(document).ready(function() {
 					return;
 				}
 				let contentHtml = `
-					<div style="font-family: Arial, sans-serif;">
-						<table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-							<tr><th colspan="2" style="background:#f2f2f2; padding:8px;">CUSTOMER & POLICY INFORMATION</th></tr>
-							<tr><td style="width: 30%; font-weight: bold;">CUSTOMER NAME</td><td>${(data.customerName || "-").toUpperCase()}</td></tr>
-							<tr><td style="font-weight: bold;">CONTACT NUMBER</td><td>${data.contactNo || "-"}</td></tr>
-							<tr><td style="font-weight: bold;">POLICY CODE</td><td>${(data.policyCode || "-").toUpperCase()}</td></tr>
-							<tr><td style="font-weight: bold;">POLICY DATE</td><td>${data.policyStartDate || "-"}</td></tr>
-							<tr><td style="font-weight: bold;">SCHEME TYPE</td><td>${(data.schemeType || "-").toUpperCase()}</td></tr>
-							<tr><td style="font-weight: bold;">POLICY AMOUNT</td><td>₹${parseFloat(data.policyAmount || 0).toFixed(2)}</td></tr>
-							<tr><td style="font-weight: bold;">PAYMENT MODE</td><td>${(data.paymentMode || "CASH").toUpperCase()}</td></tr>
-							<tr><td style="font-weight: bold;">BRANCH</td><td>${(data.branchName || "-").toUpperCase()}</td></tr>
-						</table>
+					<table class="table table-bordered text-uppercase">
+						<thead class="table-dark">
+							<tr><th colspan="2" class="text-center">CUSTOMER & POLICY TRANSACTION STATEMENT</th></tr>
+						</thead>
+						<tbody>
+							<tr><td style="width: 35%;" class="fw-bold">CUSTOMER NAME</td><td class="fw-bold">${(data.customerName || "-").toUpperCase()}</td></tr>
+							<tr><td>CONTACT NUMBER</td><td>${(data.contactNo || "-").toUpperCase()}</td></tr>
+							<tr><td class="fw-bold">POLICY CODE</td><td class="fw-bold">${(data.policyCode || "-").toUpperCase()}</td></tr>
+							<tr><td>POLICY START DATE</td><td>${(data.policyStartDate || "-").toUpperCase()}</td></tr>
+							<tr><td>SCHEME TYPE</td><td>${(data.schemeType || "-").toUpperCase()}</td></tr>
+							<tr><td class="fw-bold">POLICY AMOUNT</td><td class="text-success fw-bold">₹${parseFloat(data.policyAmount || 0).toLocaleString('en-IN', {minimumFractionDigits: 2})}</td></tr>
+							<tr><td>PAYMENT MODE</td><td>${(data.paymentMode || "CASH").toUpperCase()}</td></tr>
+							<tr><td>BRANCH NAME</td><td>${(data.branchName || "-").toUpperCase()}</td></tr>
+						</tbody>
+					</table>
+					<div class="row mt-4 pt-4 text-uppercase">
+						<div class="col-6 text-center">
+							<div style="border-top: 1px solid #333; display: inline-block; width: 220px; padding-top: 5px; font-weight: bold; font-size: 12px;">
+								BRANCH MANAGER
+							</div>
+						</div>
+						<div class="col-6 text-center">
+							<div style="border-top: 1px solid #333; display: inline-block; width: 220px; padding-top: 5px; font-weight: bold; font-size: 12px;">
+								AUTHORIZED SIGNATORY
+							</div>
+						</div>
 					</div>
 				`;
-				ReportPrintUtil.printHtml("POLICY INVESTMENT REPORT", contentHtml);
+				ReportPrintUtil.printHtml("POLICY INVESTMENT TRANSACTION STATEMENT", contentHtml);
 			},
 			error: function() {
 				alert("FAILED TO LOAD PRINT DATA");

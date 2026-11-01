@@ -156,9 +156,15 @@ $(document).ready(function() {
 		$("#modalTeamMemberName").text(String(memberName || '').toUpperCase());
 		$("#modalConsultantsTableBody").html('<tr><td colspan="8" class="text-center text-muted">LOADING CONNECTED CONSULTANTS...</td></tr>');
 
-		const modalEl = document.getElementById('consultantsModal');
-		const bsModal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-		bsModal.show();
+		if (typeof $('#consultantsModal').modal === 'function') {
+			$('#consultantsModal').modal('show');
+		} else {
+			const modalEl = document.getElementById('consultantsModal');
+			if (modalEl) {
+				modalEl.classList.add('show');
+				modalEl.style.display = 'block';
+			}
+		}
 
 		$.ajax({
 			type: "GET",

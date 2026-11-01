@@ -125,7 +125,7 @@ body.modal-open {
                 <h5 class="modal-title fw-bold text-uppercase">
                     <i class="bi bi-file-earmark-check me-2"></i>POLICY INVESTMENT TRANSACTION STATEMENT
                 </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal" aria-label="CLOSE" style="background:transparent; border:none; font-size:24px; line-height:1;">&times;</button>
             </div>
 
             <!-- BODY -->
@@ -229,7 +229,7 @@ body.modal-open {
                 <button type="button" id="printBankReportBtn" class="btn btn-success">
                     <i class="bi bi-printer"></i> PRINT STATEMENT
                 </button>
-                <button type="button" class="btn btn-secondary text-uppercase" data-bs-dismiss="modal">CLOSE</button>
+                <button type="button" class="btn btn-secondary text-uppercase" data-dismiss="modal" data-bs-dismiss="modal">CLOSE</button>
             </div>
 
         </div>
