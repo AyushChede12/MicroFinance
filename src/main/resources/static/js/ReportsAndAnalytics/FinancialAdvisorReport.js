@@ -1,11 +1,11 @@
 let allFinancialConsultants = [];
 let currentFilteredConsultants = [];
 
-$(document).ready(function() {
+$(document).ready(function () {
 	loadBranchDropdown();
 	loadFinancialConsultants();
 
-	$("#resetBtn").on("click", function(e) {
+	$("#resetBtn").on("click", function (e) {
 		e.preventDefault();
 		$("#formid")[0].reset();
 		currentFilteredConsultants = allFinancialConsultants;
@@ -13,7 +13,7 @@ $(document).ready(function() {
 	});
 
 	// Print Full Report Table
-	$("#printFullReportBtn").on("click", function(e) {
+	$("#printFullReportBtn").on("click", function (e) {
 		e.preventDefault();
 		const branch = $("#branchName2").val() || "ALL BRANCHES";
 		let subTitle = "BRANCH: " + branch.toUpperCase();
@@ -24,10 +24,10 @@ $(document).ready(function() {
 	});
 
 	// Table Print Button Handler
-	$(document).off("click", ".viewDetailsBtn").on("click", ".viewDetailsBtn", function(e) {
+	$(document).off("click", ".viewDetailsBtn").on("click", ".viewDetailsBtn", function (e) {
 		e.preventDefault();
 		const index = $(this).data("index");
-		const data = currentFilteredConsultants[index] || allFinancialConsultants[index];
+		const data = (currentFilteredConsultants && currentFilteredConsultants[index]) ? currentFilteredConsultants[index] : allFinancialConsultants[index];
 		if (!data) {
 			alert("FINANCIAL CONSULTANT RECORD NOT FOUND");
 			return;
@@ -52,8 +52,8 @@ $(document).ready(function() {
 					<tr>
 						<th>FULL NAME</th>
 						<td><strong>${(data.financialName || "-").toUpperCase()}</strong></td>
-						<th>DESIGNATION</th>
-						<td>${(data.selectPosition || "-").toUpperCase()}</td>
+						<th>DESIGNATION / POSITION</th>
+						<td>${(data.selectPosition || data.profession || "-").toUpperCase()}</td>
 					</tr>
 					<tr>
 						<th>DATE OF BIRTH</th>
@@ -69,7 +69,7 @@ $(document).ready(function() {
 					</tr>
 					<tr>
 						<th>RESIDENTIAL ADDRESS</th>
-						<td colspan="3">${(data.address || "-").toUpperCase()}, ${(data.district || "-").toUpperCase()}, ${(data.state || "-").toUpperCase()} - ${data.pinCode || "-"}</td>
+						<td colspan="3">${(data.address || "-").toUpperCase()}${data.district ? (", " + data.district.toUpperCase()) : ""}${data.state ? (", " + data.state.toUpperCase()) : ""}${data.pinCode ? (" - " + data.pinCode) : ""}</td>
 					</tr>
 					<tr>
 						<th>PAN NUMBER</th>
@@ -78,14 +78,20 @@ $(document).ready(function() {
 						<td>${data.aadharNo || "-"}</td>
 					</tr>
 					<tr>
-						<th>BANK NAME</th>
-						<td>${(data.bankName || "-").toUpperCase()}</td>
-						<th>BANK ACCOUNT NO.</th>
-						<td>${data.accountNo || "-"}</td>
+						<th>PROFESSION</th>
+						<td>${(data.profession || "-").toUpperCase()}</td>
+						<th>ACADEMIC BACKGROUND</th>
+						<td>${(data.academicBackground || "-").toUpperCase()}</td>
 					</tr>
 					<tr>
-						<th>IFSC CODE</th>
-						<td>${(data.ifsc || "-").toUpperCase()}</td>
+						<th>FEES PAID</th>
+						<td>₹${parseFloat(data.fees || 0).toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+						<th>PAYMENT MODE</th>
+						<td>${(data.modeofPayment || "CASH").toUpperCase()}</td>
+					</tr>
+					<tr>
+						<th>INTRODUCER / REFERRAL</th>
+						<td>${(data.referralCode || "-").toUpperCase()} - ${(data.referralName || "-").toUpperCase()}</td>
 						<th>STATUS</th>
 						<td><span class="badge bg-success">APPROVED & ACTIVE</span></td>
 					</tr>
@@ -103,7 +109,7 @@ function loadBranchDropdown() {
 	$.ajax({
 		url: "api/preference/getAllBranchModule",
 		type: "GET",
-		success: function(response) {
+		success: function (response) {
 			const select = $("#branchName2");
 			select.empty().append('<option value="">ALL BRANCHES</option>');
 
@@ -114,14 +120,14 @@ function loadBranchDropdown() {
 				branchList = response;
 			}
 
-			branchList.forEach(function(branch) {
+			branchList.forEach(function (branch) {
 				if (branch && branch.branchName) {
 					const name = branch.branchName.trim().toUpperCase();
 					select.append(`<option value="${name}">${name}</option>`);
 				}
 			});
 		},
-		error: function() {
+		error: function () {
 			console.warn("FAILED TO LOAD BRANCHES");
 		}
 	});
@@ -133,13 +139,13 @@ function loadFinancialConsultants() {
 	$.ajax({
 		url: "api/reports/getApprovedFinancialConsultant",
 		type: "GET",
-		success: function(response) {
+		success: function (response) {
 			allFinancialConsultants = (response && response.data) ? response.data : [];
 			currentFilteredConsultants = allFinancialConsultants;
 			renderTable(allFinancialConsultants);
 		},
-		error: function() {
-			$(".datatable tbody").html("<tr><td colspan='9' class='text-center text-muted'>NO APPROVED FINANCIAL CONSULTANTS FOUND</td></tr>");
+		error: function () {
+			$(".datatable tbody").html("<tr><td colspan='11' class='text-center text-muted'>NO APPROVED FINANCIAL CONSULTANTS FOUND</td></tr>");
 		}
 	});
 }
@@ -147,27 +153,43 @@ function loadFinancialConsultants() {
 /* ================= RENDER TABLE ================= */
 
 function renderTable(data) {
+	currentFilteredConsultants = data || [];
 	const tableBody = $(".datatable tbody");
 	tableBody.empty();
 
 	if (!data || data.length === 0) {
-		tableBody.html("<tr><td colspan='9' class='text-center text-muted'>NO CONSULTANTS MATCHING CRITERIA</td></tr>");
+		tableBody.html("<tr><td colspan='11' class='text-center text-muted fw-bold'>NO CONSULTANTS MATCHING CRITERIA</td></tr>");
 		return;
 	}
 
-	data.forEach(function(item, index) {
+	data.forEach(function (item, index) {
+		let code = (item.financialCode || "-").trim().toUpperCase();
+		let name = (item.financialName || "-").trim().toUpperCase();
+		let joiningDate = (item.joiningDate || "-").trim().toUpperCase();
+		let branch = (item.branchName || "-").trim().toUpperCase();
+		let dob = (item.dob || "-").trim().toUpperCase();
+		let contact = (item.contactNo || "-").trim().toUpperCase();
+		let position = (item.selectPosition || item.profession || "-").trim().toUpperCase();
+		let address = (item.address || "-").trim().toUpperCase();
+		let status = (item.approved || item.isApproved) ? "APPROVED" : "PENDING";
+		let statusBadge = (status === "APPROVED")
+			? '<span class="badge bg-success">APPROVED</span>'
+			: '<span class="badge bg-warning text-dark">PENDING</span>';
+
 		const row = `
 			<tr style="font-family: 'Poppins', sans-serif;">
 				<td class="text-center font-monospace">${index + 1}</td>
-				<td><strong>${(item.financialCode || "-").toUpperCase()}</strong></td>
-				<td>${(item.financialName || "-").toUpperCase()}</td>
-				<td>${item.joiningDate || "-"}</td>
-				<td>${(item.branchName || "-").toUpperCase()}</td>
-				<td>${item.contactNo || "-"}</td>
-				<td>${(item.selectPosition || "-").toUpperCase()}</td>
-				<td><span class="badge bg-success">APPROVED</span></td>
+				<td class="fw-bold">${code}</td>
+				<td class="fw-semibold">${name}</td>
+				<td>${joiningDate}</td>
+				<td>${branch}</td>
+				<td>${dob}</td>
+				<td>${contact}</td>
+				<td>${position}</td>
+				<td>${address}</td>
+				<td class="text-center">${statusBadge}</td>
 				<td class="text-center no-print">
-					<button class="btn btn-sm btn-outline-primary viewDetailsBtn" data-index="${index}" title="PRINT DOSSIER">
+					<button type="button" class="btn btn-sm btn-outline-primary viewDetailsBtn" data-index="${index}" title="PRINT DOSSIER">
 						<i class="bi bi-printer"></i> PRINT
 					</button>
 				</td>
@@ -179,25 +201,25 @@ function renderTable(data) {
 
 /* ================= FILTER FORM ================= */
 
-$("#formid").on("submit", function(e) {
+$("#formid").on("submit", function (e) {
 	e.preventDefault();
 
-	const selectedBranch = $("#branchName2").val();
+	const selectedBranch = ($("#branchName2").val() || "").trim().toUpperCase();
 	const fromDate = $("#fromDate").val();
 	const toDate = $("#toDate").val();
 
-	const filtered = allFinancialConsultants.filter(function(item) {
+	const filtered = allFinancialConsultants.filter(function (item) {
 		let matchesBranch = true;
 		let matchesDate = true;
 
-		if (selectedBranch && selectedBranch.trim() !== "") {
-			matchesBranch = (item.branchName || "").trim().toUpperCase() === selectedBranch.trim().toUpperCase();
+		if (selectedBranch && selectedBranch !== "" && selectedBranch !== "ALL BRANCHES") {
+			matchesBranch = (item.branchName || "").trim().toUpperCase().includes(selectedBranch);
 		}
 
-		if (item.joiningDate) {
-			const joiningDate = new Date(item.joiningDate);
-			if (fromDate) matchesDate = matchesDate && (joiningDate >= new Date(fromDate));
-			if (toDate) matchesDate = matchesDate && (joiningDate <= new Date(toDate));
+		if (fromDate || toDate) {
+			let jDate = item.joiningDate ? new Date(item.joiningDate) : null;
+			if (fromDate && jDate) matchesDate = matchesDate && (jDate >= new Date(fromDate));
+			if (toDate && jDate) matchesDate = matchesDate && (jDate <= new Date(toDate));
 		}
 
 		return matchesBranch && matchesDate;

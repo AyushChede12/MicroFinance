@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
 	let collectionData = [];
 	let currentFilteredCollection = [];
 
@@ -9,7 +9,7 @@ $(document).ready(function() {
 		$.ajax({
 			url: "api/reports/investment-transactions",
 			type: "GET",
-			success: function(response) {
+			success: function (response) {
 				let txns = response && response.data ? response.data : (Array.isArray(response) ? response : []);
 				let filtered = txns.filter(t => {
 					let fcCode = (t.advisorCode || t.agentCode || t.collectorCode || "").toUpperCase();
@@ -24,7 +24,7 @@ $(document).ready(function() {
 				currentFilteredCollection = collectionData;
 				renderCollection(collectionData);
 			},
-			error: function() {
+			error: function () {
 				tbody.html("<tr><td colspan='14' class='text-center text-danger fw-bold'>NO COLLECTION RECORDS FOUND</td></tr>");
 			}
 		});
@@ -54,9 +54,9 @@ $(document).ready(function() {
 					<td class="fw-semibold">${(item.applicantName || item.customerName || '-').toUpperCase()}</td>
 					<td>${(item.planCode || '-').toUpperCase()}</td>
 					<td class="fw-bold">${(item.advisorCode || item.agentCode || $('#advisorCode').val() || '-').toUpperCase()}</td>
-					<td class="text-success fw-bold">₹${amt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
-					<td class="text-primary fw-bold">₹${cleared.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
-					<td class="text-danger">₹${uncleared.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+					<td class="text-success fw-bold">₹${amt.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+					<td class="text-primary fw-bold">₹${cleared.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+					<td class="text-danger">₹${uncleared.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
 					<td><span class="badge bg-secondary">${(item.paymentMode || 'CASH').toUpperCase()}</span></td>
 					<td>${(item.chequeNo || '-').toUpperCase()}</td>
 					<td class="text-center no-print">
@@ -70,7 +70,7 @@ $(document).ready(function() {
 		});
 	}
 
-	$("#findBtn").click(function(e) {
+	$("#findBtn").click(function (e) {
 		e.preventDefault();
 		let code = ($("#advisorCode").val() || "").trim().toUpperCase();
 		let fDate = $("#fDate").val();
@@ -78,7 +78,7 @@ $(document).ready(function() {
 		fetchCollection(code, fDate, tDate);
 	});
 
-	$("#resetBtn").click(function(e) {
+	$("#resetBtn").click(function (e) {
 		e.preventDefault();
 		$("#advisorCode").val("");
 		$("#fDate").val("");
@@ -86,7 +86,7 @@ $(document).ready(function() {
 		$("#collectionTableBody").html("<tr><td colspan='14' class='text-center text-muted'>ENTER FINANCIAL CONSULTANT CODE TO VIEW COLLECTION RECORDS</td></tr>");
 	});
 
-	$("#printFullReportBtn").click(function(e) {
+	$("#printFullReportBtn").click(function (e) {
 		e.preventDefault();
 		let code = ($("#advisorCode").val() || "ALL ADVISORS").toUpperCase();
 		let fDate = $("#fDate").val() || "START";
@@ -95,7 +95,7 @@ $(document).ready(function() {
 		ReportPrintUtil.printTable('.datatable', 'FINANCIAL CONSULTANT TEAM COLLECTION REPORT', subTitle);
 	});
 
-	$(document).off("click", ".printCollectionBtn").on("click", ".printCollectionBtn", function(e) {
+	$(document).off("click", ".printCollectionBtn").on("click", ".printCollectionBtn", function (e) {
 		e.preventDefault();
 		let idx = $(this).data("index");
 		let item = currentFilteredCollection[idx] || collectionData[idx];
@@ -142,7 +142,7 @@ $(document).ready(function() {
 					</tr>
 					<tr>
 						<th>COLLECTED AMOUNT</th>
-						<td colspan="3" style="font-size: 16px; font-weight: bold; color: green;">₹${amt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+						<td colspan="3" style="font-size: 16px; font-weight: bold; color: green;">₹${amt.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
 					</tr>
 				</tbody>
 			</table>
