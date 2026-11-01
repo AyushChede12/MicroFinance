@@ -24,11 +24,12 @@ $(document).ready(function() {
 
 				bindTable(allLoans);
 			} else {
-				alert("ERROR: " + (response.message || "FAILED TO LOAD LOANS"));
+				bindTable([]);
 			}
 		},
 		error: function() {
-			alert("API ERROR WHILE FETCHING APPROVED LOANS.");
+			allLoans = [];
+			bindTable([]);
 		}
 	});
 

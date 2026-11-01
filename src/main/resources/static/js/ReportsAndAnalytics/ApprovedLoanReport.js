@@ -2,6 +2,23 @@ $(document).ready(function() {
 	let allApprovedData = [];
 	let currentFilteredData = [];
 
+	// Load branches from branch module
+	$.ajax({
+		url: "api/preference/getAllBranchModule",
+		type: "GET",
+		success: function(response) {
+			let list = response && response.data ? response.data : (Array.isArray(response) ? response : []);
+			let sel = $("#branchName1");
+			sel.html("<option value=''>ALL BRANCHES</option>");
+			list.forEach(b => {
+				if (b && b.branchName) {
+					let name = b.branchName.trim().toUpperCase();
+					sel.append(`<option value="${name}">${name}</option>`);
+				}
+			});
+		}
+	});
+
 	// Fetch all approved loan applications on page load
 	$.ajax({
 		url: "api/datacorrection/fetchAllApprovedLoanApplications",
@@ -10,25 +27,14 @@ $(document).ready(function() {
 			if (response && response.data && Array.isArray(response.data)) {
 				allApprovedData = response.data;
 				currentFilteredData = allApprovedData;
-
-				// Fill branch dropdown
-				let branches = new Set();
-				allApprovedData.forEach(loan => {
-					if (loan.branchName) branches.add(loan.branchName.trim().toUpperCase());
-				});
-				let $branchSelect = $('#branchName1');
-				$branchSelect.empty().append('<option value="">ALL BRANCHES</option>');
-				branches.forEach(branch => {
-					$branchSelect.append(`<option value="${branch}">${branch}</option>`);
-				});
-
 				renderTable(allApprovedData);
 			} else {
 				$(".datatable tbody").html("<tr><td colspan='10' class='text-center text-muted'>NO APPROVED LOANS FOUND.</td></tr>");
 			}
 		},
 		error: function() {
-			$(".datatable tbody").html("<tr><td colspan='10' class='text-center text-danger'>ERROR WHILE FETCHING LOAN DATA.</td></tr>");
+			allApprovedData = [];
+			$(".datatable tbody").html("<tr><td colspan='10' class='text-center text-muted'>NO APPROVED LOANS FOUND.</td></tr>");
 		}
 	});
 

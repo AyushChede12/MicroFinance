@@ -168,10 +168,10 @@ public class DataCorrectionController {
 
 		} else {
 
-			ApiResponse<List<LoanApplication>> response = new ApiResponse<>(HttpStatus.NOT_FOUND,
-					"NO APPROVED LOAN FOUND.", null);
+			ApiResponse<List<LoanApplication>> response = new ApiResponse<>(HttpStatus.OK,
+					"NO APPROVED LOAN FOUND.", java.util.Collections.emptyList());
 
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+			return ResponseEntity.ok(response);
 		}
 	}
 

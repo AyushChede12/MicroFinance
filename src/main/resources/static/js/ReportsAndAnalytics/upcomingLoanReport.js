@@ -2,39 +2,58 @@ $(document).ready(function() {
 	let allLoanData = [];
 	let currentFilteredLoans = [];
 
-	/* ---------------- BRANCH & PLAN DROPDOWNS ---------------- */
-	$.ajax({
-		url: "api/datacorrection/fetchAllApprovedLoanApplications",
-		type: "GET",
-		success: function(response) {
-			if (response.status === "OK" || response.status === "SUCCESS" || Array.isArray(response.data)) {
-				allLoanData = response.data || [];
-				currentFilteredLoans = allLoanData;
-				populateDropdowns(allLoanData);
-				loadEmiReport();
-			} else {
-				alert("ERROR: " + (response.message || "FAILED TO LOAD LOAN DATA"));
+	loadBranchDropdown();
+	loadApprovedLoans();
+
+	/* ---------------- BRANCH DROPDOWN (FROM BRANCH API) ---------------- */
+	function loadBranchDropdown() {
+		$.ajax({
+			url: "api/preference/getAllBranchModule",
+			type: "GET",
+			success: function(response) {
+				let list = response && response.data ? response.data : (Array.isArray(response) ? response : []);
+				let sel = $("#branchName1");
+				sel.html("<option value=''>ALL BRANCHES</option>");
+				list.forEach(b => {
+					if (b && b.branchName) {
+						let name = b.branchName.trim().toUpperCase();
+						sel.append(`<option value="${name}">${name}</option>`);
+					}
+				});
+			},
+			error: function() {
+				$("#branchName1").html("<option value=''>ALL BRANCHES</option>");
 			}
-		},
-		error: function(xhr) {
-			console.error("Error loading approved loans:", xhr.responseText);
-			alert("FAILED TO LOAD DROPDOWN DATA.");
-		}
-	});
+		});
+	}
 
-	function populateDropdowns(loanList) {
-		const uniqueBranches = new Set();
+	/* ---------------- APPROVED LOAN APPLICATIONS ---------------- */
+	function loadApprovedLoans() {
+		$.ajax({
+			url: "api/datacorrection/fetchAllApprovedLoanApplications",
+			type: "GET",
+			success: function(response) {
+				let list = (response && response.data && Array.isArray(response.data)) ? response.data : (Array.isArray(response) ? response : []);
+				allLoanData = list;
+				currentFilteredLoans = allLoanData;
+				populatePlanDropdown(allLoanData);
+				loadEmiReport();
+			},
+			error: function(xhr) {
+				console.warn("Notice: No approved loan applications or API unavailable (status " + xhr.status + ")");
+				allLoanData = [];
+				currentFilteredLoans = [];
+				populatePlanDropdown([]);
+				bindTable([]);
+			}
+		});
+	}
+
+	function populatePlanDropdown(loanList) {
 		const uniquePlans = new Set();
-
 		loanList.forEach(item => {
-			if (item.branchName) uniqueBranches.add(item.branchName.trim().toUpperCase());
 			if (item.typeOfLoan) uniquePlans.add(item.typeOfLoan.trim().toUpperCase());
 			if (item.loanPlanName) uniquePlans.add(item.loanPlanName.trim().toUpperCase());
-		});
-
-		$("#branchName1").html("<option value=''>ALL BRANCHES</option>");
-		uniqueBranches.forEach(branch => {
-			$("#branchName1").append(`<option value="${branch}">${branch}</option>`);
 		});
 
 		$("#loanPlanName").html("<option value=''>ALL PLANS</option>");
@@ -225,8 +244,8 @@ $(document).ready(function() {
 
 		if (!data || data.length === 0) {
 			tbody.append(`<tr>
-				<td colspan="13" class="text-center text-danger fw-bold">
-					NO RECORDS FOUND
+				<td colspan="13" class="text-center text-muted fw-bold">
+					NO UPCOMING EMI DUE RECORDS FOUND
 				</td>
 			</tr>`);
 			return;
@@ -247,30 +266,27 @@ $(document).ready(function() {
 				dueDate = `${yyyy}-${mm}-${dd}`;
 			}
 
-			const loanAmt = parseFloat(item.loanAmount || 0);
-			const emiAmt = parseFloat(item.emiPayment || 0);
+			const loanAmount = parseFloat(item.loanAmount || 0);
+			const emiAmount = parseFloat(item.emiPayment || 0);
 			const outstanding = calculateOutstanding(item);
-			const status = (item.loanStatus || 'ACTIVE').toUpperCase();
-
-			let statusBadge = `<span class="badge bg-primary">${status}</span>`;
-			if (status.includes('DUE') || status.includes('OVERDUE')) {
-				statusBadge = `<span class="badge bg-danger">${status}</span>`;
-			} else if (status.includes('APPROV') || status.includes('ACTIV')) {
-				statusBadge = `<span class="badge bg-success">${status}</span>`;
+			const loanStatus = (item.loanStatus || 'ACTIVE').toUpperCase();
+			let statusBadge = `<span class="badge bg-success">${loanStatus}</span>`;
+			if (loanStatus.includes('PEND')) {
+				statusBadge = `<span class="badge bg-warning text-dark">${loanStatus}</span>`;
 			}
 
 			const row = `
-			<tr>
+			<tr style="font-family: 'Poppins', sans-serif;">
 				<td class="text-center font-monospace">${count++}</td>
-				<td class="fw-bold">${(item.loanId || '-').toUpperCase()}</td>
-				<td>${(item.memberId || '-').toUpperCase()}</td>
-				<td class="fw-semibold">${(item.memberName || '-').toUpperCase()}</td>
-				<td>${(item.branchName || '-').toUpperCase()}</td>
-				<td>${(item.typeOfLoan || item.loanPlanName || '-').toUpperCase()}</td>
-				<td>${(item.contactNo || '-').toUpperCase()}</td>
-				<td>₹${loanAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
-				<td class="text-success fw-bold">₹${emiAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
-				<td class="fw-bold">${dueDate}</td>
+				<td class="fw-bold">${(item.loanId || '').toUpperCase()}</td>
+				<td>${(item.memberId || '').toUpperCase()}</td>
+				<td class="fw-semibold">${(item.memberName || '').toUpperCase()}</td>
+				<td>${(item.branchName || '').toUpperCase()}</td>
+				<td>${(item.typeOfLoan || item.loanPlanName || '').toUpperCase()}</td>
+				<td>${(item.contactNo || '').toUpperCase()}</td>
+				<td class="fw-bold">₹${loanAmount.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+				<td class="text-success fw-bold">₹${emiAmount.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+				<td class="fw-bold text-danger">${dueDate}</td>
 				<td class="text-danger fw-bold">₹${outstanding.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
 				<td>${statusBadge}</td>
 				<td class="text-center no-print">
@@ -284,11 +300,10 @@ $(document).ready(function() {
 		});
 	}
 
-	/* ---------------- OUTSTANDING ---------------- */
 	function calculateOutstanding(item) {
-		const total = parseFloat(item.loanAmount || 0);
-		const paid = parseFloat(item.charges || item.totalPaid || 0);
-		const outstanding = total - paid;
-		return isNaN(outstanding) ? 0 : outstanding;
+		const loanAmount = parseFloat(item.loanAmount || 0);
+		const sanctioned = parseFloat(item.sanctionedAmount || item.totalPaid || 0);
+		const diff = loanAmount - sanctioned;
+		return diff > 0 ? diff : 0;
 	}
 });

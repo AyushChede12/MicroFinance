@@ -1,43 +1,48 @@
 $(document).ready(function() {
 	let allLoanData = [];
 
-	// ==============================
-	// Load Dropdowns & Initial Data
-	// ==============================
+	// Load Branch Dropdown
+	$.ajax({
+		url: "api/preference/getAllBranchModule",
+		type: "GET",
+		success: function(response) {
+			let list = response && response.data ? response.data : (Array.isArray(response) ? response : []);
+			let sel = $("#branchName1");
+			sel.html("<option value=''>ALL BRANCHES</option>");
+			list.forEach(b => {
+				if (b && b.branchName) {
+					let name = b.branchName.trim().toUpperCase();
+					sel.append(`<option value="${name}">${name}</option>`);
+				}
+			});
+		}
+	});
+
+	// Load Approved Loans
 	$.ajax({
 		url: "api/datacorrection/fetchAllApprovedLoanApplications",
 		type: "GET",
 		success: function(response) {
-			if (response.status === "OK" || response.status === "SUCCESS" || Array.isArray(response.data)) {
-				allLoanData = response.data || [];
+			let list = (response && response.data && Array.isArray(response.data)) ? response.data : (Array.isArray(response) ? response : []);
+			allLoanData = list;
 
-				const uniqueBranches = new Set();
-				const uniquePlans = new Set();
+			const uniquePlans = new Set();
+			allLoanData.forEach(item => {
+				if (item.loanPlanName) uniquePlans.add(item.loanPlanName.trim().toUpperCase());
+				if (item.typeOfLoan) uniquePlans.add(item.typeOfLoan.trim().toUpperCase());
+			});
 
-				allLoanData.forEach(item => {
-					if (item.branchName) uniqueBranches.add(item.branchName.trim().toUpperCase());
-					if (item.loanPlanName) uniquePlans.add(item.loanPlanName.trim().toUpperCase());
-					if (item.typeOfLoan) uniquePlans.add(item.typeOfLoan.trim().toUpperCase());
-				});
+			$("#loanPlanName").html("<option value=''>ALL PLANS</option>");
+			uniquePlans.forEach(planName => {
+				$("#loanPlanName").append(`<option value="${planName}">${planName}</option>`);
+			});
 
-				$("#branchName1").html("<option value=''>ALL BRANCHES</option>");
-				uniqueBranches.forEach(branchName => {
-					$("#branchName1").append(`<option value="${branchName}">${branchName}</option>`);
-				});
-
-				$("#loanPlanName").html("<option value=''>ALL PLANS</option>");
-				uniquePlans.forEach(planName => {
-					$("#loanPlanName").append(`<option value="${planName}">${planName}</option>`);
-				});
-
-				bindLoanTable(allLoanData);
-			} else {
-				alert("ERROR: " + (response.message || "FAILED TO LOAD DROPDOWN DATA"));
-			}
+			bindLoanTable(allLoanData);
 		},
 		error: function(xhr) {
-			console.error("Error loading approved loans:", xhr.responseText);
-			alert("FAILED TO LOAD DROPDOWN DATA.");
+			console.warn("Notice: No approved loans or API unavailable (status " + xhr.status + ")");
+			allLoanData = [];
+			bindLoanTable([]);
 		}
 	});
 

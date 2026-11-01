@@ -157,8 +157,7 @@ public class ReportsAndAnalyticsController {
 			return ResponseEntity
 					.ok(ApiResponse.success(HttpStatus.OK, "LOAN APPLICATION DATA FETCHED SUCCESSFULLY", list));
 		} else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "LOAN APPLICATION DATA NOT FOUND"));
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "NO LOAN APPLICATIONS FOUND", java.util.Collections.emptyList()));
 		}
 	}
 
