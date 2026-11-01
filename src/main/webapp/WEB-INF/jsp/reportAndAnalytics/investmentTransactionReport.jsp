@@ -134,13 +134,13 @@ body.modal-open {
 
                     <!-- BANK HEADER -->
                     <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
-                        <div>
+                        <div class="below-company-details no-print">
                             <h4 id="bankName" class="mb-0 fw-bold text-primary text-uppercase"></h4>
                             <div id="bankAddress" class="text-muted small text-uppercase mt-1"></div>
                             <div id="bankContact" class="text-muted small text-uppercase"></div>
                         </div>
 
-                        <div class="text-end">
+                        <div class="text-end ms-auto">
                             <p class="mb-1">
                                 <strong class="text-uppercase">CUSTOMER CODE:</strong>
                                 <span id="accountNumber"></span>
@@ -208,7 +208,7 @@ body.modal-open {
                     </div>
 
                     <!-- SIGNATURE AREA -->
-                    <div class="row mt-5 pt-4">
+                    <div class="row mt-5 pt-4 modal-signatures no-print">
                         <div class="col-6 text-center">
                             <div style="border-top: 1px solid #333; display: inline-block; width: 220px; padding-top: 5px; font-weight: bold; font-size: 12px; text-transform: uppercase;">
                                 BRANCH MANAGER

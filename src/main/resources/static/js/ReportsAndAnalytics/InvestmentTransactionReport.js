@@ -239,7 +239,12 @@ $(document).ready(function() {
 
 	$(document).off("click", "#printBankReportBtn").on("click", "#printBankReportBtn", function(e) {
 		e.preventDefault();
-		let content = document.getElementById("bankReportContent").innerHTML;
+		let $clone = $("#bankReportContent").clone();
+		// Remove below company and address so it doesn't repeat with ReportPrintUtil header
+		$clone.find(".below-company-details, #bankName, #bankAddress, #bankContact").remove();
+		$clone.find(".modal-signatures, .no-print").remove();
+
+		let content = $clone.html();
 		ReportPrintUtil.printHtml("POLICY INVESTMENT TRANSACTION STATEMENT", content);
 	});
 
@@ -268,18 +273,6 @@ $(document).ready(function() {
 							<tr><td>BRANCH NAME</td><td>${(data.branchName || "-").toUpperCase()}</td></tr>
 						</tbody>
 					</table>
-					<div class="row mt-4 pt-4 text-uppercase">
-						<div class="col-6 text-center">
-							<div style="border-top: 1px solid #333; display: inline-block; width: 220px; padding-top: 5px; font-weight: bold; font-size: 12px;">
-								BRANCH MANAGER
-							</div>
-						</div>
-						<div class="col-6 text-center">
-							<div style="border-top: 1px solid #333; display: inline-block; width: 220px; padding-top: 5px; font-weight: bold; font-size: 12px;">
-								AUTHORIZED SIGNATORY
-							</div>
-						</div>
-					</div>
 				`;
 				ReportPrintUtil.printHtml("POLICY INVESTMENT TRANSACTION STATEMENT", contentHtml);
 			},
