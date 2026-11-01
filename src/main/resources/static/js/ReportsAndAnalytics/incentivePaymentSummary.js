@@ -60,6 +60,74 @@ $(document).ready(function () {
 		printReport();
 	});
 
+	// Row Print Button Click
+	$(document).off("click", ".printIncentiveBtn").on("click", ".printIncentiveBtn", function(e) {
+		e.preventDefault();
+		let idx = $(this).data("index");
+		let dataList = window.cachedSummaryList || [];
+		let item = dataList[idx];
+		if (!item) {
+			alert("INCENTIVE RECORD NOT FOUND");
+			return;
+		}
+
+		const earnings = parseFloat(item.totalEarnings) || 0;
+		const tax = parseFloat(item.taxDeducted) || 0;
+		const service = parseFloat(item.serviceDeduction) || 0;
+		const totalDed = tax + service;
+		const payout = parseFloat(item.finalPayout) || (earnings - totalDed);
+
+		let html = `
+			<table class="table table-bordered text-uppercase" style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+				<thead class="table-dark">
+					<tr>
+						<th colspan="4" style="padding: 10px; font-size: 14px; text-align: center;">
+							FINANCIAL CONSULTANT INCENTIVE PAY VOUCHER
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th style="width: 25%;">ADVISOR CODE</th>
+						<td style="width: 25%; font-weight: bold; color: #002147;">${(item.teamCode || "-").toUpperCase()}</td>
+						<th style="width: 25%;">INCENTIVE MONTH</th>
+						<td style="width: 25%; font-weight: bold;">${(item.incentiveMonth || "").toUpperCase()}</td>
+					</tr>
+					<tr>
+						<th>ADVISOR NAME</th>
+						<td><strong>${(item.teamName || "").toUpperCase()}</strong></td>
+						<th>DESIGNATION</th>
+						<td>${(item.designation || "-").toUpperCase()}</td>
+					</tr>
+					<tr>
+						<th>BRANCH</th>
+						<td>${(item.branchName || "-").toUpperCase()}</td>
+						<th>STATUS</th>
+						<td><span class="badge bg-success">${(item.status || "PAID").toUpperCase()}</span></td>
+					</tr>
+					<tr>
+						<th>TOTAL GROSS EARNINGS</th>
+						<td style="font-weight: bold; color: green;">₹${earnings.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+						<th>TDS DEDUCTION</th>
+						<td style="color: red;">₹${tax.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+					</tr>
+					<tr>
+						<th>SERVICE CHARGES</th>
+						<td style="color: red;">₹${service.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+						<th>TOTAL DEDUCTIONS</th>
+						<td style="font-weight: bold; color: red;">₹${totalDed.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+					</tr>
+					<tr>
+						<th>NET PAYOUT AMOUNT</th>
+						<td colspan="3" style="font-size: 16px; font-weight: bold; color: green;">₹${payout.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+					</tr>
+				</tbody>
+			</table>
+		`;
+
+		ReportPrintUtil.printHtml("ADVISOR INCENTIVE PAY VOUCHER", html);
+	});
+
 });
 
 function loadSummaryData(branch) {
@@ -78,7 +146,7 @@ function loadSummaryData(branch) {
 		},
 		error: function (xhr) {
 			console.error("FAILED TO LOAD INCENTIVE SUMMARY:", xhr);
-			$("#summaryTableBody").empty().append("<tr><td colspan='10' class='text-center text-danger fw-bold'>ERROR LOADING INCENTIVE SUMMARY</td></tr>");
+			$("#summaryTableBody").empty().append("<tr><td colspan='11' class='text-center text-danger fw-bold'>ERROR LOADING INCENTIVE SUMMARY</td></tr>");
 		}
 	});
 }
@@ -88,7 +156,7 @@ function renderTable(dataList) {
 	tbody.empty();
 
 	if (!dataList || dataList.length === 0) {
-		tbody.append("<tr><td colspan='10' class='text-center text-danger fw-bold'>NO INCENTIVE RECORDS FOUND</td></tr>");
+		tbody.append("<tr><td colspan='11' class='text-center text-danger fw-bold'>NO INCENTIVE RECORDS FOUND</td></tr>");
 		return;
 	}
 
@@ -115,6 +183,11 @@ function renderTable(dataList) {
 				<td class="text-danger">₹${totalDed.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
 				<td class="fw-bold">₹${payout.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
 				<td>${statusBadge}</td>
+				<td class="text-center no-print">
+					<button class="btn btn-sm btn-outline-primary printIncentiveBtn" data-index="${index}" title="PRINT VOUCHER">
+						<i class="bi bi-printer"></i> PRINT
+					</button>
+				</td>
 			</tr>
 		`;
 		tbody.append(row);

@@ -1,144 +1,14 @@
+let allFinancialConsultants = [];
+let currentFilteredConsultants = [];
+
 $(document).ready(function() {
-
-	if (window.financialConsultantInitialized) {
-		console.warn("FINANCIAL CONSULTANT JS ALREADY INITIALIZED");
-		return;
-	}
-	window.financialConsultantInitialized = true;
-
-	var allFinancialConsultants = [];
-
-	/* ================= FETCH DATA ================= */
-
-	$.ajax({
-		url: "api/reports/getApprovedFinancialConsultant",
-		method: "GET",
-		contentType: "application/json; charset=ISO-8859-1",
-		success: function(response) {
-			if (response && Array.isArray(response.data) && response.data.length > 0) {
-				allFinancialConsultants = response.data;
-				populateBranchDropdown(allFinancialConsultants);
-				renderTable(allFinancialConsultants);
-			} else {
-				fetchAllConsultantsFallback();
-			}
-		},
-		error: function() {
-			fetchAllConsultantsFallback();
-		}
-	});
-
-	function fetchAllConsultantsFallback() {
-		$.ajax({
-			url: "api/financialconsultant/getAllFinancialConsultantDetails",
-			type: "POST",
-			contentType: "application/json",
-			success: function(response) {
-				if (response && Array.isArray(response.data) && response.data.length > 0) {
-					allFinancialConsultants = response.data;
-					populateBranchDropdown(allFinancialConsultants);
-					renderTable(allFinancialConsultants);
-				} else {
-					$("#fetchFinancialConsultants")
-						.html("<tr><td colspan='10' class='text-center text-muted'>NO FINANCIAL CONSULTANTS FOUND.</td></tr>");
-				}
-			},
-			error: function() {
-				$("#fetchFinancialConsultants")
-					.html("<tr><td colspan='10' class='text-center text-danger'>FAILED TO LOAD FINANCIAL CONSULTANTS.</td></tr>");
-			}
-		});
-	}
-
-	/* ================= BRANCH DROPDOWN ================= */
-
-	function populateBranchDropdown(data) {
-		const branchDropdown = $("#branchName2");
-		branchDropdown.empty().append('<option value="">-- ALL BRANCHES --</option>');
-
-		const uniqueBranches = new Set();
-		data.forEach(function(item) {
-			if (item.branchName && item.branchName.trim() !== "") {
-				uniqueBranches.add(item.branchName.trim().toUpperCase());
-			}
-		});
-
-		uniqueBranches.forEach(function(branch) {
-			branchDropdown.append(`<option value="${branch}">${branch}</option>`);
-		});
-	}
-
-	/* ================= RENDER TABLE ================= */
-
-	function renderTable(data) {
-		const tableBody = $("#fetchFinancialConsultants");
-		tableBody.empty();
-
-		if (!data || data.length === 0) {
-			tableBody.html("<tr><td colspan='10' class='text-center text-muted'>NO FINANCIAL CONSULTANTS FOUND MATCHING CRITERIA.</td></tr>");
-			return;
-		}
-
-		data.forEach(function(item, index) {
-			const isApproved = (item.approved === true || item.isApproved === true || item.isApproved === "true" || item.isApproved === 1);
-			const statusBadge = isApproved
-				? '<span class="badge bg-success">APPROVED</span>'
-				: '<span class="badge bg-warning text-dark">PENDING</span>';
-
-			const row = `
-				<tr style="font-family: 'Poppins', sans-serif;">
-					<td>${index + 1}</td>
-					<td><strong>${(item.financialCode || '').toUpperCase()}</strong></td>
-					<td>${(item.financialName || '').toUpperCase()}</td>
-					<td>${item.joiningDate || '-'}</td>
-					<td>${(item.branchName || '-').toUpperCase()}</td>
-					<td>${item.dob || '-'}</td>
-					<td>${item.contactNo || '-'}</td>
-					<td>${(item.address || '-').toUpperCase()}</td>
-					<td>${statusBadge}</td>
-					<td class="no-print">
-						<button class="btn btn-sm btn-outline-primary viewDetailsBtn" data-index="${index}" title="VIEW DOSSIER">
-							<i class="bi bi-eye"></i> DOSSIER
-						</button>
-					</td>
-				</tr>
-			`;
-			tableBody.append(row);
-		});
-	}
-
-	/* ================= FILTER FORM ================= */
-
-	$("#formid").on("submit", function(e) {
-		e.preventDefault();
-
-		const selectedBranch = $("#branchName2").val();
-		const fromDate = $("#fromDate").val();
-		const toDate = $("#toDate").val();
-
-		const filtered = allFinancialConsultants.filter(function(item) {
-			let matchesBranch = true;
-			let matchesDate = true;
-
-			if (selectedBranch && selectedBranch.trim() !== "") {
-				matchesBranch = (item.branchName || "").trim().toUpperCase() === selectedBranch.trim().toUpperCase();
-			}
-
-			if (item.joiningDate) {
-				const joiningDate = new Date(item.joiningDate);
-				if (fromDate) matchesDate = matchesDate && (joiningDate >= new Date(fromDate));
-				if (toDate) matchesDate = matchesDate && (joiningDate <= new Date(toDate));
-			}
-
-			return matchesBranch && matchesDate;
-		});
-
-		renderTable(filtered);
-	});
+	loadBranchDropdown();
+	loadFinancialConsultants();
 
 	$("#resetBtn").on("click", function(e) {
 		e.preventDefault();
 		$("#formid")[0].reset();
+		currentFilteredConsultants = allFinancialConsultants;
 		renderTable(allFinancialConsultants);
 	});
 
@@ -153,62 +23,186 @@ $(document).ready(function() {
 		ReportPrintUtil.printTable('.datatable', 'FINANCIAL CONSULTANT REPORT', subTitle);
 	});
 
-	/* ================= MODAL DETAILS POPULATION ================= */
-
-	$(document).on("click", ".viewDetailsBtn", function() {
+	// Table Print Button Handler
+	$(document).off("click", ".viewDetailsBtn").on("click", ".viewDetailsBtn", function(e) {
+		e.preventDefault();
 		const index = $(this).data("index");
-		const data = allFinancialConsultants[index];
-		if (!data) return;
+		const data = currentFilteredConsultants[index] || allFinancialConsultants[index];
+		if (!data) {
+			alert("FINANCIAL CONSULTANT RECORD NOT FOUND");
+			return;
+		}
 
-		ReportPrintUtil.getCompanyDetails(function(company) {
-			$("#bankName").text(company.companyName);
-			$("#bankAddress").text(company.address + ", " + company.city + ", " + company.state + " - " + company.pinCode);
-			$("#bankContact").text("CIN: " + company.cinNo + " | HELPLINE: " + company.helplineNo);
+		let html = `
+			<table class="table table-bordered text-uppercase" style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+				<thead class="table-dark">
+					<tr>
+						<th colspan="4" style="padding: 10px; font-size: 14px; text-align: center;">
+							FINANCIAL CONSULTANT PROFILE & DOSSIER
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th style="width: 25%;">CONSULTANT CODE</th>
+						<td style="width: 25%; font-weight: bold; color: #002147;">${(data.financialCode || "-").toUpperCase()}</td>
+						<th style="width: 25%;">JOINING DATE</th>
+						<td style="width: 25%; font-weight: bold;">${data.joiningDate || "-"}</td>
+					</tr>
+					<tr>
+						<th>FULL NAME</th>
+						<td><strong>${(data.financialName || "-").toUpperCase()}</strong></td>
+						<th>DESIGNATION</th>
+						<td>${(data.selectPosition || "-").toUpperCase()}</td>
+					</tr>
+					<tr>
+						<th>DATE OF BIRTH</th>
+						<td>${data.dob || "-"}</td>
+						<th>AGE</th>
+						<td>${data.age || "-"}</td>
+					</tr>
+					<tr>
+						<th>CONTACT NUMBER</th>
+						<td>${data.contactNo || "-"}</td>
+						<th>BRANCH</th>
+						<td>${(data.branchName || "-").toUpperCase()}</td>
+					</tr>
+					<tr>
+						<th>RESIDENTIAL ADDRESS</th>
+						<td colspan="3">${(data.address || "-").toUpperCase()}, ${(data.district || "-").toUpperCase()}, ${(data.state || "-").toUpperCase()} - ${data.pinCode || "-"}</td>
+					</tr>
+					<tr>
+						<th>PAN NUMBER</th>
+						<td>${(data.pan || "MFCAS1245W").toUpperCase()}</td>
+						<th>AADHAAR NUMBER</th>
+						<td>${data.aadharNo || "-"}</td>
+					</tr>
+					<tr>
+						<th>BANK NAME</th>
+						<td>${(data.bankName || "-").toUpperCase()}</td>
+						<th>BANK ACCOUNT NO.</th>
+						<td>${data.accountNo || "-"}</td>
+					</tr>
+					<tr>
+						<th>IFSC CODE</th>
+						<td>${(data.ifsc || "-").toUpperCase()}</td>
+						<th>STATUS</th>
+						<td><span class="badge bg-success">APPROVED & ACTIVE</span></td>
+					</tr>
+				</tbody>
+			</table>
+		`;
 
-			$("#financialCode").text((data.financialCode || "-").toUpperCase());
-			$("#joiningDate").text(data.joiningDate || "-");
+		ReportPrintUtil.printHtml("FINANCIAL CONSULTANT DOSSIER", html);
+	});
+});
 
-			$("#financialName").text((data.financialName || "-").toUpperCase());
-			$("#dob").text(data.dob || "-");
-			$("#age").text(data.age || "-");
-			$("#contactNo").text(data.contactNo || "-");
-			$("#branchName").text((data.branchName || "-").toUpperCase());
-			$("#selectPosition").text((data.selectPosition || "-").toUpperCase());
+/* ================= BRANCH DROPDOWN ================= */
 
-			$("#address").text((data.address || "-").toUpperCase());
-			$("#district").text((data.district || "-").toUpperCase());
-			$("#state").text((data.state || "-").toUpperCase());
-			$("#pinCode").text(data.pinCode || "-");
-			$("#profession").text((data.profession || "-").toUpperCase());
-			$("#academicBackground").text((data.academicBackground || "-").toUpperCase());
+function loadBranchDropdown() {
+	$.ajax({
+		url: "api/preference/getAllBranchModule",
+		type: "GET",
+		success: function(response) {
+			const select = $("#branchName2");
+			select.empty().append('<option value="">ALL BRANCHES</option>');
 
-			$("#fees").text(data.fees || "0");
-			$("#modeofPayment").text((data.modeofPayment || "-").toUpperCase());
-			$("#chequeNo").text((data.chequeNo || "-").toUpperCase());
-			$("#chequeDate").text(data.chequeDate || "-");
-			$("#depositAccount").text((data.depositAccount || "-").toUpperCase());
-			$("#refNo").text((data.refNo || "-").toUpperCase());
+			let branchList = [];
+			if (response && response.data && Array.isArray(response.data)) {
+				branchList = response.data;
+			} else if (Array.isArray(response)) {
+				branchList = response;
+			}
 
-			$("#referralCode").text((data.referralCode || "-").toUpperCase());
-			$("#referralName").text((data.referralName || "-").toUpperCase());
-			$("#teamMemberCode").text((data.teamMemberCode || "-").toUpperCase());
+			branchList.forEach(function(branch) {
+				if (branch && branch.branchName) {
+					const name = branch.branchName.trim().toUpperCase();
+					select.append(`<option value="${name}">${name}</option>`);
+				}
+			});
+		},
+		error: function() {
+			console.warn("FAILED TO LOAD BRANCHES");
+		}
+	});
+}
 
-			$("#comments").text((data.comments || "-").toUpperCase());
-			$("#financialStatus").text((data.financialStatus === "1" || data.financialStatus === "ACTIVE") ? "ACTIVE" : "INACTIVE");
-			$("#smsSend").text(data.smsSend === "1" ? "ENABLED" : "DISABLED");
-			$("#isApproved").text((data.approved || data.isApproved) ? "APPROVED" : "PENDING");
+/* ================= LOAD CONSULTANTS ================= */
 
-			const modalEl = document.getElementById("bankReportModal");
-			const bsModal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-			bsModal.show();
-		});
+function loadFinancialConsultants() {
+	$.ajax({
+		url: "api/reports/getApprovedFinancialConsultant",
+		type: "GET",
+		success: function(response) {
+			allFinancialConsultants = (response && response.data) ? response.data : [];
+			currentFilteredConsultants = allFinancialConsultants;
+			renderTable(allFinancialConsultants);
+		},
+		error: function() {
+			$(".datatable tbody").html("<tr><td colspan='9' class='text-center text-muted'>NO APPROVED FINANCIAL CONSULTANTS FOUND</td></tr>");
+		}
+	});
+}
+
+/* ================= RENDER TABLE ================= */
+
+function renderTable(data) {
+	const tableBody = $(".datatable tbody");
+	tableBody.empty();
+
+	if (!data || data.length === 0) {
+		tableBody.html("<tr><td colspan='9' class='text-center text-muted'>NO CONSULTANTS MATCHING CRITERIA</td></tr>");
+		return;
+	}
+
+	data.forEach(function(item, index) {
+		const row = `
+			<tr style="font-family: 'Poppins', sans-serif;">
+				<td class="text-center font-monospace">${index + 1}</td>
+				<td><strong>${(item.financialCode || "-").toUpperCase()}</strong></td>
+				<td>${(item.financialName || "-").toUpperCase()}</td>
+				<td>${item.joiningDate || "-"}</td>
+				<td>${(item.branchName || "-").toUpperCase()}</td>
+				<td>${item.contactNo || "-"}</td>
+				<td>${(item.selectPosition || "-").toUpperCase()}</td>
+				<td><span class="badge bg-success">APPROVED</span></td>
+				<td class="text-center no-print">
+					<button class="btn btn-sm btn-outline-primary viewDetailsBtn" data-index="${index}" title="PRINT DOSSIER">
+						<i class="bi bi-printer"></i> PRINT
+					</button>
+				</td>
+			</tr>
+		`;
+		tableBody.append(row);
+	});
+}
+
+/* ================= FILTER FORM ================= */
+
+$("#formid").on("submit", function(e) {
+	e.preventDefault();
+
+	const selectedBranch = $("#branchName2").val();
+	const fromDate = $("#fromDate").val();
+	const toDate = $("#toDate").val();
+
+	const filtered = allFinancialConsultants.filter(function(item) {
+		let matchesBranch = true;
+		let matchesDate = true;
+
+		if (selectedBranch && selectedBranch.trim() !== "") {
+			matchesBranch = (item.branchName || "").trim().toUpperCase() === selectedBranch.trim().toUpperCase();
+		}
+
+		if (item.joiningDate) {
+			const joiningDate = new Date(item.joiningDate);
+			if (fromDate) matchesDate = matchesDate && (joiningDate >= new Date(fromDate));
+			if (toDate) matchesDate = matchesDate && (joiningDate <= new Date(toDate));
+		}
+
+		return matchesBranch && matchesDate;
 	});
 
-	/* ================= PRINT MODAL DOSSIER ================= */
-
-	$("#printBankReportBtn").on("click", function() {
-		const content = document.getElementById("bankReportContent").innerHTML;
-		ReportPrintUtil.printHtml("FINANCIAL CONSULTANT DOSSIER REPORT", content);
-	});
-
+	currentFilteredConsultants = filtered;
+	renderTable(filtered);
 });

@@ -210,3 +210,4 @@ var ReportPrintUtil = (function() {
 		printTable: printTable
 	};
 })();
+

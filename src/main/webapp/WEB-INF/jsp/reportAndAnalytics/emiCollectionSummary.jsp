@@ -92,10 +92,11 @@
 								<th scope="col">CHEQUE / REF NO.</th>
 								<th scope="col">SB ACCOUNT</th>
 								<th scope="col">COLLECTOR CODE</th>
+								<th scope="col" class="no-print">ACTION</th>
 							</tr>
 						</thead>
 						<tbody id="emiTableBody">
-							<tr><td colspan="13" class="text-center text-muted">LOADING EMI COLLECTIONS...</td></tr>
+							<tr><td colspan="14" class="text-center text-muted">LOADING EMI COLLECTIONS...</td></tr>
 						</tbody>
 					</table>
 				</div>

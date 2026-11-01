@@ -93,10 +93,11 @@
 								<th scope="col">TDS DEDUCTED (₹)</th>
 								<th scope="col">NET PAYOUT (₹)</th>
 								<th scope="col">STATUS</th>
+								<th scope="col" class="no-print">ACTION</th>
 							</tr>
 						</thead>
 						<tbody id="tdsTableBody">
-							<tr><td colspan="10" class="text-center text-muted">LOADING TDS DEDUCTIONS...</td></tr>
+							<tr><td colspan="11" class="text-center text-muted">LOADING TDS DEDUCTIONS...</td></tr>
 						</tbody>
 					</table>
 				</div>

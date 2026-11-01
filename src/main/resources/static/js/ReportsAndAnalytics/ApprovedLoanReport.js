@@ -1,5 +1,6 @@
 $(document).ready(function() {
 	let allApprovedData = [];
+	let currentFilteredData = [];
 
 	// Fetch all approved loan applications on page load
 	$.ajax({
@@ -8,6 +9,7 @@ $(document).ready(function() {
 		success: function(response) {
 			if (response && response.data && Array.isArray(response.data)) {
 				allApprovedData = response.data;
+				currentFilteredData = allApprovedData;
 
 				// Fill branch dropdown
 				let branches = new Set();
@@ -47,12 +49,14 @@ $(document).ready(function() {
 			return matchBranch && matchDate;
 		});
 
+		currentFilteredData = filtered;
 		renderTable(filtered);
 	});
 
 	$('#resetBtn').click(function(e) {
 		e.preventDefault();
 		$('#formid')[0].reset();
+		currentFilteredData = allApprovedData;
 		renderTable(allApprovedData);
 	});
 
@@ -80,18 +84,18 @@ $(document).ready(function() {
 		data.forEach((loan, index) => {
 			let row = `
 				<tr style="font-family: 'Poppins', sans-serif;">
-					<td>${index + 1}</td>
+					<td class="text-center font-monospace">${index + 1}</td>
 					<td><strong>${(loan.loanId || '').toUpperCase()}</strong></td>
-					<td>${(loan.loanPlanName || '').toUpperCase()}</td>
-					<td>${(loan.interestType || '').toUpperCase()}</td>
-					<td>${loan.loanDate || ''}</td>
-					<td>₹${parseFloat(loan.loanAmount || 0).toFixed(2)}</td>
-					<td>${loan.contactNo || ''}</td>
-					<td>${(loan.branchName || '').toUpperCase()}</td>
+					<td>${(loan.loanPlanName || loan.typeOfLoan || '').toUpperCase()}</td>
+					<td>${(loan.interestType || 'FLAT').toUpperCase()}</td>
+					<td>${loan.loanDate || loan.approvalDate || '-'}</td>
+					<td class="fw-bold">₹${parseFloat(loan.loanAmount || 0).toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+					<td>${loan.contactNo || '-'}</td>
+					<td>${(loan.branchName || '-').toUpperCase()}</td>
 					<td><span class="badge bg-success">APPROVED</span></td>
-					<td class="no-print">
-						<button class="btn btn-sm btn-outline-success printPopupBtn" data-id="${loan.id}" title="PRINT SANCTION LETTER">
-							<i class="bi bi-printer"></i>
+					<td class="text-center no-print">
+						<button class="btn btn-sm btn-outline-success printPopupBtn" data-index="${index}" title="PRINT SANCTION LETTER">
+							<i class="bi bi-printer"></i> PRINT
 						</button>
 					</td>
 				</tr>
@@ -100,82 +104,72 @@ $(document).ready(function() {
 		});
 	}
 
-	// Single Sanction Letter Modal
-	$(document).on("click", ".printPopupBtn", function() {
-		const id = $(this).data("id");
-		const loan = allApprovedData.find(p => p.id === id);
-		if (!loan) return;
+	// Single Sanction Letter Direct Print & Modal
+	$(document).off("click", ".printPopupBtn").on("click", ".printPopupBtn", function(e) {
+		e.preventDefault();
+		const idx = $(this).data("index");
+		const loan = currentFilteredData[idx] || allApprovedData[idx];
+		if (!loan) {
+			alert("LOAN RECORD NOT FOUND");
+			return;
+		}
 
-		ReportPrintUtil.getCompanyDetails(function(company) {
-			let html = `
-				<div style="font-family: Arial, sans-serif;">
-					<div style="text-align: center; margin-bottom: 20px;">
-						<h4 style="color: #002147; font-weight: bold; text-transform: uppercase; margin-bottom: 3px;">
-							${company.companyName}
-						</h4>
-						<p style="margin: 0; font-size: 12px; text-transform: uppercase;">
-							${company.address}, ${company.city}, ${company.state} - ${company.pinCode}
-						</p>
-						<p style="margin: 2px 0 0 0; font-size: 11px; text-transform: uppercase; color: #555;">
-							CIN: ${company.cinNo} | HELPLINE: ${company.helplineNo} | EMAIL: ${company.emailId}
-						</p>
-						<hr style="margin: 15px 0;">
-						<h5 style="color: #002147; font-weight: bold; text-transform: uppercase;">
-							LOAN SANCTION & APPROVAL DOSSIER
-						</h5>
-					</div>
+		let html = `
+			<table class="table table-bordered text-uppercase" style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+				<thead class="table-dark">
+					<tr>
+						<th colspan="4" style="padding: 10px; font-size: 14px; text-align: center;">
+							OFFICIAL LOAN SANCTION & BORROWER DETAILS
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th style="width: 25%;">LOAN ID</th>
+						<td style="width: 25%; font-weight: bold;">${(loan.loanId || '-').toUpperCase()}</td>
+						<th style="width: 25%;">BORROWER NAME</th>
+						<td style="width: 25%; font-weight: bold;">${(loan.memberName || loan.customerName || '-').toUpperCase()}</td>
+					</tr>
+					<tr>
+						<th>LOAN PLAN NAME</th>
+						<td>${(loan.loanPlanName || loan.typeOfLoan || '-').toUpperCase()}</td>
+						<th>INTEREST TYPE</th>
+						<td>${(loan.interestType || 'FLAT').toUpperCase()}</td>
+					</tr>
+					<tr>
+						<th>SANCTION AMOUNT</th>
+						<td style="font-weight: bold; color: green;">₹${parseFloat(loan.loanAmount || 0).toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+						<th>SANCTION DATE</th>
+						<td>${loan.loanDate || loan.approvalDate || '-'}</td>
+					</tr>
+					<tr>
+						<th>BRANCH</th>
+						<td>${(loan.branchName || '-').toUpperCase()}</td>
+						<th>CONTACT NUMBER</th>
+						<td>${loan.contactNo || '-'}</td>
+					</tr>
+					<tr>
+						<th>APPROVAL STATUS</th>
+						<td style="color: green; font-weight: bold;">APPROVED / SANCTIONED</td>
+						<th>TERM / TENURE</th>
+						<td>${loan.loanTerm || '-'} MONTHS</td>
+					</tr>
+					<tr>
+						<th>RATE OF INTEREST</th>
+						<td>${loan.rateOfInterest || '0'}% P.A.</td>
+						<th>MONTHLY EMI</th>
+						<td style="font-weight: bold;">₹${parseFloat(loan.emiPayment || 0).toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+					</tr>
+					<tr>
+						<th>GUARANTOR</th>
+						<td>${(loan.guarantorIdentity || loan.guarantorMemberId || 'N/A').toUpperCase()}</td>
+						<th>FINANCIAL ADVISOR</th>
+						<td>${(loan.financialConsultantName || loan.financialConsultantId || 'DIRECT').toUpperCase()}</td>
+					</tr>
+				</tbody>
+			</table>
+		`;
 
-					<table style="width: 100%; border-collapse: collapse; font-size: 13px;">
-						<tr style="background: #0d6efd; color: #fff;">
-							<th colspan="4" style="padding: 8px; border: 1px solid #333; text-transform: uppercase;">
-								LOAN APPLICATION & BORROWER DETAILS
-							</th>
-						</tr>
-						<tr>
-							<th style="border: 1px solid #333; padding: 8px; width: 25%; background: #f2f2f2; text-transform: uppercase;">LOAN ID</th>
-							<td style="border: 1px solid #333; padding: 8px; width: 25%;"><strong>${(loan.loanId || '-').toUpperCase()}</strong></td>
-							<th style="border: 1px solid #333; padding: 8px; width: 25%; background: #f2f2f2; text-transform: uppercase;">BORROWER NAME</th>
-							<td style="border: 1px solid #333; padding: 8px; width: 25%;"><strong>${(loan.memberName || loan.customerName || '-').toUpperCase()}</strong></td>
-						</tr>
-						<tr>
-							<th style="border: 1px solid #333; padding: 8px; background: #f2f2f2; text-transform: uppercase;">LOAN PLAN NAME</th>
-							<td style="border: 1px solid #333; padding: 8px;">${(loan.loanPlanName || '-').toUpperCase()}</td>
-							<th style="border: 1px solid #333; padding: 8px; background: #f2f2f2; text-transform: uppercase;">INTEREST TYPE</th>
-							<td style="border: 1px solid #333; padding: 8px;">${(loan.interestType || '-').toUpperCase()}</td>
-						</tr>
-						<tr>
-							<th style="border: 1px solid #333; padding: 8px; background: #f2f2f2; text-transform: uppercase;">SANCTION AMOUNT</th>
-							<td style="border: 1px solid #333; padding: 8px;"><strong>₹${parseFloat(loan.loanAmount || 0).toFixed(2)}</strong></td>
-							<th style="border: 1px solid #333; padding: 8px; background: #f2f2f2; text-transform: uppercase;">SANCTION DATE</th>
-							<td style="border: 1px solid #333; padding: 8px;">${loan.loanDate || '-'}</td>
-						</tr>
-						<tr>
-							<th style="border: 1px solid #333; padding: 8px; background: #f2f2f2; text-transform: uppercase;">BRANCH</th>
-							<td style="border: 1px solid #333; padding: 8px;">${(loan.branchName || '-').toUpperCase()}</td>
-							<th style="border: 1px solid #333; padding: 8px; background: #f2f2f2; text-transform: uppercase;">CONTACT NUMBER</th>
-							<td style="border: 1px solid #333; padding: 8px;">${loan.contactNo || '-'}</td>
-						</tr>
-						<tr>
-							<th style="border: 1px solid #333; padding: 8px; background: #f2f2f2; text-transform: uppercase;">APPROVAL STATUS</th>
-							<td style="border: 1px solid #333; padding: 8px; color: green; font-weight: bold;">APPROVED</td>
-							<th style="border: 1px solid #333; padding: 8px; background: #f2f2f2; text-transform: uppercase;">TERM / TENURE</th>
-							<td style="border: 1px solid #333; padding: 8px;">${loan.loanTerm || '-'} MONTHS</td>
-						</tr>
-					</table>
-				</div>
-			`;
-
-			$("#modalDataContainer").html(html);
-			const modalEl = document.getElementById("printModal");
-			const bsModal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-			bsModal.show();
-		});
+		ReportPrintUtil.printHtml("LOAN SANCTION & APPROVAL LETTER", html);
 	});
-
-	// Print single loan sanction letter
-	$("#printBtn").click(function() {
-		const printContent = document.getElementById("modalDataContainer").innerHTML;
-		ReportPrintUtil.printHtml("LOAN SANCTION LETTER", printContent);
-	});
-
 });

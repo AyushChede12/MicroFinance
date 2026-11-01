@@ -84,10 +84,11 @@
 								<th scope="col">MATURITY DATE</th>
 								<th scope="col">MATURITY AMOUNT</th>
 								<th scope="col">STATUS</th>
+								<th scope="col" class="no-print">ACTION</th>
 							</tr>
 						</thead>
 						<tbody id="performanceTableBody">
-							<tr><td colspan="12" class="text-center text-muted">LOADING POLICY PERFORMANCE DATA...</td></tr>
+							<tr><td colspan="13" class="text-center text-muted">LOADING POLICY PERFORMANCE DATA...</td></tr>
 						</tbody>
 					</table>
 				</div>

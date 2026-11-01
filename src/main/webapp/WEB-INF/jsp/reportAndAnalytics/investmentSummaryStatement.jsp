@@ -87,10 +87,11 @@
 								<th scope="col">RENEWAL BUSINESS (₹)</th>
 								<th scope="col">LATE PENALTY (₹)</th>
 								<th scope="col">TOTAL COLLECTION (₹)</th>
+								<th scope="col" class="no-print">ACTION</th>
 							</tr>
 						</thead>
 						<tbody id="summaryTableBody">
-							<tr><td colspan="8" class="text-center text-muted">LOADING INVESTMENT SUMMARY...</td></tr>
+							<tr><td colspan="9" class="text-center text-muted">LOADING INVESTMENT SUMMARY...</td></tr>
 						</tbody>
 					</table>
 				</div>

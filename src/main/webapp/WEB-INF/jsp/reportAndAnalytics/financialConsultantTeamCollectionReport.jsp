@@ -90,10 +90,11 @@
 								<th scope="col">UNCLEARED AMOUNT</th>
 								<th scope="col">PAY MODE</th>
 								<th scope="col">CHEQUE NO.</th>
+								<th scope="col" class="no-print">ACTION</th>
 							</tr>
 						</thead>
 						<tbody id="collectionTableBody">
-							<tr><td colspan="13" class="text-center text-muted">ENTER FINANCIAL CONSULTANT CODE TO VIEW COLLECTION RECORDS</td></tr>
+							<tr><td colspan="14" class="text-center text-muted">ENTER FINANCIAL CONSULTANT CODE TO VIEW COLLECTION RECORDS</td></tr>
 						</tbody>
 					</table>
 				</div>

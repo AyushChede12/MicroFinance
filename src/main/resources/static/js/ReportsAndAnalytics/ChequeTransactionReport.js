@@ -1,7 +1,8 @@
 let allChequeData = [];
-let rowIndex = 0;
+let currentFilteredCheques = [];
 
 $(document).ready(function() {
+	const basePath = (typeof contextPath !== 'undefined' && contextPath) ? contextPath : "";
 
 	loadBranchDropdown();
 	loadSavingActivity();
@@ -14,6 +15,7 @@ $(document).ready(function() {
 	$("#resetBtn").on("click", function(e) {
 		e.preventDefault();
 		$("#formid")[0].reset();
+		currentFilteredCheques = allChequeData;
 		renderTable(allChequeData);
 	});
 
@@ -27,6 +29,56 @@ $(document).ready(function() {
 		ReportPrintUtil.printTable('.datatable', 'CHEQUE TRANSACTION REPORT', subTitle);
 	});
 
+	// Table Print Button Handler
+	$(document).off("click", ".printChequeBtn").on("click", ".printChequeBtn", function(e) {
+		e.preventDefault();
+		let idx = $(this).data("index");
+		let item = currentFilteredCheques[idx] || allChequeData[idx];
+		if (!item) {
+			alert("CHEQUE RECORD NOT FOUND");
+			return;
+		}
+
+		let content = `
+			<table class="table table-bordered text-uppercase" style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+				<thead class="table-dark">
+					<tr>
+						<th colspan="2" style="padding: 10px; font-size: 14px; text-align: center;">
+							CHEQUE TRANSACTION CLEARANCE VOUCHER
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th style="width: 35%;">ACCOUNT HOLDER / PAYEE</th>
+						<td><strong>${item.name}</strong></td>
+					</tr>
+					<tr>
+						<th>TRANSACTION DATE</th>
+						<td>${formatDate(item.date)}</td>
+					</tr>
+					<tr>
+						<th>CHEQUE NUMBER</th>
+						<td><strong style="color: #002147;">${item.chequeNo}</strong></td>
+					</tr>
+					<tr>
+						<th>BRANCH</th>
+						<td>${item.branch || "-"}</td>
+					</tr>
+					<tr>
+						<th>SOURCE TRANSACTION MODULE</th>
+						<td>${item.source}</td>
+					</tr>
+					<tr>
+						<th>CLEARANCE STATUS</th>
+						<td><span class="badge bg-success">${item.type}</span></td>
+					</tr>
+				</tbody>
+			</table>
+		`;
+
+		ReportPrintUtil.printHtml("CHEQUE TRANSACTION VOUCHER", content);
+	});
 });
 
 /* ================= BRANCH ================= */
@@ -53,9 +105,10 @@ function loadBranchDropdown() {
 /* ================= LOAD APIS ================= */
 
 function loadSavingActivity() {
+	const basePath = (typeof contextPath !== 'undefined' && contextPath) ? contextPath : "";
 	allChequeData = [];
 	$.ajax({
-		url: contextPath + "/api/reports/getPayByFromSavingAccountActivity",
+		url: basePath + "/api/reports/getPayByFromSavingAccountActivity",
 		type: "GET",
 		success: function(res) {
 			let data = extractData(res);
@@ -79,8 +132,9 @@ function loadSavingActivity() {
 }
 
 function loadLoanPayment() {
+	const basePath = (typeof contextPath !== 'undefined' && contextPath) ? contextPath : "";
 	$.ajax({
-		url: contextPath + "/api/reports/getCheckDataFromLoanPayment",
+		url: basePath + "/api/reports/getCheckDataFromLoanPayment",
 		type: "GET",
 		success: function(res) {
 			let data = extractData(res);
@@ -104,8 +158,9 @@ function loadLoanPayment() {
 }
 
 function loadCreateSaving() {
+	const basePath = (typeof contextPath !== 'undefined' && contextPath) ? contextPath : "";
 	$.ajax({
-		url: contextPath + "/api/reports/getCheckDataFromCreateSavings",
+		url: basePath + "/api/reports/getCheckDataFromCreateSavings",
 		type: "GET",
 		success: function(res) {
 			let data = extractData(res);
@@ -129,8 +184,9 @@ function loadCreateSaving() {
 }
 
 function loadFinancialConsultant() {
+	const basePath = (typeof contextPath !== 'undefined' && contextPath) ? contextPath : "";
 	$.ajax({
-		url: contextPath + "/api/reports/getCheckDataFromFinancialConsultant",
+		url: basePath + "/api/reports/getCheckDataFromFinancialConsultant",
 		type: "GET",
 		success: function(res) {
 			let data = extractData(res);
@@ -154,25 +210,28 @@ function loadFinancialConsultant() {
 }
 
 function loadTeamMember() {
+	const basePath = (typeof contextPath !== 'undefined' && contextPath) ? contextPath : "";
 	$.ajax({
-		url: contextPath + "/api/reports/getCheckDataFromTeamMember",
+		url: basePath + "/api/reports/getCheckDataFromTeamMember",
 		type: "GET",
 		success: function(res) {
 			let data = extractData(res);
 			data.forEach(item => {
 				allChequeData.push({
 					id: "TM_" + (item.id || Math.random()),
-					name: (item.teamMemberName || "-").toUpperCase(),
-					date: item.signUpDate,
+					name: (item.name || "-").toUpperCase(),
+					date: item.doj,
 					chequeNo: (item.chequeNo || "-").toUpperCase(),
 					type: "ISSUED",
-					branch: (item.branchName || "-").toUpperCase(),
-					source: "TEAM MEMBER ONBOARDING"
+					branch: (item.branch || "-").toUpperCase(),
+					source: "TEAM MEMBER"
 				});
 			});
+			currentFilteredCheques = allChequeData;
 			renderTable(allChequeData);
 		},
 		error: function() {
+			currentFilteredCheques = allChequeData;
 			renderTable(allChequeData);
 		}
 	});
@@ -181,121 +240,64 @@ function loadTeamMember() {
 /* ================= FILTER ================= */
 
 function applyFilters() {
-	let fDate = $("#fDate").val();
-	let tDate = $("#tDate").val();
-	let chequeNo = $("#chequeNo").val().trim().toUpperCase();
 	let type = $("#type").val();
 	let branch = $("#branchName").val();
-
-	let fromDate = parseInputDate(fDate);
-	let toDate = parseInputDate(tDate);
+	let fDate = parseInputDate($("#fDate").val());
+	let tDate = parseInputDate($("#tDate").val());
+	let chequeNo = $("#chequeNo").val().trim().toUpperCase();
 
 	let filtered = allChequeData.filter(item => {
+		let matchType = !type || item.type === type.toUpperCase();
+		let matchBranch = !branch || item.branch === branch.toUpperCase();
+		let matchCheque = !chequeNo || item.chequeNo.includes(chequeNo);
+
 		let itemDate = parseDate(item.date);
+		let matchFrom = !fDate || (itemDate && itemDate >= fDate);
+		let matchTo = !tDate || (itemDate && itemDate <= tDate);
 
-		if (fromDate && itemDate && itemDate < fromDate) return false;
-		if (toDate && itemDate && itemDate > toDate) return false;
-
-		if (chequeNo && !String(item.chequeNo).toUpperCase().includes(chequeNo)) return false;
-
-		if (type && item.type.toUpperCase() !== type.toUpperCase()) return false;
-
-		if (branch && item.branch && item.branch.toUpperCase() !== branch.toUpperCase()) return false;
-
-		return true;
+		return matchType && matchBranch && matchCheque && matchFrom && matchTo;
 	});
 
+	currentFilteredCheques = filtered;
 	renderTable(filtered);
 }
 
-/* ================= TABLE ================= */
+/* ================= RENDER ================= */
 
 function renderTable(data) {
 	let tbody = $(".datatable tbody");
 	tbody.empty();
-	rowIndex = 0;
 
 	if (!data || data.length === 0) {
-		tbody.append(`<tr><td colspan="8" class="text-center text-muted">NO CHEQUE TRANSACTIONS FOUND MATCHING CRITERIA</td></tr>`);
+		tbody.html("<tr><td colspan='8' class='text-center text-muted'>NO CHEQUE TRANSACTIONS FOUND MATCHING CRITERIA</td></tr>");
 		return;
 	}
 
-	data.forEach(item => {
-		rowIndex++;
-		let statusBadge = (item.type === "CLEARED" || item.type === "ISSUED")
-			? '<span class="badge bg-success">CLEARED</span>'
-			: (item.type === "BOUNCED" || item.type === "CANCELLED")
-				? '<span class="badge bg-danger">BOUNCED</span>'
-				: '<span class="badge bg-warning text-dark">' + item.type + '</span>';
+	data.forEach((item, index) => {
+		let statusBadge = `<span class="badge bg-success">${item.type}</span>`;
+		if (item.type.includes("BOUN") || item.type.includes("FAIL")) {
+			statusBadge = `<span class="badge bg-danger">${item.type}</span>`;
+		} else if (item.type.includes("PEND")) {
+			statusBadge = `<span class="badge bg-warning text-dark">${item.type}</span>`;
+		}
 
 		tbody.append(`
 			<tr style="font-family: 'Poppins', sans-serif;">
-				<td>${rowIndex}</td>
+				<td class="text-center font-monospace">${index + 1}</td>
 				<td><strong>${item.name}</strong></td>
 				<td>${formatDate(item.date)}</td>
-				<td>${item.chequeNo}</td>
+				<td><strong>${item.chequeNo}</strong></td>
 				<td>${item.branch || "-"}</td>
 				<td>${item.source || "-"}</td>
 				<td>${statusBadge}</td>
-				<td class="no-print">
-					<button class="btn btn-sm btn-outline-success printChequeBtn" data-id="${item.id}" title="PRINT CHEQUE VOUCHER">
-						<i class="bi bi-printer"></i>
+				<td class="text-center no-print">
+					<button class="btn btn-sm btn-outline-success printChequeBtn" data-index="${index}" title="PRINT CHEQUE VOUCHER">
+						<i class="bi bi-printer"></i> PRINT
 					</button>
 				</td>
 			</tr>
 		`);
 	});
-}
-
-$(document).on("click", ".printChequeBtn", function() {
-	let id = $(this).data("id");
-	viewData(id);
-});
-
-/* ================= PRINT SINGLE VOUCHER ================= */
-
-function viewData(id) {
-	let item = allChequeData.find(x => x.id == id);
-	if (!item) {
-		alert("CHEQUE RECORD NOT FOUND");
-		return;
-	}
-
-	let content = `
-		<table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
-			<tr>
-				<th colspan="2" style="background:#f2f2f2; padding: 10px; font-size: 14px; text-transform: uppercase;">
-					CHEQUE TRANSACTION CLEARANCE VOUCHER
-				</th>
-			</tr>
-			<tr>
-				<td style="width: 35%; font-weight: bold; padding: 8px;">ACCOUNT HOLDER / PAYEE</td>
-				<td style="padding: 8px;">${item.name}</td>
-			</tr>
-			<tr>
-				<td style="font-weight: bold; padding: 8px;">TRANSACTION DATE</td>
-				<td style="padding: 8px;">${formatDate(item.date)}</td>
-			</tr>
-			<tr>
-				<td style="font-weight: bold; padding: 8px;">CHEQUE NUMBER</td>
-				<td style="padding: 8px;"><strong>${item.chequeNo}</strong></td>
-			</tr>
-			<tr>
-				<td style="font-weight: bold; padding: 8px;">BRANCH</td>
-				<td style="padding: 8px;">${item.branch || "-"}</td>
-			</tr>
-			<tr>
-				<td style="font-weight: bold; padding: 8px;">SOURCE TRANSACTION MODULE</td>
-				<td style="padding: 8px;">${item.source}</td>
-			</tr>
-			<tr>
-				<td style="font-weight: bold; padding: 8px;">CLEARANCE STATUS</td>
-				<td style="padding: 8px;"><strong>${item.type}</strong></td>
-			</tr>
-		</table>
-	`;
-
-	ReportPrintUtil.printHtml("CHEQUE TRANSACTION VOUCHER", content);
 }
 
 /* ================= HELPERS ================= */

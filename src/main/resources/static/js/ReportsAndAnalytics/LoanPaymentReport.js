@@ -1,5 +1,6 @@
 $(document).ready(function() {
 	let allPaymentData = [];
+	let currentFilteredData = [];
 
 	// ✅ 1. Fetch all approved loan applications on page load
 	$.ajax({
@@ -10,6 +11,7 @@ $(document).ready(function() {
 
 			if (response && response.data && Array.isArray(response.data)) {
 				allPaymentData = response.data;
+				currentFilteredData = allPaymentData;
 
 				// ✅ Fill loan dropdown
 				let loanIdSet = new Set();
@@ -48,6 +50,7 @@ $(document).ready(function() {
 			return matchesLoan && matchesFrom && matchesTo;
 		});
 
+		currentFilteredData = filtered;
 		renderTable(filtered);
 	});
 
@@ -57,6 +60,7 @@ $(document).ready(function() {
 		$('#loanId').val('');
 		$('#fromDate').val('');
 		$('#toDate').val('');
+		currentFilteredData = allPaymentData;
 		renderTable(allPaymentData);
 	});
 
@@ -98,7 +102,7 @@ $(document).ready(function() {
 					<td>${(loan.paymentDate || '').toUpperCase()}</td>
 					<td>${statusBadge}</td>
 					<td class="text-center no-print">
-						<button class="btn btn-sm btn-outline-primary printPopupBtn" data-id="${loan.id}" data-bs-toggle="modal" data-bs-target="#receiptModal">
+						<button class="btn btn-sm btn-outline-primary printPopupBtn" data-index="${index}" title="PRINT RECEIPT">
 							<i class="bi bi-printer"></i> RECEIPT
 						</button>
 					</td>
@@ -106,81 +110,75 @@ $(document).ready(function() {
 			`;
 			tableBody.append(row);
 		});
-
-		// ✅ Handle print popup
-		$(".printPopupBtn").click(function() {
-			const id = $(this).data("id");
-			const selectedPolicy = allPaymentData.find(p => p.id === id);
-
-			if (selectedPolicy) {
-				let html = `
-					<div class="table-responsive">
-						<table class="table table-bordered table-striped text-uppercase">
-							<thead class="table-dark">
-								<tr>
-									<th style="width: 40%;">PARAMETER</th>
-									<th style="width: 60%;">DETAILS</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr><td>LOAN ID</td><td class="fw-bold">${(selectedPolicy.loanId || '').toUpperCase()}</td></tr>
-								<tr><td>LOAN DATE</td><td>${(selectedPolicy.loanDate || '').toUpperCase()}</td></tr>
-								<tr><td>MEMBER ID</td><td>${(selectedPolicy.memberId || '').toUpperCase()}</td></tr>
-								<tr><td>RELATIVE DETAILS</td><td>${(selectedPolicy.relativeDetails || '').toUpperCase()}</td></tr>
-								<tr><td>DATE OF BIRTH</td><td>${(selectedPolicy.dateOfBirth || '').toUpperCase()}</td></tr>
-								<tr><td>AGE</td><td>${(selectedPolicy.age || '')}</td></tr>
-								<tr><td>CONTACT NO</td><td>${(selectedPolicy.contactNo || '').toUpperCase()}</td></tr>
-								<tr><td>MESSAGE STATUS</td><td>${(selectedPolicy.messageStatus || '').toUpperCase()}</td></tr>
-								<tr><td>ADDRESS</td><td>${(selectedPolicy.address || '').toUpperCase()}</td></tr>
-								<tr><td>PIN CODE</td><td>${(selectedPolicy.pinCode || '').toUpperCase()}</td></tr>
-								<tr><td>BRANCH NAME</td><td>${(selectedPolicy.branchName || '').toUpperCase()}</td></tr>
-
-								<tr><td>LOAN PLAN NAME</td><td>${(selectedPolicy.loanPlanName || '').toUpperCase()}</td></tr>
-								<tr><td>TYPE OF LOAN</td><td>${(selectedPolicy.typeOfLoan || '').toUpperCase()}</td></tr>
-								<tr><td>LOAN MODE</td><td>${(selectedPolicy.loanMode || '').toUpperCase()}</td></tr>
-								<tr><td>LOAN TERM</td><td>${(selectedPolicy.loanTerm || '').toUpperCase()}</td></tr>
-								<tr><td>RATE OF INTEREST</td><td>${(selectedPolicy.rateOfInterest || '')}%</td></tr>
-								<tr><td>LOAN AMOUNT</td><td class="fw-bold">₹${Number(selectedPolicy.loanAmount || 0).toLocaleString('en-IN', {minimumFractionDigits: 2})}</td></tr>
-								<tr><td>INTEREST TYPE</td><td>${(selectedPolicy.interestType || '').toUpperCase()}</td></tr>
-								<tr><td>EMI PAYMENT</td><td class="text-success fw-bold">₹${Number(selectedPolicy.emiPayment || 0).toLocaleString('en-IN', {minimumFractionDigits: 2})}</td></tr>
-
-								<tr><td>GUARANTOR MEMBER ID</td><td>${(selectedPolicy.guarantorMemberId || '').toUpperCase()}</td></tr>
-								<tr><td>GUARANTOR IDENTITY</td><td>${(selectedPolicy.guarantorIdentity || '').toUpperCase()}</td></tr>
-								<tr><td>GUARANTOR ADDRESS</td><td>${(selectedPolicy.guarantorAddress || '').toUpperCase()}</td></tr>
-								<tr><td>GUARANTOR CONTACT</td><td>${(selectedPolicy.guarantorContactNo || '').toUpperCase()}</td></tr>
-
-								<tr><td>CO-APPLICANT MEMBER ID</td><td>${(selectedPolicy.coApplicantMemberId || '').toUpperCase()}</td></tr>
-								<tr><td>CO-APPLICANT IDENTITY</td><td>${(selectedPolicy.coApplicantIdentity || '').toUpperCase()}</td></tr>
-								<tr><td>CO-APPLICANT ADDRESS</td><td>${(selectedPolicy.coApplicantAddress || '').toUpperCase()}</td></tr>
-
-								<tr><td>PROCESSING FEE</td><td>₹${Number(selectedPolicy.processingFee || 0).toLocaleString('en-IN', {minimumFractionDigits: 2})}</td></tr>
-								<tr><td>LEGAL CHARGES</td><td>₹${Number(selectedPolicy.legalCharges || 0).toLocaleString('en-IN', {minimumFractionDigits: 2})}</td></tr>
-								<tr><td>GST</td><td>₹${Number(selectedPolicy.gst || 0).toLocaleString('en-IN', {minimumFractionDigits: 2})}</td></tr>
-
-								<tr><td>FINANCIAL CONSULTANT</td><td>${(selectedPolicy.financialConsultantName || '').toUpperCase()}</td></tr>
-
-								<tr><td>PAYMENT DATE</td><td class="fw-bold">${(selectedPolicy.paymentDate || '').toUpperCase()}</td></tr>
-								<tr><td>PAYMENT STATUS</td><td><span class="badge bg-success">${(selectedPolicy.paymentStatus || 'COMPLETED').toUpperCase()}</span></td></tr>
-								<tr><td>PAYMENT MODE</td><td>${(selectedPolicy.paymentMode || 'CASH').toUpperCase()}</td></tr>
-
-								<tr><td>ACCOUNT NO</td><td>${(selectedPolicy.accountNo || '').toUpperCase()}</td></tr>
-								<tr><td>UPI REF</td><td>${(selectedPolicy.ref_UpiId || '').toUpperCase()}</td></tr>
-
-								<tr><td>REMARKS</td><td>${(selectedPolicy.remarks || 'LOAN EMI RE-PAYMENT').toUpperCase()}</td></tr>
-								<tr><td>CHEQUE DATE</td><td>${(selectedPolicy.chequeDate || '').toUpperCase()}</td></tr>
-								<tr><td>CHEQUE NO</td><td>${(selectedPolicy.chequeNo || '').toUpperCase()}</td></tr>
-							</tbody>
-						</table>
-					</div>
-				`;
-				$("#modalDataContainer").html(html);
-			}
-		});
 	}
 
-	// ✅ 4. Print modal data with dynamic bank letterhead
-	$(document).off("click", "#printBtn").on("click", "#printBtn", function() {
-		const content = document.getElementById("modalDataContainer").innerHTML;
-		ReportPrintUtil.printHtml("LOAN EMI PAYMENT RECEIPT", content);
+	// ✅ 4. Handle table print button click
+	$(document).off("click", ".printPopupBtn").on("click", ".printPopupBtn", function(e) {
+		e.preventDefault();
+		const idx = $(this).data("index");
+		const selectedPolicy = currentFilteredData[idx] || allPaymentData[idx];
+
+		if (selectedPolicy) {
+			let html = `
+				<table class="table table-bordered table-striped text-uppercase" style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+					<thead class="table-dark">
+						<tr>
+							<th style="width: 40%;">PARAMETER</th>
+							<th style="width: 60%;">DETAILS</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr><td>LOAN ID</td><td class="fw-bold">${(selectedPolicy.loanId || '').toUpperCase()}</td></tr>
+						<tr><td>LOAN DATE</td><td>${(selectedPolicy.loanDate || '').toUpperCase()}</td></tr>
+						<tr><td>MEMBER ID</td><td>${(selectedPolicy.memberId || '').toUpperCase()}</td></tr>
+						<tr><td>RELATIVE DETAILS</td><td>${(selectedPolicy.relativeDetails || '').toUpperCase()}</td></tr>
+						<tr><td>DATE OF BIRTH</td><td>${(selectedPolicy.dateOfBirth || '').toUpperCase()}</td></tr>
+						<tr><td>AGE</td><td>${(selectedPolicy.age || '')}</td></tr>
+						<tr><td>CONTACT NO</td><td>${(selectedPolicy.contactNo || '').toUpperCase()}</td></tr>
+						<tr><td>MESSAGE STATUS</td><td>${(selectedPolicy.messageStatus || '').toUpperCase()}</td></tr>
+						<tr><td>ADDRESS</td><td>${(selectedPolicy.address || '').toUpperCase()}</td></tr>
+						<tr><td>PIN CODE</td><td>${(selectedPolicy.pinCode || '').toUpperCase()}</td></tr>
+						<tr><td>BRANCH NAME</td><td>${(selectedPolicy.branchName || '').toUpperCase()}</td></tr>
+
+						<tr><td>LOAN PLAN NAME</td><td>${(selectedPolicy.loanPlanName || '').toUpperCase()}</td></tr>
+						<tr><td>TYPE OF LOAN</td><td>${(selectedPolicy.typeOfLoan || '').toUpperCase()}</td></tr>
+						<tr><td>LOAN MODE</td><td>${(selectedPolicy.loanMode || '').toUpperCase()}</td></tr>
+						<tr><td>LOAN TERM</td><td>${(selectedPolicy.loanTerm || '').toUpperCase()}</td></tr>
+						<tr><td>RATE OF INTEREST</td><td>${(selectedPolicy.rateOfInterest || '')}%</td></tr>
+						<tr><td>LOAN AMOUNT</td><td class="fw-bold">₹${Number(selectedPolicy.loanAmount || 0).toLocaleString('en-IN', {minimumFractionDigits: 2})}</td></tr>
+						<tr><td>INTEREST TYPE</td><td>${(selectedPolicy.interestType || '').toUpperCase()}</td></tr>
+						<tr><td>EMI PAYMENT</td><td class="text-success fw-bold">₹${Number(selectedPolicy.emiPayment || 0).toLocaleString('en-IN', {minimumFractionDigits: 2})}</td></tr>
+
+						<tr><td>GUARANTOR MEMBER ID</td><td>${(selectedPolicy.guarantorMemberId || '').toUpperCase()}</td></tr>
+						<tr><td>GUARANTOR IDENTITY</td><td>${(selectedPolicy.guarantorIdentity || '').toUpperCase()}</td></tr>
+						<tr><td>GUARANTOR ADDRESS</td><td>${(selectedPolicy.guarantorAddress || '').toUpperCase()}</td></tr>
+						<tr><td>GUARANTOR CONTACT</td><td>${(selectedPolicy.guarantorContactNo || '').toUpperCase()}</td></tr>
+
+						<tr><td>CO-APPLICANT MEMBER ID</td><td>${(selectedPolicy.coApplicantMemberId || '').toUpperCase()}</td></tr>
+						<tr><td>CO-APPLICANT IDENTITY</td><td>${(selectedPolicy.coApplicantIdentity || '').toUpperCase()}</td></tr>
+						<tr><td>CO-APPLICANT ADDRESS</td><td>${(selectedPolicy.coApplicantAddress || '').toUpperCase()}</td></tr>
+
+						<tr><td>PROCESSING FEE</td><td>₹${Number(selectedPolicy.processingFee || 0).toLocaleString('en-IN', {minimumFractionDigits: 2})}</td></tr>
+						<tr><td>LEGAL CHARGES</td><td>₹${Number(selectedPolicy.legalCharges || 0).toLocaleString('en-IN', {minimumFractionDigits: 2})}</td></tr>
+						<tr><td>GST</td><td>₹${Number(selectedPolicy.gst || 0).toLocaleString('en-IN', {minimumFractionDigits: 2})}</td></tr>
+
+						<tr><td>FINANCIAL CONSULTANT</td><td>${(selectedPolicy.financialConsultantName || '').toUpperCase()}</td></tr>
+
+						<tr><td>PAYMENT DATE</td><td class="fw-bold">${(selectedPolicy.paymentDate || '').toUpperCase()}</td></tr>
+						<tr><td>PAYMENT STATUS</td><td><span class="badge bg-success">${(selectedPolicy.paymentStatus || 'COMPLETED').toUpperCase()}</span></td></tr>
+						<tr><td>PAYMENT MODE</td><td>${(selectedPolicy.paymentMode || 'CASH').toUpperCase()}</td></tr>
+
+						<tr><td>ACCOUNT NO</td><td>${(selectedPolicy.accountNo || '').toUpperCase()}</td></tr>
+						<tr><td>UPI REF</td><td>${(selectedPolicy.ref_UpiId || '').toUpperCase()}</td></tr>
+
+						<tr><td>REMARKS</td><td>${(selectedPolicy.remarks || 'LOAN EMI RE-PAYMENT').toUpperCase()}</td></tr>
+						<tr><td>CHEQUE DATE</td><td>${(selectedPolicy.chequeDate || '').toUpperCase()}</td></tr>
+						<tr><td>CHEQUE NO</td><td>${(selectedPolicy.chequeNo || '').toUpperCase()}</td></tr>
+					</tbody>
+				</table>
+			`;
+
+			ReportPrintUtil.printHtml("LOAN EMI PAYMENT RECEIPT", html);
+		}
 	});
 });

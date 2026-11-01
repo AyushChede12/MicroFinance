@@ -90,10 +90,11 @@
 								<th scope="col">OVERDUE AMOUNT</th>
 								<th scope="col">CURRENT DUE</th>
 								<th scope="col">IRREGULARITY STATUS</th>
+								<th scope="col" class="no-print">ACTION</th>
 							</tr>
 						</thead>
 						<tbody id="irregularityTableBody">
-							<tr><td colspan="11" class="text-center text-muted">LOADING EMI IRREGULARITY DATA...</td></tr>
+							<tr><td colspan="12" class="text-center text-muted">LOADING EMI IRREGULARITY DATA...</td></tr>
 						</tbody>
 					</table>
 				</div>

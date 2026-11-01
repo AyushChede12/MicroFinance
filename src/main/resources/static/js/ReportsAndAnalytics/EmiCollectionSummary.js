@@ -1,5 +1,6 @@
 $(document).ready(function() {
 	let allEmiPayments = [];
+	let currentFilteredEmi = [];
 
 	$.ajax({
 		url: "api/preference/getAllBranchModule",
@@ -23,10 +24,11 @@ $(document).ready(function() {
 			type: "GET",
 			success: function(response) {
 				allEmiPayments = response && response.data ? response.data : [];
+				currentFilteredEmi = allEmiPayments;
 				renderTable(allEmiPayments);
 			},
 			error: function() {
-				$("#emiTableBody").html("<tr><td colspan='13' class='text-center text-danger fw-bold'>NO EMI COLLECTION RECORDS FOUND</td></tr>");
+				$("#emiTableBody").html("<tr><td colspan='14' class='text-center text-danger fw-bold'>NO EMI COLLECTION RECORDS FOUND</td></tr>");
 			}
 		});
 	}
@@ -36,7 +38,7 @@ $(document).ready(function() {
 		tbody.empty();
 
 		if (!data || !data.length) {
-			tbody.html("<tr><td colspan='13' class='text-center text-danger fw-bold'>NO MATCHING EMI COLLECTIONS FOUND</td></tr>");
+			tbody.html("<tr><td colspan='14' class='text-center text-danger fw-bold'>NO MATCHING EMI COLLECTIONS FOUND</td></tr>");
 			return;
 		}
 
@@ -62,6 +64,11 @@ $(document).ready(function() {
 					<td>${(p.chequeNo || p.ref_UpiId || '-').toUpperCase()}</td>
 					<td>${(p.accountNo || '-').toUpperCase()}</td>
 					<td>${(p.financialConsultantName || p.collectorCode || '-').toUpperCase()}</td>
+					<td class="text-center no-print">
+						<button class="btn btn-sm btn-outline-primary printEmiReceiptBtn" data-index="${idx}" title="PRINT RECEIPT">
+							<i class="bi bi-printer"></i> PRINT
+						</button>
+					</td>
 				</tr>
 			`;
 			tbody.append(row);
@@ -82,6 +89,7 @@ $(document).ready(function() {
 			return bMatch && matchFrom && matchTo;
 		});
 
+		currentFilteredEmi = filtered;
 		renderTable(filtered);
 	});
 
@@ -90,6 +98,7 @@ $(document).ready(function() {
 		$("#branch").val("");
 		$("#fDate").val("");
 		$("#tDate").val("");
+		currentFilteredEmi = allEmiPayments;
 		renderTable(allEmiPayments);
 	});
 
@@ -100,6 +109,62 @@ $(document).ready(function() {
 		let tDate = $("#tDate").val() || "TODAY";
 		let subTitle = `FILTERS: BRANCH: ${branch} | PERIOD: ${fDate} TO ${tDate}`;
 		ReportPrintUtil.printTable('.datatable', 'EMI COLLECTION SUMMARY REPORT', subTitle);
+	});
+
+	$(document).off("click", ".printEmiReceiptBtn").on("click", ".printEmiReceiptBtn", function(e) {
+		e.preventDefault();
+		let idx = $(this).data("index");
+		let p = currentFilteredEmi[idx] || allEmiPayments[idx];
+		if (!p) {
+			alert("EMI PAYMENT RECORD NOT FOUND");
+			return;
+		}
+
+		let amt = parseFloat(p.emiPayment || p.loanAmount || 0);
+
+		let html = `
+			<table class="table table-bordered text-uppercase" style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+				<thead class="table-dark">
+					<tr>
+						<th colspan="4" style="padding: 10px; font-size: 14px; text-align: center;">
+							LOAN EMI COLLECTION RECEIPT
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th style="width: 25%;">LOAN ACCOUNT ID</th>
+						<td style="width: 25%; font-weight: bold; color: #002147;">${(p.loanId || '-').toUpperCase()}</td>
+						<th style="width: 25%;">PAYMENT DATE</th>
+						<td style="width: 25%; font-weight: bold;">${(p.paymentDate || '-').toUpperCase()}</td>
+					</tr>
+					<tr>
+						<th>MEMBER CODE</th>
+						<td>${(p.memberId || '-').toUpperCase()}</td>
+						<th>BORROWER NAME</th>
+						<td><strong>${(p.memberName || p.customerName || '-').toUpperCase()}</strong></td>
+					</tr>
+					<tr>
+						<th>BRANCH</th>
+						<td>${(p.branchName || '-').toUpperCase()}</td>
+						<th>PAYMENT MODE</th>
+						<td>${(p.paymentMode || 'CASH').toUpperCase()}</td>
+					</tr>
+					<tr>
+						<th>CHEQUE / UPI REF</th>
+						<td>${(p.chequeNo || p.ref_UpiId || '-').toUpperCase()}</td>
+						<th>COLLECTOR / ADVISOR</th>
+						<td>${(p.financialConsultantName || p.collectorCode || '-').toUpperCase()}</td>
+					</tr>
+					<tr>
+						<th>COLLECTED EMI AMOUNT</th>
+						<td colspan="3" style="font-size: 16px; font-weight: bold; color: green;">₹${amt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+					</tr>
+				</tbody>
+			</table>
+		`;
+
+		ReportPrintUtil.printHtml("LOAN EMI PAYMENT RECEIPT", html);
 	});
 
 	loadEmiPayments();

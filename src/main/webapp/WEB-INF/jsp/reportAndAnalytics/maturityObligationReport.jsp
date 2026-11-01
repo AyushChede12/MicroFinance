@@ -98,10 +98,11 @@
 								<th scope="col">POLICY AMOUNT</th>
 								<th scope="col">TOTAL PAID</th>
 								<th scope="col">NET MATURITY LIABILITY</th>
+								<th scope="col" class="no-print">ACTION</th>
 							</tr>
 						</thead>
 						<tbody id="obligationTableBody">
-							<tr><td colspan="10" class="text-center text-muted">LOADING MATURITY OBLIGATIONS...</td></tr>
+							<tr><td colspan="11" class="text-center text-muted">LOADING MATURITY OBLIGATIONS...</td></tr>
 						</tbody>
 					</table>
 				</div>

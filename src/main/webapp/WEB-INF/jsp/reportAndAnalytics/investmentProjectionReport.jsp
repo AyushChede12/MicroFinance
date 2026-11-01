@@ -97,10 +97,11 @@
 								<th scope="col">START DATE</th>
 								<th scope="col">PROJECTED MATURITY DATE</th>
 								<th scope="col">PROJECTED RETURN</th>
+								<th scope="col" class="no-print">ACTION</th>
 							</tr>
 						</thead>
 						<tbody id="projectionTableBody">
-							<tr><td colspan="9" class="text-center text-muted">LOADING INVESTMENT PROJECTIONS...</td></tr>
+							<tr><td colspan="10" class="text-center text-muted">LOADING INVESTMENT PROJECTIONS...</td></tr>
 						</tbody>
 					</table>
 				</div>

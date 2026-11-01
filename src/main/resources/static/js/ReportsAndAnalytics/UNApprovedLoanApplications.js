@@ -1,4 +1,5 @@
 let allUnapprovedLoans = [];
+let currentFilteredLoans = [];
 
 $(document).ready(function() {
 	loadUnapprovedLoans();
@@ -15,6 +16,7 @@ $(document).ready(function() {
 		$("#branchName1").val('');
 		$("#fromDate").val('');
 		$("#toDate").val('');
+		currentFilteredLoans = allUnapprovedLoans;
 		renderTable(allUnapprovedLoans);
 	});
 
@@ -36,6 +38,7 @@ $(document).ready(function() {
 			success: function(response) {
 				if (response && response.data && Array.isArray(response.data)) {
 					allUnapprovedLoans = response.data;
+					currentFilteredLoans = allUnapprovedLoans;
 					populateBranchDropdown(allUnapprovedLoans);
 					renderTable(allUnapprovedLoans);
 				} else {
@@ -77,6 +80,7 @@ $(document).ready(function() {
 			return matchBranch && matchFrom && matchTo;
 		});
 
+		currentFilteredLoans = filtered;
 		renderTable(filtered);
 	}
 
@@ -107,8 +111,8 @@ $(document).ready(function() {
 				<td>${(loan.branchName || '').toUpperCase()}</td>
 				<td><span class="badge bg-danger">${status}</span></td>
 				<td class="text-center no-print">
-					<button class="btn btn-sm btn-outline-primary printPopupBtn" data-index="${index}" data-bs-toggle="modal" data-bs-target="#printModal">
-						<i class="bi bi-printer"></i> VIEW
+					<button class="btn btn-sm btn-outline-primary printRowDossierBtn" data-index="${index}" title="PRINT APPLICATION DOSSIER">
+						<i class="bi bi-printer"></i> PRINT
 					</button>
 				</td>
 			</tr>
@@ -116,52 +120,48 @@ $(document).ready(function() {
 
 			tbody.append(row);
 		});
-
-		// Modal click handler
-		$(".printPopupBtn").off("click").on("click", function() {
-			let idx = $(this).data("index");
-			let loan = data[idx];
-			if (!loan) return;
-
-			let loanAmt = parseFloat(loan.loanAmount || 0);
-			let emiAmt = parseFloat(loan.emiPayment || 0);
-
-			let html = `
-				<div class="table-responsive">
-					<table class="table table-bordered text-uppercase">
-						<thead class="table-dark">
-							<tr><th style="width: 40%;">PARAMETER</th><th style="width: 60%;">DETAILS</th></tr>
-						</thead>
-						<tbody>
-							<tr><td class="fw-bold">LOAN APPLICATION ID</td><td class="fw-bold">${(loan.loanId || '').toUpperCase()}</td></tr>
-							<tr><td>MEMBER / BORROWER CODE</td><td>${(loan.memberId || '').toUpperCase()}</td></tr>
-							<tr><td>APPLICANT NAME</td><td class="fw-bold">${(loan.memberName || '').toUpperCase()}</td></tr>
-							<tr><td>CONTACT NUMBER</td><td>${(loan.contactNo || '').toUpperCase()}</td></tr>
-							<tr><td>RESIDENTIAL ADDRESS</td><td>${(loan.address || 'N/A').toUpperCase()}</td></tr>
-							<tr><td>BRANCH NAME</td><td>${(loan.branchName || '').toUpperCase()}</td></tr>
-							<tr><td>LOAN PLAN NAME</td><td>${(loan.loanPlanName || loan.typeOfLoan || '').toUpperCase()}</td></tr>
-							<tr><td>INTEREST TYPE</td><td>${(loan.interestType || '').toUpperCase()}</td></tr>
-							<tr><td>RATE OF INTEREST</td><td>${loan.rateOfInterest || 0}%</td></tr>
-							<tr><td>TENURE / TERM</td><td>${(loan.loanTerm || 0)} MONTHS</td></tr>
-							<tr><td>REQUESTED LOAN AMOUNT</td><td class="fw-bold text-primary">₹${loanAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td></tr>
-							<tr><td>EXPECTED EMI PAYMENT</td><td>₹${emiAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td></tr>
-							<tr><td>APPLICATION DATE</td><td>${(loan.loanDate || '').toUpperCase()}</td></tr>
-							<tr><td>FINANCIAL CONSULTANT</td><td>${(loan.financialConsultantName || loan.financialConsultantId || 'DIRECT').toUpperCase()}</td></tr>
-							<tr><td>GUARANTOR DETAILS</td><td>${(loan.guarantorIdentity || loan.guarantorMemberId || 'N/A').toUpperCase()}</td></tr>
-							<tr><td>CURRENT STATUS</td><td><span class="badge bg-danger">UNAPPROVED / PENDING SCRUTINY</span></td></tr>
-							<tr><td>REMARKS / REASON</td><td>${(loan.remarks || 'APPLICATION PENDING FINAL BOARD SANCTION').toUpperCase()}</td></tr>
-						</tbody>
-					</table>
-				</div>
-			`;
-
-			$("#modalDataContainer").html(html);
-		});
 	}
 
-	// Modal Print Button
-	$("#modalPrintBtn").off("click").on("click", function() {
-		let content = $("#modalDataContainer").html();
-		ReportPrintUtil.printHtml("UNAPPROVED LOAN APPLICATION DOSSIER", content);
+	// Direct Print Button Click
+	$(document).off("click", ".printRowDossierBtn").on("click", ".printRowDossierBtn", function(e) {
+		e.preventDefault();
+		let idx = $(this).data("index");
+		let loan = currentFilteredLoans[idx] || allUnapprovedLoans[idx];
+		if (!loan) {
+			alert("LOAN APPLICATION RECORD NOT FOUND");
+			return;
+		}
+
+		let loanAmt = parseFloat(loan.loanAmount || 0);
+		let emiAmt = parseFloat(loan.emiPayment || 0);
+
+		let html = `
+			<table class="table table-bordered text-uppercase" style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+				<thead class="table-dark">
+					<tr><th style="width: 40%;">PARAMETER</th><th style="width: 60%;">DETAILS</th></tr>
+				</thead>
+				<tbody>
+					<tr><td class="fw-bold">LOAN APPLICATION ID</td><td class="fw-bold">${(loan.loanId || '').toUpperCase()}</td></tr>
+					<tr><td>MEMBER / BORROWER CODE</td><td>${(loan.memberId || '').toUpperCase()}</td></tr>
+					<tr><td>APPLICANT NAME</td><td class="fw-bold">${(loan.memberName || '').toUpperCase()}</td></tr>
+					<tr><td>CONTACT NUMBER</td><td>${(loan.contactNo || '').toUpperCase()}</td></tr>
+					<tr><td>RESIDENTIAL ADDRESS</td><td>${(loan.address || 'N/A').toUpperCase()}</td></tr>
+					<tr><td>BRANCH NAME</td><td>${(loan.branchName || '').toUpperCase()}</td></tr>
+					<tr><td>LOAN PLAN NAME</td><td>${(loan.loanPlanName || loan.typeOfLoan || '').toUpperCase()}</td></tr>
+					<tr><td>INTEREST TYPE</td><td>${(loan.interestType || '').toUpperCase()}</td></tr>
+					<tr><td>RATE OF INTEREST</td><td>${loan.rateOfInterest || 0}%</td></tr>
+					<tr><td>TENURE / TERM</td><td>${(loan.loanTerm || 0)} MONTHS</td></tr>
+					<tr><td>REQUESTED LOAN AMOUNT</td><td class="fw-bold text-primary">₹${loanAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td></tr>
+					<tr><td>EXPECTED EMI PAYMENT</td><td>₹${emiAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td></tr>
+					<tr><td>APPLICATION DATE</td><td>${(loan.loanDate || '').toUpperCase()}</td></tr>
+					<tr><td>FINANCIAL CONSULTANT</td><td>${(loan.financialConsultantName || loan.financialConsultantId || 'DIRECT').toUpperCase()}</td></tr>
+					<tr><td>GUARANTOR DETAILS</td><td>${(loan.guarantorIdentity || loan.guarantorMemberId || 'N/A').toUpperCase()}</td></tr>
+					<tr><td>CURRENT STATUS</td><td><span class="badge bg-danger">UNAPPROVED / PENDING SCRUTINY</span></td></tr>
+					<tr><td>REMARKS / REASON</td><td>${(loan.remarks || 'APPLICATION PENDING FINAL BOARD SANCTION').toUpperCase()}</td></tr>
+				</tbody>
+			</table>
+		`;
+
+		ReportPrintUtil.printHtml("UNAPPROVED LOAN APPLICATION DOSSIER", html);
 	});
 });

@@ -1,5 +1,6 @@
 $(document).ready(function() {
 	let allLoanData = [];
+	let currentFilteredLoans = [];
 
 	/* ---------------- BRANCH & PLAN DROPDOWNS ---------------- */
 	$.ajax({
@@ -8,6 +9,7 @@ $(document).ready(function() {
 		success: function(response) {
 			if (response.status === "OK" || response.status === "SUCCESS" || Array.isArray(response.data)) {
 				allLoanData = response.data || [];
+				currentFilteredLoans = allLoanData;
 				populateDropdowns(allLoanData);
 				loadEmiReport();
 			} else {
@@ -54,6 +56,7 @@ $(document).ready(function() {
 		$('#loanPlanName').val('');
 		$('#financialCode').val('');
 		$('#toDate').val('');
+		currentFilteredLoans = allLoanData;
 		bindTable(allLoanData);
 	});
 
@@ -66,6 +69,85 @@ $(document).ready(function() {
 		const toDate = $('#toDate').val() || 'ALL DATES';
 		const subTitle = `FILTERS: BRANCH: ${branch} | PLAN: ${plan} | ADVISOR: ${finCode} | DUE BEFORE: ${toDate}`;
 		ReportPrintUtil.printTable('.datatable', 'UPCOMING EMI DUE REPORT', subTitle);
+	});
+
+	/* ---------------- ROW PRINT NOTICE BUTTON ---------------- */
+	$(document).off("click", ".printEmiNoticeBtn").on("click", ".printEmiNoticeBtn", function(e) {
+		e.preventDefault();
+		let idx = $(this).data("index");
+		let item = currentFilteredLoans[idx] || allLoanData[idx];
+		if (!item) {
+			alert("LOAN EMI RECORD NOT FOUND");
+			return;
+		}
+
+		const approvalDate = parseDateSafe(item.approvalDate || item.loanDate);
+		const loanTerm = parseInt(item.loanTerm) || 0;
+		let dueDate = '-';
+		if (approvalDate) {
+			const d = new Date(approvalDate.getTime());
+			d.setMonth(d.getMonth() + loanTerm);
+			const yyyy = d.getFullYear();
+			const mm = String(d.getMonth() + 1).padStart(2, '0');
+			const dd = String(d.getDate()).padStart(2, '0');
+			dueDate = `${yyyy}-${mm}-${dd}`;
+		}
+
+		const loanAmt = parseFloat(item.loanAmount || 0);
+		const emiAmt = parseFloat(item.emiPayment || 0);
+		const outstanding = calculateOutstanding(item);
+
+		let html = `
+			<table class="table table-bordered text-uppercase" style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+				<thead class="table-dark">
+					<tr>
+						<th colspan="4" style="padding: 10px; font-size: 14px; text-align: center;">
+							UPCOMING LOAN EMI DEMAND NOTICE
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th style="width: 25%;">LOAN ACCOUNT ID</th>
+						<td style="width: 25%; font-weight: bold; color: #002147;">${(item.loanId || '-').toUpperCase()}</td>
+						<th style="width: 25%;">DUE DATE</th>
+						<td style="width: 25%; font-weight: bold; color: #d9534f;">${dueDate}</td>
+					</tr>
+					<tr>
+						<th>CUSTOMER CODE</th>
+						<td>${(item.memberId || '-').toUpperCase()}</td>
+						<th>CUSTOMER NAME</th>
+						<td><strong>${(item.memberName || '-').toUpperCase()}</strong></td>
+					</tr>
+					<tr>
+						<th>BRANCH</th>
+						<td>${(item.branchName || '-').toUpperCase()}</td>
+						<th>MOBILE NUMBER</th>
+						<td>${item.contactNo || '-'}</td>
+					</tr>
+					<tr>
+						<th>LOAN TYPE / SCHEME</th>
+						<td>${(item.typeOfLoan || item.loanPlanName || '-').toUpperCase()}</td>
+						<th>SANCTION AMOUNT</th>
+						<td>₹${loanAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+					</tr>
+					<tr>
+						<th>MONTHLY EMI DUE</th>
+						<td style="font-weight: bold; color: green; font-size: 15px;">₹${emiAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+						<th>OUTSTANDING BALANCE</th>
+						<td style="font-weight: bold; color: red;">₹${outstanding.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+					</tr>
+					<tr>
+						<th>LOAN STATUS</th>
+						<td><span class="badge bg-success">${(item.loanStatus || 'ACTIVE').toUpperCase()}</span></td>
+						<th>ADVISOR CODE</th>
+						<td>${(item.financialConsultantId || 'DIRECT').toUpperCase()}</td>
+					</tr>
+				</tbody>
+			</table>
+		`;
+
+		ReportPrintUtil.printHtml("UPCOMING LOAN EMI NOTICE", html);
 	});
 
 	/* ---------------- EMI REPORT FILTERING ---------------- */
@@ -106,6 +188,7 @@ $(document).ready(function() {
 			return branchMatch && planMatch && codeMatch && dateMatch;
 		});
 
+		currentFilteredLoans = filtered;
 		bindTable(filtered);
 	}
 
@@ -142,7 +225,7 @@ $(document).ready(function() {
 
 		if (!data || data.length === 0) {
 			tbody.append(`<tr>
-				<td colspan="12" class="text-center text-danger fw-bold">
+				<td colspan="13" class="text-center text-danger fw-bold">
 					NO RECORDS FOUND
 				</td>
 			</tr>`);
@@ -150,7 +233,7 @@ $(document).ready(function() {
 		}
 
 		let count = 1;
-		data.forEach(item => {
+		data.forEach((item, index) => {
 			const approvalDate = parseDateSafe(item.approvalDate || item.loanDate);
 			const loanTerm = parseInt(item.loanTerm) || 0;
 
@@ -190,6 +273,11 @@ $(document).ready(function() {
 				<td class="fw-bold">${dueDate}</td>
 				<td class="text-danger fw-bold">₹${outstanding.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
 				<td>${statusBadge}</td>
+				<td class="text-center no-print">
+					<button class="btn btn-sm btn-outline-primary printEmiNoticeBtn" data-index="${index}" title="PRINT NOTICE">
+						<i class="bi bi-printer"></i> PRINT
+					</button>
+				</td>
 			</tr>
 			`;
 			tbody.append(row);

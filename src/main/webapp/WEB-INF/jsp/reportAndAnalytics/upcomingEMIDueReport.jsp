@@ -100,10 +100,11 @@
 								<th scope="col">DUE DATE</th>
 								<th scope="col">OUTSTANDING AMOUNT</th>
 								<th scope="col">STATUS</th>
+								<th scope="col" class="no-print">ACTION</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr><td colspan="12" class="text-center text-muted">LOADING UPCOMING EMI DUES...</td></tr>
+							<tr><td colspan="13" class="text-center text-muted">LOADING UPCOMING EMI DUES...</td></tr>
 						</tbody>
 					</table>
 				</div>

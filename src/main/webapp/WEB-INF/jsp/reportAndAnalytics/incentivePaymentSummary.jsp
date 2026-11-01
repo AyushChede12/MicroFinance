@@ -89,10 +89,11 @@
 								<th scope="col">DEDUCTIONS</th>
 								<th scope="col">NET PAYOUT</th>
 								<th scope="col">STATUS</th>
+								<th scope="col" class="no-print">ACTION</th>
 							</tr>
 						</thead>
 						<tbody id="summaryTableBody">
-							<tr><td colspan="10" class="text-center text-muted">LOADING INCENTIVE SUMMARY...</td></tr>
+							<tr><td colspan="11" class="text-center text-muted">LOADING INCENTIVE SUMMARY...</td></tr>
 						</tbody>
 					</table>
 				</div>

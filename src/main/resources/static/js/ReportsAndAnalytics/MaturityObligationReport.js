@@ -1,5 +1,6 @@
 $(document).ready(function() {
 	let allObligations = [];
+	let currentFilteredData = [];
 
 	$.ajax({
 		url: "api/preference/getAllBranchModule",
@@ -23,6 +24,7 @@ $(document).ready(function() {
 			type: "GET",
 			success: function(response) {
 				allObligations = response && response.data ? response.data : [];
+				currentFilteredData = allObligations;
 				let plans = new Set();
 				allObligations.forEach(p => {
 					if (p.schemeName) plans.add(p.schemeName.trim().toUpperCase());
@@ -33,17 +35,18 @@ $(document).ready(function() {
 				renderTable(allObligations);
 			},
 			error: function() {
-				$("#obligationTableBody").html("<tr><td colspan='10' class='text-center text-danger fw-bold'>NO MATURITY OBLIGATION RECORDS FOUND</td></tr>");
+				$("#obligationTableBody").html("<tr><td colspan='11' class='text-center text-danger fw-bold'>NO MATURITY OBLIGATION RECORDS FOUND</td></tr>");
 			}
 		});
 	}
 
 	function renderTable(data) {
+		currentFilteredData = data || [];
 		let tbody = $("#obligationTableBody");
 		tbody.empty();
 
 		if (!data || !data.length) {
-			tbody.html("<tr><td colspan='10' class='text-center text-danger fw-bold'>NO MATURITY OBLIGATION RECORDS FOUND</td></tr>");
+			tbody.html("<tr><td colspan='11' class='text-center text-danger fw-bold'>NO MATURITY OBLIGATION RECORDS FOUND</td></tr>");
 			return;
 		}
 
@@ -64,11 +67,65 @@ $(document).ready(function() {
 					<td>₹${pAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
 					<td class="text-primary">₹${depAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
 					<td class="text-success fw-bold">₹${mAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+					<td class="text-center no-print">
+						<button type="button" class="btn btn-sm btn-outline-primary printObligationVoucherBtn" data-index="${idx}">
+							<i class="bi bi-printer"></i> PRINT
+						</button>
+					</td>
 				</tr>
 			`;
 			tbody.append(row);
 		});
 	}
+
+	$(document).off("click", ".printObligationVoucherBtn").on("click", ".printObligationVoucherBtn", function(e) {
+		e.preventDefault();
+		let idx = $(this).data("index");
+		let p = (currentFilteredData && currentFilteredData[idx]) ? currentFilteredData[idx] : allObligations[idx];
+		if (!p) {
+			alert("RECORD NOT FOUND FOR PRINTING");
+			return;
+		}
+
+		let pAmt = parseFloat(p.policyAmount || 0);
+		let depAmt = parseFloat(p.depositAmount || 0);
+		let mAmt = parseFloat(p.maturityAmount || 0);
+
+		let voucherHtml = `
+			<table class="table table-bordered text-uppercase">
+				<thead class="table-dark">
+					<tr><th colspan="2" class="text-center">BANK MATURITY OBLIGATION STATEMENT</th></tr>
+				</thead>
+				<tbody>
+					<tr><td style="width:40%;" class="fw-bold">POLICY CODE</td><td class="fw-bold">${(p.policyCode || '-').toUpperCase()}</td></tr>
+					<tr><td class="fw-bold">APPLICANT / BENEFICIARY</td><td class="fw-bold">${(p.customerName || '-').toUpperCase()}</td></tr>
+					<tr><td>BRANCH CODE & NAME</td><td>${(p.branchName || '-').toUpperCase()}</td></tr>
+					<tr><td>FINANCIAL CONSULTANT</td><td>${(p.advisorCode || p.memberId || '-').toUpperCase()} - ${(p.advisorName || 'DIRECT').toUpperCase()}</td></tr>
+					<tr><td>INVESTMENT SCHEME</td><td>${(p.schemeName || '-').toUpperCase()}</td></tr>
+					<tr><td>INVESTED PRINCIPAL AMOUNT</td><td>₹${pAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td></tr>
+					<tr><td>CUMULATIVE DEPOSIT RECEIVED</td><td class="text-primary fw-bold">₹${depAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td></tr>
+					<tr><td>POLICY START DATE</td><td>${(p.startDate || '-').toUpperCase()}</td></tr>
+					<tr><td class="fw-bold">MATURITY SETTLEMENT DATE</td><td class="fw-bold text-danger">${(p.maturityDate || '-').toUpperCase()}</td></tr>
+					<tr><td class="fw-bold text-success fs-6">NET MATURITY LIABILITY PAYABLE</td><td class="text-success fw-bold fs-5">₹${mAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td></tr>
+					<tr><td>OBLIGATION SETTLEMENT STATUS</td><td><span class="badge bg-warning text-dark">${(p.status || 'DUE FOR DISBURSEMENT').toUpperCase()}</span></td></tr>
+				</tbody>
+			</table>
+			<div class="row mt-4 pt-4 text-uppercase">
+				<div class="col-6 text-center">
+					<div style="border-top: 1px solid #333; display: inline-block; width: 220px; padding-top: 5px; font-weight: bold; font-size: 12px;">
+						ACCOUNTS AUDITOR
+					</div>
+				</div>
+				<div class="col-6 text-center">
+					<div style="border-top: 1px solid #333; display: inline-block; width: 220px; padding-top: 5px; font-weight: bold; font-size: 12px;">
+						BRANCH MANAGER / AUTHORIZED SIGNATORY
+					</div>
+				</div>
+			</div>
+		`;
+
+		ReportPrintUtil.printHtml("MATURITY OBLIGATION STATEMENT", voucherHtml);
+	});
 
 	$("#findBtn").click(function(e) {
 		e.preventDefault();
