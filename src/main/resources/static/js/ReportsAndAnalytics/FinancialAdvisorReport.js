@@ -85,7 +85,7 @@ $(document).ready(function () {
 					</tr>
 					<tr>
 						<th>FEES PAID</th>
-						<td>₹${parseFloat(data.fees || 0).toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+						<td>₹${parseFloat(data.fees || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
 						<th>PAYMENT MODE</th>
 						<td>${(data.modeofPayment || "CASH").toUpperCase()}</td>
 					</tr>

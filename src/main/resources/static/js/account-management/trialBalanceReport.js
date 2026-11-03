@@ -1,5 +1,7 @@
 $(document).ready(function() {
 
+	loadBranchDropdown();
+
 	$("#viewBtn").click(function(e) {
 		e.preventDefault();
 		getTrialBalance();
@@ -155,4 +157,27 @@ function formatDate(dateStr) {
 	let month = String(d.getMonth() + 1).padStart(2, '0');
 	let year = d.getFullYear();
 	return `${day}-${month}-${year}`;
+}
+
+// =====================================================
+// LOAD BRANCH DROPDOWN
+// =====================================================
+function loadBranchDropdown() {
+	$.ajax({
+		type: "GET",
+		url: "api/preference/getAllBranchModule",
+		contentType: "application/json",
+		success: function(response) {
+			let options = "<option value=''>--SELECT BRANCH NAME--</option>";
+			if (response && Array.isArray(response.data)) {
+				response.data.forEach(branch => {
+					options += `<option value="${branch.branchName}">${branch.branchName.toUpperCase()}</option>`;
+				});
+			}
+			$("#branchName").html(options);
+		},
+		error: function() {
+			alert("FAILED TO LOAD BRANCH NAMES.");
+		}
+	});
 }

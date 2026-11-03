@@ -54,7 +54,9 @@ import com.microfinance.model.AccountTransaction;
 import com.microfinance.model.AddnewinvestmentPM;
 import com.microfinance.model.ApplyForGold;
 import com.microfinance.model.BankCashTransferEntry;
+import com.microfinance.model.BankModule;
 import com.microfinance.model.BankTransaction;
+import com.microfinance.model.BranchModule;
 import com.microfinance.model.CreateSavingsAccount;
 import com.microfinance.model.IncentivePayment;
 import com.microfinance.model.IncomingReceiptEntry;
@@ -71,6 +73,7 @@ import com.microfinance.repository.AccountTransactionRepo;
 import com.microfinance.repository.AddInvestmentRepo;
 import com.microfinance.repository.ApplyForGoldRepo;
 import com.microfinance.repository.BankCashTransferRepo;
+import com.microfinance.repository.BankModuleRepo;
 import com.microfinance.repository.BankTransactionRepo;
 import com.microfinance.repository.BranchModuleRepo;
 import com.microfinance.repository.CreateSavingAccountRepo;
@@ -159,6 +162,9 @@ public class AccountManagementService {
 
 	@Autowired
 	private BankTransactionRepo bankTransactionRepo;
+
+	@Autowired
+	private BankModuleRepo bankModuleRepo;
 
 	@Autowired
 	private CreateSavingAccountRepo createSavingsAccountRepo;
@@ -452,6 +458,13 @@ public class AccountManagementService {
 				.findByBranchNameAndAccountTitleIgnoreCase(branchName, creditLedgerTitle)
 				.orElseThrow(() -> new BadRequestException("CREDIT LEDGER NOT FOUND: " + creditLedgerTitle));
 
+		if (debitLedger.getCurrentBalance() == null) {
+			debitLedger.setCurrentBalance(BigDecimal.ZERO);
+		}
+		if (creditLedger.getCurrentBalance() == null) {
+			creditLedger.setCurrentBalance(BigDecimal.ZERO);
+		}
+
 		// DR Ledger: Increase
 		debitLedger.setCurrentBalance(debitLedger.getCurrentBalance().add(amount));
 
@@ -461,6 +474,114 @@ public class AccountManagementService {
 		// Save both ledgers
 		ledgerAccountRepository.save(debitLedger);
 		ledgerAccountRepository.save(creditLedger);
+	}
+
+	public void recordAccountTransaction(String branchName, String accountCode, String customerName,
+			String accountNumber, String transactionDate, String narration, Double credit, Double debit,
+			Double balance, String transactionType, String paymentBy, String referenceNo) {
+		try {
+			AccountTransaction at = new AccountTransaction();
+			at.setBranchName(branchName != null ? branchName.toUpperCase() : "");
+			at.setAccountCode(accountCode != null ? accountCode.toUpperCase() : "");
+			at.setCustomerName(customerName != null ? customerName.toUpperCase() : "");
+			at.setAccountNumber(accountNumber != null && !accountNumber.trim().isEmpty() ? accountNumber.toUpperCase() : "NA");
+			at.setTransactionDate(transactionDate != null && !transactionDate.trim().isEmpty() ? transactionDate : LocalDate.now().toString());
+			at.setNarration(narration != null ? narration.toUpperCase() : "");
+			at.setCredit(credit != null ? credit : 0.0);
+			at.setDebit(debit != null ? debit : 0.0);
+			at.setBalance(balance != null ? balance : 0.0);
+			at.setTransactionType(transactionType != null ? transactionType.toUpperCase() : "TRANSACTION");
+			at.setPaymentBy(paymentBy != null ? paymentBy.toUpperCase() : "CASH");
+			at.setReferenceNo(referenceNo != null ? referenceNo.toUpperCase() : "");
+			at.setStatus("SUCCESS");
+			at.setCreatedAt(LocalDateTime.now());
+			at.setCreatedBy("ADMIN");
+			accountTransactionRepo.save(at);
+		} catch (Exception e) {
+			System.err.println("FAILED TO RECORD ACCOUNT TRANSACTION: " + e.getMessage());
+		}
+	}
+
+	public void recordBankTransaction(String bankNameOrAcc, String branchName, Double creditAmount, Double debitAmount,
+			String narration, String referenceNo, String dateStr, String type) {
+		try {
+			Double cr = creditAmount != null ? creditAmount : 0.0;
+			Double dr = debitAmount != null ? debitAmount : 0.0;
+			if (cr == 0.0 && dr == 0.0) {
+				return;
+			}
+			BranchModule branch = null;
+			if (branchName != null && !branchName.trim().isEmpty()) {
+				branch = branchModuleRepo.findByBranchNameIgnoreCase(branchName.trim()).orElse(null);
+			}
+
+			BankModule bank = null;
+			List<BankModule> banks = bankModuleRepo.findAll();
+			if (bankNameOrAcc != null && !bankNameOrAcc.trim().isEmpty()) {
+				String search = bankNameOrAcc.trim();
+				bank = banks.stream()
+						.filter(b -> search.equalsIgnoreCase(b.getBankName()) || search.equalsIgnoreCase(b.getAccountNo()))
+						.findFirst().orElse(null);
+			}
+			if (bank == null && branch != null && branch.getBank() != null) {
+				bank = branch.getBank();
+			}
+			if (bank == null && !banks.isEmpty()) {
+				bank = banks.get(0);
+			}
+			if (bank == null) {
+				return;
+			}
+
+			// Connect Branch and Bank if not connected
+			if (branch != null && branch.getBank() == null) {
+				branch.setBank(bank);
+				branchModuleRepo.save(branch);
+			}
+
+			List<BankTransaction> txns = bankTransactionRepo.findByBank_IdOrderByIdDesc(bank.getId());
+			Double prevBalance = 0.0;
+			if (txns != null && !txns.isEmpty() && txns.get(0).getBalance() != null) {
+				prevBalance = txns.get(0).getBalance();
+			} else if (bank.getOpeningBalance() != null && !bank.getOpeningBalance().trim().isEmpty()) {
+				try {
+					prevBalance = Double.parseDouble(bank.getOpeningBalance().trim());
+				} catch (Exception ignored) {}
+			}
+
+			Double newBalance = prevBalance + cr - dr;
+
+			BankTransaction bt = new BankTransaction();
+			bt.setBank(bank);
+			bt.setBranch(branch);
+			bt.setAccountNumber(bank.getAccountNo() != null ? bank.getAccountNo() : "NA");
+			bt.setDate(dateStr != null && !dateStr.trim().isEmpty() ? dateStr : LocalDate.now().toString());
+			bt.setNarration(narration != null ? narration.toUpperCase() : "BANK TRANSACTION");
+			bt.setCredit(cr);
+			bt.setDebit(dr);
+			bt.setBalance(newBalance);
+			bt.setTransactionType(type != null ? type.toUpperCase() : (cr > 0 ? "DEPOSIT" : "WITHDRAW"));
+			bt.setReferenceNo(referenceNo != null ? referenceNo.toUpperCase() : "");
+
+			bankTransactionRepo.save(bt);
+		} catch (Exception e) {
+			System.err.println("FAILED TO RECORD BANK TRANSACTION: " + e.getMessage());
+		}
+	}
+
+	public List<BankModule> getAllBankModules() {
+		return bankModuleRepo.findAll();
+	}
+
+	public List<BankModule> getBanksByBranch(String branchName) {
+		if (branchName == null || branchName.trim().isEmpty()) {
+			return bankModuleRepo.findAll();
+		}
+		BranchModule branch = branchModuleRepo.findByBranchNameIgnoreCase(branchName.trim()).orElse(null);
+		if (branch != null && branch.getBank() != null) {
+			return Collections.singletonList(branch.getBank());
+		}
+		return bankModuleRepo.findAll();
 	}
 
 	private LedgerAccountDto mapToDto(LedgerAccountMaster entity) {
@@ -535,12 +656,12 @@ public class AccountManagementService {
 		dto.setBranchName(dto.getBranchName() != null ? dto.getBranchName().trim() : null);
 		dto.setDebitLedger(dto.getDebitLedger() != null ? dto.getDebitLedger().trim() : null);
 		dto.setCreditLedger(dto.getCreditLedger() != null ? dto.getCreditLedger().trim() : null);
-		dto.setRemarks(dto.getRemarks() != null ? dto.getRemarks().replaceAll("\\s+", " ").trim().toLowerCase() : null);
+		dto.setRemarks(dto.getRemarks() != null ? dto.getRemarks().replaceAll("\\s+", " ").trim().toUpperCase() : null);
 
 		validateOutgoingPayment(dto);
 		OutgoingPaymentEntry entity = mapToEntity(dto);
 
-		// 📌 Auto-generate Receipt ID
+		// Auto-generate Voucher ID
 		String branch = dto.getBranchName().toUpperCase();
 		String dateStr = dto.getDateOfEntry().replace("-", "");
 		String shortUUID = UUID.randomUUID().toString().substring(0, 8);
@@ -549,7 +670,40 @@ public class AccountManagementService {
 
 		BigDecimal amount = new BigDecimal(dto.getTransactionAmount());
 		updateLedgerBalances(dto.getBranchName(), dto.getDebitLedger(), dto.getCreditLedger(), amount);
-		return mapToDto(outgoingPaymentRepo.save(entity));
+		OutgoingPaymentEntry saved = outgoingPaymentRepo.save(entity);
+
+		// Record in common AccountTransaction table
+		LedgerAccountMaster debitLedger = ledgerAccountRepository
+				.findByBranchNameAndAccountTitleIgnoreCase(dto.getBranchName(), dto.getDebitLedger()).orElse(null);
+		LedgerAccountMaster creditLedger = ledgerAccountRepository
+				.findByBranchNameAndAccountTitleIgnoreCase(dto.getBranchName(), dto.getCreditLedger()).orElse(null);
+
+		String debitCode = debitLedger != null && debitLedger.getAccountCode() != null ? debitLedger.getAccountCode() : "101";
+		Double debitBal = debitLedger != null && debitLedger.getCurrentBalance() != null ? debitLedger.getCurrentBalance().doubleValue() : amount.doubleValue();
+		recordAccountTransaction(dto.getBranchName(), debitCode, dto.getDebitLedger(),
+				voucherId, dto.getDateOfEntry(),
+				("PAYMENT TO " + dto.getDebitLedger() + " VIA " + dto.getTransferMode() + (dto.getRemarks() != null ? " - " + dto.getRemarks() : "")).toUpperCase(),
+				0.0, amount.doubleValue(), debitBal, "PAYMENT", dto.getTransferMode().toUpperCase(), voucherId);
+
+		String creditCode = creditLedger != null && creditLedger.getAccountCode() != null ? creditLedger.getAccountCode() : "201";
+		Double creditBal = creditLedger != null && creditLedger.getCurrentBalance() != null ? creditLedger.getCurrentBalance().doubleValue() : 0.0;
+		recordAccountTransaction(dto.getBranchName(), creditCode, dto.getCreditLedger(),
+				voucherId, dto.getDateOfEntry(),
+				("PAYMENT FROM " + dto.getCreditLedger() + " VIA " + dto.getTransferMode() + (dto.getRemarks() != null ? " - " + dto.getRemarks() : "")).toUpperCase(),
+				amount.doubleValue(), 0.0, creditBal, "PAYMENT", dto.getTransferMode().toUpperCase(), voucherId);
+
+		// Record in common BankTransaction table if Bank involved
+		String mode = dto.getTransferMode() != null ? dto.getTransferMode().trim().toUpperCase() : "CASH";
+		boolean isBank = !"CASH".equalsIgnoreCase(mode) || (dto.getBankName() != null && !dto.getBankName().trim().isEmpty());
+		if (isBank) {
+			String bName = dto.getBankName() != null && !dto.getBankName().trim().isEmpty() ? dto.getBankName() : dto.getCreditLedger();
+			recordBankTransaction(bName, dto.getBranchName(), 0.0, amount.doubleValue(),
+					("OUTGOING PAYMENT - " + voucherId + (dto.getRemarks() != null ? " - " + dto.getRemarks() : "")).toUpperCase(),
+					dto.getChequeNo() != null && !dto.getChequeNo().trim().isEmpty() ? dto.getChequeNo() : voucherId,
+					dto.getDateOfEntry(), "WITHDRAW");
+		}
+
+		return mapToDto(saved);
 	}
 
 	/**
@@ -817,7 +971,7 @@ public class AccountManagementService {
 		dto.setBranchName(dto.getBranchName() != null ? dto.getBranchName().trim() : null);
 		dto.setDebitLedger(dto.getDebitLedger() != null ? dto.getDebitLedger().trim() : null);
 		dto.setCreditLedger(dto.getCreditLedger() != null ? dto.getCreditLedger().trim() : null);
-		dto.setRemarks(dto.getRemarks() != null ? dto.getRemarks().replaceAll("\\s+", " ").trim().toLowerCase() : null);
+		dto.setRemarks(dto.getRemarks() != null ? dto.getRemarks().replaceAll("\\s+", " ").trim().toUpperCase() : null);
 
 		// Branch validation
 		branchModuleRepo.findByBranchNameIgnoreCase(dto.getBranchName()).map(branch -> {
@@ -829,7 +983,7 @@ public class AccountManagementService {
 
 		IncomingReceiptEntry entity = mapToEntity(dto);
 
-		// 📌 Auto-generate Receipt ID
+		// Auto-generate Receipt ID
 		String branch = dto.getBranchName().toUpperCase();
 		String dateStr = dto.getDateOfEntry().replace("-", "");
 		String shortUUID = UUID.randomUUID().toString().substring(0, 8);
@@ -841,7 +995,40 @@ public class AccountManagementService {
 		BigDecimal amount = new BigDecimal(dto.getTransactionAmount());
 		updateLedgerBalances(dto.getBranchName(), dto.getDebitLedger(), dto.getCreditLedger(), amount);
 
-		return mapToDto(incomingReceiptRepo.save(entity));
+		IncomingReceiptEntry saved = incomingReceiptRepo.save(entity);
+
+		// Record in common AccountTransaction table
+		LedgerAccountMaster debitLedger = ledgerAccountRepository
+				.findByBranchNameAndAccountTitleIgnoreCase(dto.getBranchName(), dto.getDebitLedger()).orElse(null);
+		LedgerAccountMaster creditLedger = ledgerAccountRepository
+				.findByBranchNameAndAccountTitleIgnoreCase(dto.getBranchName(), dto.getCreditLedger()).orElse(null);
+
+		String debitCode = debitLedger != null && debitLedger.getAccountCode() != null ? debitLedger.getAccountCode() : "101";
+		Double debitBal = debitLedger != null && debitLedger.getCurrentBalance() != null ? debitLedger.getCurrentBalance().doubleValue() : amount.doubleValue();
+		recordAccountTransaction(dto.getBranchName(), debitCode, dto.getDebitLedger(),
+				voucherID, dto.getDateOfEntry(),
+				("RECEIPT INTO " + dto.getDebitLedger() + " VIA " + dto.getTransferMode() + (dto.getRemarks() != null ? " - " + dto.getRemarks() : "")).toUpperCase(),
+				0.0, amount.doubleValue(), debitBal, "RECEIPT", dto.getTransferMode().toUpperCase(), voucherID);
+
+		String creditCode = creditLedger != null && creditLedger.getAccountCode() != null ? creditLedger.getAccountCode() : "301";
+		Double creditBal = creditLedger != null && creditLedger.getCurrentBalance() != null ? creditLedger.getCurrentBalance().doubleValue() : 0.0;
+		recordAccountTransaction(dto.getBranchName(), creditCode, dto.getCreditLedger(),
+				voucherID, dto.getDateOfEntry(),
+				("RECEIPT FROM " + dto.getCreditLedger() + " VIA " + dto.getTransferMode() + (dto.getRemarks() != null ? " - " + dto.getRemarks() : "")).toUpperCase(),
+				amount.doubleValue(), 0.0, creditBal, "RECEIPT", dto.getTransferMode().toUpperCase(), voucherID);
+
+		// Record in common BankTransaction table if Bank involved
+		String mode = dto.getTransferMode() != null ? dto.getTransferMode().trim().toUpperCase() : "CASH";
+		boolean isBank = !"CASH".equalsIgnoreCase(mode) || (dto.getBankName() != null && !dto.getBankName().trim().isEmpty());
+		if (isBank) {
+			String bName = dto.getBankName() != null && !dto.getBankName().trim().isEmpty() ? dto.getBankName() : dto.getDebitLedger();
+			recordBankTransaction(bName, dto.getBranchName(), amount.doubleValue(), 0.0,
+					("INCOMING RECEIPT - " + voucherID + (dto.getRemarks() != null ? " - " + dto.getRemarks() : "")).toUpperCase(),
+					dto.getChequeNo() != null && !dto.getChequeNo().trim().isEmpty() ? dto.getChequeNo() : voucherID,
+					dto.getDateOfEntry(), "DEPOSIT");
+		}
+
+		return mapToDto(saved);
 	}
 
 	private void validateIncomingReceipt(IncomingReceiptDto dto) {
@@ -1020,8 +1207,6 @@ public class AccountManagementService {
 		BankCashTransferEntry entity = mapToEntity(dto);
 
 		validateBankCashTransfer(dto);
-		System.out.println("Duplicate Check (Bank Cash): " + dto.getBranchName() + ", " + dto.getDateOfEntry() + ", "
-				+ dto.getDebitLedger() + ", " + dto.getCreditLedger() + ", " + dto.getTransactionAmount());
 
 		boolean exists = bankCashTransferRepo
 				.existsByBranchNameIgnoreCaseAndDateOfEntryAndDebitLedgerIgnoreCaseAndCreditLedgerIgnoreCaseAndTransactionAmount(
@@ -1044,8 +1229,49 @@ public class AccountManagementService {
 		BigDecimal amount = new BigDecimal(dto.getTransactionAmount());
 		updateLedgerBalances(dto.getBranchName(), dto.getDebitLedger(), dto.getCreditLedger(), amount);
 
-		return mapToDto(bankCashTransferRepo.save(entity));
+		BankCashTransferEntry saved = bankCashTransferRepo.save(entity);
 
+		// Record in common AccountTransaction table
+		LedgerAccountMaster debitLedger = ledgerAccountRepository
+				.findByBranchNameAndAccountTitleIgnoreCase(dto.getBranchName(), dto.getDebitLedger()).orElse(null);
+		LedgerAccountMaster creditLedger = ledgerAccountRepository
+				.findByBranchNameAndAccountTitleIgnoreCase(dto.getBranchName(), dto.getCreditLedger()).orElse(null);
+
+		String debitCode = debitLedger != null && debitLedger.getAccountCode() != null ? debitLedger.getAccountCode() : "101";
+		Double debitBal = debitLedger != null && debitLedger.getCurrentBalance() != null ? debitLedger.getCurrentBalance().doubleValue() : amount.doubleValue();
+		recordAccountTransaction(dto.getBranchName(), debitCode, dto.getDebitLedger(),
+				voucherId, dto.getDateOfEntry(),
+				("CONTRA TRANSFER TO " + dto.getDebitLedger() + " FROM " + dto.getCreditLedger() + (dto.getRemarks() != null ? " - " + dto.getRemarks() : "")).toUpperCase(),
+				0.0, amount.doubleValue(), debitBal, "CONTRA", dto.getTransferMode().toUpperCase(), voucherId);
+
+		String creditCode = creditLedger != null && creditLedger.getAccountCode() != null ? creditLedger.getAccountCode() : "102";
+		Double creditBal = creditLedger != null && creditLedger.getCurrentBalance() != null ? creditLedger.getCurrentBalance().doubleValue() : 0.0;
+		recordAccountTransaction(dto.getBranchName(), creditCode, dto.getCreditLedger(),
+				voucherId, dto.getDateOfEntry(),
+				("CONTRA TRANSFER FROM " + dto.getCreditLedger() + " TO " + dto.getDebitLedger() + (dto.getRemarks() != null ? " - " + dto.getRemarks() : "")).toUpperCase(),
+				amount.doubleValue(), 0.0, creditBal, "CONTRA", dto.getTransferMode().toUpperCase(), voucherId);
+
+		// Common BankTransaction details
+		String mode = dto.getTransferMode() != null ? dto.getTransferMode().trim().toUpperCase() : "";
+		String bName = dto.getBankName() != null && !dto.getBankName().trim().isEmpty() ? dto.getBankName()
+				: (dto.getDebitLedger().toUpperCase().contains("BANK") ? dto.getDebitLedger() : dto.getCreditLedger());
+
+		if (mode.contains("DEPOSIT") || dto.getDebitLedger().toUpperCase().contains("BANK")) {
+			recordBankTransaction(bName, dto.getBranchName(), amount.doubleValue(), 0.0,
+					("CASH DEPOSIT TO BANK - " + voucherId + (dto.getRemarks() != null ? " - " + dto.getRemarks() : "")).toUpperCase(),
+					dto.getChequeNo() != null && !dto.getChequeNo().trim().isEmpty() ? dto.getChequeNo() : voucherId,
+					dto.getDateOfEntry(), "DEPOSIT");
+		} else if (mode.contains("WITHDRAWAL") || dto.getCreditLedger().toUpperCase().contains("BANK")) {
+			recordBankTransaction(bName, dto.getBranchName(), 0.0, amount.doubleValue(),
+					("CASH WITHDRAWAL FROM BANK - " + voucherId + (dto.getRemarks() != null ? " - " + dto.getRemarks() : "")).toUpperCase(),
+					dto.getChequeNo() != null && !dto.getChequeNo().trim().isEmpty() ? dto.getChequeNo() : voucherId,
+					dto.getDateOfEntry(), "WITHDRAW");
+		} else {
+			recordBankTransaction(bName, dto.getBranchName(), amount.doubleValue(), 0.0,
+					("BANK CONTRA TRANSFER - " + voucherId).toUpperCase(), voucherId, dto.getDateOfEntry(), "TRANSFER");
+		}
+
+		return mapToDto(saved);
 	}
 
 	private void validateBankCashTransfer(BankCashTransferDto dto) {
@@ -1290,7 +1516,29 @@ public class AccountManagementService {
 		BigDecimal amount = new BigDecimal(dto.getTransactionAmount());
 		updateLedgerBalances(dto.getBranchName(), dto.getDebitLedger(), dto.getCreditLedger(), amount);
 
-		return mapToDto(manualJournalRepo.save(entity));
+		ManualJournalEntry saved = manualJournalRepo.save(entity);
+
+		// Common AccountTransaction details
+		LedgerAccountMaster debitLedger = ledgerAccountRepository
+				.findByBranchNameAndAccountTitleIgnoreCase(dto.getBranchName(), dto.getDebitLedger()).orElse(null);
+		LedgerAccountMaster creditLedger = ledgerAccountRepository
+				.findByBranchNameAndAccountTitleIgnoreCase(dto.getBranchName(), dto.getCreditLedger()).orElse(null);
+
+		String debitCode = debitLedger != null && debitLedger.getAccountCode() != null ? debitLedger.getAccountCode() : "101";
+		Double debitBal = debitLedger != null && debitLedger.getCurrentBalance() != null ? debitLedger.getCurrentBalance().doubleValue() : amount.doubleValue();
+		recordAccountTransaction(dto.getBranchName(), debitCode, dto.getDebitLedger(),
+				voucherId, dto.getDateOfEntry(),
+				("JOURNAL ENTRY DR " + dto.getDebitLedger() + " CR " + dto.getCreditLedger() + (dto.getRemarks() != null ? " - " + dto.getRemarks() : "")).toUpperCase(),
+				0.0, amount.doubleValue(), debitBal, "JOURNAL", "JOURNAL", voucherId);
+
+		String creditCode = creditLedger != null && creditLedger.getAccountCode() != null ? creditLedger.getAccountCode() : "201";
+		Double creditBal = creditLedger != null && creditLedger.getCurrentBalance() != null ? creditLedger.getCurrentBalance().doubleValue() : 0.0;
+		recordAccountTransaction(dto.getBranchName(), creditCode, dto.getCreditLedger(),
+				voucherId, dto.getDateOfEntry(),
+				("JOURNAL ENTRY CR " + dto.getCreditLedger() + " DR " + dto.getDebitLedger() + (dto.getRemarks() != null ? " - " + dto.getRemarks() : "")).toUpperCase(),
+				amount.doubleValue(), 0.0, creditBal, "JOURNAL", "JOURNAL", voucherId);
+
+		return mapToDto(saved);
 	}
 
 	/**
@@ -2006,7 +2254,7 @@ public class AccountManagementService {
 		AccountTransaction txn = new AccountTransaction();
 		txn.setAccountNumber(accountNumber);
 		txn.setTransactionDate(LocalDate.now().toString());
-		txn.setNarration("Cash Deposit");
+		txn.setNarration("CASH DEPOSIT");
 		txn.setCredit(amount);
 		txn.setDebit(0.0);
 		txn.setBalance(newBalance);
@@ -2027,6 +2275,7 @@ public class AccountManagementService {
 		return loanPaymentRepo.searchCheque(typeOfLoan, branchName, startDate, endDate, chequeNo);
 	}
 
+	@Transactional
 	public LoanPayment clearCheque(Long id) {
 		LoanPayment payment = loanPaymentRepo.findById(id)
 				.orElseThrow(() -> new RuntimeException("LOANPAYMENT NOT FOUND"));
@@ -2035,8 +2284,35 @@ public class AccountManagementService {
 			throw new RuntimeException("THIS PAYMENT IS NOT A CHEQUE.");
 		}
 
-		payment.setPaymentStatus("PAID"); // ✅ clear hone ke baad PAID
-		return loanPaymentRepo.save(payment);
+		payment.setPaymentStatus("PAID");
+		LoanPayment saved = loanPaymentRepo.save(payment);
+
+		Double amount = 0.0;
+		try {
+			if (payment.getEmiPayment() != null && !payment.getEmiPayment().trim().isEmpty()) {
+				amount = Double.parseDouble(payment.getEmiPayment().replaceAll("[^0-9.]", "").trim());
+			} else if (payment.getAmountDue() != null && !payment.getAmountDue().trim().isEmpty()) {
+				amount = Double.parseDouble(payment.getAmountDue().replaceAll("[^0-9.]", "").trim());
+			}
+		} catch (Exception e) {
+			amount = 0.0;
+		}
+
+		String branch = payment.getBranchName() != null ? payment.getBranchName() : "HEAD OFFICE";
+		String chequeNo = payment.getChequeNo() != null ? payment.getChequeNo() : "CHQ-" + saved.getId();
+		String date = payment.getPaymentDate() != null ? payment.getPaymentDate() : LocalDate.now().toString();
+		String bankAcc = payment.getAccountNo() != null ? payment.getAccountNo() : "";
+
+		if (amount > 0) {
+			recordBankTransaction(bankAcc, branch, amount, 0.0,
+					("CHEQUE CLEARED - " + chequeNo + " FOR LOAN PAYMENT").toUpperCase(),
+					chequeNo, date, "DEPOSIT");
+
+			recordAccountTransaction(branch, "104", "LOAN RECOVERY", chequeNo, date,
+					("CHEQUE CLEARED - " + chequeNo + " FOR LOAN PAYMENT").toUpperCase(),
+					amount, 0.0, amount, "CHEQUE_CLEAR", "CHEQUE", chequeNo);
+		}
+		return saved;
 	}
 
 	public List<LoanPayment> findAllPendingCheques() {
@@ -2211,6 +2487,17 @@ public class AccountManagementService {
 		}
 
 		try {
+			String bBranch = request.getPaymentBranch() != null ? request.getPaymentBranch().toUpperCase() : "HEAD OFFICE";
+			String refNo = "INC-" + saved.getId();
+			String pDate = request.getPaymentDate() != null ? request.getPaymentDate() : LocalDate.now().toString();
+			recordBankTransaction(paymentLedger.getAccountTitle(), bBranch, 0.0, amount.doubleValue(),
+					("INCENTIVE PAYOUT FOR " + request.getMonth() + " TO " + request.getAgentCode()).toUpperCase(),
+					refNo, pDate, "WITHDRAW");
+		} catch (Exception ex) {
+			System.err.println("BANK TRANSACTION ERROR: " + ex.getMessage());
+		}
+
+		try {
 			String mName = request.getMonth() != null ? request.getMonth().toUpperCase() : "";
 			Optional<GenerateIncentivePayments> gipOpt = generateIncentivePaymentsRepo.findFirstByTeamCodeAndIncentiveMonth(request.getAgentCode(), mName);
 			if (gipOpt.isPresent()) {
@@ -2283,6 +2570,25 @@ public class AccountManagementService {
 
 			MandateDeposit saved = mandateDepositRepo.save(entity);
 
+			double fdAmt = parse(dto.getFixedDepositAmount());
+			if (fdAmt <= 0) {
+				fdAmt = parse(dto.getFixedDeposit());
+			}
+			String branchName = dto.getBranchName() != null && !dto.getBranchName().trim().isEmpty() ? dto.getBranchName() : "HEAD OFFICE";
+			String bankName = dto.getBankName() != null ? dto.getBankName() : "";
+			String ref = dto.getFdNumber() != null && !dto.getFdNumber().trim().isEmpty() ? dto.getFdNumber() : "FD-" + saved.getId();
+			String date = dto.getFdInstallationDate() != null && !dto.getFdInstallationDate().trim().isEmpty()
+					? dto.getFdInstallationDate() : LocalDate.now().toString();
+
+			if (fdAmt > 0) {
+				recordAccountTransaction(branchName, "103", "MANDATE FD DEPOSIT", ref, date,
+						("MANDATE FD DEPOSIT TO " + bankName + " - " + ref).toUpperCase(),
+						0.0, fdAmt, fdAmt, "MANDATE_DEPOSIT", dto.getModeOfPayment() != null ? dto.getModeOfPayment().toUpperCase() : "BANK", ref);
+
+				recordBankTransaction(bankName, branchName, fdAmt, 0.0,
+						("MANDATE FD DEPOSIT - " + ref).toUpperCase(), ref, date, "DEPOSIT");
+			}
+
 			return new ApiResponse<>(HttpStatus.OK, "SAVED SUCCESSFULLY", mapToDto(saved));
 
 		} catch (Exception e) {
@@ -2340,6 +2646,78 @@ public class AccountManagementService {
 		return dto;
 	}
 
+	public ApiResponse<List<MandateDepositDto>> getByDateRange(String startDate, String endDate) {
+		try {
+			List<MandateDeposit> list;
+			if (startDate != null && !startDate.trim().isEmpty() && endDate != null && !endDate.trim().isEmpty()) {
+				list = mandateDepositRepo.findByStartDateBetween(startDate, endDate);
+			} else {
+				list = mandateDepositRepo.findAll();
+			}
+			List<MandateDepositDto> dtos = list.stream().map(this::mapToDto).collect(Collectors.toList());
+			return new ApiResponse<>(HttpStatus.OK, "MANDATE DEPOSITS FETCHED SUCCESSFULLY", dtos);
+		} catch (Exception e) {
+			return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, "ERROR: " + e.getMessage(), null);
+		}
+	}
+
+	@Transactional
+	public ApiResponse<Map<String, Object>> payMisInterest(Map<String, String> payload) {
+		try {
+			String policyCode = payload.get("policyCode");
+			String payingBranch = payload.get("branchName");
+			String paymentDate = payload.get("paymentDate");
+			String paymentMode = payload.get("paymentMode");
+			String payAmountStr = payload.get("payAmount");
+
+			if (policyCode == null || policyCode.trim().isEmpty()) {
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "POLICY CODE IS REQUIRED", null);
+			}
+			if (payAmountStr == null || payAmountStr.trim().isEmpty()) {
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "PAY AMOUNT IS REQUIRED", null);
+			}
+
+			double amount = 0.0;
+		try {
+				amount = Double.parseDouble(payAmountStr.replaceAll("[^0-9.]", "").trim());
+			} catch (Exception e) {
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "INVALID PAY AMOUNT", null);
+			}
+
+			if (amount <= 0) {
+				return new ApiResponse<>(HttpStatus.BAD_REQUEST, "PAY AMOUNT MUST BE GREATER THAN ZERO", null);
+			}
+
+			String branch = (payingBranch != null && !payingBranch.trim().isEmpty()) ? payingBranch.toUpperCase() : "HEAD OFFICE";
+			String date = (paymentDate != null && !paymentDate.trim().isEmpty()) ? paymentDate : LocalDate.now().toString();
+			String mode = (paymentMode != null && !paymentMode.trim().isEmpty()) ? paymentMode.toUpperCase() : "CASH";
+			String ref = "MIS-" + policyCode + "-" + (System.currentTimeMillis() % 100000);
+
+			recordAccountTransaction(branch, "501", "MIS INTEREST EXPENSE", ref, date,
+					("MIS INTEREST PAYMENT FOR POLICY " + policyCode).toUpperCase(),
+					amount, 0.0, amount, "MIS_INTEREST_PAYMENT", mode, ref);
+
+			if (!"CASH".equalsIgnoreCase(mode)) {
+				recordBankTransaction(branch, branch, 0.0, amount,
+						("MIS INTEREST PAYMENT FOR POLICY " + policyCode).toUpperCase(),
+						ref, date, "WITHDRAW");
+			}
+
+			Map<String, Object> res = new HashMap<>();
+			res.put("POLICY_CODE", policyCode.toUpperCase());
+			res.put("BRANCH", branch);
+			res.put("AMOUNT", amount);
+			res.put("DATE", date);
+			res.put("MODE", mode);
+			res.put("REFERENCE_NO", ref);
+			res.put("STATUS", "SUCCESS");
+
+			return new ApiResponse<>(HttpStatus.OK, "MIS INTEREST PAYMENT PROCESSED SUCCESSFULLY", res);
+		} catch (Exception e) {
+			return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, "ERROR PROCESSING MIS INTEREST PAYMENT: " + e.getMessage(), null);
+		}
+	}
+
 	public List<BankStatementDto> getBankStatement(String accountNumber, String startDate, String endDate) {
 
 		// =====================================================
@@ -2377,26 +2755,46 @@ public class AccountManagementService {
 		}
 
 		// =====================================================
-		// 4. CHECK SAVING ACCOUNT
-		// =====================================================
-
-		CreateSavingsAccount acc = createSavingsAccountRepo.findByAccountNumber(cleanAccountNumber)
-				.orElseThrow(() -> new RuntimeException("ACCOUNT NOT FOUND: " + cleanAccountNumber));
-
-		// =====================================================
-		// 5. GET BANK / BRANCH DETAILS
+		// 4. CHECK SAVING ACCOUNT OR BANK MODULE
 		// =====================================================
 
 		String bankName = "";
 		String branchName = "";
 
-		if (acc.getBranchName() != null) {
-
-			branchName = acc.getBranchName().getBranchName();
-
-			if (acc.getBranchName().getBank() != null) {
-
-				bankName = acc.getBranchName().getBank().getBankName();
+		Optional<CreateSavingsAccount> accOpt = createSavingsAccountRepo.findByAccountNumber(cleanAccountNumber);
+		if (accOpt.isPresent()) {
+			CreateSavingsAccount acc = accOpt.get();
+			if (acc.getBranchName() != null) {
+				branchName = acc.getBranchName().getBranchName();
+				if (acc.getBranchName().getBank() != null) {
+					bankName = acc.getBranchName().getBank().getBankName();
+				}
+			}
+		} else {
+			Optional<BankModule> bankOpt = bankModuleRepo.findAll().stream()
+					.filter(b -> b.getAccountNo() != null && cleanAccountNumber.equalsIgnoreCase(b.getAccountNo().trim()))
+					.findFirst();
+			if (bankOpt.isPresent()) {
+				BankModule bm = bankOpt.get();
+				bankName = bm.getBankName();
+				if (bm.getBranches() != null && !bm.getBranches().isEmpty()) {
+					branchName = bm.getBranches().get(0).getBranchName();
+				} else {
+					branchName = "HEAD OFFICE";
+				}
+			} else {
+				List<BankTransaction> prev = bankTransactionRepo.findPreviousTransactions(cleanAccountNumber, cleanStartDate);
+				if (prev != null && !prev.isEmpty()) {
+					if (prev.get(0).getBank() != null) {
+						bankName = prev.get(0).getBank().getBankName();
+					}
+					if (prev.get(0).getBranch() != null) {
+						branchName = prev.get(0).getBranch().getBranchName();
+					}
+				} else {
+					bankName = "BANK";
+					branchName = "MAIN BRANCH";
+				}
 			}
 		}
 
@@ -2857,9 +3255,9 @@ public class AccountManagementService {
 
 		sourceEntry.setNarration(
 
-				"Cash Transfer To "
+				("CASH TRANSFER TO "
 
-						+ dto.getReceivingBranch());
+						+ dto.getReceivingBranch()).toUpperCase());
 
 		sourceEntry.setDebit(0.0);
 
@@ -2889,9 +3287,9 @@ public class AccountManagementService {
 
 		receivingEntry.setNarration(
 
-				"Cash Received From "
+				("CASH RECEIVED FROM "
 
-						+ dto.getSourceBranch());
+						+ dto.getSourceBranch()).toUpperCase());
 
 		receivingEntry.setDebit(dto.getAmount());
 

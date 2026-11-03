@@ -159,67 +159,51 @@ function loadCompanyDetails() {
 
 function loadSavingAccounts() {
 
+	let dropdown = $("#accountNumber");
+	dropdown.empty();
+	dropdown.append('<option value="">-- SELECT ACCOUNT NUMBER --</option>');
+
+	// 1. Fetch Bank Module Accounts
+	$.ajax({
+		url: "accountManagement/all-bank-modules",
+		type: "GET",
+		dataType: "json",
+		success: function(response) {
+			if (response && response.status === "OK" && Array.isArray(response.data) && response.data.length > 0) {
+				let bankGroup = $('<optgroup label="BANK ACCOUNTS"></optgroup>');
+				response.data.forEach(function(b) {
+					if (b.accountNo) {
+						let label = (b.bankName || "BANK") + " - " + b.accountNo + " (" + (b.branch ? b.branch.branchName : "BRANCH") + ")";
+						bankGroup.append(`<option value="${escapeHtml(b.accountNo)}">${escapeHtml(label.toUpperCase())}</option>`);
+					}
+				});
+				dropdown.append(bankGroup);
+			}
+		},
+		error: function(xhr) {
+			console.warn("BANK MODULE DROPDOWN ERROR:", xhr);
+		}
+	});
+
+	// 2. Fetch Customer Savings Accounts
 	$.ajax({
 		url: "api/customermanagement/getAllCustomer",
 		type: "GET",
 		dataType: "json",
-
 		success: function(response) {
-
-			let dropdown = $("#accountNumber");
-
-			dropdown.empty();
-
-			dropdown.append(
-				'<option value="">-- SELECT ACCOUNT NUMBER --</option>'
-			);
-
-			if (
-				(response.status === "OK" ||
-					response.status === "FOUND") &&
-				response.data &&
-				response.data.length > 0
-			) {
-
+			if ((response.status === "OK" || response.status === "FOUND") && response.data && response.data.length > 0) {
+				let custGroup = $('<optgroup label="CUSTOMER SAVINGS ACCOUNTS"></optgroup>');
 				$.each(response.data, function(index, acc) {
-
 					if (acc.accountNumber) {
-
-						dropdown.append(`
-                            <option value="${escapeHtml(
-							acc.accountNumber
-						)}">
-                                ${escapeHtml(
-							acc.accountNumber
-						)}
-                            </option>
-                        `);
+						let label = acc.accountNumber + (acc.customerName ? " - " + acc.customerName : "");
+						custGroup.append(`<option value="${escapeHtml(acc.accountNumber)}">${escapeHtml(label.toUpperCase())}</option>`);
 					}
-
 				});
-
-			} else {
-
-				dropdown.append(
-					'<option value="">NO SAVING ACCOUNT FOUND</option>'
-				);
-
-				console.warn(
-					"NO SAVING ACCOUNT FOUND"
-				);
+				dropdown.append(custGroup);
 			}
 		},
-
 		error: function(xhr) {
-
-			console.error(
-				"ACCOUNT DROPDOWN ERROR:",
-				xhr.responseText
-			);
-
-			alert(
-				"UNABLE TO LOAD SAVING ACCOUNT NUMBERS"
-			);
+			console.error("CUSTOMER ACCOUNT DROPDOWN ERROR:", xhr.responseText);
 		}
 	});
 }

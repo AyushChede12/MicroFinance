@@ -1,4 +1,3 @@
-
 package com.microfinance.service;
 
 import java.math.BigDecimal;
@@ -12,7 +11,6 @@ import com.microfinance.model.BankTransaction;
 import com.microfinance.model.BranchModule;
 import com.microfinance.repository.BankModuleRepo;
 import com.microfinance.repository.BankTransactionRepo;
-
 import com.microfinance.repository.BranchModuleRepo;
 
 @Service
@@ -35,14 +33,20 @@ public class BankTransactionService {
 
 		// 1. Validate bank
 		BankModule bank = bankModuleRepo.findById(bankId)
-				.orElseThrow(() -> new RuntimeException("Bank not found: " + bankId));
+				.orElseThrow(() -> new RuntimeException("BANK NOT FOUND: " + bankId));
 
 		// 2. Validate branch
 		BranchModule branch = branchModuleRepo.findById(branchId)
-				.orElseThrow(() -> new RuntimeException("Branch not found: " + branchId));
+				.orElseThrow(() -> new RuntimeException("BRANCH NOT FOUND: " + branchId));
 
-		if (branch.getBank() == null || !branch.getBank().getId().equals(bankId)) {
-			throw new RuntimeException("Selected branch does not belong to this bank");
+		// Auto connect branch and bank if not linked
+		if (branch.getBank() == null) {
+			branch.setBank(bank);
+			branchModuleRepo.save(branch);
+		} else if (!branch.getBank().getId().equals(bankId)) {
+			// Connect branch to this bank according to bank accounts
+			branch.setBank(bank);
+			branchModuleRepo.save(branch);
 		}
 
 		// 3. Validate credit and debit
@@ -53,11 +57,11 @@ public class BankTransactionService {
 				: BigDecimal.valueOf(transaction.getDebit());
 
 		if (credit.signum() < 0 || debit.signum() < 0) {
-			throw new RuntimeException("Credit and debit cannot be negative");
+			throw new RuntimeException("CREDIT AND DEBIT CANNOT BE NEGATIVE");
 		}
 
 		if ((credit.signum() > 0 && debit.signum() > 0) || (credit.signum() == 0 && debit.signum() == 0)) {
-			throw new RuntimeException("Enter either credit or debit amount");
+			throw new RuntimeException("ENTER EITHER CREDIT OR DEBIT AMOUNT");
 		}
 
 		// 4. Get latest transaction balance
@@ -80,7 +84,7 @@ public class BankTransactionService {
 		BigDecimal newBalance = previousBalance.add(credit).subtract(debit);
 
 		if (newBalance.signum() < 0) {
-			throw new RuntimeException("Insufficient bank balance");
+			throw new RuntimeException("INSUFFICIENT BANK BALANCE");
 		}
 
 		// 6. Set relationships and transaction details

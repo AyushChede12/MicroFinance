@@ -37,6 +37,7 @@ import com.microfinance.dto.TrialBalanceDTO;
 import com.microfinance.dto.TrialBalanceReportDto;
 import com.microfinance.model.AccountIncentivePayment;
 import com.microfinance.model.AccountTransaction;
+import com.microfinance.model.BankModule;
 import com.microfinance.model.BankTransaction;
 import com.microfinance.model.IncentivePayment;
 import com.microfinance.model.LedgerAccountMaster;
@@ -503,32 +504,21 @@ public class AccountManagementController {
 				.body(response);
 	}
 
-//	// ================= SEARCH =================
-//	@GetMapping("/listOfMandateDeposit")
-//	public ResponseEntity<ApiResponse<List<MandateDepositDto>>> getByDateRange(@RequestParam String startDate,
-//			@RequestParam String endDate) {
-//
-//		ApiResponse<List<MandateDepositDto>> response = accountManagementService.getByDateRange(startDate, endDate);
-//
-//		if (response.isStatus()) {
-//			return new ResponseEntity<>(response, HttpStatus.OK); // 200
-//		} else {
-//			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST); // 400
-//		}
-//	}
-//
-//	// ================= GET BY ID =================
-//	@GetMapping("/{id}")
-//	public ResponseEntity<ApiResponse<MandateDepositDto>> getById(@PathVariable Long id) {
-//
-//		ApiResponse<MandateDepositDto> response = accountManagementService.getById(id);
-//
-//		if (response.isStatus()) {
-//			return new ResponseEntity<>(response, HttpStatus.OK); // 200
-//		} else {
-//			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND); // 404
-//		}
-//	}
+	// ================= SEARCH =================
+	@GetMapping("/listOfMandateDeposit")
+	public ResponseEntity<ApiResponse<List<MandateDepositDto>>> getByDateRange(
+			@RequestParam(required = false) String startDate,
+			@RequestParam(required = false) String endDate) {
+		ApiResponse<List<MandateDepositDto>> response = accountManagementService.getByDateRange(startDate, endDate);
+		return ResponseEntity.status(response.getStatus()).body(response);
+	}
+
+	// ================= MIS INTEREST PAYMENT =================
+	@PostMapping("/pay-mis-interest")
+	public ResponseEntity<ApiResponse<Map<String, Object>>> payMisInterest(@RequestBody Map<String, String> payload) {
+		ApiResponse<Map<String, Object>> response = accountManagementService.payMisInterest(payload);
+		return ResponseEntity.status(response.getStatus()).body(response);
+	}
 
 	// Bank Statement
 	@GetMapping("/bank-statement")
@@ -720,6 +710,18 @@ public class AccountManagementController {
 		}
 
 		return new ApiResponse<>(HttpStatus.OK, "ACTIVE BANK ACCOUNTS FETCHED SUCCESSFULLY", list);
+	}
+
+	@GetMapping("/all-bank-modules")
+	public ResponseEntity<ApiResponse<List<BankModule>>> getAllBankModules() {
+		List<BankModule> list = accountManagementService.getAllBankModules();
+		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "BANK MODULES FETCHED SUCCESSFULLY", list));
+	}
+
+	@GetMapping("/banksByBranch/{branchName}")
+	public ResponseEntity<ApiResponse<List<BankModule>>> getBanksByBranch(@PathVariable String branchName) {
+		List<BankModule> list = accountManagementService.getBanksByBranch(branchName);
+		return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "BANKS FOR BRANCH RETRIEVED SUCCESSFULLY", list));
 	}
 
 }

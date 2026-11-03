@@ -1,5 +1,7 @@
 $(document).ready(function() {
 
+	loadBranchDropdown();
+
 	// =========================
 	// SEARCH BUTTON CLICK
 	// =========================
@@ -14,17 +16,17 @@ $(document).ready(function() {
 		// VALIDATION
 		// =========================
 		if (branchName === "") {
-			alert("Please Select Branch");
+			alert("PLEASE SELECT BRANCH");
 			return;
 		}
 
 		if (startDate === "") {
-			alert("Please Select Start Date");
+			alert("PLEASE SELECT START DATE");
 			return;
 		}
 
 		if (endDate === "") {
-			alert("Please Select End Date");
+			alert("PLEASE SELECT END DATE");
 			return;
 		}
 
@@ -41,7 +43,7 @@ $(document).ready(function() {
 			},
 			beforeSend: function() {
 				$("tbody").html(
-					'<tr><td colspan="4" class="text-center">Loading...</td></tr>'
+					'<tr><td colspan="4" class="text-center">LOADING...</td></tr>'
 				);
 			},
 			success: function(response) {
@@ -146,3 +148,26 @@ $(document).ready(function() {
 		});
 	});
 });
+
+// =====================================================
+// LOAD BRANCH DROPDOWN
+// =====================================================
+function loadBranchDropdown() {
+	$.ajax({
+		type: "GET",
+		url: "api/preference/getAllBranchModule",
+		contentType: "application/json",
+		success: function(response) {
+			let options = "<option value=''>--SELECT BRANCH NAME--</option>";
+			if (response && Array.isArray(response.data)) {
+				response.data.forEach(branch => {
+					options += `<option value="${branch.branchName}">${branch.branchName.toUpperCase()}</option>`;
+				});
+			}
+			$("#branchName").html(options);
+		},
+		error: function() {
+			alert("FAILED TO LOAD BRANCH NAMES.");
+		}
+	});
+}

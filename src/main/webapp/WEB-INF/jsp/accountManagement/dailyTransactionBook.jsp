@@ -78,7 +78,7 @@
 					<!-- Search Input -->
 					<input type="text" id="transactionSearch"
 						class="form-control form-control-sm"
-						placeholder="Search Customer Name..."
+						placeholder="SEARCH CUSTOMER NAME..."
 						style="width: 250px; text-transform: uppercase;">
 				</div>
 			</div>
