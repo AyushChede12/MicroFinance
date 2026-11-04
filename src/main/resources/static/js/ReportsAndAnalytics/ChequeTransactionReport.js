@@ -2,7 +2,6 @@ let allChequeData = [];
 let currentFilteredCheques = [];
 
 $(document).ready(function() {
-	const basePath = (typeof contextPath !== 'undefined' && contextPath) ? contextPath : "";
 
 	loadBranchDropdown();
 	loadSavingActivity();
@@ -105,10 +104,9 @@ function loadBranchDropdown() {
 /* ================= LOAD APIS ================= */
 
 function loadSavingActivity() {
-	const basePath = (typeof contextPath !== 'undefined' && contextPath) ? contextPath : "";
 	allChequeData = [];
 	$.ajax({
-		url: basePath + "/api/reports/getPayByFromSavingAccountActivity",
+		url: "api/reports/getPayByFromSavingAccountActivity",
 		type: "GET",
 		success: function(res) {
 			let data = extractData(res);
@@ -132,9 +130,8 @@ function loadSavingActivity() {
 }
 
 function loadLoanPayment() {
-	const basePath = (typeof contextPath !== 'undefined' && contextPath) ? contextPath : "";
 	$.ajax({
-		url: basePath + "/api/reports/getCheckDataFromLoanPayment",
+		url: "api/reports/getCheckDataFromLoanPayment",
 		type: "GET",
 		success: function(res) {
 			let data = extractData(res);
@@ -158,9 +155,8 @@ function loadLoanPayment() {
 }
 
 function loadCreateSaving() {
-	const basePath = (typeof contextPath !== 'undefined' && contextPath) ? contextPath : "";
 	$.ajax({
-		url: basePath + "/api/reports/getCheckDataFromCreateSavings",
+		url: "api/reports/getCheckDataFromCreateSavings",
 		type: "GET",
 		success: function(res) {
 			let data = extractData(res);
@@ -184,9 +180,8 @@ function loadCreateSaving() {
 }
 
 function loadFinancialConsultant() {
-	const basePath = (typeof contextPath !== 'undefined' && contextPath) ? contextPath : "";
 	$.ajax({
-		url: basePath + "/api/reports/getCheckDataFromFinancialConsultant",
+		url: "api/reports/getCheckDataFromFinancialConsultant",
 		type: "GET",
 		success: function(res) {
 			let data = extractData(res);
@@ -210,9 +205,8 @@ function loadFinancialConsultant() {
 }
 
 function loadTeamMember() {
-	const basePath = (typeof contextPath !== 'undefined' && contextPath) ? contextPath : "";
 	$.ajax({
-		url: basePath + "/api/reports/getCheckDataFromTeamMember",
+		url: "api/reports/getCheckDataFromTeamMember",
 		type: "GET",
 		success: function(res) {
 			let data = extractData(res);

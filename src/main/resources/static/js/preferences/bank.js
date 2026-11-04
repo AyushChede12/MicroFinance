@@ -889,7 +889,7 @@ function loadBankTransactions() {
             $("#bankTransactionsBody").html(
                 '<tr><td colspan="8">' +
                 'Transaction history API is not available yet. ' +
-                'Add GET /api/bank-transactions/by-bank in the backend.' +
+                'Add GET api/bank-transactions/by-bank in the backend.' +
                 '</td></tr>'
             );
         }

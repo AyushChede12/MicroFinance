@@ -5,7 +5,7 @@ $(document).ready(function() {
 		url: "api/datacorrection/fetchAllSavingAccountActivity",
 		type: "GET",
 		success: function(response) {
-			if (response.status =/api== "FOUND") {
+			if (response.status === "FOUND") {
 				$("#accountNumber").empty().append("<option value=''>-- SELECT ACCOUNT NO --</option>");
 				response.data.forEach(function(item) {
 					$("#accountNumber").append(`<option value='${item.accountNumber}'>${item.accountNumber}</option>`);
@@ -68,7 +68,7 @@ $(document).ready(function() {
 	});
 
 	$.ajax({
-		url: "api/preference/getAllBranchModule", // Add base path if needed like /api/preference/getAllBranchModule
+		url: "api/preference/getAllBranchModule", // Base path: api/preference/getAllBranchModule
 		type: "GET",
 		success: function(response) {
 			if ((response.status == "OK" || response.status == "FOUND" || response.status == 200) && Array.isArray(response.data)) {
