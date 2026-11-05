@@ -1,11 +1,11 @@
-$(document).ready(function() {
+$(document).ready(function () {
 	let allEmiPayments = [];
 	let currentFilteredEmi = [];
 
 	$.ajax({
 		url: "api/preference/getAllBranchModule",
 		type: "GET",
-		success: function(response) {
+		success: function (response) {
 			let list = response && response.data ? response.data : (Array.isArray(response) ? response : []);
 			let sel = $("#branch");
 			sel.html("<option value=''>ALL BRANCHES</option>");
@@ -22,12 +22,12 @@ $(document).ready(function() {
 		$.ajax({
 			url: "api/reports/getLoanPaymentReport",
 			type: "GET",
-			success: function(response) {
+			success: function (response) {
 				allEmiPayments = response && response.data ? response.data : [];
 				currentFilteredEmi = allEmiPayments;
 				renderTable(allEmiPayments);
 			},
-			error: function() {
+			error: function () {
 				$("#emiTableBody").html("<tr><td colspan='14' class='text-center text-danger fw-bold'>NO EMI COLLECTION RECORDS FOUND</td></tr>");
 			}
 		});
@@ -57,9 +57,9 @@ $(document).ready(function() {
 					<td class="fw-semibold">${(p.memberName || p.customerName || '-').toUpperCase()}</td>
 					<td>${(p.branchName || '-').toUpperCase()}</td>
 					<td>${(p.paymentDate || '-').toUpperCase()}</td>
-					<td class="text-success fw-bold">₹${amt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
-					<td>₹${principal.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
-					<td class="text-primary">₹${interest.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+					<td class="text-success fw-bold">₹${amt.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+					<td>₹${principal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+					<td class="text-primary">₹${interest.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
 					<td><span class="badge bg-secondary">${(p.paymentMode || 'CASH').toUpperCase()}</span></td>
 					<td>${(p.chequeNo || p.ref_UpiId || '-').toUpperCase()}</td>
 					<td>${(p.accountNo || '-').toUpperCase()}</td>
@@ -75,7 +75,7 @@ $(document).ready(function() {
 		});
 	}
 
-	$("#findBtn").click(function(e) {
+	$("#findBtn").click(function (e) {
 		e.preventDefault();
 		let branch = ($("#branch").val() || "").toUpperCase();
 		let fDate = $("#fDate").val();
@@ -93,7 +93,7 @@ $(document).ready(function() {
 		renderTable(filtered);
 	});
 
-	$("#resetBtn").click(function(e) {
+	$("#resetBtn").click(function (e) {
 		e.preventDefault();
 		$("#branch").val("");
 		$("#fDate").val("");
@@ -102,7 +102,7 @@ $(document).ready(function() {
 		renderTable(allEmiPayments);
 	});
 
-	$("#printFullReportBtn").click(function(e) {
+	$("#printFullReportBtn").click(function (e) {
 		e.preventDefault();
 		let branch = $("#branch").val() || "ALL BRANCHES";
 		let fDate = $("#fDate").val() || "START";
@@ -111,7 +111,7 @@ $(document).ready(function() {
 		ReportPrintUtil.printTable('.datatable', 'EMI COLLECTION SUMMARY REPORT', subTitle);
 	});
 
-	$(document).off("click", ".printEmiReceiptBtn").on("click", ".printEmiReceiptBtn", function(e) {
+	$(document).off("click", ".printEmiReceiptBtn").on("click", ".printEmiReceiptBtn", function (e) {
 		e.preventDefault();
 		let idx = $(this).data("index");
 		let p = currentFilteredEmi[idx] || allEmiPayments[idx];
@@ -158,7 +158,7 @@ $(document).ready(function() {
 					</tr>
 					<tr>
 						<th>COLLECTED EMI AMOUNT</th>
-						<td colspan="3" style="font-size: 16px; font-weight: bold; color: green;">₹${amt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+						<td colspan="3" style="font-size: 16px; font-weight: bold; color: green;">₹${amt.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
 					</tr>
 				</tbody>
 			</table>
