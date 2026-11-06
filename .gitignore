@@ -32,5 +32,7 @@ mvnw.cmd
 # Tools & Uploads
 .tools/
 .factorypath
-src/main/webapp/Uploads/
+src/main/webapp/Uploads/*
+!src/main/webapp/Uploads/bgimageLogin.png
+!src/main/webapp/Uploads/upload.png
 mvn.cmd

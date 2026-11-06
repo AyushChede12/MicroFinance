@@ -13,8 +13,8 @@
 body {
 	font-family: 'Poppins', sans-serif;
 	background: linear-gradient(rgba(0, 0, 50, 0.8), rgba(0, 0, 50, 0.8)),
-		url('Uploads/bgimageLogin.png') no-repeat center
-		center;
+		url('${pageContext.request.contextPath}/Uploads/bgimageLogin.png') no-repeat center center,
+		url('Uploads/bgimageLogin.png') no-repeat center center;
 	background-size: cover;
 	height: 100vh;
 	display: flex;
@@ -166,6 +166,28 @@ body {
 
 	<script>
 		$(document).ready(function() {
+			// Background image fallback for live server
+			var testBg = new Image();
+			testBg.onerror = function() {
+				var fallbacks = [
+					'${pageContext.request.contextPath}/images/bgimageLogin.png',
+					'${pageContext.request.contextPath}/static/images/bgimageLogin.png',
+					'images/bgimageLogin.png'
+				];
+				function tryNext(i) {
+					if (i >= fallbacks.length) return;
+					var fImg = new Image();
+					fImg.onload = function() {
+						$('body').css('background', 'linear-gradient(rgba(0, 0, 50, 0.8), rgba(0, 0, 50, 0.8)), url(' + fallbacks[i] + ') no-repeat center center');
+						$('body').css('background-size', 'cover');
+					};
+					fImg.onerror = function() { tryNext(i + 1); };
+					fImg.src = fallbacks[i];
+				}
+				tryNext(0);
+			};
+			testBg.src = '${pageContext.request.contextPath}/Uploads/bgimageLogin.png';
+
 			// Password toggle
 			$("#eyeicon").click(function() {
 				let password = $("#password");
