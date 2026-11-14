@@ -22,13 +22,38 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- ApexCharts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.46.0/apexcharts.min.js"></script>
-
     <!-- jQuery & Bootstrap Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
+
+    <!-- Global Context & AJAX Prefilter for Localhost & Online Compatibility -->
+    <script>
+        window.contextPath = '${pageContext.request.contextPath}';
+        if (window.jQuery) {
+            jQuery.ajaxPrefilter(function(options, originalOptions, jqXHR) {
+                const ctx = "${pageContext.request.contextPath}";
+                let url = options.url;
+                if (url && typeof url === "string") {
+                    if (url.startsWith("api/")) {
+                        options.url = (ctx ? ctx : "") + "/" + url;
+                    } else if (url.startsWith("./api/")) {
+                        options.url = (ctx ? ctx : "") + "/" + url.substring(2);
+                    } else if (url.startsWith("/api/") && ctx && !url.startsWith(ctx + "/api/")) {
+                        options.url = ctx + url;
+                    }
+                }
+            });
+        }
+    </script>
+
+    <!-- ApexCharts (Local script with CDN fallback) -->
+    <script src="${baseUrl}/js/apexcharts.min.js"></script>
+    <script>
+        if (typeof ApexCharts === 'undefined') {
+            document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.46.0/apexcharts.min.js"><\/script>');
+        }
+    </script>
 
     <!-- Project Stylesheet -->
     <link rel="stylesheet" href="${baseUrl}/css/admin.css" />
@@ -708,7 +733,7 @@
     <script>
         window.contextPath = '${pageContext.request.contextPath}';
     </script>
-    <script src="${baseUrl}/js/adminscript.js"></script>
-    <script src="${baseUrl}/js/Dashboard/DashboardCard.js"></script>
+    <script src="${baseUrl}/js/adminscript.js?v=2.1"></script>
+    <script src="${baseUrl}/js/Dashboard/DashboardCard.js?v=2.1"></script>
 </body>
 </html>

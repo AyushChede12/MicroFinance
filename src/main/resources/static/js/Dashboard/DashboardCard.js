@@ -1,5 +1,5 @@
 // ==========================================================================
-// BANK EXECUTIVE DASHBOARD - CORE REAL-TIME ANALYTICS & MONITORING
+// BANK EXECUTIVE DASHBOARD - REAL-TIME ANALYTICS & MONITORING
 // ==========================================================================
 
 let cashflowChartInstance = null;
@@ -17,17 +17,39 @@ let kpiCounts = {
     transactions: 0
 };
 
+// Defensive URL helper
+function resolveApiUrl(endpoint) {
+    const ctx = (typeof window.contextPath !== "undefined" && window.contextPath) ? window.contextPath : "";
+    if (endpoint.startsWith("/")) {
+        return (ctx && !endpoint.startsWith(ctx + "/")) ? ctx + endpoint : endpoint;
+    }
+    return ctx ? ctx + "/" + endpoint : endpoint;
+}
+
+// Format currency
+function formatInr(val) {
+    return Number(val || 0).toLocaleString('en-IN', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+
 $(document).ready(function() {
-    // 1. Initialize live system date and clock
+    console.log("INITIALIZING BANK EXECUTIVE DASHBOARD...");
+
+    // 1. Live system clock
     updateSystemDateTime();
     setInterval(updateSystemDateTime, 1000);
 
-    // 2. Load all dashboard metrics and populate tables
+    // 2. Render all 3 charts immediately with initial banking metrics
+    initAllCharts();
+
+    // 3. Fetch live data from backend APIs
     loadAllDashboardData();
 });
 
 // ==========================================================================
-// DATE & LIVE CLOCK
+// SYSTEM CLOCK & DATE
 // ==========================================================================
 function updateSystemDateTime() {
     const now = new Date();
@@ -37,6 +59,21 @@ function updateSystemDateTime() {
 
     $("#currentDateBadge").html('<i class="bi bi-calendar3 me-1"></i> ' + dateStr);
     $("#liveClock").text(timeStr + ' IST');
+}
+
+// ==========================================================================
+// INITIALIZE ALL 3 APEXCHARTS IMMEDIATELY ON DOM READY
+// ==========================================================================
+function initAllCharts() {
+    if (typeof ApexCharts === 'undefined') {
+        console.warn("ApexCharts library not yet loaded. Retrying in 300ms...");
+        setTimeout(initAllCharts, 300);
+        return;
+    }
+
+    renderCashflowChart();
+    updateAllocationChart();
+    renderLoanPerformanceChart();
 }
 
 // ==========================================================================
@@ -51,13 +88,12 @@ function loadAllDashboardData() {
     fetchPolicyCount();
     fetchBranchCount();
     fetchTransactionsAndPopulate();
-    renderLoanPerformanceChart();
 }
 
 // 1. Total Customers
 function fetchCustomerCount() {
     $.ajax({
-        url: "api/customermanagement/getAllCustomer",
+        url: resolveApiUrl("api/customermanagement/getAllCustomer"),
         type: "GET",
         dataType: "json",
         success: function(response) {
@@ -72,8 +108,9 @@ function fetchCustomerCount() {
             populateRecentCustomers(list);
             updateAllocationChart();
         },
-        error: function() {
-            $("#CustomerCount .kpi-value").text("0");
+        error: function(err) {
+            console.error("Error fetching customers:", err);
+            $("#CustomerCount .kpi-value").text(kpiCounts.customers || "0");
         }
     });
 }
@@ -81,41 +118,47 @@ function fetchCustomerCount() {
 // 2. Savings Accounts
 function fetchSavingsAccountCount() {
     $.ajax({
-        url: "api/customersavings/getAllSavingAccountData",
+        url: resolveApiUrl("api/customersavings/getAllSavingAccountData"),
         type: "GET",
         dataType: "json",
         success: function(response) {
             let count = 0;
             if (response && response.data && Array.isArray(response.data)) {
                 count = response.data.length;
+            } else if (Array.isArray(response)) {
+                count = response.length;
             }
             kpiCounts.savings = count;
             $("#SavingAccountCount .kpi-value").text(count);
             updateAllocationChart();
         },
-        error: function() {
-            $("#SavingAccountCount .kpi-value").text("0");
+        error: function(err) {
+            console.error("Error fetching savings:", err);
+            $("#SavingAccountCount .kpi-value").text(kpiCounts.savings || "0");
         }
     });
 }
 
-// 3. Share Transfers & Capital
+// 3. Share Transfers
 function fetchShareCount() {
     $.ajax({
-        url: "api/customershareholdingcontroller/getAllTransferShare",
+        url: resolveApiUrl("api/customershareholdingcontroller/getAllTransferShare"),
         type: "GET",
         dataType: "json",
         success: function(response) {
             let count = 0;
             if (response && response.data && Array.isArray(response.data)) {
                 count = response.data.length;
+            } else if (Array.isArray(response)) {
+                count = response.length;
             }
             kpiCounts.shares = count;
             $("#ShareIssueCount .kpi-value").text(count);
             updateAllocationChart();
         },
-        error: function() {
-            $("#ShareIssueCount .kpi-value").text("0");
+        error: function(err) {
+            console.error("Error fetching shares:", err);
+            $("#ShareIssueCount .kpi-value").text(kpiCounts.shares || "0");
         }
     });
 }
@@ -123,40 +166,46 @@ function fetchShareCount() {
 // 4. Financial Consultants
 function fetchFinancialConsultantCount() {
     $.ajax({
-        url: "api/financialconsultant/getAllFinancialConsultantDetails",
+        url: resolveApiUrl("api/financialconsultant/getAllFinancialConsultantDetails"),
         type: "POST",
         dataType: "json",
         success: function(response) {
             let count = 0;
             if (response && response.data && Array.isArray(response.data)) {
                 count = response.data.length;
+            } else if (Array.isArray(response)) {
+                count = response.length;
             }
             kpiCounts.consultants = count;
             $("#FinancialConsultantCount .kpi-value").text(count);
         },
-        error: function() {
-            $("#FinancialConsultantCount .kpi-value").text("0");
+        error: function(err) {
+            console.error("Error fetching consultants:", err);
+            $("#FinancialConsultantCount .kpi-value").text(kpiCounts.consultants || "0");
         }
     });
 }
 
-// 5. Loan Applications
+// 5. Active Loan Applications
 function fetchLoanCount() {
     $.ajax({
-        url: "api/loanmanegment/getAllLoanIds",
+        url: resolveApiUrl("api/loanmanegment/getAllActiveLoanIds"),
         type: "GET",
         dataType: "json",
         success: function(response) {
             let count = 0;
             if (response && response.data && Array.isArray(response.data)) {
                 count = response.data.length;
+            } else if (Array.isArray(response)) {
+                count = response.length;
             }
             kpiCounts.loans = count;
             $("#loanApplication .kpi-value").text(count);
             updateAllocationChart();
         },
-        error: function() {
-            $("#loanApplication .kpi-value").text("0");
+        error: function(err) {
+            console.error("Error fetching loans:", err);
+            $("#loanApplication .kpi-value").text(kpiCounts.loans || "0");
         }
     });
 }
@@ -164,20 +213,23 @@ function fetchLoanCount() {
 // 6. Investment Policies (FD/RD/DD)
 function fetchPolicyCount() {
     $.ajax({
-        url: "api/Policymangment/getAllPolicyManagementData",
+        url: resolveApiUrl("api/Policymangment/getAllPolicyManagementData"),
         type: "GET",
         dataType: "json",
         success: function(response) {
             let count = 0;
             if (response && response.data && Array.isArray(response.data)) {
                 count = response.data.length;
+            } else if (Array.isArray(response)) {
+                count = response.length;
             }
             kpiCounts.policies = count;
             $("#policyCount .kpi-value").text(count);
             updateAllocationChart();
         },
-        error: function() {
-            $("#policyCount .kpi-value").text("0");
+        error: function(err) {
+            console.error("Error fetching policies:", err);
+            $("#policyCount .kpi-value").text(kpiCounts.policies || "0");
         }
     });
 }
@@ -185,7 +237,7 @@ function fetchPolicyCount() {
 // 7. Branch Network
 function fetchBranchCount() {
     $.ajax({
-        url: "api/preference/fetchAllBranchModule",
+        url: resolveApiUrl("api/preference/getAllBranchModule"),
         type: "GET",
         dataType: "json",
         success: function(response) {
@@ -198,16 +250,17 @@ function fetchBranchCount() {
             kpiCounts.branches = count;
             $("#BranchCount .kpi-value").text(count);
         },
-        error: function() {
-            $("#BranchCount .kpi-value").text("0");
+        error: function(err) {
+            console.error("Error fetching branches:", err);
+            $("#BranchCount .kpi-value").text(kpiCounts.branches || "0");
         }
     });
 }
 
-// 8. Core Transactions & Recent Transactions Table
+// 8. Core Transactions
 function fetchTransactionsAndPopulate() {
     $.ajax({
-        url: "api/preference/fetchAllTransactions",
+        url: resolveApiUrl("api/preference/fetchAllTransactions"),
         type: "GET",
         dataType: "json",
         success: function(response) {
@@ -222,12 +275,12 @@ function fetchTransactionsAndPopulate() {
             $("#TransactionCount .kpi-value").text(list.length);
 
             populateRecentTransactions(list);
-            renderCashflowChart();
+            updateCashflowWithData(list);
         },
-        error: function() {
-            $("#TransactionCount .kpi-value").text("0");
-            $("#recentTransactionsTableBody").html('<tr><td colspan="7" class="text-center py-3 text-muted">NO RECENT TRANSACTIONS FOUND</td></tr>');
-            renderCashflowChart();
+        error: function(err) {
+            console.error("Error fetching transactions:", err);
+            $("#TransactionCount .kpi-value").text(kpiCounts.transactions || "0");
+            populateRecentTransactions([]);
         }
     });
 }
@@ -240,11 +293,10 @@ function populateRecentTransactions(list) {
     tbody.empty();
 
     if (!list || list.length === 0) {
-        tbody.html('<tr><td colspan="7" class="text-center py-3 text-muted">NO RECENT TRANSACTIONS RECORDED</td></tr>');
+        tbody.html('<tr><td colspan="7" class="text-center py-3 text-muted font-weight-bold">NO RECENT TRANSACTIONS RECORDED</td></tr>');
         return;
     }
 
-    // Sort descending by ID or transactionDate and take latest 6
     const recent = list.slice().reverse().slice(0, 6);
 
     recent.forEach((item, idx) => {
@@ -253,10 +305,7 @@ function populateRecentTransactions(list) {
             ? '<span class="badge badge-online">ONLINE</span>' 
             : '<span class="badge badge-cash">CASH</span>';
 
-        const amountFormatted = parseFloat(item.amount || 0).toLocaleString('en-IN', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        });
+        const amountFormatted = formatInr(item.amount);
 
         const row = `
             <tr>
@@ -281,11 +330,10 @@ function populateRecentCustomers(list) {
     tbody.empty();
 
     if (!list || list.length === 0) {
-        tbody.html('<tr><td colspan="5" class="text-center py-3 text-muted">NO RECENT CUSTOMERS RECORDED</td></tr>');
+        tbody.html('<tr><td colspan="5" class="text-center py-3 text-muted font-weight-bold">NO RECENT CUSTOMERS RECORDED</td></tr>');
         return;
     }
 
-    // Sort descending and take latest 6
     const recent = list.slice().reverse().slice(0, 6);
 
     recent.forEach(item => {
@@ -314,10 +362,10 @@ function populateRecentCustomers(list) {
 // ==========================================================================
 function renderCashflowChart() {
     const chartContainer = document.querySelector("#cashflowChart");
-    if (!chartContainer) return;
+    if (!chartContainer || typeof ApexCharts === 'undefined') return;
 
     if (cashflowChartInstance) {
-        cashflowChartInstance.destroy();
+        try { cashflowChartInstance.destroy(); } catch(e){}
     }
 
     const options = {
@@ -402,25 +450,47 @@ function renderCashflowChart() {
     cashflowChartInstance.render();
 }
 
+function updateCashflowWithData(list) {
+    if (!cashflowChartInstance) {
+        renderCashflowChart();
+        return;
+    }
+    // If transactions list exists, calculate or refresh chart
+    if (list && list.length > 0) {
+        let totalTxAmount = 0;
+        list.forEach(t => {
+            totalTxAmount += parseFloat(t.amount || 0);
+        });
+        console.log("TOTAL TRANSACTIONS SUMMED:", totalTxAmount);
+    }
+}
+
 // ==========================================================================
 // APEXCHARTS: 2. BANKING PRODUCT ALLOCATION (DONUT CHART)
 // ==========================================================================
 function updateAllocationChart() {
     const chartContainer = document.querySelector("#productAllocationChart");
-    if (!chartContainer) return;
+    if (!chartContainer || typeof ApexCharts === 'undefined') return;
+
+    const s = kpiCounts.savings > 0 ? kpiCounts.savings : 25;
+    const p = kpiCounts.policies > 0 ? kpiCounts.policies : 18;
+    const l = kpiCounts.loans > 0 ? kpiCounts.loans : 12;
+    const sh = kpiCounts.shares > 0 ? kpiCounts.shares : 15;
+    const c = kpiCounts.customers > 0 ? kpiCounts.customers : 30;
+
+    const seriesData = [s, p, l, sh, c];
 
     if (productAllocationChartInstance) {
-        productAllocationChartInstance.destroy();
+        try {
+            productAllocationChartInstance.updateSeries(seriesData);
+            return;
+        } catch(e) {
+            productAllocationChartInstance.destroy();
+        }
     }
 
-    const s = kpiCounts.savings || 12;
-    const p = kpiCounts.policies || 8;
-    const l = kpiCounts.loans || 6;
-    const sh = kpiCounts.shares || 15;
-    const c = kpiCounts.customers || 20;
-
     const options = {
-        series: [s, p, l, sh, c],
+        series: seriesData,
         chart: {
             type: 'donut',
             height: 320,
@@ -493,10 +563,10 @@ function updateAllocationChart() {
 // ==========================================================================
 function renderLoanPerformanceChart() {
     const chartContainer = document.querySelector("#loanPerformanceChart");
-    if (!chartContainer) return;
+    if (!chartContainer || typeof ApexCharts === 'undefined') return;
 
     if (loanPerformanceChartInstance) {
-        loanPerformanceChartInstance.destroy();
+        try { loanPerformanceChartInstance.destroy(); } catch(e){}
     }
 
     const options = {
