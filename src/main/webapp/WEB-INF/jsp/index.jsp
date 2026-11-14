@@ -165,7 +165,24 @@ body {
 	</div>
 
 	<script>
+		window.contextPath = '${pageContext.request.contextPath}';
 		$(document).ready(function() {
+			if (window.jQuery) {
+				jQuery.ajaxPrefilter(function(options) {
+					const ctx = "${pageContext.request.contextPath}";
+					let url = options.url;
+					if (url && typeof url === "string") {
+						if (url.startsWith("api/")) {
+							options.url = (ctx ? ctx : "") + "/" + url;
+						} else if (url.startsWith("./api/")) {
+							options.url = (ctx ? ctx : "") + "/" + url.substring(2);
+						} else if (url.startsWith("/api/") && ctx && !url.startsWith(ctx + "/api/")) {
+							options.url = ctx + url;
+						}
+					}
+				});
+			}
+
 			// Background image fallback for live server
 			var testBg = new Image();
 			testBg.onerror = function() {
@@ -204,6 +221,6 @@ body {
 			// AJAX login
 		});
 	</script>
-	<script src="./js/login.js"></script>
+	<script src="${pageContext.request.contextPath}/js/login.js"></script>
 </body>
 </html>

@@ -795,3 +795,59 @@ function clearStatement() {
 
 	$("#closingBalance").text("₹ 0.00");
 }
+
+
+// =========================================================
+// PRINT BANK STATEMENT
+// =========================================================
+
+function printBankStatement() {
+
+	if (!$("#accountNumber").val()) {
+		alert("PLEASE SELECT AN ACCOUNT NUMBER FIRST!");
+		return;
+	}
+
+	if (typeof ReportPrintUtil !== "undefined") {
+		let acct = $("#statementAccountNumber").text() || "-";
+		let bank = $("#statementBankName").text() || "-";
+		let branch = $("#statementBranchName").text() || "-";
+		let from = $("#statementStartDate").text() || "-";
+		let to = $("#statementEndDate").text() || "-";
+		let genDate = $("#generatedDate").text() || new Date().toLocaleString("en-GB");
+		let opBal = $("#openingBalance").text() || "₹ 0.00";
+		let cr = $("#totalCredit").text() || "₹ 0.00";
+		let dr = $("#totalDebit").text() || "₹ 0.00";
+		let clBal = $("#closingBalance").text() || "₹ 0.00";
+
+		let metaSummary = `
+			<div style="margin-bottom: 15px; border: 1px solid #ccc; padding: 10px; font-family: Arial, sans-serif; font-size: 12px; background: #fafafa;">
+				<table style="width: 100%; border: none; margin: 0;">
+					<tr style="border: none;">
+						<td style="border: none; padding: 4px; font-weight: bold;">ACCOUNT NUMBER: ${acct}</td>
+						<td style="border: none; padding: 4px; font-weight: bold;">BANK: ${bank}</td>
+						<td style="border: none; padding: 4px; font-weight: bold;">BRANCH: ${branch}</td>
+					</tr>
+					<tr style="border: none;">
+						<td style="border: none; padding: 4px;">PERIOD: ${from} TO ${to}</td>
+						<td style="border: none; padding: 4px;">GENERATED ON: ${genDate}</td>
+						<td style="border: none; padding: 4px;"></td>
+					</tr>
+				</table>
+				<hr style="margin: 8px 0; border: 0; border-top: 1px solid #ddd;">
+				<table style="width: 100%; border: none; margin: 0;">
+					<tr style="border: none;">
+						<td style="border: none; padding: 4px;"><strong>OPENING BALANCE:</strong> ${opBal}</td>
+						<td style="border: none; padding: 4px;"><strong>TOTAL CREDIT:</strong> ${cr}</td>
+						<td style="border: none; padding: 4px;"><strong>TOTAL DEBIT:</strong> ${dr}</td>
+						<td style="border: none; padding: 4px;"><strong>CLOSING BALANCE:</strong> ${clBal}</td>
+					</tr>
+				</table>
+			</div>
+		`;
+
+		ReportPrintUtil.printTable(".datatable", "BANK ACCOUNT STATEMENT", "ACCOUNT: " + acct, metaSummary);
+	} else {
+		window.print();
+	}
+}

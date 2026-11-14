@@ -141,6 +141,11 @@ function renderDnoRows(records) {
 
 // Print DNO Register
 function printDnoRegister() {
+	if (typeof ReportPrintUtil !== "undefined") {
+		ReportPrintUtil.printTable("#dnoPrintArea table", "REGISTER OF DISTINCTIVE NUMBERS (DNO) OF SHARES");
+		return;
+	}
+
 	var tableContent = $("#dnoPrintArea").html();
 
 	var printWin = window.open("", "_blank", "width=900,height=700");

@@ -227,3 +227,11 @@ $(document).ready(function() {
 	});
 
 });
+
+function printTeamMemberReport() {
+	if (typeof ReportPrintUtil !== "undefined") {
+		ReportPrintUtil.printTable(".card.recent-sales table", "TEAM MEMBER SEARCH RESULTS");
+	} else {
+		window.print();
+	}
+}

@@ -9,6 +9,7 @@ const monthsListDetails = [
 ];
 
 $(document).ready(function() {
+	loadIncentiveCompanyHeader();
 
 	// 1. Populate Months
 	const monthSelect = $('#searchMonth');
@@ -267,6 +268,11 @@ function printPaySlipArea() {
 
 // Print Entire Statement
 function printStatementSection() {
+	if (typeof ReportPrintUtil !== "undefined") {
+		ReportPrintUtil.printTable("#paymentDetailsTable", "OFFICIAL INCENTIVE PAYMENT DETAILS STATEMENT");
+		return;
+	}
+
 	const printContents = document.getElementById('statementPrintSection').innerHTML;
 	const printWindow = window.open('', '_blank', 'width=1100,height=750');
 	printWindow.document.write(`
@@ -296,4 +302,18 @@ function printStatementSection() {
 function escapeHtml(text) {
 	if (!text) return '';
 	return text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+}
+
+function loadIncentiveCompanyHeader() {
+	$.ajax({
+		url: "api/preference/getCompanyDetails",
+		type: "GET",
+		dataType: "json",
+		success: function(res) {
+			if (res) {
+				const name = (res.companyName || res.shortName || "CO OPERATIVE SOCIETY LTD").trim().toUpperCase();
+				$("#paySlipPrintArea h3").text(name);
+			}
+		}
+	});
 }

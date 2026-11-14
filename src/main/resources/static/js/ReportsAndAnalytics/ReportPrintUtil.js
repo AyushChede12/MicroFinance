@@ -66,6 +66,14 @@ var ReportPrintUtil = (function() {
 		let fullAddr = [companyDetails.address, companyDetails.city, companyDetails.state].filter(Boolean).join(", ");
 		if (companyDetails.pinCode) fullAddr += " - " + companyDetails.pinCode;
 
+		let metaParts = [];
+		if (companyDetails.cinNo) metaParts.push("CIN: " + companyDetails.cinNo);
+		if (companyDetails.pan) metaParts.push("PAN: " + companyDetails.pan);
+		if (companyDetails.gstin) metaParts.push("GSTIN: " + companyDetails.gstin);
+		if (companyDetails.helplineNo) metaParts.push("HELPLINE: " + companyDetails.helplineNo);
+		if (companyDetails.emailId) metaParts.push("EMAIL: " + companyDetails.emailId);
+		let metaHtml = metaParts.length > 0 ? `<div style="font-size: 11px; margin-top: 3px; color: #555; text-transform: uppercase;">${metaParts.join(" &nbsp;|&nbsp; ")}</div>` : '';
+
 		return `
 			<div class="print-header" style="text-align: center; margin-bottom: 20px; font-family: Arial, sans-serif;">
 				<div style="font-size: 20px; font-weight: bold; color: #002147; letter-spacing: 0.5px; text-transform: uppercase;">
@@ -74,9 +82,7 @@ var ReportPrintUtil = (function() {
 				<div style="font-size: 12px; margin-top: 3px; color: #222; text-transform: uppercase;">
 					${fullAddr}
 				</div>
-				<div style="font-size: 11px; margin-top: 3px; color: #555; text-transform: uppercase;">
-					CIN: ${companyDetails.cinNo} &nbsp;|&nbsp; PAN: ${companyDetails.pan} &nbsp;|&nbsp; GSTIN: ${companyDetails.gstin} &nbsp;|&nbsp; HELPLINE: ${companyDetails.helplineNo} &nbsp;|&nbsp; EMAIL: ${companyDetails.emailId}
-				</div>
+				${metaHtml}
 				<div style="border-bottom: 2px solid #002147; margin-top: 10px; margin-bottom: 10px;"></div>
 				<div style="font-size: 16px; font-weight: bold; color: #002147; text-transform: uppercase; letter-spacing: 0.5px;">
 					${title}
@@ -202,12 +208,22 @@ var ReportPrintUtil = (function() {
 		});
 	}
 
+	function printElement(elementSelector, reportTitle, subTitle) {
+		fetchCompanyDetails(function() {
+			let $cloned = $(elementSelector).clone();
+			$cloned.find('.no-print, button, .iconbutton, .print-button-section').remove();
+			let innerHtml = $cloned.html();
+			printHtml(reportTitle, innerHtml, subTitle);
+		});
+	}
+
 	return {
 		getCompanyDetails: fetchCompanyDetails,
 		getHeaderHtml: getHeaderHtml,
 		getFooterHtml: getFooterHtml,
 		printHtml: printHtml,
-		printTable: printTable
+		printTable: printTable,
+		printElement: printElement
 	};
 })();
 

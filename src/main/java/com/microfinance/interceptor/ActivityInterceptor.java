@@ -19,9 +19,11 @@ public class ActivityInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         String uri = request.getRequestURI();
+        String contextPath = request.getContextPath();
+        String path = (contextPath != null && !contextPath.isEmpty() && uri.startsWith(contextPath)) ? uri.substring(contextPath.length()) : uri;
         
         // Log API requests
-        if (uri.startsWith("/api/")) {
+        if (path.startsWith("/api/") || uri.contains("/api/")) {
             String method = request.getMethod();
             
             // Log mutating methods (POST, PUT, DELETE) and login validate
@@ -29,26 +31,30 @@ public class ActivityInterceptor implements HandlerInterceptor {
             boolean isLogin = uri.contains("/loginValidate");
             
             if (isMutating || isLogin) {
-                HttpSession session = request.getSession(false);
-                String username = "Anonymous";
-                if (session != null && session.getAttribute("username") != null) {
-                    username = (String) session.getAttribute("username");
+                try {
+                    HttpSession session = request.getSession(false);
+                    String username = "Anonymous";
+                    if (session != null && session.getAttribute("username") != null) {
+                        username = (String) session.getAttribute("username");
+                    }
+                    
+                    String action = getActionName(uri, method);
+                    String details = getDetails(uri, method, request, response);
+                    
+                    ActivityLog log = new ActivityLog();
+                    log.setTimestamp(LocalDateTime.now());
+                    log.setUsername(username);
+                    log.setAction(action);
+                    log.setDetails(details);
+                    log.setIpAddress(request.getRemoteAddr());
+                    log.setStatus(response.getStatus() >= 200 && response.getStatus() < 300 ? "SUCCESS" : "FAILURE");
+                    log.setMethod(method);
+                    log.setUrl(uri);
+                    
+                    activityLogRepository.save(log);
+                } catch (Exception e) {
+                    // Prevent logging failure from disrupting user request
                 }
-                
-                String action = getActionName(uri, method);
-                String details = getDetails(uri, method, request, response);
-                
-                ActivityLog log = new ActivityLog();
-                log.setTimestamp(LocalDateTime.now());
-                log.setUsername(username);
-                log.setAction(action);
-                log.setDetails(details);
-                log.setIpAddress(request.getRemoteAddr());
-                log.setStatus(response.getStatus() >= 200 && response.getStatus() < 300 ? "SUCCESS" : "FAILURE");
-                log.setMethod(method);
-                log.setUrl(uri);
-                
-                activityLogRepository.save(log);
             }
         }
     }

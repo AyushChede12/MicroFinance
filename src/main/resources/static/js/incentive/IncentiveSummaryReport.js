@@ -245,6 +245,13 @@ function renderReportTable(list) {
 
 // Print Summary Report
 function printSummaryReport() {
+	if (typeof ReportPrintUtil !== "undefined") {
+		const month = $('#reportMonth').val() || 'ALL';
+		const branch = $('#reportBranch').val() || 'ALL';
+		ReportPrintUtil.printTable("#summaryReportTable", "OFFICIAL INCENTIVE SUMMARY REPORT", "FILTER: MONTH = " + month + " | BRANCH = " + branch);
+		return;
+	}
+
 	const printContents = document.getElementById('summaryReportPrintArea').innerHTML;
 	const month = $('#reportMonth').val() || 'ALL';
 	const branch = $('#reportBranch').val() || 'ALL';

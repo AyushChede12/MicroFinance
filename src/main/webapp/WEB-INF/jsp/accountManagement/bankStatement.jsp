@@ -421,7 +421,6 @@
 			<div class="row mt-3"
 				style="border-top: 1px solid #dee2e6; padding-top: 15px;">
 
-				```
 				<div class="col-md-12 text-center">
 					<small class="text-muted"> THIS IS A SYSTEM GENERATED BANK
 						ACCOUNT STATEMENT. </small>

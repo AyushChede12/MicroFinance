@@ -111,7 +111,7 @@
 					<button type="button" id="resetBtn" class="btnStyle bg-secondary text-white">
 						<i class="bi bi-arrow-counterclockwise"></i> RESET
 					</button>
-					<button type="button" id="printBtn" class="btnStyle bg-primary text-white" onclick="window.print();">
+					<button type="button" id="printBtn" class="btnStyle bg-primary text-white" onclick="printTeamMemberReport();">
 						<i class="bi bi-printer"></i> PRINT
 					</button>
 				</div>

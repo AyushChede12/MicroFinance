@@ -9,6 +9,7 @@ const monthsList = [
 ];
 
 $(document).ready(function() {
+	loadIncentiveCompanyHeader();
 
 	// 1. Initialize Month Dropdowns
 	const monthDropdown = $('#incentiveMonth');
@@ -382,4 +383,18 @@ function printPaySlipArea() {
 function escapeHtml(text) {
 	if (!text) return '';
 	return text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+}
+
+function loadIncentiveCompanyHeader() {
+	$.ajax({
+		url: "api/preference/getCompanyDetails",
+		type: "GET",
+		dataType: "json",
+		success: function(res) {
+			if (res) {
+				const name = (res.companyName || res.shortName || "CO OPERATIVE SOCIETY LTD").trim().toUpperCase();
+				$("#paySlipPrintArea h3").text(name);
+			}
+		}
+	});
 }

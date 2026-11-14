@@ -38,11 +38,29 @@
 
 <script>
 	// =========================================================
-	// GLOBAL UPPERCASE ALERT & DIALOG INTERCEPTOR
-	// Enforces uppercase text across all alerts, confirms,
-	// SweetAlert2 popups, AJAX responses, and user inputs.
+	// GLOBAL CONTEXT & UPPERCASE ALERT & DIALOG INTERCEPTOR
+	// Enforces correct context path and uppercase text across
+	// all alerts, confirms, SweetAlert2 popups, AJAX responses,
+	// and user inputs.
 	// =========================================================
 	(function() {
+		// 0. Global AJAX Prefilter: Resolves API URLs across localhost & production context paths
+		if (window.jQuery) {
+			jQuery.ajaxPrefilter(function(options, originalOptions, jqXHR) {
+				const ctx = "${pageContext.request.contextPath}";
+				let url = options.url;
+				if (url && typeof url === "string") {
+					if (url.startsWith("api/")) {
+						options.url = (ctx ? ctx : "") + "/" + url;
+					} else if (url.startsWith("./api/")) {
+						options.url = (ctx ? ctx : "") + "/" + url.substring(2);
+					} else if (url.startsWith("/api/") && ctx && !url.startsWith(ctx + "/api/")) {
+						options.url = ctx + url;
+					}
+				}
+			});
+		}
+
 		// 1. Intercept native window.alert
 		const _nativeAlert = window.alert;
 		window.alert = function(message) {
@@ -153,6 +171,7 @@
 		src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.46.0/apexcharts.min.js"></script>
 
 	<script src="${pageContext.request.contextPath}/js/adminscript.js"></script>
+	<script src="${pageContext.request.contextPath}/js/ReportsAndAnalytics/ReportPrintUtil.js"></script>
 	<script>
 		$(document).ready(function() {
 			let username = sessionStorage.getItem("username");

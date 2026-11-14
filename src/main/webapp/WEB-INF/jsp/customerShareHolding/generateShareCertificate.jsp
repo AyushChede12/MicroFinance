@@ -79,9 +79,11 @@
 							<!-- Certificate Form Starts Here -->
 							<div class="p-4" style="border: 2px solid #856404; border-radius: 6px; background: #fffdf7;">
 								<div class="text-center mb-4">
-									<h3 style="font-weight: 800; color: #1a237e; letter-spacing: 1px;">
+									<h3 id="certCompanyName" style="font-weight: 800; color: #1a237e; letter-spacing: 1px;">
 										MICROFINANCE PVT. LTD.
 									</h3>
+									<p id="certCompanyAddress" style="font-size: 12px; color: #555; margin-bottom: 4px; text-transform: uppercase;"></p>
+									<p id="certCompanyMeta" style="font-size: 11px; color: #666; margin-bottom: 6px; text-transform: uppercase;"></p>
 									<h6 style="color: #666; font-weight: 600; letter-spacing: 0.5px;">
 										SHARE CERTIFICATE OF MEMBERSHIP
 									</h6>

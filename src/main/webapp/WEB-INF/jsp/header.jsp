@@ -41,7 +41,7 @@
 
 		<!-- LEFT -->
 		<div class="d-flex align-items-center">
-			<a href="/" class="logo d-flex align-items-center">
+			<a href="${pageContext.request.contextPath}/openDashboard" class="logo d-flex align-items-center">
 				<p id="bindUserName"
 					style="color: white; margin: 0; font-size: 25px; font-weight: 600; margin-left: 10px;">
 				</p>
@@ -51,7 +51,7 @@
 		<!-- RIGHT -->
 		<div class="header-right-buttons">
 
-			<a href="helpmanual" class="header-btn help-btn"> <i
+			<a href="${pageContext.request.contextPath}/helpmanual" class="header-btn help-btn"> <i
 				class="fa fa-question-circle"></i> HELP
 			</a> <a href="#" class="header-btn logout-btn" onclick="logoutUser()">
 				<i class="fa fa-sign-out"></i> LOGOUT

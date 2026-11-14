@@ -110,5 +110,15 @@ public class WebConfig implements WebMvcConfigurer {
 		registry.addResourceHandler("/static/**")
 				.addResourceLocations("classpath:/static/");
 	}
+
+	@Override
+	public void addCorsMappings(org.springframework.web.servlet.config.annotation.CorsRegistry registry) {
+		registry.addMapping("/**")
+				.allowedOriginPatterns("*")
+				.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH")
+				.allowedHeaders("*")
+				.allowCredentials(true)
+				.maxAge(3600);
+	}
 	
 }

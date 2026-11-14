@@ -1,6 +1,7 @@
 // Customer ShareHolding - Generate Share Certificate
 
 $(document).ready(function() {
+	loadCompanyDetails();
 	loadCustomerDropdown();
 
 	// Dropdown change listener
@@ -71,6 +72,34 @@ $(document).ready(function() {
 		printCertificateWindow();
 	});
 });
+
+// Load Company Details for Certificate Header
+function loadCompanyDetails() {
+	$.ajax({
+		url: "api/preference/getCompanyDetails",
+		type: "GET",
+		dataType: "json",
+		success: function(res) {
+			if (res) {
+				var name = (res.companyName || res.shortName || "CO OPERATIVE SOCIETY LTD").trim().toUpperCase();
+				$("#certCompanyName").text(name);
+				var fullAddr = [res.address, res.city, res.state].filter(Boolean).join(", ").trim().toUpperCase();
+				if (res.pinCode) fullAddr += " - " + res.pinCode;
+				if (fullAddr) $("#certCompanyAddress").text(fullAddr);
+
+				var meta = [];
+				if (res.cinNo) meta.push("CIN: " + res.cinNo.trim().toUpperCase());
+				if (res.pan) meta.push("PAN: " + res.pan.trim().toUpperCase());
+				if (res.gstin) meta.push("GSTIN: " + res.gstin.trim().toUpperCase());
+				if (res.helplineNo) meta.push("HELPLINE: " + res.helplineNo.trim());
+				if (meta.length > 0) $("#certCompanyMeta").text(meta.join(" | "));
+			}
+		},
+		error: function(err) {
+			console.warn("COMPANY DETAILS FETCH FAILED:", err);
+		}
+	});
+}
 
 // Load distinct customers with shares for dropdown
 function loadCustomerDropdown() {

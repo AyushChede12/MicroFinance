@@ -381,6 +381,11 @@ function displayDetails() {
 }
 
 function printTable() {
+	if (typeof ReportPrintUtil !== "undefined") {
+		ReportPrintUtil.printTable("#tabl", "FINANCIAL CONSULTANT REPORT");
+		return;
+	}
+
 	const printContent = document.getElementById('tabl').outerHTML;
 	const printWindow = window.open('', '', 'height=500,width=800');
 
