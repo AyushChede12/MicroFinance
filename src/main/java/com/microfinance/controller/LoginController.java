@@ -32,6 +32,18 @@ public class LoginController {
 		User loginUser = userService.validateUser(user.getUsername(), user.getPassword());
 		if (loginUser != null) {
 			session.setAttribute("username", loginUser.getUsername()); // ✅ save in session
+
+			// Establish Spring Security Context
+			try {
+				org.springframework.security.core.Authentication auth = 
+					new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
+						loginUser.getUsername(), null, java.util.Collections.emptyList());
+				org.springframework.security.core.context.SecurityContextHolder.getContext().setAuthentication(auth);
+				session.setAttribute(
+					org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+					org.springframework.security.core.context.SecurityContextHolder.getContext());
+			} catch (Exception ignored) {}
+
 			return ApiResponse.success(HttpStatus.OK, "LOGIN SUCCESSFUL", loginUser);
 		} else {
 			return ApiResponse.error(HttpStatus.UNAUTHORIZED, "INVALID USERNAME OR PASSWORD");
