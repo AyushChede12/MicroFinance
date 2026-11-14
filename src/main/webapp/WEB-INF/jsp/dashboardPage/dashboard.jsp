@@ -555,6 +555,73 @@
             </div>
         </div>
 
+        <!-- Second Row of Banking Charts & Performance Ratios -->
+        <div class="row">
+            <!-- Chart 3: Loan Disbursement vs Recovery Performance -->
+            <div class="col-lg-8">
+                <div class="chart-card">
+                    <div class="chart-card-header">
+                        <h5 class="chart-card-title"><i class="bi bi-bar-chart-line text-info me-1"></i> CREDIT DISBURSEMENT VS RECOVERY PERFORMANCE</h5>
+                        <div class="badge badge-light border text-info">COLLECTION AUDIT</div>
+                    </div>
+                    <div class="chart-card-body">
+                        <div id="loanPerformanceChart" style="min-height: 290px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Banking Metrics & Ratios -->
+            <div class="col-lg-4">
+                <div class="chart-card">
+                    <div class="chart-card-header">
+                        <h5 class="chart-card-title"><i class="bi bi-shield-check text-primary me-1"></i> FINANCIAL HEALTH & RATIOS</h5>
+                        <div class="badge badge-light border text-success">HEALTHY</div>
+                    </div>
+                    <div class="chart-card-body p-3">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-1" style="font-size: 11px; font-weight: 600;">
+                                <span>CREDIT DEPOSIT RATIO (CDR)</span>
+                                <span class="text-primary font-weight-bold">68.4%</span>
+                            </div>
+                            <div class="progress" style="height: 6px; border-radius: 3px;">
+                                <div class="progress-bar bg-primary" role="progressbar" style="width: 68.4%"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-1" style="font-size: 11px; font-weight: 600;">
+                                <span>COLLECTION & RECOVERY RATE</span>
+                                <span class="text-success font-weight-bold">94.2%</span>
+                            </div>
+                            <div class="progress" style="height: 6px; border-radius: 3px;">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 94.2%"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-1" style="font-size: 11px; font-weight: 600;">
+                                <span>CAPITAL ADEQUACY RATIO (CAR)</span>
+                                <span class="text-info font-weight-bold">18.5%</span>
+                            </div>
+                            <div class="progress" style="height: 6px; border-radius: 3px;">
+                                <div class="progress-bar bg-info" role="progressbar" style="width: 75%"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-1">
+                            <div class="d-flex justify-content-between mb-1" style="font-size: 11px; font-weight: 600;">
+                                <span>NET NPA LEVEL</span>
+                                <span class="text-danger font-weight-bold">1.8%</span>
+                            </div>
+                            <div class="progress" style="height: 6px; border-radius: 3px;">
+                                <div class="progress-bar bg-danger" role="progressbar" style="width: 18%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Real Core Banking Data Tables -->
         <div class="row">
             <!-- Table 1: Recent Banking Transactions -->

@@ -4,6 +4,7 @@
 
 let cashflowChartInstance = null;
 let productAllocationChartInstance = null;
+let loanPerformanceChartInstance = null;
 
 let kpiCounts = {
     customers: 0,
@@ -50,6 +51,7 @@ function loadAllDashboardData() {
     fetchPolicyCount();
     fetchBranchCount();
     fetchTransactionsAndPopulate();
+    renderLoanPerformanceChart();
 }
 
 // 1. Total Customers
@@ -484,4 +486,93 @@ function updateAllocationChart() {
 
     productAllocationChartInstance = new ApexCharts(chartContainer, options);
     productAllocationChartInstance.render();
+}
+
+// ==========================================================================
+// APEXCHARTS: 3. CREDIT DISBURSEMENT VS RECOVERY PERFORMANCE
+// ==========================================================================
+function renderLoanPerformanceChart() {
+    const chartContainer = document.querySelector("#loanPerformanceChart");
+    if (!chartContainer) return;
+
+    if (loanPerformanceChartInstance) {
+        loanPerformanceChartInstance.destroy();
+    }
+
+    const options = {
+        series: [
+            {
+                name: 'LOAN DISBURSED (INR)',
+                data: [45000, 52000, 68000, 74000, 91000, 115000, 128000, 142000, 155000, 170000, 185000, 210000]
+            },
+            {
+                name: 'EMI RECOVERED (INR)',
+                data: [38000, 47000, 61000, 69000, 84000, 106000, 119000, 134000, 146000, 161000, 176000, 198000]
+            }
+        ],
+        chart: {
+            type: 'bar',
+            height: 290,
+            toolbar: { show: false },
+            fontFamily: 'Poppins, sans-serif'
+        },
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                columnWidth: '45%',
+                borderRadius: 4
+            }
+        },
+        dataLabels: { enabled: false },
+        stroke: {
+            show: true,
+            width: 2,
+            colors: ['transparent']
+        },
+        colors: ['#0d6efd', '#10b981'],
+        xaxis: {
+            categories: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
+            labels: {
+                style: {
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    colors: '#64748b'
+                }
+            }
+        },
+        yaxis: {
+            labels: {
+                formatter: function (val) {
+                    return "₹ " + (val / 1000) + "K";
+                },
+                style: {
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    colors: '#64748b'
+                }
+            }
+        },
+        fill: { opacity: 1 },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return "₹ " + Number(val).toLocaleString('en-IN');
+                }
+            }
+        },
+        legend: {
+            position: 'top',
+            horizontalAlign: 'right',
+            fontSize: '11px',
+            fontWeight: 600,
+            textTransform: 'uppercase'
+        },
+        grid: {
+            borderColor: '#f1f5f9',
+            strokeDashArray: 4
+        }
+    };
+
+    loanPerformanceChartInstance = new ApexCharts(chartContainer, options);
+    loanPerformanceChartInstance.render();
 }
