@@ -43,19 +43,23 @@
 	// all alerts, confirms, SweetAlert2 popups, AJAX responses,
 	// and user inputs.
 	// =========================================================
+	window.contextPath = "${pageContext.request.contextPath}";
+
 	(function() {
-		// 0. Global AJAX Prefilter: Resolves API URLs across localhost & production context paths
+		// 0. Global AJAX Prefilter: Resolves API & Controller URLs across localhost & production context paths
 		if (window.jQuery) {
 			jQuery.ajaxPrefilter(function(options, originalOptions, jqXHR) {
-				const ctx = "${pageContext.request.contextPath}";
+				const ctx = window.contextPath || "${pageContext.request.contextPath}";
 				let url = options.url;
-				if (url && typeof url === "string") {
-					if (url.startsWith("api/")) {
-						options.url = (ctx ? ctx : "") + "/" + url;
-					} else if (url.startsWith("./api/")) {
-						options.url = (ctx ? ctx : "") + "/" + url.substring(2);
-					} else if (url.startsWith("/api/") && ctx && !url.startsWith(ctx + "/api/")) {
-						options.url = ctx + url;
+				if (url && typeof url === "string" && !url.startsWith("http://") && !url.startsWith("https://") && !url.startsWith("//")) {
+					if (ctx) {
+						if (url.startsWith("/")) {
+							if (!url.startsWith(ctx + "/")) {
+								options.url = ctx + url;
+							}
+						} else {
+							options.url = ctx + "/" + url;
+						}
 					}
 				}
 			});

@@ -267,11 +267,38 @@ public class CustomerManagementService {
 		}
 	}
 
+	private String getEffectiveUploadDirectory() {
+		if (uploadDirectory != null && !uploadDirectory.trim().isEmpty()) {
+			try {
+				File dir = new File(uploadDirectory);
+				if (dir.exists() || dir.mkdirs()) {
+					if (dir.canWrite()) {
+						return dir.getAbsolutePath();
+					}
+				}
+			} catch (Exception ignored) {}
+		}
+		// Fallback for Linux Tomcat
+		File tomcatDir = new File("/opt/tomcat/webapps/MicroFinance/Uploads");
+		try {
+			if (tomcatDir.exists() || tomcatDir.mkdirs()) {
+				return tomcatDir.getAbsolutePath();
+			}
+		} catch (Exception ignored) {}
+
+		// Fallback to system temp directory
+		File tmpDir = new File(System.getProperty("java.io.tmpdir"), "microfinance_uploads");
+		if (!tmpDir.exists()) {
+			tmpDir.mkdirs();
+		}
+		return tmpDir.getAbsolutePath();
+	}
+
 	private String saveFile(MultipartFile file) throws IOException {
 		if (file != null && !file.isEmpty()) {
-			ensureUploadDirectoryExists();
+			String baseDir = getEffectiveUploadDirectory();
 			String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-			File destination = new File(uploadDirectory + File.separator + fileName);
+			File destination = new File(baseDir + File.separator + fileName);
 			file.transferTo(destination);
 			return fileName;
 		}
@@ -279,13 +306,13 @@ public class CustomerManagementService {
 	}
 
 	private void ensureUploadDirectoryExists() {
-		File uploadDir = new File(uploadDirectory);
+		File uploadDir = new File(getEffectiveUploadDirectory());
 		if (!uploadDir.exists()) {
 			boolean created = uploadDir.mkdirs();
 			if (created) {
-				System.out.println("Upload directory created at: " + uploadDirectory);
+				System.out.println("Upload directory created at: " + uploadDir.getAbsolutePath());
 			} else {
-				System.err.println("Failed to create upload directory: " + uploadDirectory);
+				System.err.println("Failed to create upload directory: " + uploadDir.getAbsolutePath());
 			}
 		}
 	}
@@ -459,7 +486,7 @@ public class CustomerManagementService {
 		addCustomer customer = customerRepo.findById(customerId)
 				.orElseThrow(() -> new IllegalArgumentException("INVALID CUSTOMER ID: " + customerId));
 
-		Path customerDir = Paths.get(uploadDirectory, "customer", customerId.toString());
+		Path customerDir = Paths.get(getEffectiveUploadDirectory(), "customer", customerId.toString());
 		Files.createDirectories(customerDir);
 
 		String originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
@@ -547,7 +574,7 @@ public class CustomerManagementService {
 			return false;
 		}
 
-		Path customerDir = Paths.get(uploadDirectory, "customer", customerId.toString());
+		Path customerDir = Paths.get(getEffectiveUploadDirectory(), "customer", customerId.toString());
 		try {
 			if (targetImg.getFileName() != null) {
 				Files.deleteIfExists(customerDir.resolve(targetImg.getFileName()));
