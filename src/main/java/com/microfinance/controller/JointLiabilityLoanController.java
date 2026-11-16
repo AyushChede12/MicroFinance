@@ -28,6 +28,7 @@ import com.microfinance.model.ExecutiveFounder;
 import com.microfinance.model.GroupDirectory;
 import com.microfinance.model.GroupInstallmentRepayment;
 import com.microfinance.model.GroupLoanPayment;
+import com.microfinance.model.GroupLoanClosure;
 import com.microfinance.model.InstallmentRepayment;
 import com.microfinance.model.LoanApplication;
 import com.microfinance.model.LoanAprroval;
@@ -385,4 +386,77 @@ public class JointLiabilityLoanController {
 		}
 	}
 
+
+	@PostMapping("/earlyClosure")
+	public ResponseEntity<ApiResponse<GroupLoanClosure>> closeGroupLoanEarly(@RequestBody GroupLoanClosure closure) {
+		try {
+			boolean isClosed = jointLiabilityLoanService.closeGroupLoanEarly(closure);
+			if (isClosed) {
+				return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "JOINT LIABILITY LOAN CLOSED SUCCESSFULLY", closure));
+			} else {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+						.body(ApiResponse.error(HttpStatus.BAD_REQUEST, "FAILED TO CLOSE GROUP LOAN"));
+			}
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "ERROR: " + e.getMessage()));
+		}
+	}
+
+	@GetMapping("/getStatementByGroupId")
+	public ResponseEntity<ApiResponse<Map<String, Object>>> getStatementByGroupId(@RequestParam("groupID") String groupID) {
+		try {
+			Map<String, Object> statement = jointLiabilityLoanService.getStatementOfAccount(groupID);
+			if (statement != null && !statement.isEmpty() && statement.get("groupLoan") != null) {
+				return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "STATEMENT OF ACCOUNT FETCHED SUCCESSFULLY", statement));
+			} else {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND)
+						.body(ApiResponse.error(HttpStatus.NOT_FOUND, "NO STATEMENT FOUND FOR THIS GROUP ID"));
+			}
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "ERROR: " + e.getMessage()));
+		}
+	}
+
+	@GetMapping("/getCompletedLoans")
+	public ResponseEntity<ApiResponse<List<Map<String, Object>>>> getCompletedLoans(
+			@RequestParam(value = "branch", required = false) String branch,
+			@RequestParam(value = "startDate", required = false) String startDate,
+			@RequestParam(value = "endDate", required = false) String endDate) {
+		try {
+			List<Map<String, Object>> list = jointLiabilityLoanService.getCompletedGroupLoans(branch, startDate, endDate);
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "COMPLETED GROUP LOANS FETCHED SUCCESSFULLY", list));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "ERROR: " + e.getMessage()));
+		}
+	}
+
+	@GetMapping("/searchLoanRecords")
+	public ResponseEntity<ApiResponse<List<Map<String, Object>>>> searchLoanRecords(
+			@RequestParam(value = "branch", required = false) String branch,
+			@RequestParam(value = "groupCode", required = false) String groupCode,
+			@RequestParam(value = "memberCode", required = false) String memberCode,
+			@RequestParam(value = "startDate", required = false) String startDate,
+			@RequestParam(value = "endDate", required = false) String endDate) {
+		try {
+			List<Map<String, Object>> list = jointLiabilityLoanService.searchGroupLoanRecords(branch, groupCode, memberCode, startDate, endDate);
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "GROUP LOAN RECORDS FETCHED SUCCESSFULLY", list));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "ERROR: " + e.getMessage()));
+		}
+	}
+
+	@GetMapping("/getAllGroupCodes")
+	public ResponseEntity<ApiResponse<List<String>>> getAllGroupCodes() {
+		try {
+			List<String> list = jointLiabilityLoanService.getAllGroupCodes();
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "GROUP CODES FETCHED SUCCESSFULLY", list));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "ERROR: " + e.getMessage()));
+		}
+	}
 }

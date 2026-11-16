@@ -19,6 +19,20 @@ public class QueryDbTest {
     @Autowired
     private com.microfinance.repository.CreateSavingAccountRepo createSavingAccountRepo;
 
+    @Autowired
+    private com.microfinance.repository.CompanyAdministrationRepo companyAdministrationRepo;
+
+    @Test
+    public void testCompanyDetails() {
+        List<com.microfinance.model.CompanyAdministration> list = companyAdministrationRepo.findAll();
+        System.out.println("=== COMPANY ADMINISTRATION IN DATABASE ===");
+        System.out.println("Total company records: " + list.size());
+        for (com.microfinance.model.CompanyAdministration c : list) {
+            System.out.println("ID: " + c.getId() + ", Name: " + c.getCompanyName() + ", Short: " + c.getShortName() + ", Address: " + c.getAddress() + ", City: " + c.getCity() + ", State: " + c.getState() + ", PIN: " + c.getPinCode() + ", CIN: " + c.getCinNo() + ", PAN: " + c.getPan() + ", GSTIN: " + c.getGstin() + ", Helpline: " + c.getHelplineNo() + ", Email: " + c.getEmailId());
+        }
+        System.out.println("=========================================");
+    }
+
     @Test
     public void testUsers() {
         List<User> users = userRepository.findAll();

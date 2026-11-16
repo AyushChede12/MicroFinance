@@ -1,3 +1,103 @@
+// Dynamic Company Details integration & Report Printing
+let companyDetails = {};
+
+function loadCompanyDetails() {
+	$.ajax({
+		url: "api/preference/getCompanyDetails",
+		type: "GET",
+		dataType: "json",
+		success: function(resp) {
+			const comp = (resp && resp.data) ? resp.data : resp;
+			if (comp) {
+				companyDetails = comp;
+				const compName = (comp.companyName || "MICROFINANCE FINANCIAL SERVICES").toUpperCase();
+				const compAddr = [comp.address, comp.city, comp.state, comp.pinCode].filter(Boolean).join(", ").toUpperCase();
+
+				const regParts = [];
+				if (comp.cinNo) regParts.push("CIN: " + comp.cinNo);
+				if (comp.pan) regParts.push("PAN: " + comp.pan);
+				if (comp.tan) regParts.push("TAN: " + comp.tan);
+				if (comp.gstin) regParts.push("GSTIN: " + comp.gstin);
+				const regLine = regParts.join(" | ").toUpperCase();
+
+				const contactParts = [];
+				if (comp.helplineNo) contactParts.push("HELPLINE: " + comp.helplineNo);
+				if (comp.emailId) contactParts.push("EMAIL: " + comp.emailId);
+				const contactLine = contactParts.join(" | ").toUpperCase();
+
+				$("#compName").text(compName);
+				$("#compAddress").text(compAddr);
+				$("#compRegLine").text(regLine);
+				$("#compContact").text(contactLine);
+			}
+		},
+		error: function(err) {
+			console.error("FAILED TO FETCH COMPANY DETAILS:", err);
+		}
+	});
+}
+
+function printGroupDirectoryReport() {
+	const printCard = document.getElementById("printableGroupDirectoryArea").cloneNode(true);
+	const header = printCard.querySelector("#companyHeader");
+	if (header) header.style.display = "block";
+
+	const signatures = printCard.querySelector(".print-signatures");
+	if (signatures) signatures.style.display = "flex";
+
+	// Hide action buttons in printed report
+	const actionCells = printCard.querySelectorAll("th:last-child, td:last-child");
+	actionCells.forEach(cell => cell.remove());
+
+	const printWindow = window.open("", "_blank", "width=1100,height=800");
+	printWindow.document.write(`
+		<!DOCTYPE html>
+		<html>
+		<head>
+			<title>JOINT LIABILITY GROUP DIRECTORY REPORT</title>
+			<style>
+				@page { size: A4 landscape; margin: 12mm; }
+				body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; margin: 0; padding: 10px; color: #000; background: #fff; }
+				table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 20px; font-size: 11px; }
+				th, td { border: 1px solid #333; padding: 6px 8px; text-align: left; }
+				th { background-color: #f2f2f2 !important; -webkit-print-color-adjust: exact; text-transform: uppercase; }
+				.text-center { text-align: center; }
+				.mb-4 { margin-bottom: 1.5rem; }
+				.mt-5 { margin-top: 3rem; }
+				.pt-4 { padding-top: 1.5rem; }
+				.row { display: flex; flex-wrap: wrap; margin-right: -15px; margin-left: -15px; }
+				.col-4 { flex: 0 0 33.333333%; max-width: 33.333333%; }
+				.card-title { display: none; }
+			</style>
+		</head>
+		<body>
+			${printCard.innerHTML}
+			<script>
+				window.onload = function() {
+					window.print();
+					window.onafterprint = function() { window.close(); };
+				};
+			<\/script>
+		</body>
+		</html>
+	`);
+	printWindow.document.close();
+}
+
+$(document).ready(function() {
+	loadCompanyDetails();
+
+	$("#printGroupDirectoryBtn").on("click", function(e) {
+		e.preventDefault();
+		const rows = $("#groupDirectoryBody tr").length;
+		if (rows === 0 || $("#groupDirectoryBody tr td.text-warning").length > 0) {
+			alert("NO GROUP DIRECTORY DATA AVAILABLE TO PRINT. PLEASE CLICK 'SHOW TABLE' FIRST.");
+			return;
+		}
+		printGroupDirectoryReport();
+	});
+});
+
 $(document).ready(function() {
 	console.log("DOCUMENT READY");
 
@@ -237,10 +337,10 @@ $(document).ready(function() {
 			success: function(response) {
 				console.log('RESPONSE:', response);
 				if (response.status === 'CREATED') {
-					alert("GROUP DIRECTORY SAVED SUCCESSFULLY!\n" + response.message);
+					alert("GROUP DIRECTORY SAVED SUCCESSFULLY!\n" + (response.message ? response.message.toUpperCase() : ""));
 					location.reload();
 				} else {
-					alert("❌ FAILED: " + response.message);
+					alert("FAILED: " + (response.message ? response.message.toUpperCase() : "PLEASE CHECK INPUTS."));
 				}
 			},
 			error: function(xhr, status, error) {

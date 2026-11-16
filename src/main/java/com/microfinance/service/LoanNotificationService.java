@@ -52,6 +52,40 @@ public class LoanNotificationService {
 	@Autowired(required = false)
 	private LoanDeductionDetailsRepo loanDeductionDetailsRepo;
 
+	@Autowired(required = false)
+	private com.microfinance.repository.CompanyAdministrationRepo companyAdministrationRepo;
+
+	public String getCompanyName() {
+		try {
+			if (companyAdministrationRepo != null) {
+				com.microfinance.model.CompanyAdministration comp = companyAdministrationRepo.findTopByOrderByIdAsc();
+				if (comp != null && comp.getCompanyName() != null && !comp.getCompanyName().trim().isEmpty()) {
+					return comp.getCompanyName().trim().toUpperCase();
+				}
+			}
+		} catch (Exception e) {
+			logger.warn("Could not load dynamic company name: {}", e.getMessage());
+		}
+		return "CO OPERATIVE SOCIETY LTD NAGPUR";
+	}
+
+	public String getCompanyShortName() {
+		try {
+			if (companyAdministrationRepo != null) {
+				com.microfinance.model.CompanyAdministration comp = companyAdministrationRepo.findTopByOrderByIdAsc();
+				if (comp != null && comp.getShortName() != null && !comp.getShortName().trim().isEmpty()) {
+					return comp.getShortName().trim().toUpperCase();
+				}
+				if (comp != null && comp.getCompanyName() != null && !comp.getCompanyName().trim().isEmpty()) {
+					return comp.getCompanyName().trim().toUpperCase();
+				}
+			}
+		} catch (Exception e) {
+			logger.warn("Could not load dynamic company short name: {}", e.getMessage());
+		}
+		return "CO-OP SOCIETY";
+	}
+
 	@Value("${spring.mail.username:infosaisoftwarecompany@gmail.com}")
 	private String fromEmail;
 
@@ -77,12 +111,12 @@ public class LoanNotificationService {
 
 		// SMS message
 		String smsText = "Dear " + contact.name + ", your loan application (" + loanId + ") for Rs." + loanAmount
-				+ " under " + loanPlan + " has been submitted successfully. - Samitha Urban";
+				+ " under " + loanPlan + " has been submitted successfully." + " - " + getCompanyShortName();
 		sendSms(contact.mobile, smsText);
 
 		// Email message
-		String emailSubject = "Loan Application Submitted - " + loanId + " | Samitha Urban Nidhi Limited";
-		String emailBody = "Dear " + contact.name + ",\n\n" + "Greetings from Samitha Urban Nidhi Limited!\n\n"
+		String emailSubject = "Loan Application Submitted - " + loanId + " | " + getCompanyName() + "";
+		String emailBody = "Dear " + contact.name + ",\n\n" + "Greetings from " + getCompanyName() + "!\n\n"
 				+ "We have successfully received your loan application. Details are as follows:\n"
 				+ "--------------------------------------------------\n" + "Loan Application ID : " + loanId + "\n"
 				+ "Customer Member Code: " + (loanApp.getMemberId() != null ? loanApp.getMemberId() : "N/A") + "\n"
@@ -96,8 +130,8 @@ public class LoanNotificationService {
 				+ "\n" + "Application Date    : " + (loanApp.getLoanDate() != null ? loanApp.getLoanDate() : "N/A")
 				+ "\n" + "--------------------------------------------------\n\n"
 				+ "Your application is currently under verification. We will notify you once your application is reviewed and approved.\n\n"
-				+ "Thank you for choosing Samitha Urban Nidhi Limited.\n\n" + "Warm regards,\n"
-				+ "Loan Management Team\n" + "Samitha Urban Nidhi Limited";
+				+ "Thank you for choosing " + getCompanyName() + ".\n\n" + "Warm regards,\n"
+				+ "Loan Management Team\n" + getCompanyName();
 		sendEmail(contact.email, emailSubject, emailBody);
 	}
 
@@ -118,11 +152,11 @@ public class LoanNotificationService {
 
 		// SMS message
 		String smsText = "Dear " + contact.name + ", congratulations! Your loan (" + loanId + ") of Rs."
-				+ approvedAmount + " has been approved successfully. - Samitha Urban";
+				+ approvedAmount + " has been approved successfully." + " - " + getCompanyShortName();
 		sendSms(contact.mobile, smsText);
 
 		// Email message
-		String emailSubject = "Loan Application Approved - " + loanId + " | Samitha Urban Nidhi Limited";
+		String emailSubject = "Loan Application Approved - " + loanId + " | " + getCompanyName() + "";
 		String emailBody = "Dear " + contact.name + ",\n\n"
 				+ "Congratulations! We are delighted to inform you that your loan application has been APPROVED.\n\n"
 				+ "--------------------------------------------------\n" + "Loan ID             : " + loanId + "\n"
@@ -136,7 +170,7 @@ public class LoanNotificationService {
 				+ "Installment (EMI)   : Rs. " + (loanApp.getEmiPayment() != null ? loanApp.getEmiPayment() : "N/A")
 				+ "\n" + "--------------------------------------------------\n\n"
 				+ "Your loan is now ready for disbursement. You can visit your branch to complete the disbursement process.\n\n"
-				+ "Warm regards,\n" + "Credit Approval Team\n" + "Samitha Urban Nidhi Limited";
+				+ "Warm regards,\n" + "Credit Approval Team\n" + getCompanyName();
 		sendEmail(contact.email, emailSubject, emailBody);
 	}
 
@@ -269,11 +303,11 @@ public class LoanNotificationService {
 		String smsText;
 		if (isSavingTransfer) {
 			smsText = String.format(Locale.US,
-					"Dear %s, your loan (%s) of Gross Rs.%.2f has been disbursed. Total Deductions: Rs.%.2f. Net credited: Rs.%.2f to Savings A/c %s. - Samitha Urban",
+					"Dear %s, your loan (%s) of Gross Rs.%.2f has been disbursed. Total Deductions: Rs.%.2f. Net credited: Rs.%.2f to Savings A/c %s." + " - " + getCompanyShortName(),
 					contact.name, loanId, grossPrincipal, totalDeductions, netDisbursementAmount, accountNo);
 		} else {
 			smsText = String.format(Locale.US,
-					"Dear %s, your loan (%s) of Gross Rs.%.2f has been disbursed in Cash. Total Deductions: Rs.%.2f. Net Disbursed: Rs.%.2f. - Samitha Urban",
+					"Dear %s, your loan (%s) of Gross Rs.%.2f has been disbursed in Cash. Total Deductions: Rs.%.2f. Net Disbursed: Rs.%.2f." + " - " + getCompanyShortName(),
 					contact.name, loanId, grossPrincipal, totalDeductions, netDisbursementAmount);
 		}
 		sendSms(contact.mobile, smsText);
@@ -284,7 +318,7 @@ public class LoanNotificationService {
 
 		// Build HTML and Plain Text Bodies
 		String emailSubject = "Loan Disbursed Successfully & EMI Schedule - " + loanId
-				+ " | Samitha Urban Nidhi Limited";
+				+ " | " + getCompanyName() + "";
 		String htmlBody = buildDisbursementHtmlEmail(contact.name, memberId, loanId, grossPrincipal, totalDeductions,
 				netDisbursementAmount, processingFee, legalCharges, gst, insuranceFee, valuationFees, stationaryFee,
 				mode, accountNo, disburseDateStr, interestType, annualRoi, tenure, loanMode, emiAmount, schedule);
@@ -311,11 +345,11 @@ public class LoanNotificationService {
 
 		// SMS message
 		String smsText = "Dear " + contact.name + ", your gold loan application (" + goldId + ") for Rs." + loanAmount
-				+ " under " + loanPlan + " has been submitted successfully. - Samitha Urban";
+				+ " under " + loanPlan + " has been submitted successfully." + " - " + getCompanyShortName();
 		sendSms(contact.mobile, smsText);
 
 		// Email message
-		String emailSubject = "Gold Loan Application Submitted - " + goldId + " | Samitha Urban Nidhi Limited";
+		String emailSubject = "Gold Loan Application Submitted - " + goldId + " | " + getCompanyName() + "";
 		String htmlBody = buildGoldLoanApplicationHtmlEmail(contact.name, goldLoan);
 		String textBody = buildGoldLoanApplicationTextEmail(contact.name, goldLoan);
 
@@ -339,11 +373,11 @@ public class LoanNotificationService {
 
 		// SMS message
 		String smsText = "Dear " + contact.name + ", congratulations! Your Gold Loan (" + goldId + ") of Rs."
-				+ sanctionedAmount + " has been approved successfully. - Samitha Urban";
+				+ sanctionedAmount + " has been approved successfully." + " - " + getCompanyShortName();
 		sendSms(contact.mobile, smsText);
 
 		// Email message
-		String emailSubject = "Gold Loan Application Approved - " + goldId + " | Samitha Urban Nidhi Limited";
+		String emailSubject = "Gold Loan Application Approved - " + goldId + " | " + getCompanyName() + "";
 		String emailBody = "Dear " + contact.name + ",\n\n"
 				+ "Congratulations! We are pleased to inform you that your Gold Loan application has been APPROVED.\n\n"
 				+ "--------------------------------------------------\n" + "Gold Loan ID        : " + goldId + "\n"
@@ -361,7 +395,7 @@ public class LoanNotificationService {
 				+ "\n" + "Disbursement Status : UNPAID (Ready for Disbursement to Savings Account)\n"
 				+ "--------------------------------------------------\n\n"
 				+ "Your gold loan has been sanctioned and is now ready for disbursement. The sanctioned amount will be disbursed and credited directly to your registered Savings Account.\n\n"
-				+ "Warm regards,\n" + "Credit Approval Team\n" + "Samitha Urban Nidhi Limited";
+				+ "Warm regards,\n" + "Credit Approval Team\n" + getCompanyName();
 		sendEmail(contact.email, emailSubject, emailBody);
 	}
 
@@ -423,7 +457,7 @@ public class LoanNotificationService {
 
 		// SMS message
 		String smsText = String.format(Locale.US,
-				"Dear %s, congratulations! Your Gold Loan (%s) of Gross Rs.%.2f has been disbursed. Net Rs.%.2f credited to Savings A/c %s. - Samitha Urban",
+				"Dear %s, congratulations! Your Gold Loan (%s) of Gross Rs.%.2f has been disbursed. Net Rs.%.2f credited to Savings A/c %s." + " - " + getCompanyShortName(),
 				contact.name, goldId, grossLoan, netDisbursement, savingsAccNo);
 		sendSms(contact.mobile, smsText);
 
@@ -448,7 +482,7 @@ public class LoanNotificationService {
 		}
 
 		String emailSubject = "Gold Loan Disbursed Successfully & EMI Schedule - " + goldId
-				+ " | Samitha Urban Nidhi Limited";
+				+ " | " + getCompanyName() + "";
 		String htmlBody = buildGoldLoanDisbursementHtmlEmail(contact.name, goldLoan, grossLoan, totalDeductions,
 				netDisbursement, procFee, legalFee, gst, insuFee, valFee, statFee, stampDuty, smsCharges, mainCharges,
 				penaltyCharge, overCharge, colCharge, hasSavings, savingsAccNo, schedule);
@@ -692,7 +726,7 @@ public class LoanNotificationService {
 
 				// Header
 				+ "<div style=\"background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); color: #ffffff; padding: 25px 30px; text-align: center;\">"
-				+ "<h1 style=\"margin: 0; font-size: 22px; letter-spacing: 0.5px;\">SAMITHA URBAN NIDHI LIMITED</h1>"
+				+ "<h1 style=\"margin: 0; font-size: 22px; letter-spacing: 0.5px;\">" + getCompanyName() + "</h1>"
 				+ "<p style=\"margin: 6px 0 0 0; font-size: 13px; opacity: 0.85; text-transform: uppercase; letter-spacing: 1px;\">Loan Disbursement Advice & Repayment Schedule</p>"
 				+ "</div>"
 
@@ -812,7 +846,7 @@ public class LoanNotificationService {
 				+ "<div style=\"border-top: 1px solid #e2e8f0; padding-top: 16px; font-size: 12px; color: #64748b; line-height: 1.5;\">"
 				+ "<p style=\"margin: 0 0 6px 0;\"><strong>Important Note:</strong> Please ensure timely deposits on or before each scheduled due date to avoid late payment charges.</p>"
 				+ "<p style=\"margin: 0 0 16px 0;\">For any assistance regarding your loan, please reach out to your home branch or email us at support.</p>"
-				+ "<p style=\"margin: 0; color: #334155;\">Warm regards,<br><strong>Disbursement & Operations Team</strong><br>Samitha Urban Nidhi Limited</p>"
+				+ "<p style=\"margin: 0; color: #334155;\">Warm regards,<br><strong>Disbursement & Operations Team</strong><br>" + getCompanyName() + "</p>"
 				+ "</div>"
 
 				+ "</div>" + "</div>" + "</body>" + "</html>";
@@ -873,7 +907,7 @@ public class LoanNotificationService {
 		sb.append("Please maintain sufficient balance or timely deposits for regular installment payments.\n\n");
 		sb.append("Warm regards,\n");
 		sb.append("Disbursement & Operations Team\n");
-		sb.append("Samitha Urban Nidhi Limited\n");
+		sb.append("" + getCompanyName() + "\n");
 
 		return sb.toString();
 	}
@@ -901,7 +935,7 @@ public class LoanNotificationService {
 				+ "<body style=\"margin: 0; padding: 20px; background-color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #334155;\">"
 				+ "<div style=\"max-width: 700px; margin: 0 auto; background-color: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #e2e8f0;\">"
 				+ "<div style=\"background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); color: #ffffff; padding: 24px 30px; text-align: center;\">"
-				+ "<h1 style=\"margin: 0; font-size: 20px; letter-spacing: 0.5px;\">SAMITHA URBAN NIDHI LIMITED</h1>"
+				+ "<h1 style=\"margin: 0; font-size: 20px; letter-spacing: 0.5px;\">" + getCompanyName() + "</h1>"
 				+ "<p style=\"margin: 6px 0 0 0; font-size: 13px; color: #fbbf24; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;\">Gold Loan Application Acknowledgement</p>"
 				+ "</div>" + "<div style=\"padding: 24px 30px;\">"
 				+ "<p style=\"font-size: 15px; margin: 0 0 12px 0;\">Dear <strong>" + customerName + "</strong>,</p>"
@@ -942,7 +976,7 @@ public class LoanNotificationService {
 				+ "</table>" + "</div>"
 				+ "<p style=\"font-size: 13px; line-height: 1.5; color: #64748b; margin: 0 0 16px 0;\">Your application is currently being appraised and processed by our credit underwriting team. Once approved, the funds will be disbursed and you will receive instant confirmation.</p>"
 				+ "<div style=\"border-top: 1px solid #e2e8f0; padding-top: 14px; font-size: 12px; color: #64748b;\">"
-				+ "Warm regards,<br><strong style=\"color: #0f172a;\">Gold Loan Underwriting Team</strong><br>Samitha Urban Nidhi Limited"
+				+ "Warm regards,<br><strong style=\"color: #0f172a;\">Gold Loan Underwriting Team</strong><br>" + getCompanyName() + ""
 				+ "</div></div></div></body></html>";
 	}
 
@@ -953,7 +987,7 @@ public class LoanNotificationService {
 		String goldId = g.getGoldID() != null ? g.getGoldID() : "N/A";
 		StringBuilder sb = new StringBuilder();
 		sb.append("Dear ").append(customerName).append(",\n\n");
-		sb.append("Greetings from Samitha Urban Nidhi Limited!\n\n");
+		sb.append("Greetings from " + getCompanyName() + "!\n\n");
 		sb.append("We have successfully received your Gold Loan Application. Details are as follows:\n");
 		sb.append("--------------------------------------------------\n");
 		sb.append("Gold Loan ID        : ").append(goldId).append("\n");
@@ -979,7 +1013,7 @@ public class LoanNotificationService {
 		sb.append("Status              : Under Appraisal & Verification\n");
 		sb.append("--------------------------------------------------\n\n");
 		sb.append("Your application is currently being appraised and processed. We will notify you once approved.\n\n");
-		sb.append("Warm regards,\nGold Loan Underwriting Team\nSamitha Urban Nidhi Limited\n");
+		sb.append("Warm regards,\nGold Loan Underwriting Team\n" + getCompanyName() + "\n");
 		return sb.toString();
 	}
 
@@ -1026,7 +1060,7 @@ public class LoanNotificationService {
 				+ "<body style=\"margin: 0; padding: 20px; background-color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #334155;\">"
 				+ "<div style=\"max-width: 800px; margin: 0 auto; background-color: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #e2e8f0;\">"
 				+ "<div style=\"background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); color: #ffffff; padding: 25px 30px; text-align: center;\">"
-				+ "<h1 style=\"margin: 0; font-size: 22px; letter-spacing: 0.5px;\">SAMITHA URBAN NIDHI LIMITED</h1>"
+				+ "<h1 style=\"margin: 0; font-size: 22px; letter-spacing: 0.5px;\">" + getCompanyName() + "</h1>"
 				+ "<p style=\"margin: 6px 0 0 0; font-size: 13px; color: #fbbf24; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;\">Gold Loan Sanction & Disbursement Advice</p>"
 				+ "</div>" + "<div style=\"padding: 24px 30px;\">"
 				+ "<p style=\"font-size: 15px; margin: 0 0 14px 0;\">Dear <strong>" + customerName + "</strong>,</p>"
@@ -1108,7 +1142,7 @@ public class LoanNotificationService {
 						+ "<thead><tr style=\"background-color: #0f172a; color: #ffffff;\"><th style=\"padding: 8px; text-align: center;\">#</th><th style=\"padding: 8px; text-align: center;\">Due Date</th><th style=\"padding: 8px; text-align: right;\">EMI</th><th style=\"padding: 8px; text-align: right;\">Principal</th><th style=\"padding: 8px; text-align: right;\">Interest</th><th style=\"padding: 8px; text-align: right;\">Balance</th></tr></thead>"
 						+ "<tbody>" + rowsHtml.toString() + "</tbody></table></div>") : "")
 				+ "<p style=\"font-size: 13px; line-height: 1.5; color: #475569; margin: 0 0 16px 0;\">Your gold ornaments are stored securely in our insured bank locker. Upon complete closure and repayment of the loan, ornaments will be safely handed over back to you.</p>"
-				+ "<div style=\"border-top: 1px solid #e2e8f0; padding-top: 14px; font-size: 12px; color: #64748b;\">Warm regards,<br><strong style=\"color: #0f172a;\">Gold Loan & Credit Operations Team</strong><br>Samitha Urban Nidhi Limited</div>"
+				+ "<div style=\"border-top: 1px solid #e2e8f0; padding-top: 14px; font-size: 12px; color: #64748b;\">Warm regards,<br><strong style=\"color: #0f172a;\">Gold Loan & Credit Operations Team</strong><br>" + getCompanyName() + "</div>"
 				+ "</div></div></body></html>";
 	}
 
@@ -1181,7 +1215,7 @@ public class LoanNotificationService {
 		}
 
 		sb.append("Your pledged gold ornaments are stored safely in our bank locker until full loan repayment.\n\n");
-		sb.append("Warm regards,\nGold Loan & Credit Operations Team\nSamitha Urban Nidhi Limited\n");
+		sb.append("Warm regards,\nGold Loan & Credit Operations Team\n" + getCompanyName() + "\n");
 		return sb.toString();
 	}
 

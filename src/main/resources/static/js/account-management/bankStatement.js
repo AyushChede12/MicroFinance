@@ -159,67 +159,51 @@ function loadCompanyDetails() {
 
 function loadSavingAccounts() {
 
+	let dropdown = $("#accountNumber");
+	dropdown.empty();
+	dropdown.append('<option value="">-- SELECT ACCOUNT NUMBER --</option>');
+
+	// 1. Fetch Bank Module Accounts
+	$.ajax({
+		url: "accountManagement/all-bank-modules",
+		type: "GET",
+		dataType: "json",
+		success: function(response) {
+			if (response && response.status === "OK" && Array.isArray(response.data) && response.data.length > 0) {
+				let bankGroup = $('<optgroup label="BANK ACCOUNTS"></optgroup>');
+				response.data.forEach(function(b) {
+					if (b.accountNo) {
+						let label = (b.bankName || "BANK") + " - " + b.accountNo + " (" + (b.branch ? b.branch.branchName : "BRANCH") + ")";
+						bankGroup.append(`<option value="${escapeHtml(b.accountNo)}">${escapeHtml(label.toUpperCase())}</option>`);
+					}
+				});
+				dropdown.append(bankGroup);
+			}
+		},
+		error: function(xhr) {
+			console.warn("BANK MODULE DROPDOWN ERROR:", xhr);
+		}
+	});
+
+	// 2. Fetch Customer Savings Accounts
 	$.ajax({
 		url: "api/customermanagement/getAllCustomer",
 		type: "GET",
 		dataType: "json",
-
 		success: function(response) {
-
-			let dropdown = $("#accountNumber");
-
-			dropdown.empty();
-
-			dropdown.append(
-				'<option value="">-- SELECT ACCOUNT NUMBER --</option>'
-			);
-
-			if (
-				(response.status === "OK" ||
-					response.status === "FOUND") &&
-				response.data &&
-				response.data.length > 0
-			) {
-
+			if ((response.status === "OK" || response.status === "FOUND") && response.data && response.data.length > 0) {
+				let custGroup = $('<optgroup label="CUSTOMER SAVINGS ACCOUNTS"></optgroup>');
 				$.each(response.data, function(index, acc) {
-
 					if (acc.accountNumber) {
-
-						dropdown.append(`
-                            <option value="${escapeHtml(
-							acc.accountNumber
-						)}">
-                                ${escapeHtml(
-							acc.accountNumber
-						)}
-                            </option>
-                        `);
+						let label = acc.accountNumber + (acc.customerName ? " - " + acc.customerName : "");
+						custGroup.append(`<option value="${escapeHtml(acc.accountNumber)}">${escapeHtml(label.toUpperCase())}</option>`);
 					}
-
 				});
-
-			} else {
-
-				dropdown.append(
-					'<option value="">NO SAVING ACCOUNT FOUND</option>'
-				);
-
-				console.warn(
-					"NO SAVING ACCOUNT FOUND"
-				);
+				dropdown.append(custGroup);
 			}
 		},
-
 		error: function(xhr) {
-
-			console.error(
-				"ACCOUNT DROPDOWN ERROR:",
-				xhr.responseText
-			);
-
-			alert(
-				"UNABLE TO LOAD SAVING ACCOUNT NUMBERS"
-			);
+			console.error("CUSTOMER ACCOUNT DROPDOWN ERROR:", xhr.responseText);
 		}
 	});
 }
@@ -810,4 +794,60 @@ function clearStatement() {
 	$("#totalDebit").text("₹ 0.00");
 
 	$("#closingBalance").text("₹ 0.00");
+}
+
+
+// =========================================================
+// PRINT BANK STATEMENT
+// =========================================================
+
+function printBankStatement() {
+
+	if (!$("#accountNumber").val()) {
+		alert("PLEASE SELECT AN ACCOUNT NUMBER FIRST!");
+		return;
+	}
+
+	if (typeof ReportPrintUtil !== "undefined") {
+		let acct = $("#statementAccountNumber").text() || "-";
+		let bank = $("#statementBankName").text() || "-";
+		let branch = $("#statementBranchName").text() || "-";
+		let from = $("#statementStartDate").text() || "-";
+		let to = $("#statementEndDate").text() || "-";
+		let genDate = $("#generatedDate").text() || new Date().toLocaleString("en-GB");
+		let opBal = $("#openingBalance").text() || "₹ 0.00";
+		let cr = $("#totalCredit").text() || "₹ 0.00";
+		let dr = $("#totalDebit").text() || "₹ 0.00";
+		let clBal = $("#closingBalance").text() || "₹ 0.00";
+
+		let metaSummary = `
+			<div style="margin-bottom: 15px; border: 1px solid #ccc; padding: 10px; font-family: Arial, sans-serif; font-size: 12px; background: #fafafa;">
+				<table style="width: 100%; border: none; margin: 0;">
+					<tr style="border: none;">
+						<td style="border: none; padding: 4px; font-weight: bold;">ACCOUNT NUMBER: ${acct}</td>
+						<td style="border: none; padding: 4px; font-weight: bold;">BANK: ${bank}</td>
+						<td style="border: none; padding: 4px; font-weight: bold;">BRANCH: ${branch}</td>
+					</tr>
+					<tr style="border: none;">
+						<td style="border: none; padding: 4px;">PERIOD: ${from} TO ${to}</td>
+						<td style="border: none; padding: 4px;">GENERATED ON: ${genDate}</td>
+						<td style="border: none; padding: 4px;"></td>
+					</tr>
+				</table>
+				<hr style="margin: 8px 0; border: 0; border-top: 1px solid #ddd;">
+				<table style="width: 100%; border: none; margin: 0;">
+					<tr style="border: none;">
+						<td style="border: none; padding: 4px;"><strong>OPENING BALANCE:</strong> ${opBal}</td>
+						<td style="border: none; padding: 4px;"><strong>TOTAL CREDIT:</strong> ${cr}</td>
+						<td style="border: none; padding: 4px;"><strong>TOTAL DEBIT:</strong> ${dr}</td>
+						<td style="border: none; padding: 4px;"><strong>CLOSING BALANCE:</strong> ${clBal}</td>
+					</tr>
+				</table>
+			</div>
+		`;
+
+		ReportPrintUtil.printTable(".datatable", "BANK ACCOUNT STATEMENT", "ACCOUNT: " + acct, metaSummary);
+	} else {
+		window.print();
+	}
 }

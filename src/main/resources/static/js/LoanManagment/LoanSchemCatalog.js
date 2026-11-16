@@ -366,11 +366,11 @@ function submitLoanForm(type) {
 				loadLoanTable();
 
 			} else {
-				alert("FAILED: " + response.message);
+				alert("FAILED: " + String(response.message).toUpperCase());
 			}
 		},
 		error: function(xhr) {
-			alert("ERROR OCCURRED: " + xhr.responseText);
+			alert("ERROR OCCURRED: " + (xhr.responseText ? xhr.responseText.toUpperCase() : ""));
 		}
 	});
 }
@@ -512,11 +512,11 @@ function editLoanById(id) {
 				updateToggleColor(document.getElementById('planStatus'));
 
 			} else {
-				alert("LOAN NOT FOUND: " + response.message);
+				alert("LOAN NOT FOUND: " + String(response.message).toUpperCase());
 			}
 		},
 		error: function(xhr) {
-			alert("ERROR FETCHING LOAN DETAILS: " + xhr.responseText);
+			alert("ERROR FETCHING LOAN DETAILS: " + (xhr.responseText ? xhr.responseText.toUpperCase() : ""));
 		}
 	});
 }
@@ -553,7 +553,7 @@ function deleteLoan(id) {
 					alert("LOAN DELETED SUCCESSFULLY ✅");
 					loadLoanTable();
 				} else {
-					alert("FAILED: " + response.message);
+					alert("FAILED: " + String(response.message).toUpperCase());
 				}
 			},
 			error: function(xhr) {

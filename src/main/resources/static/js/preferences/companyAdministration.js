@@ -419,9 +419,12 @@ $(document).ready(function() {
 	// 7️⃣ DELETE IMAGE
 	// =================================================
 	$(document).on("click", ".deleteImg", function() {
-		alert("HH");
 		const id = $(this).data("id");
-		alert(id);
+		if (!id) return;
+
+		if (!confirm("ARE YOU SURE YOU WANT TO DELETE THIS IMAGE?")) {
+			return;
+		}
 
 		$.ajax({
 			url: "api/preference/delete/" + id,

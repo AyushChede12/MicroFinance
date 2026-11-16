@@ -1,31 +1,16 @@
+// Customer ShareHolding - Unallotted / Shareholding Records
+
 $(document).ready(function() {
-	// Populate dropdown from backend
-	$.ajax({
-		url: "api/customershareholdingcontroller/findAllTransferShare",
-		type: "GET",
-		success: function(response) {
-			if (response.status === "OK") {
-				let dropdown = $("#selectDecisionMaker");
-				dropdown.empty().append('<option value="">SELECT</option>');
+	loadCustomerDropdown();
+	loadAllShareRecords();
 
-				$.each(response.data, function(i, item) {
-					dropdown.append(`<option value="${item.findByCode}">${item.findByCode} - ${item.customerName}</option>`);
-				});
-			} else {
-				alert("FAILED TO LOAD DATA");
-			}
-		},
-		error: function() {
-			alert("ERROR LOADING DATA");
-		}
-	});
-
-	// Handle Search button click
+	// Search button click handler
 	$("#searchBtn").click(function() {
 		let selectedCode = $("#selectDecisionMaker").val();
 
 		if (!selectedCode) {
-			alert("PLEASE SELECT A DECISION MAKER!");
+			// If none selected, load all records
+			loadAllShareRecords();
 			return;
 		}
 
@@ -34,29 +19,102 @@ $(document).ready(function() {
 			type: "POST",
 			data: { findByCode: selectedCode },
 			success: function(response) {
-				let tbody = $(".datatable tbody");
+				let tbody = $("#unallotedShareTableBody");
 				tbody.empty();
 
-				if (response.status === "FOUND" && response.data.length > 0) {
-					$.each(response.data, function(i, item) {
-						let row = `<tr>
-                            <td>${i + 1}</td>
-                            <td>${item.customerName || ""}</td>
-                            <td>${item.findByCode || ""}</td>
-                            <td>${item.startDate || ""}</td>
-                            <td>${item.dateOfTransfer || ""}</td>
-                            <td>${item.noOfShare || ""}</td>
-                            <td>${item.balanceShares || ""}</td>
-                        </tr>`;
-						tbody.append(row);
-					});
+				if (response.status === "FOUND" && Array.isArray(response.data) && response.data.length > 0) {
+					renderTableRows(response.data);
 				} else {
-					tbody.append('<tr><td colspan="6">NO DATA FOUND FOR SELECTED CUSTOMER</td></tr>');
+					tbody.append('<tr><td colspan="7" class="text-center">NO SHARE DATA FOUND FOR SELECTED CUSTOMER</td></tr>');
 				}
 			},
 			error: function() {
-				alert("ERROR FETCHING SHARE DATA");
+				alert("ERROR FETCHING SHARE DATA!");
 			}
 		});
 	});
+
+	// Reset button click handler
+	$("#resetSearchBtn").click(function() {
+		$("#selectDecisionMaker").val("");
+		loadAllShareRecords();
+	});
 });
+
+// Load distinct customers for dropdown
+function loadCustomerDropdown() {
+	$.ajax({
+		url: "api/customershareholdingcontroller/findAllTransferShare",
+		type: "GET",
+		success: function(response) {
+			if (response.status === "OK" && Array.isArray(response.data)) {
+				let dropdown = $("#selectDecisionMaker");
+				dropdown.empty().append('<option value="">-- ALL CUSTOMERS / DECISION MAKERS --</option>');
+
+				let seenCodes = new Set();
+				$.each(response.data, function(i, item) {
+					if (item.findByCode && !seenCodes.has(item.findByCode)) {
+						seenCodes.add(item.findByCode);
+						let name = (item.customerName || "").toUpperCase();
+						dropdown.append(`<option value="${item.findByCode}">${item.findByCode} - ${name}</option>`);
+					}
+				});
+			} else {
+				console.warn("NO TRANSFER SHARE DATA FOR DROPDOWN");
+			}
+		},
+		error: function() {
+			console.error("ERROR LOADING DROPDOWN DATA");
+		}
+	});
+}
+
+// Load all share records into the table
+function loadAllShareRecords() {
+	$.ajax({
+		url: "api/customershareholdingcontroller/findAllTransferShare",
+		type: "GET",
+		success: function(response) {
+			let tbody = $("#unallotedShareTableBody");
+			tbody.empty();
+
+			if (response.status === "OK" && Array.isArray(response.data) && response.data.length > 0) {
+				renderTableRows(response.data);
+			} else {
+				tbody.append('<tr><td colspan="7" class="text-center">NO SHARE DATA AVAILABLE</td></tr>');
+			}
+		},
+		error: function() {
+			let tbody = $("#unallotedShareTableBody");
+			tbody.html('<tr><td colspan="7" class="text-center">ERROR LOADING SHARE RECORDS</td></tr>');
+		}
+	});
+}
+
+// Helper to render rows cleanly in uppercase
+function renderTableRows(records) {
+	let tbody = $("#unallotedShareTableBody");
+	tbody.empty();
+
+	records.forEach(function(item, index) {
+		let shareAmount = item.amountTransferred;
+		if (!shareAmount || shareAmount === "0") {
+			let shares = parseInt(item.noOfShare || 0, 10);
+			let base = parseFloat(item.baseValue || 10);
+			shareAmount = shares * base;
+		}
+
+		let row = `
+			<tr>
+				<td>${index + 1}</td>
+				<td>${(item.customerName || "-").toUpperCase()}</td>
+				<td>${(item.findByCode || "-").toUpperCase()}</td>
+				<td>${(item.startDate || "-").toUpperCase()}</td>
+				<td>${(item.dateOfTransfer || "-").toUpperCase()}</td>
+				<td>${item.noOfShare || "0"}</td>
+				<td>${shareAmount || "0"}</td>
+			</tr>
+		`;
+		tbody.append(row);
+	});
+}

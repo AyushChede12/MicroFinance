@@ -26,8 +26,7 @@ $(document).ready(function() {
 				url: "api/datacorrection/getFlexibleRenewalByPolicyCode",
 				data: { policyCode: policyCode },
 				success: function(response) {
-					alert("SUCCESS");
-					if (response.status == "FOUND") {
+										if (response.status == "FOUND") {
 						let data = response.data[0];
 						$("#id").val(data.id);
 						$("#renewalDate").val(data.renewalDate);

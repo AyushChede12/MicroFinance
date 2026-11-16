@@ -156,7 +156,7 @@ $(document).ready(function() {
 					}
 				},
 				error: function(xhr) {
-					alert("ERROR FETCHING DATA: " + xhr.responseText);
+					alert("ERROR FETCHING DATA: " + (xhr.responseText ? xhr.responseText.toUpperCase() : ""));
 				}
 			});
 		}
@@ -219,7 +219,7 @@ $("#approveBtn").click(function(event) {
 			location.reload();
 		},
 		error: function(xhr) {
-			alert("ERROR: " + xhr.responseText);
+			alert("ERROR: " + (xhr.responseText ? xhr.responseText.toUpperCase() : ""));
 		}
 	});
 });

@@ -729,7 +729,7 @@ function saveLoanApplication() {
 	for (let field of requiredNumericFields) {
 		const value = parseFloat($(field.id).val());
 		if (!value || value <= 0) {
-			alert(`PLEASE ENTER VALID ${field.msg}!`);
+			alert(`PLEASE ENTER VALID ${String(field.msg).toUpperCase()}!`);
 			$(field.id).focus();
 			return false;
 		}
@@ -866,7 +866,7 @@ function saveLoanApplication() {
 				loanTypeSpecificDetails[field.name] = el.checked;
 				loanApplication[field.name] = el.checked;
 				if (field.required && !el.checked) {
-					alert(`PLEASE CONFIRM "${field.label}"!`);
+					alert(`PLEASE CONFIRM "${String(field.label).toUpperCase()}"!`);
 					el.focus();
 					return false;
 				}
@@ -875,7 +875,7 @@ function saveLoanApplication() {
 				loanTypeSpecificDetails[field.name] = fileName;
 				loanApplication[field.name] = fileName;
 				if (field.required && !fileName) {
-					alert(`PLEASE UPLOAD "${field.label}"!`);
+					alert(`PLEASE UPLOAD "${String(field.label).toUpperCase()}"!`);
 					el.focus();
 					return false;
 				}
@@ -884,7 +884,7 @@ function saveLoanApplication() {
 				loanTypeSpecificDetails[field.name] = val;
 				loanApplication[field.name] = val;
 				if (field.required && !val) {
-					alert(`PLEASE ENTER "${field.label}"!`);
+					alert(`PLEASE ENTER "${String(field.label).toUpperCase()}"!`);
 					el.focus();
 					return false;
 				}
@@ -935,7 +935,7 @@ function saveLoanApplication() {
 		},
 		error: (xhr) => {
 			const errMsg = xhr.responseJSON?.message || "ERROR WHILE SAVING LOAN APPLICATION. PLEASE CHECK INPUT VALUES.";
-			alert(errMsg);
+			alert(String(errMsg).toUpperCase());
 			console.error('Save error details:', xhr);
 			saveBtn.prop('disabled', false).text('SAVE');
 		}

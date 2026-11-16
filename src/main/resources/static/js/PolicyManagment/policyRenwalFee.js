@@ -1361,7 +1361,7 @@ $("#viewBtn").on("click", function() {
 					xhr.responseJSON.message;
 			}
 
-			alert(message);
+			alert(String(message).toUpperCase());
 
 			const modalElement =
 				document.getElementById("installmentModal");

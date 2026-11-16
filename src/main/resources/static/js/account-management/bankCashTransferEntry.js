@@ -1,4 +1,5 @@
 $(document).ready(function() {
+	loadBankList("");
 
 	$()
 
@@ -23,6 +24,7 @@ $(document).ready(function() {
 
 	$("#entryBranchName").on("change", function() {
 		const selectedBranch = $(this).val();
+		loadBankList(selectedBranch);
 		BankCashLedgerDropdown(selectedBranch);
 	});
 
@@ -370,4 +372,28 @@ function deleteBankCashTransfer(id) {
 			}
 		});
 	}
+}
+
+// =====================================================
+// LOAD BANK LIST ACCORDING TO BRANCH
+// =====================================================
+function loadBankList(branchName) {
+	let url = branchName ? `accountManagement/banksByBranch/${branchName}` : 'accountManagement/all-bank-modules';
+	$.ajax({
+		type: "GET",
+		url: url,
+		success: function(response) {
+			let options = "";
+			if (response && response.status === "OK" && Array.isArray(response.data)) {
+				response.data.forEach(bank => {
+					let label = (bank.bankName || "") + " (" + (bank.accountNo || "") + ")";
+					options += `<option value="${(bank.bankName || '').toUpperCase()}">${label.toUpperCase()}</option>`;
+				});
+			}
+			$("#bankList").html(options);
+		},
+		error: function(xhr) {
+			console.warn("FAILED TO LOAD BANKS FOR BRANCH:", xhr);
+		}
+	});
 }

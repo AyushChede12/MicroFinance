@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -118,49 +119,49 @@ public class LoanApplication {
     @Column(columnDefinition = "TEXT")
     private String loanTypeSpecificDetails;
 
-    // Dynamic Loan Type Specific Fields
+    // Dynamic Loan Type Specific Fields (synced to/from loanTypeSpecificDetails JSON column)
     // 1. Personal Loan
-    private String employerName;
-    private String employeeId;
-    private String monthlyNetSalary;
-    private String salarySlipUpload;
-    private String bankStatementUpload;
+    @Transient private String employerName;
+    @Transient private String employeeId;
+    @Transient private String monthlyNetSalary;
+    @Transient private String salarySlipUpload;
+    @Transient private String bankStatementUpload;
 
     // 2. Business Loan
-    private String businessName;
-    private String businessType;
-    private String yearsInBusiness;
-    private String monthlyTurnover;
-    private String tradeLicenseNo;
-    private String gstNo;
+    @Transient private String businessName;
+    @Transient private String businessType;
+    @Transient private String yearsInBusiness;
+    @Transient private String monthlyTurnover;
+    @Transient private String tradeLicenseNo;
+    @Transient private String gstNo;
 
     // 3. TW Loan
-    private String vehicleModel;
-    private String onRoadPrice;
-    private String downPayment;
-    private String dealerName;
-    private String chassisNo;
-    private String engineNo;
+    @Transient private String vehicleModel;
+    @Transient private String onRoadPrice;
+    @Transient private String downPayment;
+    @Transient private String dealerName;
+    @Transient private String chassisNo;
+    @Transient private String engineNo;
 
     // 4. TW Refinance Loan
-    private String existingRcNo;
-    private String vehicleRegNo;
-    private String purchaseDate;
-    private String currentValuation;
-    private String vehicleAge;
+    @Transient private String existingRcNo;
+    @Transient private String vehicleRegNo;
+    @Transient private String purchaseDate;
+    @Transient private String currentValuation;
+    @Transient private String vehicleAge;
 
     // 5. CDL Loan
-    private String productName;
-    private String dealerShopName;
-    private String invoiceNo;
-    private String productPrice;
+    @Transient private String productName;
+    @Transient private String dealerShopName;
+    @Transient private String invoiceNo;
+    @Transient private String productPrice;
 
     // 6. Loan Against FD/RD/DRD
-    private String depositAccountNo;
-    private String depositAmount;
-    private String maturityDate;
-    private String marginPercent;
-    private Boolean lienConfirmed;
+    @Transient private String depositAccountNo;
+    @Transient private String depositAmount;
+    @Transient private String maturityDate;
+    @Transient private String marginPercent;
+    @Transient private Boolean lienConfirmed;
     
     
     

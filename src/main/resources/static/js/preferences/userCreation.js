@@ -1,22 +1,60 @@
+let editUserId = null;
+
 $(document).ready(function() {
 
-	loadUserTable(); // Load table on page load
+	loadBranches();
+	loadUserTable();
 
 	// ================= Save New User =================
 	$("#saveBtn").click(function(e) {
 		e.preventDefault();
 
+		const userId = $("#UserId").val().trim();
+		const password = $("#password").val().trim();
+		const fullName = $("#fullName").val().trim();
+		const emailId = $("#emailId").val().trim();
+		const contactNumber = $("#contactNo").val().trim();
+		const singInBranch = $("#branchName").val();
+		const pastDate = $("#pastDate").val();
+		const rePrint = $("#rePrint").val();
+		const deleteAccess = $("#deleteAccess").val();
+		const userStatus = $("#toggle-user-status").is(":checked") ? "Active" : "Inactive";
+
+		if (!userId) {
+			alert("⚠️ PLEASE ENTER USER ID.");
+			$("#UserId").focus();
+			return;
+		}
+
+		if (!password) {
+			alert("⚠️ PLEASE ENTER PASSWORD.");
+			$("#password").focus();
+			return;
+		}
+
+		if (!fullName) {
+			alert("⚠️ PLEASE ENTER FULL NAME.");
+			$("#fullName").focus();
+			return;
+		}
+
+		if (!singInBranch) {
+			alert("⚠️ PLEASE SELECT SIGN IN BRANCH.");
+			$("#branchName").focus();
+			return;
+		}
+
 		const userData = {
-			userId: $("#UserId").val(),
-			password: $("#password").val(),
-			fullName: $("#fullName").val(),
-			emailId: $("#emailId").val(),
-			contactNumber: $("#contactNo").val(),
-			singInBranch: $("#branchName").val(),
-			pastDate: $("#pastDate").val(),
-			rePrint: $("#rePrint").val(),
-			deleteAccess: $("#deleteAccess").val(),
-			userStatus: $("#toggle-member-status").is(":checked") ? "Active" : "Inactive"
+			userId: userId.toUpperCase(),
+			password: password,
+			fullName: fullName.toUpperCase(),
+			emailId: emailId.toUpperCase(),
+			contactNumber: contactNumber,
+			singInBranch: singInBranch ? singInBranch.toUpperCase() : "",
+			pastDate: pastDate ? pastDate.toUpperCase() : "NO",
+			rePrint: rePrint ? rePrint.toUpperCase() : "NO",
+			deleteAccess: deleteAccess ? deleteAccess.toUpperCase() : "NO",
+			userStatus: userStatus
 		};
 
 		$.ajax({
@@ -25,10 +63,10 @@ $(document).ready(function() {
 			contentType: "application/json",
 			data: JSON.stringify(userData),
 			success: function(res) {
-				alert(res);
+				alert(typeof res === "string" ? res.toUpperCase() : "USER SAVED SUCCESSFULLY!");
 				$("#formid")[0].reset();
-				$("#toggle-member-status").prop("checked", true);
-				loadUserTable(); // reload table
+				$("#toggle-user-status").prop("checked", true);
+				loadUserTable();
 			},
 			error: function(xhr) {
 				console.error(xhr);
@@ -40,19 +78,39 @@ $(document).ready(function() {
 	// ================= Update Existing User =================
 	$("#updateBtn").click(function(e) {
 		e.preventDefault();
-		if (!editUserId) return alert("NO USER SELECTED TO UPDATE!");
+		if (!editUserId) {
+			alert("NO USER SELECTED TO UPDATE!");
+			return;
+		}
+
+		const userId = $("#UserId").val().trim();
+		const password = $("#password").val().trim();
+		const fullName = $("#fullName").val().trim();
+		const emailId = $("#emailId").val().trim();
+		const contactNumber = $("#contactNo").val().trim();
+		const singInBranch = $("#branchName").val();
+		const pastDate = $("#pastDate").val();
+		const rePrint = $("#rePrint").val();
+		const deleteAccess = $("#deleteAccess").val();
+		const userStatus = $("#toggle-user-status").is(":checked") ? "Active" : "Inactive";
+
+		if (!userId || !password || !fullName) {
+			alert("⚠️ PLEASE FILL ALL REQUIRED FIELDS BEFORE UPDATING.");
+			return;
+		}
 
 		const userData = {
-			userId: $("#UserId").val(),
-			password: $("#password").val(),
-			fullName: $("#fullName").val(),
-			emailId: $("#emailId").val(),
-			contactNumber: $("#contactNo").val(),
-			singInBranch: $("#branchName").val(),
-			pastDate: $("#pastDate").val(),
-			rePrint: $("#rePrint").val(),
-			deleteAccess: $("#deleteAccess").val(),
-			userStatus: $("#toggle-member-status").is(":checked") ? "Active" : "Inactive"
+			id: editUserId,
+			userId: userId.toUpperCase(),
+			password: password,
+			fullName: fullName.toUpperCase(),
+			emailId: emailId.toUpperCase(),
+			contactNumber: contactNumber,
+			singInBranch: singInBranch ? singInBranch.toUpperCase() : "",
+			pastDate: pastDate ? pastDate.toUpperCase() : "NO",
+			rePrint: rePrint ? rePrint.toUpperCase() : "NO",
+			deleteAccess: deleteAccess ? deleteAccess.toUpperCase() : "NO",
+			userStatus: userStatus
 		};
 
 		$.ajax({
@@ -61,13 +119,13 @@ $(document).ready(function() {
 			contentType: "application/json",
 			data: JSON.stringify(userData),
 			success: function(res) {
-				alert(res);
+				alert(typeof res === "string" ? res.toUpperCase() : "USER UPDATED SUCCESSFULLY!");
 				$("#formid")[0].reset();
-				$("#toggle-member-status").prop("checked", true);
+				$("#toggle-user-status").prop("checked", true);
 				editUserId = null;
 
-				$("#updateBtn").hide(); // hide Update button after update
-				$("#saveBtn").show();   // show Save button for new users
+				$("#updateBtn").hide();
+				$("#saveBtn").show();
 				loadUserTable();
 			},
 			error: function(xhr) {
@@ -77,93 +135,96 @@ $(document).ready(function() {
 		});
 	});
 
-	// ================= Load Table =================
-	function loadUserTable() {
-		$.ajax({
-			url: "api/userCreation/getAllUsers",
-			type: "GET",
-			dataType: "json",
-			success: function(users) {
-				let rows = "";
-				if (users && users.length > 0) {
-					users.forEach(function(user, index) {
-						rows += `<tr>
-                                   <td>${index + 1}</td>
-                                   <td>${user.userId}</td>
-                                   <td>${user.fullName}</td>
-                                   <td>${user.emailId}</td>
-                                   <td>${user.contactNumber}</td>
-                                   <td>${user.singInBranch}</td>
-                                   <td>${user.pastDate}</td>
-                                   <td>${user.rePrint}</td>
-                                   <td>${user.deleteAccess}</td>
-                                   <td class="d-flex" style="gap:0.7rem;">
-                                       <button class="iconbutton" onclick="deleteUser('${user.id}')" title="DELETE">
-                                           <i class="fa-solid fa-trash text-danger"></i>
-                                       </button>
-                                       <button class="iconbutton" onclick="editUser('${user.id}')" title="EDIT">
-                                           <i class="fa-solid fa-pen-to-square text-success"></i>
-                                       </button>
-                                   </td>
-                               </tr>`;
-					});
-				} else {
-					rows = "<tr><td colspan='10'>NO USERS FOUND</td></tr>";
-				}
-				$("#userTable tbody").html(rows);
-			},
-			error: function(xhr) {
-				console.error(xhr);
-				alert("❌ ERROR LOADING USER TABLE!");
-			}
-		});
-	}
+});
 
-	/*// ================= Load Branch Dropdown =================
+// ================= Load Branch Dropdown =================
+function loadBranches() {
 	$.ajax({
 		url: "api/preference/getAllBranchModule",
 		type: "GET",
-		success: function(response){
-			if(response.status == "FOUND"){
-				const branchList = response.data;
-				$("#branchName1").empty().append("<option value=''>-- SELECT BRANCH --</option>");
-				branchList.forEach(branch => {
-					$("#branchName1").append(`<option value="${branch.branchName}">${branch.branchName}</option>`);
+		success: function(response) {
+			if (response && response.status === "OK" && Array.isArray(response.data)) {
+				const branchSelect = $("#branchName");
+				branchSelect.empty().append("<option value=''>-- SELECT BRANCH --</option>");
+				response.data.forEach(branch => {
+					if (branch && branch.branchName) {
+						const name = branch.branchName.toUpperCase();
+						branchSelect.append(`<option value="${name}">${name}</option>`);
+					}
 				});
-			} else {
-				alert("ERROR: "+response.message);
 			}
 		},
-		error: function(xhr){
-			console.error(xhr.responseText);
-			alert("FAILED TO LOAD DROPDOWN DATA.");
+		error: function(xhr) {
+			console.error("Failed to load branches:", xhr);
 		}
-	});*/
+	});
+}
 
-});
+// ================= Load Table =================
+function loadUserTable() {
+	$.ajax({
+		url: "api/userCreation/getAllUsers",
+		type: "GET",
+		dataType: "json",
+		success: function(users) {
+			let rows = "";
+			if (users && users.length > 0) {
+				users.forEach(function(user, index) {
+					rows += `<tr>
+                               <td>${index + 1}</td>
+                               <td>${(user.userId || '').toUpperCase()}</td>
+                               <td>${(user.fullName || '').toUpperCase()}</td>
+                               <td>${(user.emailId || '').toUpperCase()}</td>
+                               <td>${(user.contactNumber || '').toUpperCase()}</td>
+                               <td>${(user.singInBranch || '').toUpperCase()}</td>
+                               <td>${(user.pastDate || '').toUpperCase()}</td>
+                               <td>${(user.rePrint || '').toUpperCase()}</td>
+                               <td>${(user.deleteAccess || '').toUpperCase()}</td>
+                               <td class="d-flex" style="gap:0.7rem;">
+                                   <button class="iconbutton" onclick="editUser('${user.id}')" title="EDIT">
+                                       <i class="fa-solid fa-pen-to-square text-success"></i>
+                                   </button>
+                                   <button class="iconbutton" onclick="deleteUser('${user.id}')" title="DELETE">
+                                       <i class="fa-solid fa-trash text-danger"></i>
+                                   </button>
+                               </td>
+                           </tr>`;
+				});
+			} else {
+				rows = "<tr><td colspan='10' class='text-center'>NO USERS FOUND</td></tr>";
+			}
+			$("#userTable tbody").html(rows);
+		},
+		error: function(xhr) {
+			console.error(xhr);
+			alert("❌ ERROR LOADING USER TABLE!");
+		}
+	});
+}
 
-//edit the data
+// ================= Edit User =================
 function editUser(id) {
 	$.ajax({
 		url: `api/userCreation/editUserManageById/${id}`,
 		type: "GET",
 		success: function(user) {
-			$("#UserId").val(user.userId);
-			$("#password").val(user.password);
-			$("#fullName").val(user.fullName);
-			$("#emailId").val(user.emailId);
-			$("#contactNo").val(user.contactNumber);
-			$("#branchName").val(user.singInBranch);
-			$("#pastDate").val(user.pastDate);
-			$("#rePrint").val(user.rePrint);
-			$("#deleteAccess").val(user.deleteAccess);
-			$("#toggle-member-status").prop("checked", user.userStatus === "Active");
+			if (user) {
+				$("#UserId").val((user.userId || '').toUpperCase());
+				$("#password").val(user.password || '');
+				$("#fullName").val((user.fullName || '').toUpperCase());
+				$("#emailId").val((user.emailId || '').toUpperCase());
+				$("#contactNo").val(user.contactNumber || '');
+				$("#branchName").val((user.singInBranch || '').toUpperCase());
+				$("#pastDate").val(user.pastDate ? user.pastDate.toUpperCase() : '');
+				$("#rePrint").val(user.rePrint ? user.rePrint.toUpperCase() : '');
+				$("#deleteAccess").val(user.deleteAccess ? user.deleteAccess.toUpperCase() : '');
+				$("#toggle-user-status").prop("checked", user.userStatus === "Active");
 
-			// Set edit ID and toggle buttons
-			editUserId = user.id;
-			$("#updateBtn").show();
-			$("#saveBtn").hide();
-
+				editUserId = user.id;
+				$("#updateBtn").show();
+				$("#saveBtn").hide();
+				window.scrollTo({ top: 0, behavior: 'smooth' });
+			}
 		},
 		error: function(xhr) {
 			console.error(xhr);
@@ -172,7 +233,7 @@ function editUser(id) {
 	});
 }
 
-//delete data
+// ================= Delete User =================
 function deleteUser(id) {
 	if (!confirm("ARE YOU SURE YOU WANT TO DELETE THIS USER?")) {
 		return;
@@ -184,8 +245,8 @@ function deleteUser(id) {
 		contentType: "application/json",
 		data: JSON.stringify({ id: id }),
 		success: function(response) {
-			alert("USER DELETED SUCCESSFULLY!");
-			location.reload();
+			alert(typeof response === "string" ? response.toUpperCase() : "USER DELETED SUCCESSFULLY!");
+			loadUserTable();
 		},
 		error: function(err) {
 			alert("ERROR DELETING USER!");

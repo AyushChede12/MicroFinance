@@ -425,7 +425,7 @@ $(document).ready(function() {
 				}
 			},
 			error: function(xhr) {
-				alert("ERROR FETCHING LOAN DATA: " + xhr.responseText);
+				alert("ERROR FETCHING LOAN DATA: " + (xhr.responseText ? xhr.responseText.toUpperCase() : ""));
 			}
 		});
 	});
@@ -607,20 +607,20 @@ $(document).ready(function() {
 			success: function(res) {
 				$btn.prop("disabled", false).html('<i class="bi bi-credit-card-2-front"></i> PAY EMI');
 				if (res.status === "OK") {
-					alert("✓ " + res.message);
+					alert("✓ " + String(res.message).toUpperCase());
 					if (res.data && res.data.isLoanClosed) {
 						alert("🎉 CONGRATULATIONS! THIS LOAN IS NOW COMPLETELY CLOSED.");
 					}
 					// Re-trigger loan change to refresh the installment list and select next due installment
 					$("#loanID").trigger("change");
 				} else {
-					alert("❌ " + (res.message || "FAILED TO PROCESS PAYMENT."));
+					alert("❌ " + (RES.MESSAGE || "FAILED TO PROCESS PAYMENT."));
 				}
 			},
 			error: function(xhr) {
 				$btn.prop("disabled", false).html('<i class="bi bi-credit-card-2-front"></i> PAY EMI');
 				const errMsg = xhr.responseJSON?.message || xhr.responseText || "Server error";
-				alert("❌ PAYMENT FAILED: " + errMsg);
+				alert("❌ PAYMENT FAILED: " + String(errMsg).toUpperCase());
 			}
 		});
 	});

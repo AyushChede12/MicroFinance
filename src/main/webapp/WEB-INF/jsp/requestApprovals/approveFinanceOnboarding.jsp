@@ -6,7 +6,7 @@
 			<li class="breadcrumb-item"><a href="openDashboard"> <i
 					class="bi bi-check-circle"></i>
 			</a></li>
-			<li class="breadcrumb-item action">APPROVE FINANCE ONBORDING </li>
+			<li class="breadcrumb-item action">APPROVE FINANCE ONBOARDING </li>
 		</ol>
 	</nav>
 </div>
@@ -62,7 +62,7 @@
 		<div class="card recent-sales">
 
 			<div class="card-body table-responsive">
-				<h5 class="card-title">SERACH RESULT</h5>
+				<h5 class="card-title">SEARCH RESULT</h5>
 
 				<div style="overflow-x: auto; white-space: nowrap;">
 					<table class="table table-borderless datatable">
@@ -92,7 +92,7 @@
 <div class="row">
 	<div class="col-12 text-center mt-3" style="justify-content: end">
 		<button id="approveFinanceConsultantBtn" class="btnStyle"
-			style="background-color: #FFA500;">APPROVED</button>
+			style="background-color: #FFA500;">APPROVE</button>
 	</div>
 </div>
 
@@ -113,13 +113,35 @@
 
 		// Button click Approve
 		$('#approveFinanceConsultantBtn').on('click', function(e) {
-			e.preventDefault(); // Prevent form submission
-
-			// Get all checked checkboxes
+			e.preventDefault();
+			const selectedIds = [];
 			$('.member-checkbox:checked').each(function() {
 				const id = $(this).val();
-				updateMemberApprovalStatus(id, true);
+				if (id) selectedIds.push(id);
 			});
+
+			if (selectedIds.length === 0) {
+				alert("PLEASE SELECT AT LEAST ONE RECORD TO APPROVE.");
+				return;
+			}
+
+			const requests = selectedIds.map(function(id) {
+				return $.ajax({
+					url: "api/financialconsultant/approvedFinancialConsultantData",
+					type: "POST",
+					data: { id: id, isApproved: true }
+				});
+			});
+
+			$.when.apply($, requests)
+				.done(function() {
+					alert("FINANCIAL CONSULTANTS APPROVED SUCCESSFULLY!");
+					location.reload();
+				})
+				.fail(function(xhr) {
+					console.error("ERROR APPROVING CONSULTANTS:", xhr);
+					alert("FAILED TO APPROVE SELECTED CONSULTANTS.");
+				});
 		});
 
 	});

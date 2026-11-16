@@ -163,7 +163,7 @@ button {
 								<td data-label="Preview Financial"><input class="ip-center"
 									type="text"></td>
 								<td data-label="Action"><button class="btn btn-success"
-										id="saveFinancialCode">Save</button></td>
+										id="saveFinancialCode">SAVE</button></td>
 							</tr>
 							<tr style="font-family: 'Poppins', sans-serif;" data-id="3">
 								<td data-label="Name Team">TEAM MEMBER CODE</td>

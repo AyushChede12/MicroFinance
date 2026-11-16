@@ -145,8 +145,9 @@
 		<div class="col-lg-3 chequeFields d-none">
 			<div class="d-flex flex-column formFields">
 				<label for="">BANK NAME <span class="star">*</span></label> <input
-					type="text" name="bankName" id="bankName"
+					type="text" name="bankName" id="bankName" list="bankList"
 					placeholder="ENTER BANK NAME" />
+				<datalist id="bankList"></datalist>
 			</div>
 		</div>
 

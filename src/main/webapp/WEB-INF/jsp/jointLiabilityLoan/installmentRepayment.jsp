@@ -25,7 +25,7 @@
 						<label for="groupCodeid">FIND BY GROUP *</label> <select
 							id=groupid name="groupid" required
 							class="form-control selectField" style="height: 30px;">
-							<option value="">SELECT CUSTOMER NAME </option>
+							<option value="">SELECT GROUP ID</option>
 						</select>
 					</div>
 
@@ -138,8 +138,8 @@
 
 				<div class="col-lg-3 mb-4">
 					<div class="d-flex flex-column formFields">
-						<label for="emiAmount">TOTAL INTERET *</label> <input type="text"
-							name="loanEmi" id="" required placeholder="ENTER TOTAL INTEREST " />
+						<label for="emiAmount">TOTAL INTEREST *</label> <input type="text"
+							name="totalInterest" id="totalInterest" required placeholder="ENTER TOTAL INTEREST " />
 					</div>
 				</div>
 
@@ -163,16 +163,16 @@
 			<div class="row">
 				<div class="col-lg-3 mb-4">
 					<div class="d-flex flex-column formFields">
-						<label for="valuationCharges">AMOUNT DUE*</label> <input
-							type="text" name="valuationCharges" id="valuationCharges"
+						<label for="amountDue">AMOUNT DUE*</label> <input
+							type="text" name="amountDue" id="amountDue"
 							required />
 					</div>
 				</div>
 
 				<div class="col-lg-3 mb-4">
 					<div class="d-flex flex-column formFields">
-						<label for="valuationCharges">NO OF INSTALLMENT *</label> <input
-							type="text" name="valuationCharges" id="valuationCharges"
+						<label for="installmentNo">NO OF INSTALLMENT *</label> <input
+							type="text" name="installmentNo" id="installmentNo"
 							required />
 					</div>
 				</div>
@@ -217,7 +217,7 @@
 						style="margin-bottom: 30px">
 						<label>CHEQUE NUMBER <span id="star">*</span></label> <input
 							type="text" name="chequeNo" id="chequeNo" required="required"
-							placeholder="ENTER INTEREST NUMBER" style="text-transform: uppercase;" />
+							placeholder="ENTER CHEQUE NUMBER" style="text-transform: uppercase;" />
 					</div>
 				</div>
 
@@ -247,7 +247,7 @@
 					<div class="d-flex flex-column formFields">
 						<label for="">REF NUMBER/UPI ID</label> <input type="text"
 							name="ref_UpiId" id="ref_UpiId" required="required"
-							placeholder="ENTER DEPOSITE ACCOUNT"
+							placeholder="ENTER REF NUMBER/UPI ID"
 							style="text-transform: uppercase;" />
 					</div>
 				</div>
@@ -285,10 +285,12 @@
 
 
 			</div>
-			<div class="row">
-				<div class="col-12 text-center">
-					<button id="saveBtn" class="btnStyle bg-success"
-						style="margin-left: 80%">SAVE</button>
+			<div class="row mt-3">
+				<div class="col-12 text-end">
+					<button type="button" id="saveBtn" class="btnStyle bg-success me-2">SAVE REPAYMENT</button>
+					<button type="button" id="printReceiptBtn" class="btn btn-primary" style="display: none;">
+						<i class="bi bi-printer"></i> PRINT REPAYMENT RECEIPT
+					</button>
 				</div>
 			</div>
 		</div>

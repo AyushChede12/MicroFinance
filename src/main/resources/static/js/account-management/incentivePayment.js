@@ -1,5 +1,7 @@
 $(document).ready(function() {
 
+	loadBranchDropdown();
+
 	$.ajax({
 		url: "accountManagement/bank-accounts",
 		type: "GET",
@@ -248,4 +250,27 @@ function fetchCompleteIncentiveData(agentCode, month, year) {
 		}
 	});
 
+}
+
+// =====================================================
+// LOAD BRANCH DROPDOWN
+// =====================================================
+function loadBranchDropdown() {
+	$.ajax({
+		type: "GET",
+		url: "api/preference/getAllBranchModule",
+		contentType: "application/json",
+		success: function(response) {
+			let options = "<option value=''>--SELECT BRANCH--</option>";
+			if (response && Array.isArray(response.data)) {
+				response.data.forEach(branch => {
+					options += `<option value="${branch.branchName}">${branch.branchName.toUpperCase()}</option>`;
+				});
+			}
+			$("#paymentBranch").html(options);
+		},
+		error: function() {
+			alert("FAILED TO LOAD BRANCH NAMES.");
+		}
+	});
 }

@@ -1,91 +1,103 @@
+<style>
+.formFields input, .formFields select {
+	text-transform: uppercase;
+}
+@media print {
+	.pagetitle, #formid, .btnStyle, .modal-footer, .no-print {
+		display: none !important;
+	}
+}
+</style>
 
-<div class="pagetitle">
+<div class="pagetitle no-print">
 	<h1>REPORTS & ANALYTICS</h1>
 	<nav>
 		<ol class="breadcrumb">
-			<li class="breadcrumb-item"><a href="openDashboard"> <i
-					class="bi bi-file-earmark-text"></i>
-			</a></li>
-			<li class="breadcrumb-item action">LOAN CONFIRMATION DOCUMENT </li>
+			<li class="breadcrumb-item"><a href="openDashboard"> <i class="bi bi-file-earmark-text"></i></a></li>
+			<li class="breadcrumb-item action">LOAN CONFIRMATION DOCUMENT</li>
 		</ol>
 	</nav>
 </div>
-<div>
-	<nav>
-		<ol class="breadcrumb breadcrumb-title">
-			<li class="breadcrumb-item action">FIND BOX</li>
-		</ol>
-	</nav>
-	<div class="row">
-		<div class="col-lg-3">
-			<div class="d-flex flex-column formFields">
-				<label for="loanPlanName">PLAN NAME</label> <select
-					id="loanPlanName" name="loanPlanName" required="required"
-					class="form-control selectField mb-4" style="height: 30px;">
-				</select>
+
+<div class="no-print">
+	<form id="formid" autocomplete="off">
+		<div>
+			<nav>
+				<ol class="breadcrumb breadcrumb-title">
+					<li class="breadcrumb-item action">SEARCH FILTERS</li>
+				</ol>
+			</nav>
+			<div class="row">
+				<div class="col-lg-3">
+					<div class="d-flex flex-column formFields" style="margin-bottom: 20px;">
+						<label for="loanPlanName">PLAN NAME</label>
+						<select id="loanPlanName" name="loanPlanName" class="form-control selectField" style="height: 30px;">
+							<option value="">ALL PLANS</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="col-lg-3">
+					<div class="d-flex flex-column formFields">
+						<label for="financialCode">FINANCIAL CONSULTANT CODE</label>
+						<input type="text" name="financialCode" id="financialCode" placeholder="ENTER FINANCIAL CODE" style="text-transform: uppercase;" />
+					</div>
+				</div>
+
+				<div class="col-lg-3">
+					<div class="d-flex flex-column formFields">
+						<label for="toDate">LOAN SANCTION UP TO DATE</label>
+						<input type="date" name="toDate" id="toDate" style="text-transform: uppercase;" />
+					</div>
+				</div>
+			</div>
+
+			<div class="row mt-3 mb-2">
+				<div class="col-12 text-start">
+					<button type="button" id="findBtn" class="btn btn-dark">
+						<i class="bi bi-search"></i> FIND
+					</button>
+					<button type="button" id="resetBtn" class="btn btn-secondary ms-2">
+						<i class="bi bi-arrow-counterclockwise"></i> RESET
+					</button>
+					<button type="button" id="printFullReportBtn" class="btn btn-primary ms-2">
+						<i class="bi bi-printer"></i> PRINT FULL REPORT
+					</button>
+				</div>
 			</div>
 		</div>
-
-		<div class="col-lg-3">
-			<div class="d-flex flex-column formFields">
-				<label for="financialCode">FINANCIAL CODE</label> <input type="text"
-					name="financialCode" id="financialCode" required="required"
-					placeholder="ENTER FINANCIAL CODE" />
-			</div>
-		</div>
-
-		<div class="col-lg-3">
-			<div class="d-flex flex-column formFields">
-				<label for="toDate">TO DATE</label> <input type="date" name="toDate"
-					id="toDate" required="required" style="text-transform: uppercase;" />
-			</div>
-		</div>
-
-	</div>
+	</form>
 </div>
-<div class="row">
-	<div class="col-4 text-start mt-3">
-		<button id="findBtn" class="btn btn-dark">FIND</button>
-	</div>
-</div>
 
-<div class="row mt-5">
+<div class="row mt-4">
 	<div class="col-12">
 		<div class="card recent-sales">
 			<div class="card-body table-responsive">
-				<div class="">
-					<h5 class="card-title">
-						FIND RESULT <span></span>
-					</h5>
-					<div class="text-center col-lg-12">
-						<label class="font-weight-bold">COLLECTION RECORD</label>
-					</div>
+				<h5 class="card-title text-uppercase" style="font-weight: 700;">LOAN CONFIRMATION & SANCTION RECORDS</h5>
 
-					<div>
-						<label class="col-lg-3">COLLECTOR CODE :</label> <label
-							class="col-lg-6">COLLECTOR NAME :</label>
-					</div>
-				</div>
 				<div style="overflow-x: auto; white-space: nowrap;">
-					<table class="table table-borderless datatable">
+					<table class="table table-bordered table-hover datatable align-middle">
 						<thead class="table-light">
 							<tr style="font-family: 'Poppins', sans-serif;">
-								<th scope="col">SR. NO</th>
+								<th scope="col">SR NO.</th>
 								<th scope="col">LOAN ID</th>
 								<th scope="col">APPLICANT NAME</th>
-								<th scope="col">LOAN TYPE</th>
-								<th scope="col">LOAN AMOUNT</th>
+								<th scope="col">BRANCH</th>
+								<th scope="col">LOAN PLAN</th>
+								<th scope="col">SANCTIONED AMOUNT</th>
 								<th scope="col">DISBURSED AMOUNT</th>
-								<th scope="col">INTEREST RATE</th>
+								<th scope="col">ROI (%)</th>
 								<th scope="col">DURATION</th>
-								<th scope="col">LOAN START DATE</th>
-								<th scope="col">LOAN END DATE</th>
-								<th scope="col">TOTAL PAID AMOUNT</th>
-								<th scope="col">OUTSTANDING BALANCE</th>
-								<th scope="col">CONFIRMATION STATUS</th>
+								<th scope="col">START DATE</th>
+								<th scope="col">END DATE</th>
+								<th scope="col">TOTAL PAID</th>
+								<th scope="col">OUTSTANDING</th>
+								<th scope="col">STATUS</th>
+								<th scope="col" class="no-print">ACTION</th>
 							</tr>
 						</thead>
 						<tbody>
+							<tr><td colspan="15" class="text-center text-muted">LOADING LOAN CONFIRMATION DOCUMENTS...</td></tr>
 						</tbody>
 					</table>
 				</div>
@@ -93,8 +105,7 @@
 		</div>
 	</div>
 </div>
-</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script
-	src="${pageContext.request.contextPath}/js/ReportsAndAnalytics/LoanConfirmationDocument.js"></script>
-	
+<script src="${pageContext.request.contextPath}/js/ReportsAndAnalytics/ReportPrintUtil.js"></script>
+<script src="${pageContext.request.contextPath}/js/ReportsAndAnalytics/LoanConfirmationDocument.js"></script>

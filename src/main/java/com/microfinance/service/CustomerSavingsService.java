@@ -53,6 +53,14 @@ import com.microfinance.model.LoanDeductionDetails;
 import com.microfinance.repository.LoanApplicationRepo;
 import com.microfinance.repository.LoanDeductionDetailsRepo;
 import com.microfinance.repository.CustomerRepo;
+import com.microfinance.model.AccountTransaction;
+import com.microfinance.model.BankTransaction;
+import com.microfinance.model.BankModule;
+import com.microfinance.repository.AccountTransactionRepo;
+import com.microfinance.repository.BankTransactionRepo;
+import com.microfinance.repository.BankModuleRepo;
+import java.time.LocalDateTime;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
@@ -97,8 +105,188 @@ public class CustomerSavingsService {
 	@Autowired(required = false)
 	private LoanDeductionDetailsRepo loanDeductionDetailsRepo;
 
+	@Autowired
+	private AccountTransactionRepo accountTransactionRepo;
+
+	@Autowired
+	private BankTransactionRepo bankTransactionRepo;
+
+	@Autowired
+	private BankModuleRepo bankModuleRepo;
+
 	@Value("${upload.directory}")
 	private String uploadDirectory;
+
+	/**
+	 * Record an account-related transaction in the AccountTransaction table.
+	 */
+	@Transactional
+	public AccountTransaction recordAccountTransaction(String accountNumber, String customerName,
+			String branchName, String accountCode, String transactionDate, String transactionType,
+			Double credit, Double debit, String narration, String paymentBy, String referenceNo,
+			Double exactBalance, String createdBy) {
+
+		if (accountNumber == null || accountNumber.trim().isEmpty()) {
+			return null;
+		}
+
+		double cr = credit != null ? credit : 0.0;
+		double dr = debit != null ? debit : 0.0;
+
+		if (cr <= 0 && dr <= 0) {
+			return null;
+		}
+
+		AccountTransaction at = new AccountTransaction();
+		at.setAccountNumber(accountNumber.trim());
+		at.setCustomerName(customerName != null ? customerName.trim().toUpperCase() : "");
+		at.setBranchName(branchName != null ? branchName.trim() : "");
+		at.setAccountCode(accountCode != null && !accountCode.trim().isEmpty() ? accountCode.trim().toUpperCase() : "SAVING");
+		at.setTransactionDate(transactionDate != null && !transactionDate.trim().isEmpty() ? transactionDate.trim()
+				: LocalDate.now().toString());
+		at.setTransactionType(transactionType != null ? transactionType.trim().toUpperCase() : "DEPOSIT");
+		at.setCredit(cr);
+		at.setDebit(dr);
+		at.setNarration(narration != null ? narration.trim() : "");
+		at.setPaymentBy(paymentBy != null && !paymentBy.trim().isEmpty() ? paymentBy.trim().toUpperCase() : "CASH");
+		at.setReferenceNo(referenceNo != null ? referenceNo.trim() : "TXN_" + System.currentTimeMillis());
+		at.setStatus("SUCCESS");
+		at.setCreatedAt(LocalDateTime.now());
+		at.setCreatedBy(createdBy != null && !createdBy.trim().isEmpty() ? createdBy.trim().toUpperCase() : "ADMIN");
+
+		if (exactBalance != null) {
+			at.setBalance(exactBalance);
+		} else {
+			Double prevBal = getCurrentAccountBalance(accountNumber.trim());
+			at.setBalance(prevBal + cr - dr);
+		}
+
+		return accountTransactionRepo.save(at);
+	}
+
+	public Double getCurrentAccountBalance(String accountNumber) {
+		if (accountNumber == null || accountNumber.trim().isEmpty()) {
+			return 0.0;
+		}
+		List<AccountTransaction> txns = accountTransactionRepo
+				.findByAccountNumberOrderByIdAsc(accountNumber.trim());
+		if (txns != null && !txns.isEmpty()) {
+			AccountTransaction last = txns.get(txns.size() - 1);
+			if (last.getBalance() != null) {
+				return last.getBalance();
+			}
+		}
+		Optional<CreateSavingsAccount> opt = createSavingAccountRepo.findByAccountNumber(accountNumber.trim());
+		if (opt.isPresent() && opt.get().getBalance() != null) {
+			try {
+				return Double.parseDouble(opt.get().getBalance().trim());
+			} catch (Exception ignored) {}
+		}
+		return 0.0;
+	}
+
+	/**
+	 * Determine if a payment mode is bank-related.
+	 */
+	public boolean isBankPaymentMode(String mode) {
+		if (mode == null || mode.trim().isEmpty())
+			return false;
+		String m = mode.trim().toUpperCase();
+		if (m.equals("CASH") || m.equals("TRANSFER") || m.equals("INTERNAL TRANSFER") || m.equals("SYSTEM")
+				|| m.equals("SYSTEM INTEREST")) {
+			return false;
+		}
+		return m.contains("CHEQUE") || m.contains("ONLINE") || m.contains("NEFT") || m.contains("RTGS")
+				|| m.contains("UPI") || m.contains("BANK") || m.contains("DD") || m.contains("NET BANKING");
+	}
+
+	/**
+	 * Record a bank-related transaction in the BankTransaction table.
+	 */
+	@Transactional
+	public BankTransaction recordBankTransaction(String depositAccNo, BranchModule branch, String date,
+			String narration, Double credit, Double debit, String transactionType, String referenceNo) {
+
+		double cr = credit != null ? credit : 0.0;
+		double dr = debit != null ? debit : 0.0;
+
+		if (cr <= 0 && dr <= 0) {
+			return null;
+		}
+
+		// 1. Resolve BankModule
+		BankModule bank = null;
+		if (depositAccNo != null && !depositAccNo.trim().isEmpty()) {
+			String cleanAcc = depositAccNo.trim();
+			List<BankModule> allBanks = bankModuleRepo.findAll();
+			for (BankModule b : allBanks) {
+				if (b.getAccountNo() != null && b.getAccountNo().trim().equalsIgnoreCase(cleanAcc)) {
+					bank = b;
+					break;
+				}
+			}
+		}
+
+		if (bank == null && branch != null && branch.getBank() != null) {
+			bank = branch.getBank();
+		}
+
+		if (bank == null && branch != null && branch.getId() != null) {
+			Optional<BranchModule> optBr = branchModuleRepo.findById(branch.getId());
+			if (optBr.isPresent() && optBr.get().getBank() != null) {
+				bank = optBr.get().getBank();
+			}
+		}
+
+		if (bank == null) {
+			List<BankModule> allBanks = bankModuleRepo.findAll();
+			if (!allBanks.isEmpty()) {
+				bank = allBanks.get(0);
+			}
+		}
+
+		if (bank == null) {
+			System.err.println("No BankModule found in database; cannot record BankTransaction.");
+			return null;
+		}
+
+		// 2. Resolve BranchModule safely without accessing lazy collections
+		BranchModule effectiveBranch = branch;
+		if (effectiveBranch == null) {
+			List<BranchModule> allBranches = branchModuleRepo.findAll();
+			if (!allBranches.isEmpty()) {
+				effectiveBranch = allBranches.get(0);
+			}
+		}
+
+		// 3. Compute Bank Running Balance
+		List<BankTransaction> bankTxns = bankTransactionRepo.findByBank_IdOrderByIdDesc(bank.getId());
+		double prevBal = 0.0;
+		if (!bankTxns.isEmpty() && bankTxns.get(0).getBalance() != null) {
+			prevBal = bankTxns.get(0).getBalance();
+		} else if (bank.getOpeningBalance() != null && !bank.getOpeningBalance().trim().isEmpty()) {
+			try {
+				prevBal = Double.parseDouble(bank.getOpeningBalance().trim());
+			} catch (Exception ignored) {}
+		}
+
+		double newBal = prevBal + cr - dr;
+
+		// 4. Save BankTransaction
+		BankTransaction bt = new BankTransaction();
+		bt.setBank(bank);
+		bt.setBranch(effectiveBranch);
+		bt.setAccountNumber(bank.getAccountNo());
+		bt.setDate(date != null && !date.trim().isEmpty() ? date.trim() : LocalDate.now().toString());
+		bt.setNarration(narration != null ? narration.trim() : "");
+		bt.setCredit(cr);
+		bt.setDebit(dr);
+		bt.setBalance(newBal);
+		bt.setTransactionType(transactionType != null ? transactionType.trim().toUpperCase() : (cr > 0 ? "DEPOSIT" : "WITHDRAW"));
+		bt.setReferenceNo(referenceNo != null ? referenceNo.trim() : "");
+
+		return bankTransactionRepo.save(bt);
+	}
 
 	public boolean saveSavingScheme(SavingSchemeCatalog savingSchemeCatalog) {
 		try {
@@ -331,9 +519,17 @@ public class CustomerSavingsService {
 		createSavingsAccount.setOperationType(savingAccountDto.getOperationType());
 		createSavingsAccount.setJointOperationCode(toUpperStr(savingAccountDto.getJointOperationCode()));
 		createSavingsAccount.setJointSurvivorCode(toUpperStr(savingAccountDto.getJointSurvivorCode()));
-		createSavingsAccount.setFamilyRelation(toUpperStr(savingAccountDto.getFamilyRelation()));
-		createSavingsAccount.setSelectPlan(toUpperStr(savingAccountDto.getSelectPlan()));
-		createSavingsAccount.setBalance(savingAccountDto.getBalance());
+		String plan = savingAccountDto.getSelectPlan();
+		if (plan == null || plan.trim().isEmpty()) {
+			plan = isCurrentAcc ? "CURRENT ACCOUNT" : "SAVING ACCOUNT";
+		}
+		createSavingsAccount.setSelectPlan(toUpperStr(plan));
+
+		String bal = savingAccountDto.getBalance();
+		if (bal == null || bal.trim().isEmpty() || "0".equals(bal.trim())) {
+			bal = savingAccountDto.getOpeningFees();
+		}
+		createSavingsAccount.setBalance(bal != null ? bal.trim() : "0");
 		createSavingsAccount.setFinancialConsultantCode(toUpperStr(savingAccountDto.getFinancialConsultantCode()));
 		createSavingsAccount.setFinancialConsultantName(toUpperStr(savingAccountDto.getFinancialConsultantName()));
 		createSavingsAccount.setOpeningFees(savingAccountDto.getOpeningFees());
@@ -411,6 +607,74 @@ public class CustomerSavingsService {
 		CreateSavingsAccount saveSavingAccountDetails = createSavingAccountRepo.save(createSavingsAccount);
 
 		if (isNew) {
+			// Record initial deposit / opening fees
+			double openingAmount = 0.0;
+			if (saveSavingAccountDetails.getOpeningFees() != null && !saveSavingAccountDetails.getOpeningFees().trim().isEmpty()) {
+				try {
+					openingAmount = Double.parseDouble(saveSavingAccountDetails.getOpeningFees().trim());
+				} catch (Exception ignored) {}
+			}
+			if (openingAmount <= 0 && saveSavingAccountDetails.getBalance() != null && !saveSavingAccountDetails.getBalance().trim().isEmpty()) {
+				try {
+					openingAmount = Double.parseDouble(saveSavingAccountDetails.getBalance().trim());
+				} catch (Exception ignored) {}
+			}
+
+			if (openingAmount > 0) {
+				String accNo = saveSavingAccountDetails.getAccountNumber();
+				String custName = saveSavingAccountDetails.getEnterCustomerName();
+				String bName = saveSavingAccountDetails.getBranchName() != null ? saveSavingAccountDetails.getBranchName().getBranchName() : "";
+				String aCode = isCurrentAcc ? "CURRENT" : "SAVING";
+				String opDate = saveSavingAccountDetails.getOpeningDate() != null && !saveSavingAccountDetails.getOpeningDate().trim().isEmpty()
+						? saveSavingAccountDetails.getOpeningDate().trim() : LocalDate.now().toString();
+				String payMode = saveSavingAccountDetails.getModeOfPayment() != null ? saveSavingAccountDetails.getModeOfPayment().trim().toUpperCase() : "CASH";
+				String refNo = saveSavingAccountDetails.getRefNumber1() != null && !saveSavingAccountDetails.getRefNumber1().trim().isEmpty()
+						? saveSavingAccountDetails.getRefNumber1().trim()
+						: (saveSavingAccountDetails.getChequeNo() != null && !saveSavingAccountDetails.getChequeNo().trim().isEmpty()
+								? saveSavingAccountDetails.getChequeNo().trim() : "TXN_REG_" + accNo);
+
+				// 1. Save in AccountTransaction table
+				recordAccountTransaction(
+						accNo, custName, bName, aCode, opDate, "DEPOSIT",
+						openingAmount, 0.0,
+						"ACCOUNT OPENING INITIAL DEPOSIT / FEES (" + (isCurrentAcc ? "CURRENT A/C" : "SAVING A/C") + ")",
+						payMode, refNo, openingAmount, "ADMIN"
+				);
+
+				// 2. Save in BankTransaction if bank payment mode or deposit account specified
+				if (isBankPaymentMode(payMode) || (saveSavingAccountDetails.getDepositAcc1() != null && !saveSavingAccountDetails.getDepositAcc1().trim().isEmpty())) {
+					recordBankTransaction(
+							saveSavingAccountDetails.getDepositAcc1(),
+							saveSavingAccountDetails.getBranchName(),
+							opDate,
+							"ACCOUNT OPENING DEPOSIT - A/C " + accNo + " (" + custName + ") VIA " + payMode,
+							openingAmount, 0.0, "DEPOSIT", refNo
+					);
+				}
+
+				// 3. Proactively save SavingAccountActivity
+				try {
+					SavingAccountActivity regAct = new SavingAccountActivity();
+					regAct.setSelectSavingTransactionId("TXN_REG_" + accNo);
+					regAct.setTransactionDate(opDate);
+					regAct.setSelectBranchName(bName);
+					regAct.setAccountNumber(accNo);
+					regAct.setCustomerCode(saveSavingAccountDetails.getSelectByCustomer());
+					regAct.setCustomerName(custName);
+					regAct.setContactNumber(saveSavingAccountDetails.getContactNumber());
+					regAct.setTransactionFor("Member Registration");
+					regAct.setComments("Member Registration Fees / Opening Deposit");
+					regAct.setTransactionType("Deposit");
+					regAct.setTransactionAmount(String.format(java.util.Locale.US, "%.2f", openingAmount));
+					regAct.setAverageBalance(String.format(java.util.Locale.US, "%.2f", openingAmount));
+					regAct.setPayBy(saveSavingAccountDetails.getModeOfPayment() != null ? saveSavingAccountDetails.getModeOfPayment() : "Cash");
+					regAct.setApproved(true);
+					savingAccountActivityRepo.save(regAct);
+				} catch (Exception ex) {
+					System.err.println("Error saving initial account opening activity: " + ex.getMessage());
+				}
+			}
+
 			return ApiResponse.success(HttpStatus.CREATED,
 					"SAVED SUCCESSFULLY. CUSTOMER NAME: " + (saveSavingAccountDetails.getEnterCustomerName() != null ? saveSavingAccountDetails.getEnterCustomerName().toUpperCase() : ""),
 					saveSavingAccountDetails);
@@ -601,6 +865,43 @@ public class CustomerSavingsService {
 				acc.setBalance(formattedBal);
 				createSavingAccountRepo.save(acc);
 				activity.setAverageBalance(formattedBal);
+
+				// 1. Record in AccountTransaction table
+				boolean isDeposit = tType.contains("DEPOSIT") || tType.contains("CREDIT");
+				double cr = isDeposit ? txnAmt : 0.0;
+				double dr = isDeposit ? 0.0 : txnAmt;
+				String txnType = isDeposit ? "DEPOSIT" : "WITHDRAW";
+				String aCode = (acc.getAccountType() != null && "CURRENT".equalsIgnoreCase(acc.getAccountType())) ? "CURRENT" : "SAVING";
+				String payByMode = activity.getPayBy() != null ? activity.getPayBy().trim().toUpperCase() : "CASH";
+				String refNo = activity.getSelectSavingTransactionId() != null ? activity.getSelectSavingTransactionId().trim()
+						: (activity.getRefNumber1() != null ? activity.getRefNumber1().trim()
+								: (activity.getChequeNo() != null ? activity.getChequeNo().trim() : "TXN_" + System.currentTimeMillis()));
+
+				String narration = (activity.getComments() != null && !activity.getComments().trim().isEmpty())
+						? activity.getComments().trim() : (activity.getTransactionFor() != null ? activity.getTransactionFor().trim() : txnType);
+
+				recordAccountTransaction(
+						accNo, activity.getCustomerName(), activity.getSelectBranchName(), aCode,
+						activity.getTransactionDate(), txnType, cr, dr, narration, payByMode, refNo,
+						newBalance, activity.getCreatedBy()
+				);
+
+				// 2. Record in BankTransaction if bank payment mode or deposit account specified
+				String depositAcc = activity.getDepositAcc1() != null && !activity.getDepositAcc1().trim().isEmpty() ? activity.getDepositAcc1()
+						: (activity.getDepositAcc2() != null && !activity.getDepositAcc2().trim().isEmpty() ? activity.getDepositAcc2() : activity.getDepositAcc3());
+
+				if (isBankPaymentMode(payByMode) || (depositAcc != null && !depositAcc.trim().isEmpty())) {
+					String bankTxnType = isDeposit ? "DEPOSIT" : "WITHDRAW";
+					Double bankCr = isDeposit ? txnAmt : 0.0;
+					Double bankDr = isDeposit ? 0.0 : txnAmt;
+					String bankNarration = (isDeposit ? "DEPOSIT TO " : "WITHDRAWAL FROM ") + "SAVINGS A/C " + accNo
+							+ " (" + (activity.getCustomerName() != null ? activity.getCustomerName() : "") + ") VIA " + payByMode;
+
+					recordBankTransaction(
+							depositAcc, acc.getBranchName(), activity.getTransactionDate(),
+							bankNarration, bankCr, bankDr, bankTxnType, refNo
+					);
+				}
 			}
 		}
 
@@ -1058,7 +1359,86 @@ public class CustomerSavingsService {
 			createSavingAccountRepo.save(acc);
 		}
 
+		// Synchronize activities to AccountTransaction table
+		syncActivitiesToAccountTransactions(accountNumber, allList, acc);
+
 		return allList;
+	}
+
+	/**
+	 * Synchronize SavingAccountActivity records to AccountTransaction table if missing
+	 */
+	private void syncActivitiesToAccountTransactions(String accountNumber, List<SavingAccountActivity> activities, CreateSavingsAccount acc) {
+		if (accountNumber == null || activities == null || activities.isEmpty()) {
+			return;
+		}
+		try {
+			List<AccountTransaction> existingTxns = accountTransactionRepo.findByAccountNumberOrderByIdAsc(accountNumber.trim());
+			java.util.Set<String> existingRefs = new java.util.HashSet<>();
+			if (existingTxns != null) {
+				for (AccountTransaction at : existingTxns) {
+					if (at.getReferenceNo() != null && !at.getReferenceNo().trim().isEmpty()) {
+						existingRefs.add(at.getReferenceNo().trim());
+					}
+				}
+			}
+
+			String custName = acc != null && acc.getEnterCustomerName() != null ? acc.getEnterCustomerName() : "";
+			String brName = acc != null && acc.getBranchName() != null ? acc.getBranchName().getBranchName() : "";
+			String accCode = acc != null && "CURRENT".equalsIgnoreCase(acc.getAccountType()) ? "CURRENT" : "SAVING";
+
+			for (SavingAccountActivity act : activities) {
+				String refNo = act.getSelectSavingTransactionId() != null ? act.getSelectSavingTransactionId().trim() : "";
+				if (!refNo.isEmpty() && !existingRefs.contains(refNo)) {
+					double amt = 0.0;
+					try {
+						if (act.getTransactionAmount() != null) {
+							amt = Double.parseDouble(act.getTransactionAmount().trim());
+						}
+					} catch (Exception ignored) {}
+
+					if (amt <= 0) continue;
+
+					String tType = act.getTransactionType() != null ? act.getTransactionType().trim().toUpperCase() : "";
+					boolean isDeposit = tType.contains("DEPOSIT") || tType.contains("CREDIT");
+					double cr = isDeposit ? amt : 0.0;
+					double dr = isDeposit ? 0.0 : amt;
+
+					String canonicalType = isDeposit ? "DEPOSIT" : "WITHDRAW";
+					String tFor = act.getTransactionFor() != null ? act.getTransactionFor().toUpperCase() : "";
+					if (tFor.contains("TRANSFER")) canonicalType = "TRANSFER";
+					else if (tFor.contains("INTEREST")) canonicalType = "INTEREST";
+					else if (tFor.contains("CHARGE") || tFor.contains("FEE")) canonicalType = "CHARGE";
+					else if (tFor.contains("CLOSURE") || tFor.contains("CLOSE")) canonicalType = "CLOSURE";
+
+					Double exactBal = null;
+					try {
+						if (act.getAverageBalance() != null) {
+							exactBal = Double.parseDouble(act.getAverageBalance().trim());
+						}
+					} catch (Exception ignored) {}
+
+					recordAccountTransaction(
+						accountNumber,
+						(act.getCustomerName() != null && !act.getCustomerName().trim().isEmpty()) ? act.getCustomerName() : custName,
+						(act.getSelectBranchName() != null && !act.getSelectBranchName().trim().isEmpty()) ? act.getSelectBranchName() : brName,
+						accCode,
+						act.getTransactionDate(),
+						canonicalType,
+						cr,
+						dr,
+						act.getComments() != null ? act.getComments() : act.getTransactionFor(),
+						act.getPayBy() != null ? act.getPayBy() : "CASH",
+						refNo,
+						exactBal,
+						act.getCreatedBy() != null ? act.getCreatedBy() : "SYSTEM"
+					);
+					existingRefs.add(refNo);
+				}
+			}
+		} catch (Exception e) {
+			System.err.println("Error synchronizing activities to AccountTransaction: " + e.getMessage());
+		}
 	}
 
 	public boolean updateAverageBalance(String accountNumber, String newBalance) {
@@ -1119,8 +1499,95 @@ public class CustomerSavingsService {
 	}
 
 	public savingsAccountCloser saveAccountCloseInfo(savingsAccountCloser accountCloser) {
-		// TODO Auto-generated method stub
-		return savingAccCloserRepo.save(accountCloser);
+		savingsAccountCloser saved = savingAccCloserRepo.save(accountCloser);
+
+		double closingBalance = 0.0;
+		try {
+			if (accountCloser.getCurrentBalance() != null && !accountCloser.getCurrentBalance().trim().isEmpty()) {
+				closingBalance = Double.parseDouble(accountCloser.getCurrentBalance().trim());
+			}
+		} catch (Exception ignored) {}
+
+		if (closingBalance > 0) {
+			String payMode = accountCloser.getPayBy() != null && !accountCloser.getPayBy().trim().isEmpty()
+					? accountCloser.getPayBy().trim().toUpperCase() : "CASH";
+			String refNo = "TXNCLS_" + (saved != null && saved.getId() != null ? saved.getId() : System.currentTimeMillis());
+			String closeDate = accountCloser.getClosingDate() != null && !accountCloser.getClosingDate().trim().isEmpty()
+					? accountCloser.getClosingDate().trim() : LocalDate.now().toString();
+
+			// 1. Record AccountTransaction
+			recordAccountTransaction(
+					accountCloser.getAccountNumber(),
+					accountCloser.getCustomerName(),
+					accountCloser.getBranchName(),
+					"SAVING",
+					closeDate,
+					"CLOSURE",
+					0.0,
+					closingBalance,
+					"ACCOUNT CLOSURE - FINAL SETTLEMENT PAYOUT" + (accountCloser.getComments() != null && !accountCloser.getComments().trim().isEmpty() ? " (" + accountCloser.getComments().trim() + ")" : ""),
+					payMode,
+					refNo,
+					0.0,
+					"ADMIN"
+			);
+
+			// 2. Record BankTransaction if bank payout
+			if (isBankPaymentMode(payMode)) {
+				BranchModule br = null;
+				if (accountCloser.getBranchName() != null && !accountCloser.getBranchName().trim().isEmpty()) {
+					br = branchModuleRepo.findByBranchName(accountCloser.getBranchName().trim());
+					if (br == null) {
+						br = branchModuleRepo.findByBranchNameIgnoreCase(accountCloser.getBranchName().trim()).orElse(null);
+					}
+				}
+				recordBankTransaction(
+						null,
+						br,
+						closeDate,
+						"ACCOUNT CLOSURE PAYOUT - A/C " + accountCloser.getAccountNumber() + " (" + accountCloser.getCustomerName() + ")",
+						0.0,
+						closingBalance,
+						"WITHDRAW",
+						"CLS_" + accountCloser.getAccountNumber()
+				);
+			}
+
+			// 3. Proactively record final closure activity in SavingAccountActivity
+			try {
+				SavingAccountActivity clsAct = new SavingAccountActivity();
+				clsAct.setSelectSavingTransactionId(refNo);
+				clsAct.setTransactionDate(closeDate);
+				clsAct.setSelectBranchName(accountCloser.getBranchName());
+				clsAct.setAccountNumber(accountCloser.getAccountNumber());
+				clsAct.setCustomerCode(accountCloser.getCustomerCode());
+				clsAct.setCustomerName(accountCloser.getCustomerName());
+				clsAct.setContactNumber(accountCloser.getContactNumber());
+				clsAct.setTransactionFor("Account Closure");
+				clsAct.setComments("FINAL SETTLEMENT PAYOUT ON ACCOUNT CLOSURE");
+				clsAct.setTransactionType("Withdrawal");
+				clsAct.setTransactionAmount(String.format(java.util.Locale.US, "%.2f", closingBalance));
+				clsAct.setAverageBalance("0.00");
+				clsAct.setPayBy(payMode);
+				clsAct.setApproved(true);
+				savingAccountActivityRepo.save(clsAct);
+			} catch (Exception ex) {
+				System.err.println("Error saving closure activity: " + ex.getMessage());
+			}
+		}
+
+		// 4. Mark account inactive and clear balance in CreateSavingsAccount
+		if (accountCloser.getAccountNumber() != null && !accountCloser.getAccountNumber().trim().isEmpty()) {
+			Optional<CreateSavingsAccount> optAcc = createSavingAccountRepo.findByAccountNumber(accountCloser.getAccountNumber().trim());
+			if (optAcc.isPresent()) {
+				CreateSavingsAccount acc = optAcc.get();
+				acc.setAccountStatus("0");
+				acc.setBalance("0.00");
+				createSavingAccountRepo.save(acc);
+			}
+		}
+
+		return saved;
 	}
 
 	public List<CreateSavingsAccount> fetchSavingAccountDataSMSEnable(String startDate, String endDate) {
@@ -1228,13 +1695,138 @@ public class CustomerSavingsService {
 
 	public double deductSmsCharges(Long id, double balance, double smsCharge) {
 
-		double newBalance = balance - smsCharge;
+		double newBalance = Math.max(0.0, balance - smsCharge);
 
 		CreateSavingsAccount acc = createSavingAccountRepo.findById(id)
-				.orElseThrow(() -> new RuntimeException("Account not found"));
+				.orElseThrow(() -> new RuntimeException("Account not found with ID: " + id));
 
-		acc.setBalance(String.valueOf(newBalance));
+		String formattedBal = String.format(java.util.Locale.US, "%.2f", newBalance);
+		acc.setBalance(formattedBal);
 		createSavingAccountRepo.save(acc);
+
+		String dateStr = LocalDate.now().toString();
+		String refNo = "TXNSMS_" + acc.getId() + "_" + System.currentTimeMillis();
+		String aCode = (acc.getAccountType() != null && "CURRENT".equalsIgnoreCase(acc.getAccountType())) ? "CURRENT" : "SAVING";
+		String bName = acc.getBranchName() != null ? acc.getBranchName().getBranchName() : "";
+
+		// 1. Record AccountTransaction
+		recordAccountTransaction(
+				acc.getAccountNumber(),
+				acc.getEnterCustomerName(),
+				bName,
+				aCode,
+				dateStr,
+				"CHARGE",
+				0.0,
+				smsCharge,
+				"SMS SERVICE CHARGE DEDUCTED",
+				"SYSTEM",
+				refNo,
+				newBalance,
+				"SYSTEM"
+		);
+
+		// 2. Record SavingAccountActivity
+		try {
+			SavingAccountActivity smsAct = new SavingAccountActivity();
+			smsAct.setSelectSavingTransactionId(refNo);
+			smsAct.setTransactionDate(dateStr);
+			smsAct.setSelectBranchName(bName);
+			smsAct.setAccountNumber(acc.getAccountNumber());
+			smsAct.setCustomerCode(acc.getSelectByCustomer());
+			smsAct.setCustomerName(acc.getEnterCustomerName());
+			smsAct.setContactNumber(acc.getContactNumber());
+			smsAct.setTransactionFor("SMS Charge");
+			smsAct.setComments("SMS SERVICE CHARGE DEDUCTED");
+			smsAct.setTransactionType("Withdrawal");
+			smsAct.setTransactionAmount(String.format(java.util.Locale.US, "%.2f", smsCharge));
+			smsAct.setAverageBalance(formattedBal);
+			smsAct.setPayBy("SYSTEM");
+			smsAct.setApproved(true);
+			savingAccountActivityRepo.save(smsAct);
+		} catch (Exception ex) {
+			System.err.println("Error saving SMS charge activity: " + ex.getMessage());
+		}
+
+		return newBalance;
+	}
+
+	public List<CreateSavingsAccount> getServiceChargeData(String startDate, String endDate) {
+		if (startDate != null && endDate != null && !startDate.trim().isEmpty() && !endDate.trim().isEmpty()) {
+			return createSavingAccountRepo.findByIsApprovedTrueAndMessageSendAndOpeningDateBetween("1", startDate.trim(), endDate.trim());
+		}
+		return createSavingAccountRepo.findByIsApprovedTrue();
+	}
+
+	public double deductServiceCharges(Long id) {
+		CreateSavingsAccount acc = createSavingAccountRepo.findById(id)
+				.orElseThrow(() -> new RuntimeException("Account not found with ID: " + id));
+
+		double serviceFee = 50.0;
+		if (acc.getSelectPlan() != null && !acc.getSelectPlan().trim().isEmpty()) {
+			List<SavingSchemeCatalog> schemes = savingSchmeCatalogRepo.findByPolicyName(acc.getSelectPlan().trim());
+			if (schemes != null && !schemes.isEmpty() && schemes.get(0).getServiceFee() != null) {
+				try {
+					serviceFee = Double.parseDouble(schemes.get(0).getServiceFee().trim());
+				} catch (Exception ignored) {}
+			}
+		}
+
+		double currentBalance = 0.0;
+		try {
+			if (acc.getBalance() != null && !acc.getBalance().trim().isEmpty()) {
+				currentBalance = Double.parseDouble(acc.getBalance().trim());
+			}
+		} catch (Exception ignored) {}
+
+		double newBalance = Math.max(0.0, currentBalance - serviceFee);
+		String formattedBal = String.format(java.util.Locale.US, "%.2f", newBalance);
+		acc.setBalance(formattedBal);
+		createSavingAccountRepo.save(acc);
+
+		String dateStr = LocalDate.now().toString();
+		String refNo = "TXNSRV_" + acc.getId() + "_" + System.currentTimeMillis();
+		String aCode = (acc.getAccountType() != null && "CURRENT".equalsIgnoreCase(acc.getAccountType())) ? "CURRENT" : "SAVING";
+		String bName = acc.getBranchName() != null ? acc.getBranchName().getBranchName() : "";
+
+		// 1. Record AccountTransaction
+		recordAccountTransaction(
+				acc.getAccountNumber(),
+				acc.getEnterCustomerName(),
+				bName,
+				aCode,
+				dateStr,
+				"CHARGE",
+				0.0,
+				serviceFee,
+				"ACCOUNT MAINTENANCE / SERVICE CHARGE DEDUCTED",
+				"SYSTEM",
+				refNo,
+				newBalance,
+				"SYSTEM"
+		);
+
+		// 2. Record SavingAccountActivity
+		try {
+			SavingAccountActivity srvAct = new SavingAccountActivity();
+			srvAct.setSelectSavingTransactionId(refNo);
+			srvAct.setTransactionDate(dateStr);
+			srvAct.setSelectBranchName(bName);
+			srvAct.setAccountNumber(acc.getAccountNumber());
+			srvAct.setCustomerCode(acc.getSelectByCustomer());
+			srvAct.setCustomerName(acc.getEnterCustomerName());
+			srvAct.setContactNumber(acc.getContactNumber());
+			srvAct.setTransactionFor("Service Charge");
+			srvAct.setComments("ACCOUNT MAINTENANCE SERVICE CHARGE DEDUCTED");
+			srvAct.setTransactionType("Withdrawal");
+			srvAct.setTransactionAmount(String.format(java.util.Locale.US, "%.2f", serviceFee));
+			srvAct.setAverageBalance(formattedBal);
+			srvAct.setPayBy("SYSTEM");
+			srvAct.setApproved(true);
+			savingAccountActivityRepo.save(srvAct);
+		} catch (Exception ex) {
+			System.err.println("Error saving service charge activity: " + ex.getMessage());
+		}
 
 		return newBalance;
 	}
@@ -1353,6 +1945,32 @@ public class CustomerSavingsService {
 			savingAccountActivityRepo.save(intAct);
 		} catch (Exception ex) {
 			System.err.println("Failed to log interest activity: " + ex.getMessage());
+		}
+
+		// Also record in AccountTransaction table
+		try {
+			String aCode = (savingsAccount.getAccountType() != null && "CURRENT".equalsIgnoreCase(savingsAccount.getAccountType())) ? "CURRENT" : "SAVING";
+			String bName = savingsAccount.getBranchName() != null ? savingsAccount.getBranchName().getBranchName() : "";
+			String txnDate = savedInterest.getToDate() != null ? savedInterest.getToDate().toString()
+					: (savedInterest.getFromDate() != null ? savedInterest.getFromDate().toString() : LocalDate.now().toString());
+
+			recordAccountTransaction(
+					savingsAccount.getAccountNumber(),
+					savingsAccount.getEnterCustomerName(),
+					bName,
+					aCode,
+					txnDate,
+					"INTEREST",
+					interestAmount.doubleValue(),
+					0.0,
+					"SB INTEREST CREDITED (" + savedInterest.getFromDate() + " TO " + savedInterest.getToDate() + ")",
+					"SYSTEM",
+					"TXNINT_" + savedInterest.getId(),
+					newBalance.doubleValue(),
+					"SYSTEM"
+			);
+		} catch (Exception ex) {
+			System.err.println("Failed to record interest AccountTransaction: " + ex.getMessage());
 		}
 
 		return ApiResponse.success(HttpStatus.OK, "Interest transferred & main account balance updated successfully",

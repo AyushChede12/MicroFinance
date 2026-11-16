@@ -5,7 +5,7 @@ $(document).ready(function() {
 		url: "api/datacorrection/fetchAllSavingAccountActivity",
 		type: "GET",
 		success: function(response) {
-			if (response.status =/api== "FOUND") {
+			if (response.status === "FOUND") {
 				$("#accountNumber").empty().append("<option value=''>-- SELECT ACCOUNT NO --</option>");
 				response.data.forEach(function(item) {
 					$("#accountNumber").append(`<option value='${item.accountNumber}'>${item.accountNumber}</option>`);
@@ -68,10 +68,10 @@ $(document).ready(function() {
 	});
 
 	$.ajax({
-		url: "api/preference/getAllBranchModule", // Add base path if needed like /api/preference/getAllBranchModule
+		url: "api/preference/getAllBranchModule", // Base path: api/preference/getAllBranchModule
 		type: "GET",
 		success: function(response) {
-			if (response.status == "FOUND") {
+			if ((response.status == "OK" || response.status == "FOUND" || response.status == 200) && Array.isArray(response.data)) {
 				const branchList = response.data;
 				$("#branchName").empty(); // Clear existing options
 				$("#branchName").append("<option value=''>-- SELECT BRANCH --</option>");
@@ -83,7 +83,7 @@ $(document).ready(function() {
 
 				}
 			} else {
-				alert("ERROR: " + response.message);
+				// handled without alert
 			}
 		},
 		error: function(xhr) {
@@ -120,11 +120,11 @@ $(document).ready(function() {
 					$("#payBy").val(data.payBy);
 
 				} else {
-					alert("TRANSFER SHARE DETAILS NOT FOUND FOR CUSTOMER");
+					alert("SAVINGS TRANSACTION NOT FOUND FOR ACCOUNT NUMBER");
 				}
 			},
 			error: function() {
-				alert("SHARES NOT FOUND OR SERVER ERROR");
+				alert("SAVINGS TRANSACTION NOT FOUND OR SERVER ERROR");
 			}
 		});
 

@@ -35,7 +35,7 @@
 					<div class="d-flex flex-column formFields">
 						<label for="vehicalNo">DATE FROM</label> <input type="date"
 							name="fromDate" id="fromDate" required="required"
-							placeholder="Enter From Date" style="text-transform: uppercase;" />
+							placeholder="ENTER FROM DATE" style="text-transform: uppercase;" />
 					</div>
 				</div>
 
@@ -43,7 +43,7 @@
 					<div class="d-flex flex-column formFields">
 						<label for="vehicalNo">DATE TO</label> <input type="date"
 							name="toDate" id="toDate" required="required"
-							placeholder="Enter To Date" style="text-transform: uppercase;" />
+							placeholder="ENTER TO DATE" style="text-transform: uppercase;" />
 					</div>
 				</div>
 			</div>
@@ -63,7 +63,7 @@
 		<div class="card recent-sales">
 
 			<div class="card-body table-responsive">
-				<h5 class="card-title">Search result</h5>
+				<h5 class="card-title">SEARCH RESULT</h5>
 
 				<table class="table table-borderless datatable style=" white-space:nowrap;">
 					<thead class="table-light">
@@ -91,7 +91,7 @@
 <div class="row">
 	<div class="col-12 text-center mt-3">
 		<button id="approvedBtn" class="btnStyle"
-			style="background-color: #FFA500;">APPROVED</button>
+			style="background-color: #FFA500;">APPROVE</button>
 	</div>
 </div>
 </div>

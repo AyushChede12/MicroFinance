@@ -178,7 +178,7 @@ function viewData(id) {
 }
 
 function deleteData(id) {
-	if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS BRANCH?")) {
+	if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS FINANCIAL YEAR?")) {
 		$.ajax({
 			url: "api/preference/deleteFinancialYearById",
 			type: "POST",
@@ -276,7 +276,7 @@ function updateFY() {
 		contentType: "application/json",
 		data: JSON.stringify(payload),
 		success: function(response) {
-			if (response.status = "OK") {
+			if (response.status == "OK") {
 				alert(response.message);
 				location.reload();
 			} else {

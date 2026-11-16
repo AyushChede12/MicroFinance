@@ -60,10 +60,10 @@ $(document).ready(function() {
 				data.forEach((item, index) => {
 					let row = `<tr>
 						<td>${index + 1}</td>
-						<td>${item.caste}</td>
+						<td>${(item.caste || '').toUpperCase()}</td>
 						<td>
-							<button class="iconbutton" onclick="deleteData(${item.id})" title="DELETE">
-								<i class="fa-solid fa-trash text-danger"></i>
+							<button type="button" class="iconbutton" onclick="editData('${item.caste}')" title="EDIT">
+								<i class="fa-solid fa-pen-to-square text-primary"></i>
 							</button>
 						</td>
 						<td>
@@ -85,6 +85,11 @@ $(document).ready(function() {
 
 });
 
+function editData(casteVal) {
+	$("#caste").val((casteVal || '').toUpperCase());
+	$("#caste").focus();
+}
+
 function deleteData(id) {
 	if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS CASTE?")) {
 		$.ajax({
@@ -92,7 +97,7 @@ function deleteData(id) {
 			type: "POST",
 			data: { id: id },
 			success: function(response) {
-				if (response.status = "OK") {
+				if (response.status == "OK") {
 					alert(response.message);
 					location.reload();
 				} else {

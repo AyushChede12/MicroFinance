@@ -25,6 +25,13 @@ import com.microfinance.repository.PartialMaturitypaymentRepo;
 import com.microfinance.repository.PolicyRenewalRepo;
 import com.microfinance.repository.SavingAccountFundTransferRepo;
 import com.microfinance.repository.TransferShareRepo;
+import com.microfinance.model.AccountTransaction;
+import com.microfinance.model.IncomingReceiptEntry;
+import com.microfinance.model.LoanPayment;
+import com.microfinance.repository.AccountTransactionRepo;
+import com.microfinance.repository.IncomingReceiptRepo;
+import com.microfinance.repository.LoanPaymentRepo;
+import java.util.stream.Collectors;
 
 
 
@@ -57,6 +64,15 @@ public class RequestApprovalsService {
 	
 	@Autowired
 	PartialMaturitypaymentRepo partialMaturitypaymentRepo;
+
+	@Autowired
+	AccountTransactionRepo accountTransactionRepo;
+
+	@Autowired
+	LoanPaymentRepo loanPaymentRepo;
+
+	@Autowired
+	IncomingReceiptRepo incomingReceiptRepo;
 	
 	public List<addCustomer> findAllMemberCode() {
 		// TODO Auto-generated method stub
@@ -240,4 +256,65 @@ public class RequestApprovalsService {
 
 
 
+	public List<AccountTransaction> getInterBranchCashTransfers() {
+		return accountTransactionRepo.findByTransactionTypeOrderByIdDesc("INTER_BRANCH_TRANSFER");
+	}
+
+	public Optional<AccountTransaction> approveInterBranchCashTransfer(Long id, boolean isApproved) {
+		Optional<AccountTransaction> opt = accountTransactionRepo.findById(id);
+		if (opt.isPresent()) {
+			AccountTransaction tx = opt.get();
+			tx.setStatus(isApproved ? "APPROVED" : "REJECTED");
+			accountTransactionRepo.save(tx);
+		}
+		return opt;
+	}
+
+	public List<LoanPayment> getRegularEmiPayments() {
+		List<LoanPayment> all = loanPaymentRepo.findAll();
+		return all.stream()
+				.filter(p -> p.getTypeOfLoan() == null || !p.getTypeOfLoan().toUpperCase().contains("IRREGULAR"))
+				.collect(Collectors.toList());
+	}
+
+	public Optional<LoanPayment> approveRegularEmiPayment(Long id, boolean isApproved) {
+		Optional<LoanPayment> opt = loanPaymentRepo.findById(id);
+		if (opt.isPresent()) {
+			LoanPayment p = opt.get();
+			p.setPaymentStatus(isApproved ? "APPROVED" : "REJECTED");
+			loanPaymentRepo.save(p);
+		}
+		return opt;
+	}
+
+	public List<LoanPayment> getIrregularEmiPayments() {
+		List<LoanPayment> all = loanPaymentRepo.findAll();
+		return all.stream()
+				.filter(p -> p.getTypeOfLoan() != null && p.getTypeOfLoan().toUpperCase().contains("IRREGULAR"))
+				.collect(Collectors.toList());
+	}
+
+	public Optional<LoanPayment> approveIrregularEmiPayment(Long id, boolean isApproved) {
+		Optional<LoanPayment> opt = loanPaymentRepo.findById(id);
+		if (opt.isPresent()) {
+			LoanPayment p = opt.get();
+			p.setPaymentStatus(isApproved ? "APPROVED" : "REJECTED");
+			loanPaymentRepo.save(p);
+		}
+		return opt;
+	}
+
+	public List<IncomingReceiptEntry> getManualPaymentEntries() {
+		return incomingReceiptRepo.findAll();
+	}
+
+	public Optional<IncomingReceiptEntry> approveManualPaymentEntry(Long id, boolean isApproved) {
+		Optional<IncomingReceiptEntry> opt = incomingReceiptRepo.findById(id);
+		if (opt.isPresent()) {
+			IncomingReceiptEntry e = opt.get();
+			e.setRemarks((e.getRemarks() != null ? e.getRemarks() + " | " : "") + (isApproved ? "APPROVED" : "REJECTED"));
+			incomingReceiptRepo.save(e);
+		}
+		return opt;
+	}
 }

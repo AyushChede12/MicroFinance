@@ -138,7 +138,7 @@
 					<div class="d-flex flex-column formFields">
 						<label for=""> EMI AMOUNT* </label> <input type="text"
 							readonly="readonly" name="loanEmi" id="loanEmi"
-							required="required" placeholder="Emi" />
+							required="required" placeholder="EMI" />
 					</div>
 				</div>
 
@@ -361,16 +361,141 @@
 
 			</div>
 
-			<div class="row">
-				<div class="col-12 text-center">
-					<button id="groupPaymentBtn" class="btnStyle bg-success"
-						style="margin-left: 80%">PAYMENT</button>
-
+			<div class="row mt-4">
+				<div class="col-12 text-center d-flex justify-content-end align-items-center gap-2">
+					<button type="button" id="printDisbursementBtn" class="btn btn-primary" style="display: none; height: 35px; min-width: 220px; font-weight: 600; text-transform: uppercase;">
+						<i class="bi bi-printer"></i> PRINT DISBURSEMENT ADVICE
+					</button>
+					<button id="groupPaymentBtn" type="button" class="btnStyle bg-success" style="height: 35px; min-width: 140px; font-weight: 600; text-transform: uppercase;">PAYMENT</button>
 				</div>
 			</div>
 		</div>
 	</form>
 
+	<!-- Printable Disbursement Advice Area -->
+	<div id="printableDisbursementArea" style="display: none;">
+		<div style="font-family: Arial, sans-serif; padding: 25px; color: #000; line-height: 1.4;">
+			<div style="text-align: center; margin-bottom: 20px;">
+				<h2 id="disbCompName" style="margin: 0; font-size: 22px; font-weight: bold; color: #0d6efd; letter-spacing: 0.5px; text-transform: uppercase;"></h2>
+				<p id="disbCompAddress" style="margin: 4px 0 2px 0; font-size: 12px; color: #444; text-transform: uppercase;"></p>
+				<p id="disbCompRegLine" style="margin: 2px 0; font-size: 11px; color: #555; text-transform: uppercase;"></p>
+				<p id="disbCompContact" style="margin: 2px 0; font-size: 11px; color: #555; text-transform: uppercase;"></p>
+				<hr style="border: 0; border-top: 2px solid #000; margin: 12px 0 16px 0;">
+				<h3 style="margin: 5px 0; font-size: 16px; font-weight: bold; text-decoration: underline; text-transform: uppercase;">
+					JOINT LIABILITY GROUP LOAN DISBURSEMENT ADVICE / SANCTION RECEIPT
+				</h3>
+			</div>
+
+			<table style="width: 100%; font-size: 12px; margin-bottom: 15px; border-collapse: collapse;">
+				<tr>
+					<td style="width: 20%; padding: 4px 0;"><b>GROUP ID / CODE:</b></td>
+					<td style="width: 30%; padding: 4px 0;"><span id="disbGroupId"></span></td>
+					<td style="width: 20%; padding: 4px 0;"><b>DISBURSEMENT DATE:</b></td>
+					<td style="width: 30%; padding: 4px 0;"><span id="disbPaymentDate"></span></td>
+				</tr>
+				<tr>
+					<td style="padding: 4px 0;"><b>COMMUNITY / GROUP NAME:</b></td>
+					<td style="padding: 4px 0;"><span id="disbCommunityName"></span></td>
+					<td style="padding: 4px 0;"><b>BRANCH NAME:</b></td>
+					<td style="padding: 4px 0;"><span id="disbBranchName"></span></td>
+				</tr>
+				<tr>
+					<td style="padding: 4px 0;"><b>COMMUNITY ADDRESS:</b></td>
+					<td style="padding: 4px 0;"><span id="disbCommunityAddress"></span></td>
+					<td style="padding: 4px 0;"><b>CONTACT NUMBER:</b></td>
+					<td style="padding: 4px 0;"><span id="disbContactNumber"></span></td>
+				</tr>
+				<tr>
+					<td style="padding: 4px 0;"><b>LOAN SCHEME:</b></td>
+					<td style="padding: 4px 0;"><span id="disbLoanScheme"></span></td>
+					<td style="padding: 4px 0;"><b>LOAN PURPOSE:</b></td>
+					<td style="padding: 4px 0;"><span id="disbLoanPurpose"></span></td>
+				</tr>
+			</table>
+
+			<h4 style="font-size: 13px; font-weight: bold; margin: 15px 0 8px 0; border-bottom: 1px solid #ccc; padding-bottom: 3px; text-transform: uppercase;">
+				SANCTION & REPAYMENT TERMS
+			</h4>
+			<table style="width: 100%; font-size: 12px; margin-bottom: 15px; border-collapse: collapse;" border="1" cellpadding="5">
+				<tr style="background-color: #f2f2f2; text-transform: uppercase;">
+					<th>SANCTIONED AMOUNT</th>
+					<th>RATE OF INTEREST (%)</th>
+					<th>INTEREST TYPE</th>
+					<th>TENURE / TERM</th>
+					<th>EMI MODE</th>
+					<th>INSTALLMENT (EMI)</th>
+				</tr>
+				<tr style="text-align: center; text-transform: uppercase;">
+					<td><b>₹ <span id="disbLoanAmount"></span></b></td>
+					<td><span id="disbRoi"></span>%</td>
+					<td><span id="disbInterestType"></span></td>
+					<td><span id="disbTerm"></span></td>
+					<td><span id="disbEmiType"></span></td>
+					<td><b>₹ <span id="disbEmiAmount"></span></b></td>
+				</tr>
+			</table>
+
+			<h4 style="font-size: 13px; font-weight: bold; margin: 15px 0 8px 0; border-bottom: 1px solid #ccc; padding-bottom: 3px; text-transform: uppercase;">
+				DEDUCTIONS & DISBURSEMENT SUMMARY
+			</h4>
+			<table style="width: 100%; font-size: 12px; margin-bottom: 15px; border-collapse: collapse;" border="1" cellpadding="5">
+				<tr style="background-color: #f2f2f2; text-transform: uppercase;">
+					<th>PROCESSING FEE</th>
+					<th>GST AMOUNT</th>
+					<th>LEGAL CHARGES</th>
+					<th>INSURANCE CHARGES</th>
+					<th>VALUATION CHARGES</th>
+					<th>TOTAL DEDUCTIONS</th>
+					<th>NET DISBURSED AMOUNT</th>
+				</tr>
+				<tr style="text-align: center; text-transform: uppercase;">
+					<td>₹ <span id="disbProcessing"></span></td>
+					<td>₹ <span id="disbGst"></span></td>
+					<td>₹ <span id="disbLegal"></span></td>
+					<td>₹ <span id="disbInsurance"></span></td>
+					<td>₹ <span id="disbValuation"></span></td>
+					<td>₹ <span id="disbTotalDeduction"></span></td>
+					<td><b>₹ <span id="disbNetPayable"></span></b></td>
+				</tr>
+			</table>
+
+			<table style="width: 100%; font-size: 12px; margin-bottom: 25px; border-collapse: collapse;">
+				<tr>
+					<td style="width: 25%; padding: 4px 0;"><b>PAYMENT MODE:</b></td>
+					<td style="width: 25%; padding: 4px 0;"><span id="disbPaymentMode"></span></td>
+					<td style="width: 25%; padding: 4px 0;"><b>ACCOUNT / CHEQUE NO:</b></td>
+					<td style="width: 25%; padding: 4px 0;"><span id="disbAccountCheque"></span></td>
+				</tr>
+				<tr>
+					<td style="padding: 4px 0;"><b>FINANCIAL CONSULTANT:</b></td>
+					<td style="padding: 4px 0;"><span id="disbConsultant"></span></td>
+					<td style="padding: 4px 0;"><b>DEDUCTED IN CASH:</b></td>
+					<td style="padding: 4px 0;"><span id="disbChargesCash"></span></td>
+				</tr>
+			</table>
+
+			<div style="margin-top: 60px; display: flex; justify-content: space-between; font-size: 12px; text-align: center; text-transform: uppercase;">
+				<div style="width: 30%;">
+					<div style="border-top: 1px solid #000; padding-top: 5px;">
+						<b>GROUP LEADER / BORROWER</b><br>
+						<span>SIGNATURE / THUMB IMPRESSION</span>
+					</div>
+				</div>
+				<div style="width: 30%;">
+					<div style="border-top: 1px solid #000; padding-top: 5px;">
+						<b>LOAN OFFICER / PREPARED BY</b><br>
+						<span>SIGNATURE</span>
+					</div>
+				</div>
+				<div style="width: 30%;">
+					<div style="border-top: 1px solid #000; padding-top: 5px;">
+						<b>AUTHORIZED SIGNATORY</b><br>
+						<span>BRANCH MANAGER</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 <script

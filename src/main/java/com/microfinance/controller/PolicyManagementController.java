@@ -836,11 +836,11 @@ public class PolicyManagementController {
 		boolean isDeleted = policyManagementService.deletePolicyDataById(id);
 		if (isDeleted) {
 			ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK, "POLICY DATA DELETED SUCCESSFULLY",
-					"success");
+					"SUCCESS");
 			return ResponseEntity.ok(response);
 		} else {
 			ApiResponse<String> response = new ApiResponse<>(HttpStatus.NOT_FOUND, "POLICY DATA DELETION FAILED",
-					"failure");
+					"FAILURE");
 			return ResponseEntity.badRequest().body(response);
 		}
 	}

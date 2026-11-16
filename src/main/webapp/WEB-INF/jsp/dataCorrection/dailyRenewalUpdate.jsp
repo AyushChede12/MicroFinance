@@ -1,6 +1,6 @@
 
 <div class="pagetitle">
-	<h1>DATE CORRECTION</h1>
+	<h1>DATA CORRECTION</h1>
 	<nav>
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item"><a href="openDashboard"> <i
@@ -16,7 +16,7 @@
 		<div>
 			<nav>
 				<ol class="breadcrumb breadcrumb-title">
-					<li class="breadcrumb-item action">SRARCH BOX</li>
+					<li class="breadcrumb-item action">SEARCH BOX</li>
 				</ol>
 			</nav>
 			<div class="row">
@@ -184,7 +184,7 @@
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
-						<label for="dueDate">DEADLINE</label> <input type="date"
+						<label for="dueDate">DUE DATE</label> <input type="date"
 							name="dueDate" id="dueDate" required="required"
 							placeholder="" />
 					</div>
@@ -197,7 +197,7 @@
 						style="margin-bottom: 30px">
 						<label>NO OF INSTALLMENTS </label> <input type="text"
 							name="noOfInst" id="noOfInst" required="required"
-							placeholder="ENTER JOIN NAME" />
+							placeholder="ENTER NO OF INSTALLMENTS" />
 					</div>
 				</div>
 
@@ -214,7 +214,7 @@
 						<label for="modeOfPayment"> MODE OF PAYMENT </label> <select
 							id="modeOfPayment" name="modeOfPayment" required="required"
 							class="form-control selectField" style="height: 30px;">
-							<option value="">SELECT PAYMOD</option>
+							<option value="">-- SELECT PAYMENT MODE --</option>
 							<option value="Cash">CASH</option>
 							<option value="Online">ONLINE</option>
 

@@ -1,539 +1,322 @@
-/* =====================================================
-   CHEQUE TRANSACTION REPORT – FINAL JS
-   ===================================================== */
+let allChequeData = [];
+let currentFilteredCheques = [];
 
 $(document).ready(function() {
 
-	console.log("Cheque Transaction Report Loaded");
-	console.log("Context Path =", contextPath);
+	loadBranchDropdown();
+	loadSavingActivity();
 
-	loadChequeData();
-
-	$("#findBtn").on("click", function() {
+	$("#findBtn").on("click", function(e) {
+		e.preventDefault();
 		applyFilters();
 	});
 
+	$("#resetBtn").on("click", function(e) {
+		e.preventDefault();
+		$("#formid")[0].reset();
+		currentFilteredCheques = allChequeData;
+		renderTable(allChequeData);
+	});
+
+	$("#printFullReportBtn").on("click", function(e) {
+		e.preventDefault();
+		let branch = $("#branchName").val() || "ALL BRANCHES";
+		let subTitle = "BRANCH: " + branch.toUpperCase();
+		if ($("#fDate").val() && $("#tDate").val()) {
+			subTitle += " | PERIOD: " + $("#fDate").val() + " TO " + $("#tDate").val();
+		}
+		ReportPrintUtil.printTable('.datatable', 'CHEQUE TRANSACTION REPORT', subTitle);
+	});
+
+	// Table Print Button Handler
+	$(document).off("click", ".printChequeBtn").on("click", ".printChequeBtn", function(e) {
+		e.preventDefault();
+		let idx = $(this).data("index");
+		let item = currentFilteredCheques[idx] || allChequeData[idx];
+		if (!item) {
+			alert("CHEQUE RECORD NOT FOUND");
+			return;
+		}
+
+		let content = `
+			<table class="table table-bordered text-uppercase" style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+				<thead class="table-dark">
+					<tr>
+						<th colspan="2" style="padding: 10px; font-size: 14px; text-align: center;">
+							CHEQUE TRANSACTION CLEARANCE VOUCHER
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th style="width: 35%;">ACCOUNT HOLDER / PAYEE</th>
+						<td><strong>${item.name}</strong></td>
+					</tr>
+					<tr>
+						<th>TRANSACTION DATE</th>
+						<td>${formatDate(item.date)}</td>
+					</tr>
+					<tr>
+						<th>CHEQUE NUMBER</th>
+						<td><strong style="color: #002147;">${item.chequeNo}</strong></td>
+					</tr>
+					<tr>
+						<th>BRANCH</th>
+						<td>${item.branch || "-"}</td>
+					</tr>
+					<tr>
+						<th>SOURCE TRANSACTION MODULE</th>
+						<td>${item.source}</td>
+					</tr>
+					<tr>
+						<th>CLEARANCE STATUS</th>
+						<td><span class="badge bg-success">${item.type}</span></td>
+					</tr>
+				</tbody>
+			</table>
+		`;
+
+		ReportPrintUtil.printHtml("CHEQUE TRANSACTION VOUCHER", content);
+	});
 });
 
+/* ================= BRANCH ================= */
 
-/* ================= GLOBAL ================= */
-
-let allChequeData = [];
-let rowIndex = 0;
-
-
-/* ================= LOAD START ================= */
-
-function loadChequeData() {
-
-	allChequeData = [];
-	rowIndex = 0;
-	$(".datatable tbody").empty();
-
-	loadLoanPayment();
-}
-
-
-/* ================= API 1 ================= */
-
-function loadLoanPayment() {
-
+function loadBranchDropdown() {
 	$.ajax({
-		url: contextPath + "/api/reports/getCheckDataFromLoanPayment",
+		url: "api/preference/getAllBranchModule",
 		type: "GET",
-
-		success: function(res) {
-
-			let data = extractData(res);
-
-			data.forEach(item => {
-
-				allChequeData.push({
-					id: item.id,
-					name: item.memberName || "-",
-					date: item.paymentDate,
-					chequeNo: item.chequeNo || "-",
-					type: "RECEIVED",
-					branch: item.branchName || "",
-					source: "Loan Payment"
-				});
-
+		success: function(response) {
+			let branches = response.data || response || [];
+			let options = "<option value=''>ALL BRANCHES</option>";
+			branches.forEach(b => {
+				let bName = (b.branchName || "").toUpperCase();
+				if (bName) options += `<option value="${bName}">${bName}</option>`;
 			});
-
-			loadSavingActivity();
+			$("#branchName").html(options);
 		},
-
 		error: function() {
-			loadSavingActivity();
+			console.warn("FAILED TO LOAD BRANCHES");
 		}
-
 	});
 }
 
-
-/* ================= API 2 ================= */
+/* ================= LOAD APIS ================= */
 
 function loadSavingActivity() {
-
+	allChequeData = [];
 	$.ajax({
-		url: contextPath + "/api/reports/getPayByFromSavingAccountActivity",
+		url: "api/reports/getPayByFromSavingAccountActivity",
 		type: "GET",
-
 		success: function(res) {
-
 			let data = extractData(res);
-
 			data.forEach(item => {
-
 				allChequeData.push({
-					id: item.id,
-					name: item.customerName || "-",
-					date: item.transactionDate,
-					chequeNo: item.chequeNo || "-",
-					type: "ISSUED",
-					branch: item.branchName || "",
-					source: "Saving Activity"
+					id: "SA_" + (item.id || Math.random()),
+					name: (item.accountHolderName || item.customerName || "-").toUpperCase(),
+					date: item.transactionDate || item.date,
+					chequeNo: (item.chequeNo || "-").toUpperCase(),
+					type: (item.status || "CLEARED").toUpperCase(),
+					branch: (item.branchName || "-").toUpperCase(),
+					source: "SAVING ACCOUNT ACTIVITY"
 				});
-
 			});
-
-			loadCreateSaving();
+			loadLoanPayment();
 		},
-
 		error: function() {
-			loadCreateSaving();
+			loadLoanPayment();
 		}
-
 	});
 }
 
-
-/* ================= API 3 ================= */
+function loadLoanPayment() {
+	$.ajax({
+		url: "api/reports/getCheckDataFromLoanPayment",
+		type: "GET",
+		success: function(res) {
+			let data = extractData(res);
+			data.forEach(item => {
+				allChequeData.push({
+					id: "LP_" + (item.id || Math.random()),
+					name: (item.applicantName || item.customerName || "-").toUpperCase(),
+					date: item.paymentDate || item.date,
+					chequeNo: (item.chequeNo || "-").toUpperCase(),
+					type: (item.status || "CLEARED").toUpperCase(),
+					branch: (item.branchName || "-").toUpperCase(),
+					source: "LOAN REPAYMENT"
+				});
+			});
+			loadCreateSaving();
+		},
+		error: function() {
+			loadCreateSaving();
+		}
+	});
+}
 
 function loadCreateSaving() {
-
 	$.ajax({
-		url: contextPath + "/api/reports/getCheckDataFromCreateSavings",
+		url: "api/reports/getCheckDataFromCreateSavings",
 		type: "GET",
-
 		success: function(res) {
-
 			let data = extractData(res);
-
 			data.forEach(item => {
-
 				allChequeData.push({
-					id: item.id,
-					name: item.enterCustomerName || "-",
+					id: "CS_" + (item.id || Math.random()),
+					name: (item.enterCustomerName || "-").toUpperCase(),
 					date: item.openingDate,
-					chequeNo: item.chequeNo || "-",
+					chequeNo: (item.chequeNo || "-").toUpperCase(),
 					type: "ISSUED",
-					branch: item.branchName || "",
-					source: "Create Savings"
+					branch: (item.branchName || "-").toUpperCase(),
+					source: "CREATE SAVINGS ACCOUNT"
 				});
-
 			});
-
 			loadFinancialConsultant();
 		},
-
 		error: function() {
 			loadFinancialConsultant();
 		}
-
 	});
 }
-
-
-/* ================= API 4 ================= */
 
 function loadFinancialConsultant() {
-
 	$.ajax({
-		url: contextPath + "/api/reports/getCheckDataFromFinancialConsultant",
+		url: "api/reports/getCheckDataFromFinancialConsultant",
 		type: "GET",
-
 		success: function(res) {
-
 			let data = extractData(res);
-
 			data.forEach(item => {
-
 				allChequeData.push({
-					id: item.id,
-					name: item.financialName || "-",
+					id: "FC_" + (item.id || Math.random()),
+					name: (item.financialName || "-").toUpperCase(),
 					date: item.joiningDate,
-					chequeNo: item.chequeNo || "-",
+					chequeNo: (item.chequeNo || "-").toUpperCase(),
 					type: "ISSUED",
-					branch: item.branchName || "",
-					source: "Financial Consultant"
+					branch: (item.branchName || "-").toUpperCase(),
+					source: "FINANCIAL CONSULTANT"
 				});
-
 			});
-
 			loadTeamMember();
 		},
-
 		error: function() {
 			loadTeamMember();
 		}
-
 	});
 }
-
-
-/* ================= API 5 ================= */
 
 function loadTeamMember() {
-
 	$.ajax({
-		url: contextPath + "/api/reports/getCheckDataFromTeamMember",
+		url: "api/reports/getCheckDataFromTeamMember",
 		type: "GET",
-
 		success: function(res) {
-
 			let data = extractData(res);
-
 			data.forEach(item => {
-
 				allChequeData.push({
-					id: item.id,
-					name: item.teamMemberName || "-",
-					date: item.signUpDate,
-					chequeNo: item.chequeNo || "-",
+					id: "TM_" + (item.id || Math.random()),
+					name: (item.name || "-").toUpperCase(),
+					date: item.doj,
+					chequeNo: (item.chequeNo || "-").toUpperCase(),
 					type: "ISSUED",
-					branch: item.branchName || "",
-					source: "Team Member"
+					branch: (item.branch || "-").toUpperCase(),
+					source: "TEAM MEMBER"
 				});
-
 			});
-
-			loadApprovedCustomers();
-		},
-
-		error: function() {
-			loadApprovedCustomers();
-		}
-
-	});
-}
-
-
-/* ================= API 6 ================= */
-
-function loadApprovedCustomers() {
-
-	$.ajax({
-		url: contextPath + "/api/customermanagement/approved",
-		type: "GET",
-
-		success: function(res) {
-
-			let data = extractData(res);
-
-			data.forEach(item => {
-
-				allChequeData.push({
-					id: item.id,
-					name: item.customerName || "-",
-					date: item.signupDate,
-					chequeNo: item.chequeNo || "-",
-					type: "ISSUED",
-					branch: item.branchName || "",
-					source: "Customer"
-				});
-
-			});
-
+			currentFilteredCheques = allChequeData;
 			renderTable(allChequeData);
 		},
-
 		error: function() {
+			currentFilteredCheques = allChequeData;
 			renderTable(allChequeData);
 		}
-
 	});
 }
-
 
 /* ================= FILTER ================= */
 
 function applyFilters() {
-
-	let fDate = $("#fDate").val();
-	let tDate = $("#tDate").val();
-	let chequeNo = $("#chequeNo").val().trim();
 	let type = $("#type").val();
 	let branch = $("#branchName").val();
-
-	let fromDate = parseInputDate(fDate);
-	let toDate = parseInputDate(tDate);
+	let fDate = parseInputDate($("#fDate").val());
+	let tDate = parseInputDate($("#tDate").val());
+	let chequeNo = $("#chequeNo").val().trim().toUpperCase();
 
 	let filtered = allChequeData.filter(item => {
+		let matchType = !type || item.type === type.toUpperCase();
+		let matchBranch = !branch || item.branch === branch.toUpperCase();
+		let matchCheque = !chequeNo || item.chequeNo.includes(chequeNo);
 
 		let itemDate = parseDate(item.date);
+		let matchFrom = !fDate || (itemDate && itemDate >= fDate);
+		let matchTo = !tDate || (itemDate && itemDate <= tDate);
 
-		if (fromDate && itemDate && itemDate < fromDate) return false;
-		if (toDate && itemDate && itemDate > toDate) return false;
-
-		if (chequeNo && !String(item.chequeNo).includes(chequeNo)) return false;
-
-		if (type && item.type !== type) return false;
-
-		if (branch && item.branch &&
-			item.branch.toLowerCase() !== branch.toLowerCase()) return false;
-
-		return true;
+		return matchType && matchBranch && matchCheque && matchFrom && matchTo;
 	});
 
+	currentFilteredCheques = filtered;
 	renderTable(filtered);
 }
 
-
-/* ================= TABLE ================= */
+/* ================= RENDER ================= */
 
 function renderTable(data) {
-
 	let tbody = $(".datatable tbody");
 	tbody.empty();
-	rowIndex = 0;
 
 	if (!data || data.length === 0) {
-
-		tbody.append(`
-            <tr>
-                <td colspan="6">NO DATA FOUND</td>
-            </tr>
-        `);
-
+		tbody.html("<tr><td colspan='8' class='text-center text-muted'>NO CHEQUE TRANSACTIONS FOUND MATCHING CRITERIA</td></tr>");
 		return;
 	}
 
-	data.forEach(item => {
-
-		rowIndex++;
+	data.forEach((item, index) => {
+		let statusBadge = `<span class="badge bg-success">${item.type}</span>`;
+		if (item.type.includes("BOUN") || item.type.includes("FAIL")) {
+			statusBadge = `<span class="badge bg-danger">${item.type}</span>`;
+		} else if (item.type.includes("PEND")) {
+			statusBadge = `<span class="badge bg-warning text-dark">${item.type}</span>`;
+		}
 
 		tbody.append(`
-            <tr>
-                <td>${rowIndex}</td>
-                <td>${item.name}</td>
-                <td>${formatDate(item.date)}</td>
-                <td>${item.chequeNo}</td>
-                <td>${item.type}</td>
-                <td>
-                    <button class="btn btn-sm btn-success" onclick="viewData(${item.id})">
-                        <i class="bi bi-printer"></i>
-                    </button>
-                </td>
-            </tr>
-        `);
-
+			<tr style="font-family: 'Poppins', sans-serif;">
+				<td class="text-center font-monospace">${index + 1}</td>
+				<td><strong>${item.name}</strong></td>
+				<td>${formatDate(item.date)}</td>
+				<td><strong>${item.chequeNo}</strong></td>
+				<td>${item.branch || "-"}</td>
+				<td>${item.source || "-"}</td>
+				<td>${statusBadge}</td>
+				<td class="text-center no-print">
+					<button class="btn btn-sm btn-outline-success printChequeBtn" data-index="${index}" title="PRINT CHEQUE VOUCHER">
+						<i class="bi bi-printer"></i> PRINT
+					</button>
+				</td>
+			</tr>
+		`);
 	});
 }
-
-
-/* ================= PRINT ================= */
-
-function viewData(id) {
-
-	let item = allChequeData.find(x => x.id == id);
-
-	if (!item) {
-		alert("DATA NOT FOUND");
-		return;
-	}
-
-	let win = window.open('', '', 'width=900,height=700');
-
-	win.document.write(`
-        <html>
-        <head>
-            <title>CHEQUE PRINT</title>
-        </head>
-        <body style="font-family:Arial;padding:30px">
-
-            <h2>CHEQUE TRANSACTION</h2>
-            <hr>
-
-            <p><b>NAME :</b> ${item.name}</p>
-            <p><b>DATE :</b> ${formatDate(item.date)}</p>
-            <p><b>CHEQUE NO :</b> ${item.chequeNo}</p>
-            <p><b>STATUS :</b> ${item.type}</p>
-            <p><b>SOURCE :</b> ${item.source}</p>
-
-            <br>
-
-            <button onclick="window.print()">PRINT</button>
-
-        </body>
-        </html>
-    `);
-
-	win.document.close();
-}
-
 
 /* ================= HELPERS ================= */
 
 function extractData(res) {
-
 	if (!res) return [];
-
 	if (Array.isArray(res.data)) return res.data;
-
 	if (Array.isArray(res.response)) return res.response;
-
 	if (Array.isArray(res.result)) return res.result;
-
 	if (Array.isArray(res)) return res;
-
 	return [];
 }
 
-
 function parseDate(d) {
-
 	if (!d) return null;
-
 	return new Date(d.split(" ")[0]);
 }
 
-
 function parseInputDate(d) {
-
 	if (!d) return null;
-
 	return new Date(d);
 }
 
-
 function formatDate(d) {
-
 	if (!d) return "-";
-
 	let date = new Date(d.split(" ")[0]);
-
 	return date.toLocaleDateString("en-GB");
-}
-function viewData(id) {
-
-	let item = allChequeData.find(x => x.id == id);
-
-	if (!item) {
-		alert("DATA NOT FOUND");
-		return;
-	}
-
-	let win = window.open('', '', 'width=900,height=700');
-
-	win.document.write(`
-    <html>
-    <head>
-        <title>CHEQUE TRANSACTION REPORT</title>
-
-        <style>
-
-            body{
-                font-family: Arial;
-                padding:40px;
-            }
-
-            .header{
-                text-align:center;
-                margin-bottom:25px;
-            }
-
-            .company{
-                font-size:22px;
-                font-weight:bold;
-            }
-
-            .report{
-                font-size:18px;
-                margin-top:5px;
-            }
-
-            table{
-                width:100%;
-                border-collapse:collapse;
-                margin-top:20px;
-            }
-
-            table, th, td{
-                border:1px solid #000;
-            }
-
-            th, td{
-                padding:8px;
-                text-align:left;
-            }
-
-            th{
-                background:#f2f2f2;
-            }
-
-            .footer{
-                margin-top:30px;
-                font-size:13px;
-            }
-
-            @media print{
-                button{
-                    display:none;
-                }
-            }
-
-        </style>
-
-    </head>
-
-    <body>
-
-        <div class="header">
-            <div class="company">CO OPERATIVE SOCIETY LTD NAGPUR</div>
-            <div>NAGPUR, MAHARASHTRA</div>
-            <div class="report">CHEQUE TRANSACTION REPORT</div>
-        </div>
-
-        <table>
-
-            <tr>
-                <th>ACCOUNT HOLDER</th>
-                <td>${item.name}</td>
-            </tr>
-
-            <tr>
-                <th>TRANSACTION DATE</th>
-                <td>${formatDate(item.date)}</td>
-            </tr>
-
-            <tr>
-                <th>CHEQUE NUMBER</th>
-                <td>${item.chequeNo}</td>
-            </tr>
-
-            <tr>
-                <th>STATUS</th>
-                <td>${item.type}</td>
-            </tr>
-
-            <tr>
-                <th>SOURCE</th>
-                <td>${item.source}</td>
-            </tr>
-
-        </table>
-
-        <div class="footer">
-            PRINTED ON : ${new Date().toLocaleDateString()}
-        </div>
-
-        <br>
-        <button onclick="window.print()">PRINT</button>
-
-    </body>
-    </html>
-    `);
-
-	win.document.close();
 }

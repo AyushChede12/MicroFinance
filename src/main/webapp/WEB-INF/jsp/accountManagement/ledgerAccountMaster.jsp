@@ -178,7 +178,7 @@ input[type="text"] {
 									<span class="input-group-text bg-white"> <i
 										class="fa-solid fa-magnifying-glass text-primary"></i>
 									</span> <input type="text" id="ledgerSearch" class="form-control"
-										placeholder="Search Ledger..." autocomplete="off">
+										placeholder="SEARCH LEDGER..." autocomplete="off">
 
 								</div>
 

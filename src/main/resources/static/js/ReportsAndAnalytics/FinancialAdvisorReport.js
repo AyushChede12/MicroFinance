@@ -1,326 +1,230 @@
-$(document).ready(function() {
+let allFinancialConsultants = [];
+let currentFilteredConsultants = [];
 
-	if (window.financialConsultantInitialized) {
-		console.warn("Financial Consultant JS already initialized");
-		return;
-	}
-	window.financialConsultantInitialized = true;
+$(document).ready(function () {
+	loadBranchDropdown();
+	loadFinancialConsultants();
 
-	var allFinancialConsultants = [];
-
-	/* ================= COMPANY DETAILS ================= */
-
-	const companyDetails = {
-		name: "CO OPERATIVE SOCIETY LTD NAGPUR",
-		address: "PLOT NO 497 NEW NANDANWAN",
-		state: "MAHARASHTRA",
-		pin: "440024",
-		cin: "ASJ#567",
-		email: "example@gmail.com",
-		helpline: "9566200223",
-		branchManager: "9558712001"
-	};
-
-	/* ================= FETCH DATA ================= */
-
-	$.ajax({
-		url: "api/reports/getApprovedFinancialConsultant",
-		method: "GET",
-		contentType: "application/json; charset=ISO-8859-1",
-		success: function(response) {
-
-			if (response && Array.isArray(response.data)) {
-				allFinancialConsultants = response.data;
-				populateBranchDropdown(allFinancialConsultants);
-				renderTable(allFinancialConsultants);
-			} else {
-				$("#fetchFinancialConsultants")
-					.html("<tr><td colspan='10'>NO APPROVED CONSULTANTS FOUND.</td></tr>");
-			}
-		},
-		error: function() {
-			alert("ERROR WHILE FETCHING FINANCIAL CONSULTANT DATA.");
-		}
+	$("#resetBtn").on("click", function (e) {
+		e.preventDefault();
+		$("#formid")[0].reset();
+		currentFilteredConsultants = allFinancialConsultants;
+		renderTable(allFinancialConsultants);
 	});
 
-	function normalize(text) {
-		return text?.toString().replace(/\s+/g, " ").trim().toUpperCase();
-	}
+	// Print Full Report Table
+	$("#printFullReportBtn").on("click", function (e) {
+		e.preventDefault();
+		const branch = $("#branchName2").val() || "ALL BRANCHES";
+		let subTitle = "BRANCH: " + branch.toUpperCase();
+		if ($("#fromDate").val() && $("#toDate").val()) {
+			subTitle += " | PERIOD: " + $("#fromDate").val() + " TO " + $("#toDate").val();
+		}
+		ReportPrintUtil.printTable('.datatable', 'FINANCIAL CONSULTANT REPORT', subTitle);
+	});
 
-	/* ================= BRANCH DROPDOWN ================= */
-
-	function populateBranchDropdown(data) {
-
-		var select = $("#branchName2");
-
-		select.empty().append('<option value="">SELECT</option>');
-
-		let branchSet = new Set();
-
-		data.forEach(f => {
-			if (f.branchName) {
-				branchSet.add(normalize(f.branchName));
-			}
-		});
-
-		branchSet.forEach(branch => {
-			select.append(`<option value="${branch}">${branch}</option>`);
-		});
-	}
-
-	/* ================= TABLE ================= */
-
-	function renderTable(data) {
-
-		var tbody = $("#fetchFinancialConsultants");
-		tbody.empty();
-
-		if (!data || data.length === 0) {
-			tbody.append("<tr><td colspan='10'>NO MATCHING CONSULTANTS FOUND.</td></tr>");
+	// Table Print Button Handler
+	$(document).off("click", ".viewDetailsBtn").on("click", ".viewDetailsBtn", function (e) {
+		e.preventDefault();
+		const index = $(this).data("index");
+		const data = (currentFilteredConsultants && currentFilteredConsultants[index]) ? currentFilteredConsultants[index] : allFinancialConsultants[index];
+		if (!data) {
+			alert("FINANCIAL CONSULTANT RECORD NOT FOUND");
 			return;
 		}
 
-		$.each(data, function(i, f) {
+		let html = `
+			<table class="table table-bordered text-uppercase" style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+				<thead class="table-dark">
+					<tr>
+						<th colspan="4" style="padding: 10px; font-size: 14px; text-align: center;">
+							FINANCIAL CONSULTANT PROFILE & DOSSIER
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th style="width: 25%;">CONSULTANT CODE</th>
+						<td style="width: 25%; font-weight: bold; color: #002147;">${(data.financialCode || "-").toUpperCase()}</td>
+						<th style="width: 25%;">JOINING DATE</th>
+						<td style="width: 25%; font-weight: bold;">${data.joiningDate || "-"}</td>
+					</tr>
+					<tr>
+						<th>FULL NAME</th>
+						<td><strong>${(data.financialName || "-").toUpperCase()}</strong></td>
+						<th>DESIGNATION / POSITION</th>
+						<td>${(data.selectPosition || data.profession || "-").toUpperCase()}</td>
+					</tr>
+					<tr>
+						<th>DATE OF BIRTH</th>
+						<td>${data.dob || "-"}</td>
+						<th>AGE</th>
+						<td>${data.age || "-"}</td>
+					</tr>
+					<tr>
+						<th>CONTACT NUMBER</th>
+						<td>${data.contactNo || "-"}</td>
+						<th>BRANCH</th>
+						<td>${(data.branchName || "-").toUpperCase()}</td>
+					</tr>
+					<tr>
+						<th>RESIDENTIAL ADDRESS</th>
+						<td colspan="3">${(data.address || "-").toUpperCase()}${data.district ? (", " + data.district.toUpperCase()) : ""}${data.state ? (", " + data.state.toUpperCase()) : ""}${data.pinCode ? (" - " + data.pinCode) : ""}</td>
+					</tr>
+					<tr>
+						<th>PAN NUMBER</th>
+						<td>${(data.pan || "MFCAS1245W").toUpperCase()}</td>
+						<th>AADHAAR NUMBER</th>
+						<td>${data.aadharNo || "-"}</td>
+					</tr>
+					<tr>
+						<th>PROFESSION</th>
+						<td>${(data.profession || "-").toUpperCase()}</td>
+						<th>ACADEMIC BACKGROUND</th>
+						<td>${(data.academicBackground || "-").toUpperCase()}</td>
+					</tr>
+					<tr>
+						<th>FEES PAID</th>
+						<td>₹${parseFloat(data.fees || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+						<th>PAYMENT MODE</th>
+						<td>${(data.modeofPayment || "CASH").toUpperCase()}</td>
+					</tr>
+					<tr>
+						<th>INTRODUCER / REFERRAL</th>
+						<td>${(data.referralCode || "-").toUpperCase()} - ${(data.referralName || "-").toUpperCase()}</td>
+						<th>STATUS</th>
+						<td><span class="badge bg-success">APPROVED & ACTIVE</span></td>
+					</tr>
+				</tbody>
+			</table>
+		`;
 
-			let approvedStatus = '-';
+		ReportPrintUtil.printHtml("FINANCIAL CONSULTANT DOSSIER", html);
+	});
+});
 
-			if (f.approved === true) {
-				approvedStatus = '<span style="color: green; font-weight:600;">APPROVED</span>';
-			} else if (f.approved === false) {
-				approvedStatus = '<span style="color:red; font-weight:600;">NOT APPROVED</span>';
+/* ================= BRANCH DROPDOWN ================= */
+
+function loadBranchDropdown() {
+	$.ajax({
+		url: "api/preference/getAllBranchModule",
+		type: "GET",
+		success: function (response) {
+			const select = $("#branchName2");
+			select.empty().append('<option value="">ALL BRANCHES</option>');
+
+			let branchList = [];
+			if (response && response.data && Array.isArray(response.data)) {
+				branchList = response.data;
+			} else if (Array.isArray(response)) {
+				branchList = response;
 			}
 
-			tbody.append(`
-                <tr>
-                    <td>${i + 1}</td>
-                    <td>${f.financialCode || '-'}</td>
-                    <td>${(f.financialName || '-').toUpperCase()}</td>
-                    <td>${f.joiningDate || '-'}</td>
-                    <td>${(f.branchName || '-').toUpperCase()}</td>
-                    <td>${f.dob || '-'}</td>
-                    <td>${f.contactNo || '-'}</td>
-                    <td>${(f.address || '-').toUpperCase()}</td>
-                    <td>${approvedStatus}</td>
-                    <td>
-                        <button class="btn btn-outline-success btn-sm viewReportBtn"
-                            data-id="${f.id}"
-                            data-bs-toggle="modal"
-                            data-bs-target="#bankReportModal">
-                            <i class="bi bi-printer"></i>
-                        </button>
-                    </td>
-                </tr>
-            `);
-		});
-
-		bindModalEvents();
-	}
-
-	/* ================= MODAL DATA SET ================= */
-
-	function bindModalEvents() {
-
-		$(".viewReportBtn").off("click").on("click", function() {
-
-			var id = $(this).data("id");
-			var f = allFinancialConsultants.find(x => x.id === id);
-			if (!f) return;
-
-			$("#financialCode").text(f.financialCode || "N/A");
-			$("#joiningDate").text(f.joiningDate || "N/A");
-			$("#financialName").text(f.financialName || "N/A");
-			$("#dob").text(f.dob || "N/A");
-			$("#age").text(f.age || "N/A");
-			$("#contactNo").text(f.contactNo || "N/A");
-			$("#branchName").text(f.branchName || "N/A");
-
-			$("#selectPosition").text(f.selectPosition || "N/A");
-
-			$("#address").text(f.address || "N/A");
-			$("#district").text(f.district || "N/A");
-			$("#state").text(f.state || "N/A");
-			$("#pinCode").text(f.pinCode || "N/A");
-			$("#profession").text(f.profession || "N/A");
-			$("#academicBackground").text(f.academicBackground || "N/A");
-
-			$("#fees").text(f.fees || "0");
-			$("#modeofPayment").text(f.modeofPayment || "N/A");
-			$("#chequeNo").text(f.chequeNo || "N/A");
-			$("#chequeDate").text(f.chequeDate || "N/A");
-			$("#depositAccount").text(f.depositAccount || "N/A");
-			$("#refNo").text(f.refNo || "N/A");
-
-			$("#referralCode").text(f.referralCode || "N/A");
-			$("#referralName").text(f.referralName || "N/A");
-
-			$("#comments").text(f.comments || "N/A");
-			$("#financialStatus").text(f.financialStatus || "N/A");
-			$("#smsSend").text(f.smsSend || "N/A");
-			$("#isApproved").text(f.approved ? "APPROVED" : "NOT APPROVED");
-		});
-	}
-
-	/* ================= FILTER ================= */
-
-	$("#findFinancialAdvisorBtn").on("click", function(e) {
-
-		e.preventDefault();
-
-		var branch = $("#branchName2").val();
-		var fromDate = $("#fromDate").val();
-		var toDate = $("#toDate").val();
-
-		let filtered = allFinancialConsultants;
-
-		if (branch) {
-			filtered = filtered.filter(f =>
-				normalize(f.branchName) === normalize(branch)
-			);
-		}
-
-		if (fromDate && toDate) {
-			filtered = filtered.filter(f => {
-				if (!f.joiningDate) return false;
-				let d = new Date(f.joiningDate);
-				return d >= new Date(fromDate) && d <= new Date(toDate);
+			branchList.forEach(function (branch) {
+				if (branch && branch.branchName) {
+					const name = branch.branchName.trim().toUpperCase();
+					select.append(`<option value="${name}">${name}</option>`);
+				}
 			});
+		},
+		error: function () {
+			console.warn("FAILED TO LOAD BRANCHES");
+		}
+	});
+}
+
+/* ================= LOAD CONSULTANTS ================= */
+
+function loadFinancialConsultants() {
+	$.ajax({
+		url: "api/reports/getApprovedFinancialConsultant",
+		type: "GET",
+		success: function (response) {
+			allFinancialConsultants = (response && response.data) ? response.data : [];
+			currentFilteredConsultants = allFinancialConsultants;
+			renderTable(allFinancialConsultants);
+		},
+		error: function () {
+			$(".datatable tbody").html("<tr><td colspan='11' class='text-center text-muted'>NO APPROVED FINANCIAL CONSULTANTS FOUND</td></tr>");
+		}
+	});
+}
+
+/* ================= RENDER TABLE ================= */
+
+function renderTable(data) {
+	currentFilteredConsultants = data || [];
+	const tableBody = $(".datatable tbody");
+	tableBody.empty();
+
+	if (!data || data.length === 0) {
+		tableBody.html("<tr><td colspan='11' class='text-center text-muted fw-bold'>NO CONSULTANTS MATCHING CRITERIA</td></tr>");
+		return;
+	}
+
+	data.forEach(function (item, index) {
+		let code = (item.financialCode || "-").trim().toUpperCase();
+		let name = (item.financialName || "-").trim().toUpperCase();
+		let joiningDate = (item.joiningDate || "-").trim().toUpperCase();
+		let branch = (item.branchName || "-").trim().toUpperCase();
+		let dob = (item.dob || "-").trim().toUpperCase();
+		let contact = (item.contactNo || "-").trim().toUpperCase();
+		let position = (item.selectPosition || item.profession || "-").trim().toUpperCase();
+		let address = (item.address || "-").trim().toUpperCase();
+		let status = (item.approved || item.isApproved) ? "APPROVED" : "PENDING";
+		let statusBadge = (status === "APPROVED")
+			? '<span class="badge bg-success">APPROVED</span>'
+			: '<span class="badge bg-warning text-dark">PENDING</span>';
+
+		const row = `
+			<tr style="font-family: 'Poppins', sans-serif;">
+				<td class="text-center font-monospace">${index + 1}</td>
+				<td class="fw-bold">${code}</td>
+				<td class="fw-semibold">${name}</td>
+				<td>${joiningDate}</td>
+				<td>${branch}</td>
+				<td>${dob}</td>
+				<td>${contact}</td>
+				<td>${position}</td>
+				<td>${address}</td>
+				<td class="text-center">${statusBadge}</td>
+				<td class="text-center no-print">
+					<button type="button" class="btn btn-sm btn-outline-primary viewDetailsBtn" data-index="${index}" title="PRINT DOSSIER">
+						<i class="bi bi-printer"></i> PRINT
+					</button>
+				</td>
+			</tr>
+		`;
+		tableBody.append(row);
+	});
+}
+
+/* ================= FILTER FORM ================= */
+
+$("#formid").on("submit", function (e) {
+	e.preventDefault();
+
+	const selectedBranch = ($("#branchName2").val() || "").trim().toUpperCase();
+	const fromDate = $("#fromDate").val();
+	const toDate = $("#toDate").val();
+
+	const filtered = allFinancialConsultants.filter(function (item) {
+		let matchesBranch = true;
+		let matchesDate = true;
+
+		if (selectedBranch && selectedBranch !== "" && selectedBranch !== "ALL BRANCHES") {
+			matchesBranch = (item.branchName || "").trim().toUpperCase().includes(selectedBranch);
 		}
 
-		renderTable(filtered);
+		if (fromDate || toDate) {
+			let jDate = item.joiningDate ? new Date(item.joiningDate) : null;
+			if (fromDate && jDate) matchesDate = matchesDate && (jDate >= new Date(fromDate));
+			if (toDate && jDate) matchesDate = matchesDate && (jDate <= new Date(toDate));
+		}
+
+		return matchesBranch && matchesDate;
 	});
 
-	/* ================= PRINT ================= */
-
-	$(document).off("click", "#printBankReportBtn").on("click", "#printBankReportBtn", function() {
-
-		var newWindow = window.open('', '', 'width=900,height=700');
-
-		// Fetch values from modal
-		let getText = (id) => document.getElementById(id).innerText || '-';
-
-		newWindow.document.write(`
-        <html>
-        <head>
-            <title>CONSULTANT REPORT</title>
-
-            <style>
-                body{
-                    font-family: Arial;
-                    padding:20px;
-                }
-
-                h2, h4{
-                    text-align:center;
-                    margin:5px;
-                }
-
-                .company{
-                    font-size:20px;
-                    font-weight:bold;
-                }
-
-                table{
-                    width:100%;
-                    border-collapse: collapse;
-                    margin-top:20px;
-                }
-
-                th, td{
-                    border:1px solid #000;
-                    padding:8px;
-                    font-size:14px;
-                    text-align:left;
-                }
-
-                th{
-                    background:#f2f2f2;
-                }
-
-                .section-title{
-                    background:#0d6efd;
-                    color:#fff;
-                    font-weight:bold;
-                    text-align:center;
-                }
-            </style>
-        </head>
-
-        <body>
-
-            <!-- Company Header -->
-            <div class="company">${companyDetails.name}</div>
-            <div>${companyDetails.address}, ${companyDetails.state} - ${companyDetails.pin}</div>
-            <div>EMAIL: ${companyDetails.email} | HELPLINE: ${companyDetails.helpline}</div>
-
-            <h4>FINANCIAL CONSULTANT REPORT</h4>
-
-            <!-- Table -->
-            <table>
-
-                <tr class="section-title"><td colspan="4">CONSULTANT DETAILS</td></tr>
-                <tr>
-                    <th>CODE</th><td>${getText("financialCode")}</td>
-                    <th>NAME</th><td>${getText("financialName")}</td>
-                </tr>
-                <tr>
-                    <th>JOINING DATE</th><td>${getText("joiningDate")}</td>
-                    <th>DOB</th><td>${getText("dob")}</td>
-                </tr>
-                <tr>
-                    <th>AGE</th><td>${getText("age")}</td>
-                    <th>CONTACT</th><td>${getText("contactNo")}</td>
-                </tr>
-                <tr>
-                    <th>BRANCH</th><td>${getText("branchName")}</td>
-                    <th>POSITION</th><td>${getText("selectPosition")}</td>
-                </tr>
-
-                <tr class="section-title"><td colspan="4">ADDRESS DETAILS</td></tr>
-                <tr>
-                    <th>ADDRESS</th><td colspan="3">${getText("address")}</td>
-                </tr>
-                <tr>
-                    <th>DISTRICT</th><td>${getText("district")}</td>
-                    <th>STATE</th><td>${getText("state")} - ${getText("pinCode")}</td>
-                </tr>
-
-                <tr class="section-title"><td colspan="4">PAYMENT DETAILS</td></tr>
-                <tr>
-                    <th>FEES</th><td>₹${getText("fees")}</td>
-                    <th>MODE</th><td>${getText("modeofPayment")}</td>
-                </tr>
-                <tr>
-                    <th>CHEQUE NO</th><td>${getText("chequeNo")}</td>
-                    <th>CHEQUE DATE</th><td>${getText("chequeDate")}</td>
-                </tr>
-                <tr>
-                    <th>DEPOSIT ACCOUNT</th><td>${getText("depositAccount")}</td>
-                    <th>REF NO</th><td>${getText("refNo")}</td>
-                </tr>
-
-                <tr class="section-title"><td colspan="4">REFERRAL</td></tr>
-                <tr>
-                    <th>REFERRAL CODE</th><td>${getText("referralCode")}</td>
-                    <th>REFERRAL NAME</th><td>${getText("referralName")}</td>
-                </tr>
-
-                <tr class="section-title"><td colspan="4">STATUS</td></tr>
-                <tr>
-                    <th>COMMENTS</th><td colspan="3">${getText("comments")}</td>
-                </tr>
-                <tr>
-                    <th>STATUS</th><td>${getText("financialStatus")}</td>
-                    <th>APPROVED</th><td>${getText("isApproved")}</td>
-                </tr>
-
-            </table>
-
-        </body>
-        </html>
-        `);
-
-		newWindow.document.close();
-		newWindow.focus();
-		newWindow.print();
-	});
+	currentFilteredConsultants = filtered;
+	renderTable(filtered);
 });

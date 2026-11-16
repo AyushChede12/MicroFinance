@@ -55,6 +55,7 @@ function extractCustomerArray(response) {
 }
 
 function extractCompanyArray(response) {
+	if (!response) return [];
 	if (Array.isArray(response)) return response;
 	if (response && Array.isArray(response.data)) return response.data;
 
@@ -65,6 +66,10 @@ function extractCompanyArray(response) {
 
 	if (response && Array.isArray(response.content)) {
 		return response.content;
+	}
+
+	if (response && (response.companyName || response.id)) {
+		return [response];
 	}
 
 	return [];
@@ -95,10 +100,18 @@ function getApprovalStatus(value) {
 function getCompanyAddress(company) {
 	if (!company) return "OFFICIAL CUSTOMER RECORD";
 
-	return company.companyAddress ||
-		company.address ||
-		company.companyLocation ||
-		"OFFICIAL CUSTOMER RECORD";
+	let parts = [
+		company.companyAddress || company.address || company.companyLocation,
+		company.city,
+		company.state
+	].filter(Boolean);
+
+	let addr = parts.join(", ");
+	if (company.pinCode) {
+		addr += " - " + company.pinCode;
+	}
+
+	return addr || "OFFICIAL CUSTOMER RECORD";
 }
 
 function getUploadUrl(fileName) {
@@ -110,12 +123,8 @@ function getUploadUrl(fileName) {
 		return file;
 	}
 
-	const contextPath = window.location.pathname.split("/")[1];
-	const basePath = contextPath
-		? window.location.origin + "/" + contextPath + "/Uploads/"
-		: window.location.origin + "/Uploads/";
-
-	return basePath + file.replace(/^\/+/, "");
+	const base = window.location.pathname.startsWith("/MicroFinance") ? "/MicroFinance" : "";
+	return base + "/Uploads/" + file.replace(/^\/+/, "");
 }
 
 function setReportImage(selector, url, fallbackUrl) {
@@ -145,7 +154,7 @@ function formatCurrentDate() {
 $(document).ready(function() {
 
 	$.ajax({
-		url: "api/preference/fetchAllCompanyAdministration",
+		url: "api/preference/getCompanyDetails",
 		type: "GET",
 		dataType: "json",
 

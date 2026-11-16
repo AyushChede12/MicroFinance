@@ -686,11 +686,7 @@ $(document).ready(function() {
 									);
 
 									alert(
-										"✅ " +
-										(
-											response.message ||
-											"PAYMENT SAVED SUCCESSFULLY."
-										)
+										"✅ " + String(response.message || "PAYMENT SAVED SUCCESSFULLY.").toUpperCase()
 									);
 
 									location.reload();
@@ -723,7 +719,7 @@ $(document).ready(function() {
 									}
 
 									alert(
-										"⚠️ " + message
+										"⚠️ " + String(message).toUpperCase()
 									);
 
 									$("#buttonSave").prop(
@@ -780,7 +776,7 @@ $(document).ready(function() {
 					}
 
 					alert(
-						"❌ " + message
+						"❌ " + String(message).toUpperCase()
 					);
 
 					$("#buttonSave").prop(
@@ -997,7 +993,7 @@ $("#viewBtn").on("click", function() {
 					xhr.responseJSON.message;
 			}
 
-			alert(message);
+			alert(String(message).toUpperCase());
 
 			const modalElement =
 				document.getElementById("installmentModal");

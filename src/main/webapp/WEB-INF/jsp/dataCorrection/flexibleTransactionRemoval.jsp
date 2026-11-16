@@ -6,7 +6,7 @@
 			<li class="breadcrumb-item"><a href="openDashboard"> <i
 					class="bi bi-piggy-bank"></i>
 			</a></li>
-			<li class="breadcrumb-item action">FLEXIBLE TRANSCATION REMOVAL</li>
+			<li class="breadcrumb-item action">FLEXIBLE TRANSACTION REMOVAL</li>
 		</ol>
 	</nav>
 </div>
@@ -26,7 +26,7 @@
 						<label for="Agent">POLICY CODE*</label> <select id="policyCode"
 							name="policyCode" required class="form-control selectField"
 							style="height: 30px;">
-							<option value="">SELECT POLICY CODE</option>
+							<option value="">-- SELECT POLICY CODE --</option>
 						</select>
 					</div>
 				</div>
@@ -91,7 +91,7 @@
 					<div class="col-lg-3">
 						<div class="d-flex flex-column formFields">
 							<label for="">BRANCH NAME </label> <input type="text"
-								name="branchname" id="branchname" required="required"
+								name="branchName" id="branchName" required="required"
 								placeholder="ENTER RELATIVE NAME" />
 						</div>
 					</div>
@@ -99,7 +99,7 @@
 
 					<div class="col-lg-3">
 						<div class="d-flex flex-column formFields">
-							<label for="">CONATCT NO*</label> <input type="text"
+							<label for="">CONTACT NO*</label> <input type="text"
 								name="contactNo" id="contactNo" required="required"
 								placeholder="ENTER MOBILE NO." />
 						</div>
@@ -129,7 +129,7 @@
 					<!-- in this two text fieldds are required -->
 					<div class="col-lg-3">
 						<div class="d-flex flex-column formFields">
-							<label for="">POLICY TREM </label> <input type="text"
+							<label for="">POLICY TERM </label> <input type="text"
 								name="policyTerm" id="policyTerm" required="required"
 								placeholder="ENTER POLICY TERM" />
 						</div>
@@ -146,9 +146,9 @@
 
 					<div class="col-lg-3">
 						<div class="d-flex flex-column formFields">
-							<label for="">TOTAL DEPOSITE*</label> <input type="text"
+							<label for="">TOTAL DEPOSIT*</label> <input type="text"
 								name="totalDeposit" id="totalDeposit" required="required"
-								placeholder="ENTER TOTAL DEPOSITE" />
+								placeholder="ENTER TOTAL DEPOSIT" />
 						</div>
 					</div>
 
@@ -157,7 +157,7 @@
 						<div class="d-flex flex-column formFields">
 							<label for="">PAYMENT DUE*</label> <input type="text"
 								name="paymentDue" id="paymentDue" required="required"
-								placeholder="ENTER PAYMENT DEU " />
+								placeholder="ENTER PAYMENT DUE" />
 						</div>
 					</div>
 
@@ -166,7 +166,7 @@
 						<div class="d-flex flex-column formFields mt-4">
 							<label for="">LAST PAYMENT DATE  *</label> <input type="text"
 								name="lastPaymentDate" id="lastPaymentDate" required="required"
-								placeholder="ENTER LAST PAYMNET DATE" />
+								placeholder="ENTER LAST PAYMENT DATE" />
 						</div>
 					</div>
 
@@ -189,7 +189,7 @@
 
 					<div class="col-lg-3">
 						<div class="d-flex flex-column formFields mt-4">
-							<label for="">INASTALLMENT COMPLETED *</label> <input type="text"
+							<label for="">INSTALLMENT COMPLETED *</label> <input type="text"
 								name="noOfInstPaid" id="noOfInstPaid" required="required"
 								placeholder="ENTER INSTALLMENT COMPLETED " />
 						</div>

@@ -1,5 +1,7 @@
 $(document).ready(function() {
 
+	loadBranchDropdown();
+
 	// ================= SHOW DETAILS =================
 	$("#showBtn").click(function() {
 
@@ -420,4 +422,27 @@ function printReport() {
 		printWindow.close();
 
 	}, 500);
+}
+
+// =====================================================
+// LOAD BRANCH DROPDOWN
+// =====================================================
+function loadBranchDropdown() {
+	$.ajax({
+		type: "GET",
+		url: "api/preference/getAllBranchModule",
+		contentType: "application/json",
+		success: function(response) {
+			let options = "<option value=''>--SELECT BRANCH NAME--</option>";
+			if (response && Array.isArray(response.data)) {
+				response.data.forEach(branch => {
+					options += `<option value="${branch.branchName}">${branch.branchName.toUpperCase()}</option>`;
+				});
+			}
+			$("#branchName").html(options);
+		},
+		error: function() {
+			alert("FAILED TO LOAD BRANCH NAMES.");
+		}
+	});
 }

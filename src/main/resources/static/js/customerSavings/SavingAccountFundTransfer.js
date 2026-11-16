@@ -8,11 +8,32 @@
 let allAccounts = [];
 let accountsMap = {};
 let allTransfers = [];
+let companyInfo = {
+	name: "CO OPERATIVE SOCIETY LTD",
+	address: ""
+};
+
+function fetchFundTransferCompanyDetails() {
+	$.ajax({
+		url: "api/preference/getCompanyDetails",
+		type: "GET",
+		dataType: "json",
+		success: function(res) {
+			if (res) {
+				companyInfo.name = (res.companyName || res.shortName || "CO OPERATIVE SOCIETY LTD").trim().toUpperCase();
+				let full = [res.address, res.city, res.state].filter(Boolean).join(", ").trim().toUpperCase();
+				if (res.pinCode) full += " - " + res.pinCode;
+				companyInfo.address = full;
+			}
+		}
+	});
+}
 
 // ==========================================
 // 1. INITIALIZATION & DATA LOADING
 // ==========================================
 $(document).ready(function () {
+	fetchFundTransferCompanyDetails();
 	// Automatically convert any text typing to UPPERCASE
 	$(document).on('input', 'input[type="text"], textarea', function () {
 		this.value = this.value.toUpperCase();
@@ -689,11 +710,15 @@ function viewTransferAdvice(id) {
 }
 
 function showReceiptModal(data) {
+	const compName = companyInfo.name || "CO OPERATIVE SOCIETY LTD";
+	const compAddr = companyInfo.address ? `<div style="font-size: 11px; color: #555; margin-top: 2px;">${companyInfo.address}</div>` : '';
+
 	const html = `
 		<div style="font-family:'Poppins',sans-serif; text-transform:uppercase;">
 			<div class="text-center pb-3 mb-3" style="border-bottom: 2px dashed #cbd5e1;">
-				<h4 class="fw-bold mb-1" style="color: #0d6efd; letter-spacing: 0.5px;">MICROFINANCE BANKING SYSTEM</h4>
-				<div style="font-size: 11px; color: #64748b; font-weight: 600;">OFFICIAL FUND TRANSFER TRANSACTION ADVICE / VOUCHER</div>
+				<h4 class="fw-bold mb-1" style="color: #0d6efd; letter-spacing: 0.5px;">${compName}</h4>
+				${compAddr}
+				<div style="font-size: 11px; color: #64748b; font-weight: 600; margin-top: 3px;">OFFICIAL FUND TRANSFER TRANSACTION ADVICE / VOUCHER</div>
 				<div class="mt-2">
 					<span class="badge bg-primary" style="font-size: 11px;">REF NO: ${data.refId}</span>
 					<span class="badge bg-secondary ms-1" style="font-size: 11px;">DATE: ${data.transferDate}</span>
@@ -752,5 +777,36 @@ function showReceiptModal(data) {
 }
 
 function printReceipt() {
-	window.print();
+	const content = document.getElementById('printableReceiptArea').innerHTML;
+	const win = window.open('', '_blank', 'width=800,height=600');
+	if (!win) {
+		window.print();
+		return;
+	}
+	win.document.open();
+	win.document.write(`
+		<!DOCTYPE html>
+		<html>
+		<head>
+			<title>FUND TRANSFER RECEIPT</title>
+			<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+			<style>
+				@page { size: auto; margin: 15mm; }
+				body { font-family: 'Poppins', Arial, sans-serif; padding: 20px; background: #fff; }
+				@media print { body { padding: 0; } }
+			</style>
+		</head>
+		<body>
+			<div class="container my-2">
+				${content}
+			</div>
+			<script>
+				window.onload = function() {
+					window.print();
+				};
+			<\/script>
+		</body>
+		</html>
+	`);
+	win.document.close();
 }

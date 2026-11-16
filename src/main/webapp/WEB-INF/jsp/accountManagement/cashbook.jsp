@@ -72,7 +72,7 @@
 					<div style="width: 250px;">
 
 						<input type="text" id="cashBookSearch" class="form-control"
-							placeholder="Search customer..." style="text-transform: uppercase;">
+							placeholder="SEARCH CUSTOMER..." style="text-transform: uppercase;">
 
 					</div>
 

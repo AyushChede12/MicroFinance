@@ -1,143 +1,158 @@
-// all data
+// ALL UNAPPROVED SAVING ACCOUNT TRANSFERS
 let allSavingAccountFundTransfer = [];
 
 $(document).ready(function() {
-	// Load data on page load
-	loadSavingAccountFundTransfer();
+    loadBranchDropdown();
+    loadSavingAccountFundTransfer();
 
-	// Filter button click
-	$('#saveBtn').on('click', function(e) {
-		e.preventDefault();
-		filterSavingAccountFundTransfer();
-	});
+    $('#saveBtn, #findBtn').on('click', function(e) {
+        e.preventDefault();
+        filterSavingAccountFundTransfer();
+    });
 
-	// Approve button click
-	$('#approvedBtn').on('click', function() {
-		const selectedIds = $('.approval-checkbox:checked').map(function() {
-			return $(this).data('id');
-		}).get();
+    $('#approvedBtn').on('click', function(e) {
+        e.preventDefault();
+        const selectedIds = $('.approval-checkbox:checked').map(function() {
+            return $(this).data('id');
+        }).get();
 
-		if (selectedIds.length === 0) {
-			alert("PLEASE SELECT AT LEAST ONE ROW TO APPROVE.");
-			return;
-		}
+        if (selectedIds.length === 0) {
+            alert("PLEASE SELECT AT LEAST ONE ROW TO APPROVE.");
+            return;
+        }
 
-		// Approve each selected row
-		selectedIds.forEach(function(id) {
-			$.ajax({
-				url: "api/requestapproval/approvesavingAccountFundTransfer",
-				type: "POST",
-				data: {
-					id: id,
-					isApproved: true
-				},
-				success: function(response) {
-					if (response.status === "OK") {
-						console.log("Approved:", id);
-						// Optional: show success once, then reload
-						location.reload();
-					}
-				},
-				error: function(xhr) {
-					alert("ERROR APPROVING ID " + id);
-					console.error(xhr);
-				}
-			});
-		});
-	});
+        const requests = selectedIds.map(function(id) {
+            return $.ajax({
+                url: "api/requestapproval/approvesavingAccountFundTransfer",
+                type: "POST",
+                data: {
+                    id: id,
+                    isApproved: true
+                }
+            });
+        });
+
+        $.when.apply($, requests)
+            .done(function() {
+                alert("SAVING ACCOUNT TRANSFERS APPROVED SUCCESSFULLY!");
+                location.reload();
+            })
+            .fail(function(xhr) {
+                console.error("ERROR APPROVING TRANSFERS:", xhr);
+                alert("FAILED TO APPROVE SELECTED TRANSFERS.");
+            });
+    });
+
+    $(document).on('change', '#selectAll', function() {
+        $('.approval-checkbox').prop('checked', $(this).prop('checked'));
+    });
 });
 
-function loadSavingAccountFundTransfer() {
-	$.ajax({
-		url: "api/requestapproval/getUnapprovedsavingAccountFundTransfer",
-		type: "GET",
-		contentType: "application/json",
-		success: function(response) {
-			if (response.status === "OK" && Array.isArray(response.data)) {
-				allSavingAccountFundTransfer = response.data;
-				populateMemberCodeDropdown(allSavingAccountFundTransfer);
-				renderTable(allSavingAccountFundTransfer);
-			} else {
-				alert("NO DATA FOUND.");
-			}
-		},
-		error: function(xhr) {
-			console.error("Error fetching data:", xhr);
-			alert("FAILED TO LOAD DATA.");
-		}
-	});
+function loadBranchDropdown() {
+    $.ajax({
+        url: "api/preference/getAllBranchModule",
+        type: "GET",
+        dataType: "json",
+        success: function(response) {
+            if (response && response.status === "OK" && Array.isArray(response.data)) {
+                const dropdown = $('#branchName');
+                dropdown.empty().append('<option value="">SELECT BRANCH</option>');
+                response.data.forEach(function(item) {
+                    if (item.branchName) {
+                        dropdown.append(`<option value="${item.branchName}">${item.branchName.toUpperCase()}</option>`);
+                    }
+                });
+            }
+        },
+        error: function(xhr) {
+            console.error("ERROR LOADING BRANCHES:", xhr);
+        }
+    });
 }
 
-function populateMemberCodeDropdown(data) {
-	const dropdown = $('#branchName');
-	dropdown.empty().append('<option value="">SELECT BRANCH</option>');
-
-	const uniqueCodes = [...new Set(data.map(item => item.debitAccountBranch))];
-
-	uniqueCodes.forEach(code => {
-		if (code) {
-			dropdown.append(`<option value="${code}">${code}</option>`);
-		}
-	});
+function loadSavingAccountFundTransfer() {
+    $.ajax({
+        url: "api/requestapproval/getUnapprovedsavingAccountFundTransfer",
+        type: "GET",
+        contentType: "application/json",
+        success: function(response) {
+            if (response && response.status === "OK" && Array.isArray(response.data)) {
+                allSavingAccountFundTransfer = response.data;
+                renderTable(allSavingAccountFundTransfer);
+            } else {
+                renderTable([]);
+            }
+        },
+        error: function(xhr) {
+            console.error("ERROR FETCHING DATA:", xhr);
+            renderTable([]);
+        }
+    });
 }
 
 function renderTable(data) {
-	const tbody = $(".datatable tbody");
-	tbody.empty();
+    const tbody = $(".datatable tbody");
+    tbody.empty();
 
-	if (!data || data.length === 0) {
-		tbody.append(`
-			<tr>
-				<td colspan="12" style="text-align:center; font-family: 'Poppins', sans-serif;">
-					NO DATA FOUND
-				</td>
-			</tr>
-		`);
-		return;
-	}
+    if (!data || data.length === 0) {
+        tbody.append(`
+            <tr>
+                <td colspan="12" style="text-align:center; font-family: 'Poppins', sans-serif;">
+                    NO DATA FOUND
+                </td>
+            </tr>
+        `);
+        return;
+    }
 
-	data.forEach((item, index) => {
-		const row = `
-			<tr style="font-family: 'Poppins', sans-serif;">
-				<td><input type="checkbox" class="approval-checkbox" data-id="${item.id}" ${item.isApproved ? 'checked' : ''} /></td>
-				<td>${index + 1}</td>
-				<td>${item.transferDate || '-'}</td>
-				<td>${item.debitAccountNumber || '-'}</td>
-				<td>${item.debitCustomerCode || '-'}</td>
-				<td>${item.debitAccountBranch || '-'}</td>
-				<td>${item.debitContactNumber || '-'}</td>
-				<td>${item.creditAccountNumber || '-'}</td>
-				<td>${item.creditCustomerCode || '-'}</td>
-				<td>${item.creditAccountBranch || '-'}</td>
-
-
-			</tr>
-		`;
-		tbody.append(row);
-	});
+    data.forEach((item, index) => {
+        const row = `
+            <tr style="font-family: 'Poppins', sans-serif;">
+                <td><input type="checkbox" class="approval-checkbox" data-id="${item.id}" ${item.isApproved ? 'checked disabled' : ''} /></td>
+                <td>${index + 1}</td>
+                <td>${(item.transferDate || '-').toUpperCase()}</td>
+                <td>${(item.debitAccountNumber || '-').toUpperCase()}</td>
+                <td>${(item.debitCustomerCode || '-').toUpperCase()}</td>
+                <td>${(item.debitAccountBranch || '-').toUpperCase()}</td>
+                <td>${(item.debitContactNumber || '-').toUpperCase()}</td>
+                <td>${(item.creditAccountNumber || '-').toUpperCase()}</td>
+                <td>${(item.creditCustomerCode || '-').toUpperCase()}</td>
+                <td>${(item.creditAccountBranch || '-').toUpperCase()}</td>
+            </tr>
+        `;
+        tbody.append(row);
+    });
 }
 
-//filter data
 function filterSavingAccountFundTransfer() {
-	const selectedCode = $('#branchName').val();
-	const fromDateVal = $('#fromDate').val();
-	const toDateVal = $('#toDate').val();
+    const selectedCode = ($('#branchName').val() || '').trim().toUpperCase();
+    const fromDateVal = $('#fromDate').val();
+    const toDateVal = $('#toDate').val();
 
+    const fromDate = fromDateVal ? new Date(fromDateVal) : null;
+    const toDate = toDateVal ? new Date(toDateVal) : null;
 
-	const fromDate = fromDateVal ? new Date(fromDateVal) : null;
-	const toDate = toDateVal ? new Date(toDateVal) : null;
+    const filtered = allSavingAccountFundTransfer.filter(item => {
+        const branchName = (item.debitAccountBranch || '').trim().toUpperCase();
+        const dateStr = item.transferDate || item.date;
+        const transferDate = dateStr ? new Date(dateStr) : null;
 
-	const filtered = allSavingAccountFundTransfer.filter(item => {
-		const branchName = item.debitAccountBranch || '';
-		const transferDate = item.transferDate ? new Date(item.transferDate) : null;
+        const matchesCode = selectedCode ? branchName === selectedCode : true;
 
-		const matchesCode = selectedCode ? branchName === selectedCode : true;
-		const matchesFrom = fromDate && transferDate ? transferDate >= fromDate : true;
-		const matchesTo = toDate && transferDate ? transferDate <= toDate : true;
+        let matchesFrom = true;
+        let matchesTo = true;
 
+        if (fromDate && transferDate) {
+            matchesFrom = transferDate.getTime() >= fromDate.getTime();
+        }
+        if (toDate && transferDate) {
+            const nextDay = new Date(toDate);
+            nextDay.setDate(nextDay.getDate() + 1);
+            matchesTo = transferDate.getTime() < nextDay.getTime();
+        }
 
-		return matchesCode && matchesFrom && matchesTo;
-	});
+        return matchesCode && matchesFrom && matchesTo;
+    });
 
-	renderTable(filtered);
+    renderTable(filtered);
 }

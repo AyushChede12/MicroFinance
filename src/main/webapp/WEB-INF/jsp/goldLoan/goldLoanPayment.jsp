@@ -91,7 +91,7 @@
 					<div class="d-flex flex-column formFields">
 						<label for="">CONTACT NO.</label> <input type="text"
 							readonly="readonly" name="contactNo" id="contactNo"
-							required="required" placeholder="ENTER CONT No." />
+							required="required" placeholder=="ENTER CONT NO." />
 					</div>
 				</div>
 
@@ -108,7 +108,7 @@
 					<div class="d-flex flex-column formFields">
 						<label for="loanName">PIN CODE</label> <input type="text"
 							name="pinCode" id="pinCode" required="required"
-							readonly="readonly" placeholder="ENTER PIN CODE Code"
+							readonly="readonly" placeholder=="ENTER PIN CODE CODE"
 							style="text-transform: uppercase;" />
 					</div>
 				</div>
@@ -153,7 +153,7 @@
 					<div class="d-flex flex-column formFields mb-4">
 						<label for="">LOAN MODE</label> <input type="text" name="loanMode"
 							id="loanMode" required="required" readonly="readonly"
-							placeholder="LOAN CATEGORY Category"
+							placeholder=="LOAN CATEGORY CATEGORY"
 							style="text-transform: uppercase;" />
 					</div>
 				</div>
@@ -239,7 +239,7 @@
 					<div class="d-flex flex-column formFields mb-4">
 						<label for="">ITEM NAME</label> <input type="text" name="itemName"
 							id="itemName" required="required" readonly="readonly"
-							placeholder="ENTER Item NAME" />
+							placeholder=="ENTER ITEM NAME" />
 					</div>
 				</div>
 
@@ -589,7 +589,7 @@
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields mb-4">
 						<label for="financialConsultantId">FINANCIAL CONSULTANT
-							Name</label> <input type="text" name="financialConsultantId"
+							NAME</label> <input type="text" name="financialConsultantId"
 							id="financialConsultantId" required="required"
 							placeholder="ENTER CONULTANT ID"
 							style="text-transform: uppercase;" />

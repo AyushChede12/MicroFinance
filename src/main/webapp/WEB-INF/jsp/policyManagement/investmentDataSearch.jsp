@@ -49,20 +49,20 @@
 										<thead class="thead-dark"
 											style="position: sticky; top: 0; background-color: #343a40; color: white;">
 											<tr>
-												<th>Sr No.</th>
-												<th>Policy Code</th>
-												<th>Customer Name</th>
-												<th>Start Date</th>
-												<th>Contact No</th>
-												<th>Address</th>
-												<th>District</th>
-												<th>State</th>
-												<th>Branch</th>
-												<th>Policy Type</th>
-												<th>Policy Amount</th>
-												<th>Maturity Amount</th>
-												<th>Payment Mode</th>
-												<th>Approved Status</th>
+												<th>SR NO.</th>
+												<th>POLICY CODE</th>
+												<th>CUSTOMER NAME</th>
+												<th>START DATE</th>
+												<th>CONTACT NO</th>
+												<th>ADDRESS</th>
+												<th>DISTRICT</th>
+												<th>STATE</th>
+												<th>BRANCH</th>
+												<th>POLICY TYPE</th>
+												<th>POLICY AMOUNT</th>
+												<th>MATURITY AMOUNT</th>
+												<th>PAYMENT MODE</th>
+												<th>APPROVED STATUS</th>
 											</tr>
 										</thead>
 										<tbody id="policyTableBody">

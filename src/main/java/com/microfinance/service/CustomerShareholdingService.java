@@ -89,6 +89,7 @@ public class CustomerShareholdingService {
 					existingTS.setPreviousAccountBalance(transfer.getPreviousAccountBalance());
 					existingTS.setPreviousShareCount(transfer.getPreviousShareCount());
 					existingTS.setBaseValue(transfer.getBaseValue());
+					existingTS.setCertificateNo(transfer.getCertificateNo());
 					existingTS.setBranch(transfer.getBranch());
 					existingTS.setDateOfTransfer(transfer.getDateOfTransfer());
 					existingTS.setShareIssuedBy(transfer.getShareIssuedBy());

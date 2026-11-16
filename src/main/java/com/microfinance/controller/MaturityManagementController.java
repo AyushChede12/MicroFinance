@@ -1,7 +1,6 @@
 package com.microfinance.controller;
 
 import java.util.HashMap;
-
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,11 +17,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.microfinance.dto.ApiResponse;
-
 import com.microfinance.model.ApplyForMaturity;
-
 import com.microfinance.model.FullMaturity;
-
+import com.microfinance.model.MaturitySchemeMaster;
 import com.microfinance.model.partialMaturityPayment;
 import com.microfinance.service.MaturitySchemeMasterService;
 import com.microfinance.service.PolicyManagementService;
@@ -33,41 +29,56 @@ import com.microfinance.service.PolicyManagementService;
 public class MaturityManagementController {
 
 	@Autowired
-	MaturitySchemeMasterService maturityservice;
+	private MaturitySchemeMasterService maturityservice;
 
 	@Autowired
-	PolicyManagementService policyManagementService;
+	private PolicyManagementService policyManagementService;
 
-	// Save Apply Maturity
-	// Ashwini
-
-	@PostMapping("/saveApplymaturity")
+	// Save Maturity Scheme Master (Daily Deposit, Recurring, Fixed, MIS)
+	@PostMapping("/savematurityscheme")
 	@ResponseBody
-	public ApiResponse<ApplyForMaturity> saveApplymaturity(@RequestBody ApplyForMaturity Applymaturity) {
-		ApplyForMaturity maturity = maturityservice.saveApplymaturity(Applymaturity);
-
-		if (maturity != null) {
-			return ApiResponse.success(HttpStatus.OK, "DATA SAVED SUCCESSFULLY", maturity);
+	public ApiResponse<MaturitySchemeMaster> saveMaturityScheme(@RequestBody MaturitySchemeMaster maturityscheme) {
+		MaturitySchemeMaster saved = maturityservice.saveMaturityScheme(maturityscheme);
+		if (saved != null) {
+			return ApiResponse.success(HttpStatus.OK, "MATURITY SCHEME SAVED SUCCESSFULLY.", saved);
 		} else {
-			return ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "DATA COULD NOT BE SAVED");
-
+			return ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "FAILED TO SAVE MATURITY SCHEME.");
 		}
-
 	}
 
-	// view Apply Maturity Details
+	// Get All Maturity Schemes
+	@GetMapping("/getAllMaturityScheme")
+	public ResponseEntity<ApiResponse<List<MaturitySchemeMaster>>> getAllMaturityScheme() {
+		List<MaturitySchemeMaster> list = maturityservice.getAllMaturitySchemes();
+		if (list != null && !list.isEmpty()) {
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "MATURITY SCHEMES FETCHED SUCCESSFULLY.", list));
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "NO MATURITY SCHEMES FOUND."));
+		}
+	}
 
+	// Save Apply Maturity
+	@PostMapping("/saveApplymaturity")
+	@ResponseBody
+	public ApiResponse<ApplyForMaturity> saveApplymaturity(@RequestBody ApplyForMaturity applymaturity) {
+		ApplyForMaturity maturity = maturityservice.saveApplymaturity(applymaturity);
+		if (maturity != null) {
+			return ApiResponse.success(HttpStatus.OK, "MATURITY APPLICATION SAVED SUCCESSFULLY.", maturity);
+		} else {
+			return ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "FAILED TO SAVE MATURITY APPLICATION.");
+		}
+	}
+
+	// View Apply Maturity Details
 	@GetMapping("/getApplymaturitydetails")
 	public ResponseEntity<ApiResponse<List<ApplyForMaturity>>> getApplyMaturityDetails() {
-		List<ApplyForMaturity> invest = maturityservice.getApplyMaturityDetails();
-
-		if (invest != null && !invest.isEmpty()) {
-			ApiResponse<List<ApplyForMaturity>> response = ApiResponse.success(HttpStatus.OK,
-					"INVESTMENT DETAILS FETCHED SUCCESSFULLY.", invest);
-			return new ResponseEntity<>(response, HttpStatus.OK);
+		List<ApplyForMaturity> list = maturityservice.getApplyMaturityDetails();
+		if (list != null && !list.isEmpty()) {
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "MATURITY APPLICATIONS FETCHED SUCCESSFULLY.", list));
 		} else {
-			ApiResponse<List<ApplyForMaturity>> response = ApiResponse.error(HttpStatus.NOT_FOUND, "NO DETAILS FOUND.");
-			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "NO MATURITY DETAILS FOUND."));
 		}
 	}
 
@@ -78,102 +89,126 @@ public class MaturityManagementController {
 		Page<ApplyForMaturity> invest = maturityservice.getApplyMaturityDetailsWithPage(page, size);
 
 		if (invest != null && !invest.isEmpty()) {
-
 			Map<String, Object> responseData = new HashMap<>();
 			responseData.put("content", invest.getContent());
 			responseData.put("currentPage", invest.getNumber());
 			responseData.put("totalPages", invest.getTotalPages());
+			responseData.put("totalElements", invest.getTotalElements());
 
-			ApiResponse<Map<String, Object>> response = ApiResponse.success(HttpStatus.OK,
-					"INVESTMENT DETAILS FETCHED SUCCESSFULLY.", responseData);
-
-			return ResponseEntity.ok(response);
-
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "MATURITY APPLICATIONS FETCHED SUCCESSFULLY.", responseData));
 		} else {
-			ApiResponse<Map<String, Object>> response = ApiResponse.error(HttpStatus.NOT_FOUND, "NO DETAILS FOUND.");
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "NO MATURITY DETAILS FOUND."));
 		}
 	}
 
-	// view data of apply maturity by branch name and todate - fromdate
-
+	// View data of apply maturity by branch name and date range
 	@GetMapping("/getMaturityByBranchAndDate")
 	public ResponseEntity<ApiResponse<List<ApplyForMaturity>>> getMaturityByBranchAndDate(
-			@RequestParam String branchName, @RequestParam String fromDate, @RequestParam String toDate) {
+			@RequestParam(required = false) String branchName,
+			@RequestParam(required = false) String fromDate,
+			@RequestParam(required = false) String toDate) {
 
 		List<ApplyForMaturity> data = maturityservice.getMaturityDetailsByBranchAndDate(branchName, fromDate, toDate);
 
 		if (data != null && !data.isEmpty()) {
-			ApiResponse<List<ApplyForMaturity>> response = ApiResponse.success(HttpStatus.OK,
-					"FILTERED MATURITY DETAILS FETCHED SUCCESSFULLY.", data);
-			return ResponseEntity.ok(response);
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "FILTERED MATURITY DETAILS FETCHED SUCCESSFULLY.", data));
 		} else {
-			ApiResponse<List<ApplyForMaturity>> response = ApiResponse.error(HttpStatus.NOT_FOUND,
-					"NO DATA FOUND FOR THE GIVEN BRANCH AND DATE RANGE.");
-			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "NO DATA FOUND FOR THE GIVEN CRITERIA."));
 		}
 	}
 
-	// save and Update Partial Maturity Payment
-	// Ashwini
+	// Save Full Maturity Payment (triggers AccountTransaction and BankTransaction)
+	@PostMapping("/saveFullmaturity")
+	@ResponseBody
+	public ApiResponse<FullMaturity> saveFullmaturity(@RequestBody FullMaturity fullmaturity) {
+		FullMaturity maturity = maturityservice.saveFullmaturity(fullmaturity);
+		if (maturity != null) {
+			return ApiResponse.success(HttpStatus.OK, "FULL MATURITY PAYMENT SAVED SUCCESSFULLY.", maturity);
+		} else {
+			return ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "FAILED TO SAVE FULL MATURITY PAYMENT.");
+		}
+	}
+
+	@GetMapping("/getFullmaturitydetails")
+	public ResponseEntity<ApiResponse<List<FullMaturity>>> getFullMaturityDetails() {
+		List<FullMaturity> list = maturityservice.getFullMaturityDetails();
+		if (list != null && !list.isEmpty()) {
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "FULL MATURITY DETAILS FETCHED SUCCESSFULLY.", list));
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "NO FULL MATURITY DETAILS FOUND."));
+		}
+	}
+
+	@GetMapping("/getFullMaturityByBranchAndDate")
+	public ResponseEntity<ApiResponse<List<FullMaturity>>> getFullMaturityByBranchAndDate(
+			@RequestParam(required = false) String branchName,
+			@RequestParam(required = false) String fromDate,
+			@RequestParam(required = false) String toDate) {
+
+		List<FullMaturity> list = maturityservice.getFullMaturityDetailsByBranchAndDate(branchName, fromDate, toDate);
+		if (list != null && !list.isEmpty()) {
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "FILTERED FULL MATURITY DETAILS FETCHED SUCCESSFULLY.", list));
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "NO DATA FOUND FOR THE GIVEN CRITERIA."));
+		}
+	}
+
+	// Save Partial Maturity Payment (triggers AccountTransaction and BankTransaction)
 	@PostMapping("/savePartialmaturity")
 	@ResponseBody
 	public ApiResponse<partialMaturityPayment> savePartialmaturity(
 			@RequestBody partialMaturityPayment partialmaturity) {
 		partialMaturityPayment maturity = maturityservice.savePartialmaturity(partialmaturity);
-
 		if (maturity != null) {
-			return ApiResponse.success(HttpStatus.OK, "DATA SAVED SUCCESSFULLY", maturity);
+			return ApiResponse.success(HttpStatus.OK, "PARTIAL MATURITY PAYMENT SAVED SUCCESSFULLY.", maturity);
 		} else {
-			return ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "DATA COULD NOT BE SAVED");
-
+			return ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "FAILED TO SAVE PARTIAL MATURITY PAYMENT.");
 		}
-
 	}
 
 	@GetMapping("/getPartialmaturitydetails")
 	public ResponseEntity<ApiResponse<List<partialMaturityPayment>>> getPartialMaturityDetails() {
-		List<partialMaturityPayment> invest = maturityservice.getPartialMaturityDetails();
-
-		if (invest != null && !invest.isEmpty()) {
-			ApiResponse<List<partialMaturityPayment>> response = ApiResponse.success(HttpStatus.OK,
-					"INVESTMENT DETAILS FETCHED SUCCESSFULLY.", invest);
-			return new ResponseEntity<>(response, HttpStatus.OK);
+		List<partialMaturityPayment> list = maturityservice.getPartialMaturityDetails();
+		if (list != null && !list.isEmpty()) {
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "PARTIAL MATURITY DETAILS FETCHED SUCCESSFULLY.", list));
 		} else {
-			ApiResponse<List<partialMaturityPayment>> response = ApiResponse.error(HttpStatus.NOT_FOUND,
-					"NO DETAILS FOUND.");
-			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "NO PARTIAL MATURITY DETAILS FOUND."));
 		}
 	}
 
-	// save and Update Full Maturity Payment
-	// Ashwini
-	@PostMapping("/saveFullmaturity")
-	@ResponseBody
-	public ApiResponse<FullMaturity> saveFullmaturity(@RequestBody FullMaturity fullmaturity) {
-		FullMaturity maturity = maturityservice.saveFullmaturity(fullmaturity);
+	@GetMapping("/getPartialMaturityByBranchAndDate")
+	public ResponseEntity<ApiResponse<List<partialMaturityPayment>>> getPartialMaturityByBranchAndDate(
+			@RequestParam(required = false) String branchName,
+			@RequestParam(required = false) String fromDate,
+			@RequestParam(required = false) String toDate) {
 
-		if (maturity != null) {
-			return ApiResponse.success(HttpStatus.OK, "DATA SAVED SUCCESSFULLY", maturity);
+		List<partialMaturityPayment> list = maturityservice.getPartialMaturityDetailsByBranchAndDate(branchName, fromDate, toDate);
+		if (list != null && !list.isEmpty()) {
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "FILTERED PARTIAL MATURITY DETAILS FETCHED SUCCESSFULLY.", list));
 		} else {
-			return ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "DATA COULD NOT BE SAVED");
-
-		}
-
-	}
-
-	@GetMapping("/getFullmaturitydetails")
-	public ResponseEntity<ApiResponse<List<FullMaturity>>> getFullMaturityDetails() {
-		List<FullMaturity> invest = maturityservice.getFullMaturityDetails();
-
-		if (invest != null && !invest.isEmpty()) {
-			ApiResponse<List<FullMaturity>> response = ApiResponse.success(HttpStatus.OK,
-					"INVESTMENT DETAILS FETCHED SUCCESSFULLY.", invest);
-			return new ResponseEntity<>(response, HttpStatus.OK);
-		} else {
-			ApiResponse<List<FullMaturity>> response = ApiResponse.error(HttpStatus.NOT_FOUND, "NO DETAILS FOUND.");
-			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "NO DATA FOUND FOR THE GIVEN CRITERIA."));
 		}
 	}
 
+	// Approved Maturity Applications for Approved Status Report
+	@GetMapping("/getApprovedMaturityDetails")
+	public ResponseEntity<ApiResponse<List<Map<String, Object>>>> getApprovedMaturityDetails(
+			@RequestParam(required = false) String branchName,
+			@RequestParam(required = false) String fromDate,
+			@RequestParam(required = false) String toDate) {
+
+		List<Map<String, Object>> list = maturityservice.getApprovedMaturityDetails(branchName, fromDate, toDate);
+		if (list != null && !list.isEmpty()) {
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "APPROVED MATURITY DETAILS FETCHED SUCCESSFULLY.", list));
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(ApiResponse.error(HttpStatus.NOT_FOUND, "NO APPROVED MATURITY DETAILS FOUND."));
+		}
+	}
 }

@@ -276,9 +276,23 @@
 </div>
 <div class="row mt-5">
 	<div class="col-12">
-		<div class="card recent-sales">
-			<div class="card-body table-responsive">
-				<h5 class="card-title">DETAILS SEARCH LIST</h5>
+		<div class="card recent-sales p-4" id="printableAppliedLoansArea">
+			<!-- Dynamic Company Header for Report -->
+			<div id="companyHeader" class="text-center mb-4 report-header" style="display: none;">
+				<h2 id="compName" style="font-size: 22px; font-weight: bold; margin-bottom: 2px; color: #0d6efd; letter-spacing: 0.5px; text-transform: uppercase;"></h2>
+				<p id="compAddress" style="font-size: 12px; margin-bottom: 2px; color: #444; text-transform: uppercase;"></p>
+				<p id="compRegLine" style="font-size: 11px; margin-bottom: 2px; color: #555; text-transform: uppercase;"></p>
+				<p id="compContact" style="font-size: 11px; margin-bottom: 8px; color: #555; text-transform: uppercase;"></p>
+				<hr style="border: 0; border-top: 2px solid #000; margin: 10px 0 15px 0;">
+				<h4 style="font-size: 16px; font-weight: bold; text-decoration: underline; margin-bottom: 15px; text-transform: uppercase;">APPLIED JOINT LIABILITY GROUP LOANS REPORT</h4>
+			</div>
+			<div class="d-flex justify-content-between align-items-center mb-3">
+				<h5 class="card-title mb-0" style="text-transform: uppercase;">DETAILS SEARCH LIST</h5>
+				<button type="button" id="printAppliedLoansBtn" class="btn btn-primary" style="font-weight: 600; text-transform: uppercase;">
+					<i class="bi bi-printer"></i> PRINT APPLIED LOANS REPORT
+				</button>
+			</div>
+			<div class="card-body table-responsive p-0">
 				<table class="table table-bordered">
 					<thead class="thead-light">
 						<tr>
@@ -299,6 +313,18 @@
 						<!-- More rows -->
 					</tbody>
 				</table>
+			</div>
+			<!-- Signature Section for Print -->
+			<div class="row mt-5 pt-4 text-center print-signatures" style="display: none;">
+				<div class="col-4">
+					<div style="border-top: 1px solid #000; margin: 0 20px; padding-top: 5px; font-weight: bold; font-size: 12px; text-transform: uppercase;">LOAN OFFICER</div>
+				</div>
+				<div class="col-4">
+					<div style="border-top: 1px solid #000; margin: 0 20px; padding-top: 5px; font-weight: bold; font-size: 12px; text-transform: uppercase;">CREDIT MANAGER</div>
+				</div>
+				<div class="col-4">
+					<div style="border-top: 1px solid #000; margin: 0 20px; padding-top: 5px; font-weight: bold; font-size: 12px; text-transform: uppercase;">BRANCH MANAGER</div>
+				</div>
 			</div>
 		</div>
 	</div>

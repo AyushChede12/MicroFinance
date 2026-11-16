@@ -22,36 +22,50 @@ $(document).ready(function() {
 			url: "api/preference/getAllBranchModule",
 			type: "GET",
 			success: function(response) {
-				if (response.status === "OK") {
+				if (response && response.status === "OK" && Array.isArray(response.data)) {
 					const branchList = response.data;
 
-					$("#branchName").empty().append("<option value=''>--SELECT BRANCH--</option>");
-					$("#closingbranchName").empty().append("<option value=''>--SELECT BRANCH--</option>");
-					$("#branch").empty().append("<option value=''>--SELECT BRANCH--</option>");
-					$("#paymentBranch").empty().append("<option value=''>--SELECT BRANCH--</option>");
-					$("#sourceBranch").empty().append("<option value=''>--SELECT BRANCH--</option>");
-					$("#receivingBranch").empty().append("<option value=''>--SELECT BRANCH--</option>");
+					const selectors = ["#branchName", "#closingbranchName", "#branch", "#paymentBranch", "#sourceBranch", "#receivingBranch"];
+					selectors.forEach(sel => {
+						if ($(sel).is("select")) {
+							$(sel).empty().append("<option value=''>-- SELECT BRANCH --</option>");
+						}
+					});
 
 					branchList.forEach(branch => {
-						const option =
-							`<option value="${branch.branchName}">
-								${branch.branchName.toUpperCase()}
-							</option>`;
-
-						$("#branchName").append(option);
-						$("#closingbranchName").append(option);
-						$("#branch").append(option);
-						$("#paymentBranch").append(option);
-						$("#sourceBranch").append(option);
-						$("#receivingBranch").append(option);
+						if (branch && branch.branchName) {
+							const bName = branch.branchName.toUpperCase();
+							const option = `<option value="${bName}">${bName}</option>`;
+							selectors.forEach(sel => {
+								if ($(sel).is("select")) {
+									$(sel).append(option);
+								}
+							});
+						}
 					});
 				}
 			},
 			error: function(err) {
-				alert("ERR");
+				console.error("Error loading branch dropdowns:", err);
 			}
 		});
 	}
+
+	// ================= USERNAME BINDING & UPPERCASE INPUT =================
+	const currentUsername = sessionStorage.getItem("username");
+	if (currentUsername) {
+		$("#bindUserName").text(currentUsername.toUpperCase());
+	}
+
+	$(document).on('input', 'input[type="text"]:not([type="password"]), input[type="search"], textarea', function() {
+		if (this.dataset && this.dataset.keepcase === "true") return;
+		const start = this.selectionStart;
+		const end = this.selectionEnd;
+		this.value = this.value.toUpperCase();
+		if (start !== null && end !== null) {
+			this.setSelectionRange(start, end);
+		}
+	});
 
 	// ================= RELATIVES =================
 	if ($("#relationToApplicant").length || $("#familyRelation").length) {

@@ -88,7 +88,7 @@ function deleteData(id) {
 			type: "POST",
 			data: { id: id },
 			success: function(response) {
-				if (response.status = "OK") {
+				if (response.status == "OK") {
 					alert(response.message);
 					location.reload();
 				} else {
@@ -102,7 +102,6 @@ function deleteData(id) {
 		});
 	}
 
-
 }
 
 function viewData(id) {
@@ -114,18 +113,17 @@ function viewData(id) {
 		data: { id: id },
 		success: function(response) {
 			if (response.status == "FOUND") {
-				const branch = response.data;
-				$("#id").val(branch.id);
-				$("#relation").val(branch.relation);
+				const rel = response.data;
+				$("#id").val(rel.id);
+				$("#relation").val(rel.relation);
 			} else {
-				alert("BRANCH NOT FOUND: " + response.message);
+				alert("RELATIVE NOT FOUND: " + response.message);
 			}
 		},
 		error: function(xhr) {
 			alert("REQUEST FAILED: " + xhr.responseText);
 		}
 	});
-
 
 }
 

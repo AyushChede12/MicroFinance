@@ -1,156 +1,164 @@
-//all unprove data
-
+// ALL UNAPPROVED SHARE TRANSFER DATA
 let allTransferShareData = [];
 
 $(document).ready(function() {
-	// Load all member data on page load
-	loadTransferShareData();
+    loadBranchDropdown();
+    loadTransferShareData();
 
-	// Button click filter
-	$('#saveBtn').on('click', function(e) {
-		e.preventDefault(); // Prevent form submission
-		filterTransferShareData();
-	});
+    $('#findBtn, #saveBtn').on('click', function(e) {
+        e.preventDefault();
+        filterTransferShareData();
+    });
+
+    $('#approvedBtn').on('click', function(e) {
+        e.preventDefault();
+        const selectedIds = [];
+        $('.approval-checkbox:checked').each(function() {
+            const id = $(this).data('id');
+            if (id) {
+                selectedIds.push(id);
+            }
+        });
+
+        if (selectedIds.length === 0) {
+            alert("PLEASE SELECT AT LEAST ONE ROW TO APPROVE.");
+            return;
+        }
+
+        const requests = selectedIds.map(function(id) {
+            return $.ajax({
+                url: "api/requestapproval/approveShareTransaction",
+                type: "POST",
+                data: {
+                    id: id,
+                    isApproved: true
+                }
+            });
+        });
+
+        $.when.apply($, requests)
+            .done(function() {
+                alert("SHARE TRANSACTIONS APPROVED SUCCESSFULLY!");
+                location.reload();
+            })
+            .fail(function(xhr) {
+                console.error("ERROR APPROVING SHARE TRANSACTIONS:", xhr);
+                alert("FAILED TO APPROVE SELECTED SHARE TRANSACTIONS.");
+            });
+    });
+
+    $(document).on('change', '#selectAll', function() {
+        $('.approval-checkbox').prop('checked', $(this).prop('checked'));
+    });
 });
-//
 
-function loadTransferShareData() {
-	$.ajax({
-		url: "api/requestapproval/getUnapprovedTransferShare",
-		type: "GET",
-		contentType: "application/json",
-		success: function(response) {
-			if (response.status === "OK" && Array.isArray(response.data)) {
-				allTransferShareData = response.data;
-				//populateMemberCodeDropdown(allKYCData);
-				renderTable(allTransferShareData); // Initially show all
-			} else {
-				alert("NO MEMBER DATA FOUND.");
-			}
-		},
-		error: function(xhr, status, error) {
-			console.error("Error fetching data:", error);
-			alert("FAILED TO LOAD DATA.");
-		}
-	});
+function loadBranchDropdown() {
+    $.ajax({
+        url: "api/preference/getAllBranchModule",
+        type: "GET",
+        dataType: "json",
+        success: function(response) {
+            if (response && response.status === "OK" && Array.isArray(response.data)) {
+                const dropdown = $('#branchName');
+                dropdown.empty().append('<option value="">SELECT BRANCH</option>');
+                response.data.forEach(function(item) {
+                    if (item.branchName) {
+                        dropdown.append(`<option value="${item.branchName}">${item.branchName.toUpperCase()}</option>`);
+                    }
+                });
+            }
+        },
+        error: function(xhr) {
+            console.error("FAILED TO LOAD BRANCHES:", xhr);
+        }
+    });
 }
 
-function populateMemberCodeDropdown(data) {
-	const dropdown = $('#branchName');
-	dropdown.empty().append('<option value="">SELECT BRANCH</option>');
-	const uniqueCodes = [...new Set(data.map(item => item.branch))];
-	uniqueCodes.forEach(code => {
-		dropdown.append(`<option value="${code}">${code}</option>`);
-	});
+function loadTransferShareData() {
+    $.ajax({
+        url: "api/requestapproval/getUnapprovedTransferShare",
+        type: "GET",
+        contentType: "application/json",
+        success: function(response) {
+            if (response && response.status === "OK" && Array.isArray(response.data)) {
+                allTransferShareData = response.data;
+                renderTable(allTransferShareData);
+            } else {
+                renderTable([]);
+            }
+        },
+        error: function(xhr) {
+            console.error("ERROR FETCHING DATA:", xhr);
+            renderTable([]);
+        }
+    });
 }
 
 function renderTable(data) {
-	const tbody = $(".datatable tbody");
-	tbody.empty();
+    const tbody = $(".datatable tbody");
+    tbody.empty();
 
-	if (!data || data.length === 0) {
-		const noDataRow = `
+    if (!data || data.length === 0) {
+        tbody.append(`
             <tr>
-                <td colspan="12" style="text-align:center; font-family: 'Poppins', sans-serif;">
+                <td colspan="10" style="text-align:center; font-family: 'Poppins', sans-serif;">
                     NO DATA FOUND
                 </td>
             </tr>
-        `;
-		tbody.append(noDataRow); 0
-		return; // Exit the function early
-	}
+        `);
+        return;
+    }
 
-	data.forEach((item, index) => {
-		const row = `
+    data.forEach(function(item, index) {
+        const isApproved = item.isApproved;
+        const row = `
             <tr style="font-family: 'Poppins', sans-serif;">
                 <td>
-                    <input type="checkbox" class="approval-checkbox"
-                        data-id="${item.id}" ${item.isApproved ? 'checked' : ''} />
-                </td>  
-			<td>${index + 1}</td>
-
-			                   <td>${item.customerName || '-'}</td>
-			                   <td>${item.branch || '-'}</td>
-							   <td>${item.startDate || '-'}</td>
-							   <td>${item.shareIssuedBy || '-'}</td>
-							   <td>${item.noOfShare || '-'}</td>
-							   <td>${item.dateOfTransfer || '-'}</td>
-							   <td>${item.modeOfPayment || '-'}</td>
-
-
-
+                    <input type="checkbox" class="approval-checkbox" data-id="${item.id}" ${isApproved ? 'checked disabled' : ''} />
+                </td>
+                <td>${index + 1}</td>
+                <td>${(item.customerName || '-').toUpperCase()}</td>
+                <td>${(item.branch || item.branchName || '-').toUpperCase()}</td>
+                <td>${(item.startDate || '-').toUpperCase()}</td>
+                <td>${(item.shareIssuedBy || item.memberCode || '-').toUpperCase()}</td>
+                <td>${(item.noOfShare != null ? item.noOfShare : '-')}</td>
+                <td>${(item.dateOfTransfer || '-').toUpperCase()}</td>
+                <td>${(item.modeOfPayment || '-').toUpperCase()}</td>
             </tr>
         `;
-		tbody.append(row);
-	});
+        tbody.append(row);
+    });
 }
 
-
-//approve data anjali
-
-$(document).ready(function() {
-	// Handle Approve button click
-	$('#approvedBtn').on('click', function() {
-		// Collect all checked checkboxes
-		const selectedIds = [];
-
-		$('.approval-checkbox:checked').each(function() {
-			const id = $(this).data('id');
-			selectedIds.push(id);
-		});
-
-		if (selectedIds.length === 0) {
-			alert("PLEASE SELECT AT LEAST ONE ROW TO APPROVE.");
-			return;
-		}
-
-		// Approve each selected investment
-		selectedIds.forEach(function(id) {
-			$.ajax({
-				url: "api/requestapproval/approveShareTransaction",
-				type: "POST",
-				data: {
-					id: id,
-					isApproved: true // Sends 1 to the DB
-				},
-				success: function(response) {
-					if (response.status === "OK") {
-						alert("APPROVED SUCCESSFULLY!");
-						location.reload();
-					}
-				},
-				error: function(xhr) {
-					alert("ERROR APPROVING ID " + id);
-					console.error(xhr);
-				}
-			});
-		});
-	});
-
-	// Optional: reload after approval
-
-});
-
-//filter Data
 function filterTransferShareData() {
-	const selectedBranch = $('#branchName').val();
-	const fromDateVal = $('#fromDate').val();
-	const toDateVal = $('#toDate').val();
+    const selectedBranch = ($('#branchName').val() || '').trim().toUpperCase();
+    const fromDateVal = $('#fromDate').val();
+    const toDateVal = $('#toDate').val();
 
+    const fromDate = fromDateVal ? new Date(fromDateVal) : null;
+    const toDate = toDateVal ? new Date(toDateVal) : null;
 
-	const fromDate = fromDateVal ? new Date(fromDateVal) : null;
-	const toDate = toDateVal ? new Date(toDateVal) : null;
+    const filtered = allTransferShareData.filter(function(item) {
+        const itemBranch = (item.branch || item.branchName || '').trim().toUpperCase();
+        const dateStr = item.dateOfTransfer || item.startDate;
+        const transferDate = dateStr ? new Date(dateStr) : null;
 
-	const filtered = allTransferShareData.filter(item => {
-		const itemBranch = item.branch;
-		const transferDate = item.dateOfTransfer ? new Date(item.dateOfTransfer) : null;
+        const matchesBranch = selectedBranch ? itemBranch === selectedBranch : true;
 
-		const matchesBranch = selectedBranch ? itemBranch === selectedBranch : true;
-		const matchesFrom = fromDate && transferDate ? transferDate >= fromDate : true;
-		const matchesTo = toDate && transferDate ? transferDate <= toDate : true;
+        let matchesFrom = true;
+        let matchesTo = true;
 
-		return matchesBranch && matchesFrom && matchesTo;
-	});
+        if (fromDate && transferDate) {
+            matchesFrom = transferDate.getTime() >= fromDate.getTime();
+        }
+        if (toDate && transferDate) {
+            const nextDay = new Date(toDate);
+            nextDay.setDate(nextDay.getDate() + 1);
+            matchesTo = transferDate.getTime() < nextDay.getTime();
+        }
 
-	renderTable(filtered);
+        return matchesBranch && matchesFrom && matchesTo;
+    });
+
+    renderTable(filtered);
 }

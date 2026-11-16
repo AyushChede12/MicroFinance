@@ -190,7 +190,7 @@
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields mb-4">
 						<label for="karat">KARAT</label> <input type="text" name="karat"
-							id="karat" required="required" placeholder="Enter Karat"
+							id="karat" required="required" placeholder=="ENTER KARAT"
 							readonly="readonly" />
 					</div>
 				</div>
@@ -335,7 +335,7 @@
 					<div class="d-flex flex-column formFields mb-4">
 						<label for="">PIN CODE</label> <input type="number"
 							name="guarantorPinCode" id="guarantorPinCode" readonly="readonly"
-							required="required" placeholder="ENTERPIN Pin CODE" />
+							required="required" placeholder=="ENTERPIN PIN CODE" />
 					</div>
 				</div>
 
@@ -567,7 +567,7 @@
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields mb-4">
 						<label for="financialConsultantId">FINANCIAL CONSULTANT 
-							Name</label> <input type="text" name="financialConsultantId"
+							NAME</label> <input type="text" name="financialConsultantId"
 							id="financialConsultantId" required="required"
 							readonly="readonly" placeholder="ENTER CONSLTANT ID "
 							style="text-transform: uppercase;" />
@@ -618,8 +618,8 @@
 				<div class="col-12 text-center">
 					<button type="button" id="approveBtn" class="btnStyle"
 						style="background-color: #FFA500;">APPROVE IT</button>
-					<!-- <button id="saveBtn" class="btnStyle" style="background-color: #FFA500;">Update</button>
-                            <button id="saveBtn" class="btnStyle bg-primary">Print</button> -->
+					<!-- <button id="saveBtn" class="btnStyle" style="background-color: #FFA500;">UPDATE</button>
+                            <button id="saveBtn" class="btnStyle bg-primary">PRINT</button> -->
 				</div>
 
 			</div>

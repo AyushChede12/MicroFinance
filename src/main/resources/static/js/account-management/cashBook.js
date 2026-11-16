@@ -1,3 +1,30 @@
+$(document).ready(function() {
+	loadBranchDropdown();
+});
+
+// =====================================================
+// LOAD BRANCH DROPDOWN
+// =====================================================
+function loadBranchDropdown() {
+	$.ajax({
+		type: "GET",
+		url: "api/preference/getAllBranchModule",
+		contentType: "application/json",
+		success: function(response) {
+			let options = "<option value=''>--SELECT BRANCH NAME--</option>";
+			if (response && Array.isArray(response.data)) {
+				response.data.forEach(branch => {
+					options += `<option value="${branch.branchName}">${branch.branchName.toUpperCase()}</option>`;
+				});
+			}
+			$("#branchName").html(options);
+		},
+		error: function() {
+			alert("FAILED TO LOAD BRANCH NAMES.");
+		}
+	});
+}
+
 // =====================================================
 // GET CASH BOOK TRANSACTIONS
 // =====================================================
@@ -7,28 +34,27 @@ function getCashBook() {
 	let branchName = $("#branchName").val();
 	let startDate = $("#startDate").val();
 	let endDate = $("#endDate").val();
-	alert(branchName);
 
 	// ================= VALIDATION =================
 
 	if (!branchName) {
-		alert("Please select Branch");
+		alert("PLEASE SELECT BRANCH");
 		return;
 	}
 
 	if (!startDate) {
-		alert("Please select Start Date");
+		alert("PLEASE SELECT START DATE");
 		return;
 	}
 
 	if (!endDate) {
-		alert("Please select End Date");
+		alert("PLEASE SELECT END DATE");
 		return;
 	}
 
 	// Start date should not be greater than end date
 	if (startDate > endDate) {
-		alert("Start Date cannot be greater than End Date");
+		alert("START DATE CANNOT BE GREATER THAN END DATE");
 		return;
 	}
 
@@ -36,11 +62,11 @@ function getCashBook() {
 
 	$("#showDetilsBtn")
 		.prop("disabled", true)
-		.text("Loading...");
+		.text("LOADING...");
 
 	// Clear old data
 	$("#cashBookTableBody").html(
-		'<tr><td colspan="8" class="text-center">Loading...</td></tr>'
+		'<tr><td colspan="8" class="text-center">LOADING...</td></tr>'
 	);
 
 	// Reset totals
@@ -296,7 +322,7 @@ function exportToExcel() {
 	let table = document.querySelector(".datatable");
 
 	if (!table) {
-		alert("CashBook table not found");
+		alert("CASHBOOK TABLE NOT FOUND");
 		return;
 	}
 

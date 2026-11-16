@@ -1,5 +1,7 @@
 $(document).ready(function() {
 
+	loadBranchDropdowns();
+
 	// =========================
 	// LOAD TRANSFER HISTORY
 	// =========================
@@ -234,4 +236,28 @@ function loadTransferHistory() {
 
 	});
 
+}
+
+// =====================================================
+// LOAD BRANCH DROPDOWNS
+// =====================================================
+function loadBranchDropdowns() {
+	$.ajax({
+		type: "GET",
+		url: "api/preference/getAllBranchModule",
+		contentType: "application/json",
+		success: function(response) {
+			let options = "<option value=''>--SELECT BRANCH--</option>";
+			if (response && Array.isArray(response.data)) {
+				response.data.forEach(branch => {
+					options += `<option value="${branch.branchName}">${branch.branchName.toUpperCase()}</option>`;
+				});
+			}
+			$("#sourceBranch").html(options);
+			$("#receivingBranch").html(options);
+		},
+		error: function() {
+			alert("FAILED TO LOAD BRANCH NAMES.");
+		}
+	});
 }

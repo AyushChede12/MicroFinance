@@ -16,21 +16,20 @@
 		<div>
 			<nav>
 				<ol class="breadcrumb breadcrumb-title">
-					<li class="breadcrumb-item action">SEARCH</li>
+					<li class="breadcrumb-item action">SEARCH CONSULTANT DOWNLINE</li>
 				</ol>
 			</nav>
 			<div class="row">
-				<div class="col-lg-3">
+				<div class="col-lg-4">
 					<input type="hidden" id="id" name="name">
 					<div class="d-flex flex-column formFields">
-						<label for="">SEARCH BY NAME OR CONUSLTANT CODE <span
+						<label for="searchKeyword">SEARCH BY NAME OR CONSULTANT CODE <span
 							id="star">*</span></label> <input type="text" id="searchKeyword"
-							placeholder="Search by Name or Code"
-							class="form-control d-inline w-auto" />
+							placeholder="ENTER NAME OR FINANCIAL CODE"
+							class="form-control d-inline w-auto"
+							style="text-transform: uppercase;" />
 					</div>
 				</div>
-
-
 			</div>
 
 		</div>
@@ -42,7 +41,7 @@
 			<div class="card recent-sales">
 				<div class="card-body">
 					<h5 class="card-title">
-						TABLE VIEW <span>| RECORED</span>
+						TABLE VIEW <span>| DOWNLINE RECORDS</span>
 					</h5>
 
 					<div style="overflow-x: auto; white-space: nowrap;">
@@ -51,16 +50,16 @@
 							<thead class="table-light"
 								style="position: sticky; top: 0; background: #f8f9fa; z-index: 2;">
 								<tr style="font-family: 'Poppins', sans-serif;">
-									<th scope="col">Sr No.</th>
-									<th scope="col">Financial Name</th>
-									<th scope="col">Financial Code</th>
-									<th scope="col">Contact No</th>
-									<th scope="col">Joining Date</th>
-									<th scope="col">Address</th>
-									<th scope="col">Branch</th>
-									<th scope="col">Financial Status</th>
-									<th scope="col">Edit</th>
-									<th scope="col">Delete</th>
+									<th scope="col">SR NO.</th>
+									<th scope="col">FINANCIAL NAME</th>
+									<th scope="col">FINANCIAL CODE</th>
+									<th scope="col">CONTACT NO.</th>
+									<th scope="col">JOINING DATE</th>
+									<th scope="col">ADDRESS</th>
+									<th scope="col">BRANCH</th>
+									<th scope="col">FINANCIAL STATUS</th>
+									<th scope="col">EDIT</th>
+									<th scope="col">DELETE</th>
 								</tr>
 							</thead>
 							<tbody>

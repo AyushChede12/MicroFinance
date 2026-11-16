@@ -177,7 +177,7 @@ $(document).ready(function() {
 			success: function(response) {
 				var select = $("#guarantorcustomerCode,#coApplicantMemberId");
 				select.empty();
-				select.append('<option value="">Select member Code</option>');
+				select.append('<option value="">SELECT MEMBER CODE</option>');
 
 				if (response && response.data && response.data.length > 0) {
 					response.data.forEach(function(customer) {
@@ -215,7 +215,7 @@ $(document).ready(function() {
 
 
 								} else {
-									alert("No details found for this member");
+									alert("NO DETAILS FOUND FOR THIS MEMBER");
 								}
 							},
 							error: function(err) {

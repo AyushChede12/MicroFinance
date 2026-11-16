@@ -1,3 +1,18 @@
+function resolveApiUrl(url) {
+	if (!url) return url;
+	let ctx = window.contextPath;
+	if (ctx === undefined || ctx === null) {
+		const path = window.location.pathname || "";
+		const match = path.match(/^(\/[^\/]+)/);
+		ctx = (match && match[1] === '/MicroFinance') ? '/MicroFinance' : '';
+	}
+	if (ctx && url.startsWith(ctx + "/")) {
+		return url;
+	}
+	const cleanUrl = url.startsWith("/") ? url.substring(1) : url;
+	return (ctx ? ctx : "") + "/" + cleanUrl;
+}
+
 $(document).ready(function () {
 	$("#guardianDetails").hide();
 	$("#guardianAccountNo").hide();
@@ -574,13 +589,12 @@ $(document).ready(function () {
 
 		$.ajax({
 			type: 'POST',
-			url: 'api/customermanagement/saveOrUpdateCustomer',
+			url: resolveApiUrl('api/customermanagement/saveOrUpdateCustomer'),
 			data: formData,
 			processData: false,
 			contentType: false,
 
 			success: function (response) {
-				alert("Success");
 				if (response.data) {
 					const customerId = response.data.id;
 
@@ -712,7 +726,7 @@ $(document).ready(function () {
 
 					$.ajax({
 						type: 'POST',
-						url: 'accountManagement/saveAccountTransaction',
+						url: resolveApiUrl('accountManagement/saveAccountTransaction'),
 						contentType: 'application/json',
 						data: JSON.stringify(accountTransactionData),
 						dataType: 'json',
@@ -779,12 +793,14 @@ $(document).ready(function () {
 			},
 
 			error: function (xhr) {
-				alert("error");
-				console.error(xhr);
-
-				alert(
-					(xhr.responseJSON?.message || "SOMETHING WENT WRONG").toUpperCase()
-				);
+				console.error("CUSTOMER SAVE ERROR:", xhr);
+				const errMessage = (xhr.responseJSON?.message || xhr.responseText || "SOMETHING WENT WRONG WHILE SAVING CUSTOMER").toUpperCase();
+				Swal.fire({
+					icon: "error",
+					title: "REGISTRATION FAILED",
+					text: errMessage,
+					confirmButtonText: "OK"
+				});
 			}
 		});
 	});
@@ -957,7 +973,7 @@ $(document).ready(function () {
 			fd.append("file", file);
 
 			$.ajax({
-				url: "api/customermanagement/upload/" + customerId,
+				url: resolveApiUrl("api/customermanagement/upload/" + customerId),
 				type: "POST",
 				data: fd,
 				processData: false,
@@ -1083,7 +1099,7 @@ function drivingpreview() {
 
 function loadCustomerTable() {
 	$.ajax({
-		url: "api/customermanagement/getAllCustomer",
+		url: resolveApiUrl("api/customermanagement/getAllCustomer"),
 		type: "GET",
 		dataType: "json",
 
@@ -1226,7 +1242,7 @@ function newlyaddedpreview() {
 $(document).ready(function () {
 	// Load States
 	$.ajax({
-		url: 'api/preference/getAllStates',
+		url: resolveApiUrl('api/preference/getAllStates'),
 		method: "GET",
 
 		success: function (response) {
@@ -1261,7 +1277,7 @@ $('#state').on('change', function () {
 
 	if (selectedStateId) {
 		$.ajax({
-			url: 'api/preference/getAllDistrictsByStateId',
+			url: resolveApiUrl('api/preference/getAllDistrictsByStateId'),
 			method: 'GET',
 			data: { stateId: selectedStateId },
 
@@ -1290,7 +1306,7 @@ $(document).ready(function () {
 	const dropdownIds = ["relationToApplicant", "nomineeRelationToApplicant"];
 
 	$.ajax({
-		url: "api/preference/getAllRelativeModule",
+		url: resolveApiUrl("api/preference/getAllRelativeModule"),
 		method: "GET",
 
 		success: function (data) {
@@ -1328,7 +1344,7 @@ $(document).ready(function () {
 $(document).ready(function () {
 	// Fetch all branches and populate the dropdown
 	$.ajax({
-		url: "api/preference/getAllBranchModule",
+		url: resolveApiUrl("api/preference/getAllBranchModule"),
 		method: "GET",
 
 		success: function (data) {
@@ -1455,7 +1471,7 @@ document.addEventListener("DOMContentLoaded", function () {
 $(document).ready(function () {
 	// Fetch all customers and populate the "select by code" dropdown
 	$.ajax({
-		url: "api/customermanagement/getAllCustomer",
+		url: resolveApiUrl("api/customermanagement/getAllCustomer"),
 		method: "GET",
 		dataType: "json",
 
@@ -1530,7 +1546,7 @@ function fetchBySelectedCustomer() {
 		type: "POST",
 		contentType: "application/json",
 		data: JSON.stringify(input),
-		url: 'fetchBySelectedCustomer',
+		url: resolveApiUrl('api/customermanagement/fetchBySelectedCustomer'),
 		async: false,
 
 		success: function (data) {
@@ -1667,7 +1683,7 @@ $(document).ready(function () {
 $(document).ready(function () {
 	// 1️⃣ Fetch all customers for dropdown
 	$.ajax({
-		url: "api/customersavings/getAllSavingAccountData",
+		url: resolveApiUrl("api/customersavings/getAllSavingAccountData"),
 		method: "GET",
 
 		success: function (response) {
@@ -1722,7 +1738,7 @@ $(document).ready(function () {
 
 			// Fetch account number from backend
 			$.ajax({
-				url: `api/customersavings/getAccountNumbersByCode?selectByCustomer=${encodeURIComponent(selectedCode)}`,
+				url: resolveApiUrl(`api/customersavings/getAccountNumbersByCode?selectByCustomer=${encodeURIComponent(selectedCode)}`),
 				method: "GET",
 
 				success: function (res) {
@@ -1777,7 +1793,7 @@ $(document).ready(function () {
 		});*/
 
 	$.ajax({
-		url: 'api/preference/getAllCategoryModule',
+		url: resolveApiUrl('api/preference/getAllCategoryModule'),
 		method: "GET",
 
 		success: function (response) {
@@ -1821,7 +1837,7 @@ $(document).ready(function () {
 
 		if (selectedCategory) {
 			$.ajax({
-				url: 'api/preference/getAllCasteByCategory',
+				url: resolveApiUrl('api/preference/getAllCasteByCategory'),
 				method: 'GET',
 				data: { category: selectedCategory },
 

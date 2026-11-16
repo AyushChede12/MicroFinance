@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <!-- Background Linear & Radial Gradients -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a192f" />
+      <stop offset="40%" stop-color="#0f2744" />
+      <stop offset="75%" stop-color="#071526" />
+      <stop offset="100%" stop-color="#020813" />
+    </linearGradient>
+    <radialGradient id="glowTeal" cx="15%" cy="20%" r="50%">
+      <stop offset="0%" stop-color="#00d2ff" stop-opacity="0.22" />
+      <stop offset="60%" stop-color="#0066cc" stop-opacity="0.06" />
+      <stop offset="100%" stop-color="#0a192f" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="glowPurple" cx="85%" cy="80%" r="55%">
+      <stop offset="0%" stop-color="#6366f1" stop-opacity="0.18" />
+      <stop offset="50%" stop-color="#3b82f6" stop-opacity="0.05" />
+      <stop offset="100%" stop-color="#020813" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="glowCenter" cx="50%" cy="50%" r="40%">
+      <stop offset="0%" stop-color="#1e3a8a" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#0f2744" stop-opacity="0" />
+    </radialGradient>
+    <pattern id="gridPattern" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="rgba(255, 255, 255, 0.025)" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <!-- Base Dark Gradient -->
+  <rect width="1920" height="1080" fill="url(#bgGrad)" />
+
+  <!-- Ambient Glows -->
+  <rect width="1920" height="1080" fill="url(#glowTeal)" />
+  <rect width="1920" height="1080" fill="url(#glowPurple)" />
+  <rect width="1920" height="1080" fill="url(#glowCenter)" />
+
+  <!-- Geometric Grid Pattern Overlay -->
+  <rect width="1920" height="1080" fill="url(#gridPattern)" />
+
+  <!-- Banking Nodes & Constellations (Financial Network Graph) -->
+  <g stroke="rgba(56, 189, 248, 0.15)" stroke-width="1.2" fill="none">
+    <path d="M 120 180 L 320 120 L 520 220 L 410 380 L 190 320 Z" />
+    <path d="M 320 120 L 410 380" />
+    <path d="M 1550 180 L 1750 240 L 1820 450 L 1640 520 L 1480 340 Z" />
+    <path d="M 1750 240 L 1640 520" />
+    <path d="M 200 820 L 380 740 L 520 890 L 340 980 Z" />
+    <path d="M 1420 820 L 1620 740 L 1780 880 L 1580 960 Z" />
+  </g>
+
+  <!-- Glowing Connection Nodes -->
+  <g fill="#38bdf8">
+    <circle cx="120" cy="180" r="4" opacity="0.6" />
+    <circle cx="320" cy="120" r="5" opacity="0.8" />
+    <circle cx="520" cy="220" r="4" opacity="0.7" />
+    <circle cx="410" cy="380" r="5" opacity="0.75" />
+    <circle cx="190" cy="320" r="3.5" opacity="0.6" />
+
+    <circle cx="1550" cy="180" r="4" opacity="0.65" />
+    <circle cx="1750" cy="240" r="5" opacity="0.8" />
+    <circle cx="1820" cy="450" r="4.5" opacity="0.7" />
+    <circle cx="1640" cy="520" r="5" opacity="0.8" />
+    <circle cx="1480" cy="340" r="4" opacity="0.6" />
+
+    <circle cx="200" cy="820" r="4" opacity="0.6" />
+    <circle cx="380" cy="740" r="5" opacity="0.75" />
+    <circle cx="520" cy="890" r="4" opacity="0.7" />
+    <circle cx="340" cy="980" r="3.5" opacity="0.5" />
+
+    <circle cx="1420" cy="820" r="4" opacity="0.6" />
+    <circle cx="1620" cy="740" r="5" opacity="0.75" />
+    <circle cx="1780" cy="880" r="4" opacity="0.7" />
+    <circle cx="1580" cy="960" r="3.5" opacity="0.5" />
+  </g>
+
+  <!-- Elegant Financial Trend Waves (Curved Geometry) -->
+  <path d="M 0 680 C 400 550, 700 780, 1100 620 C 1450 480, 1700 600, 1920 540" fill="none" stroke="rgba(99, 102, 241, 0.12)" stroke-width="2.5" />
+  <path d="M 0 740 C 450 620, 750 820, 1150 670 C 1500 530, 1750 640, 1920 590" fill="none" stroke="rgba(56, 189, 248, 0.1)" stroke-width="2" />
+  <path d="M 0 800 C 500 690, 800 860, 1200 720 C 1550 590, 1800 690, 1920 640" fill="none" stroke="rgba(56, 189, 248, 0.05)" stroke-width="1.5" />
+</svg>
+

@@ -243,21 +243,21 @@
 					<div style="background: linear-gradient(135deg, #f8fafc 0%, #edf2f7 100%); border: 1px solid #cbd5e1; border-left: 4px solid #0284c7; border-radius: 8px; padding: 12px 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
 						<div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
 							<div>
-								<span style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Loan Principal:</span>
+								<span style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">LOAN PRINCIPAL:</span>
 								<span id="summaryPrincipalText" style="font-size: 13px; font-weight: 700; color: #1e293b; margin-left: 5px;">&#8377; 0.00</span>
 							</div>
 							<div style="font-size: 14px; color: #94a3b8; font-weight: bold;">+</div>
 							<div>
-								<span style="font-size: 11px; font-weight: 700; color: #0284c7; text-transform: uppercase;">Total Interest:</span>
+								<span style="font-size: 11px; font-weight: 700; color: #0284c7; text-transform: uppercase;">TOTAL INTEREST:</span>
 								<span id="summaryInterestText" style="font-size: 13px; font-weight: 700; color: #0369a1; margin-left: 5px;">&#8377; 0.00</span>
 							</div>
 							<div style="font-size: 14px; color: #94a3b8; font-weight: bold;">=</div>
 							<div>
-								<span style="font-size: 11px; font-weight: 700; color: #059669; text-transform: uppercase;">Total Amount to Pay:</span>
+								<span style="font-size: 11px; font-weight: 700; color: #059669; text-transform: uppercase;">TOTAL AMOUNT TO PAY:</span>
 								<span id="summaryPayableText" style="font-size: 14px; font-weight: 800; color: #047857; margin-left: 5px;">&#8377; 0.00</span>
 							</div>
 							<div style="border-left: 1px solid #cbd5e1; padding-left: 15px;">
-								<span style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">EMI Breakdown:</span>
+								<span style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">EMI BREAKDOWN:</span>
 								<span id="summaryEmiText" style="font-size: 12px; font-weight: 700; color: #475569; margin-left: 5px;">-</span>
 							</div>
 						</div>
@@ -581,8 +581,8 @@
 		<div class="row">
 			<div class="col-12 text-center">
 				<button type="button" id="saveBtn" class="btnStyle bg-success">SAVE</button>
-				<!-- <button id="saveBtn" class="btnStyle" style="background-color: #FFA500;">Update</button>
-                        <button id="saveBtn" class="btnStyle bg-primary">Print</button> -->
+				<!-- <button id="saveBtn" class="btnStyle" style="background-color: #FFA500;">UPDATE</button>
+                        <button id="saveBtn" class="btnStyle bg-primary">PRINT</button> -->
 			</div>
 		</div>
 	</form>

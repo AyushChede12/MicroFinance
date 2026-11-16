@@ -35,7 +35,7 @@
 						style="margin-bottom: 30px">
 						<label>RENEWAL DATE <span class="star">*</span></label> <input
 							type="date" name="fromDate" id="fromDate" required="required"
-							placeholder="o" style="text-transform: uppercase;" />
+							placeholder="SELECT RENEWAL DATE" style="text-transform: uppercase;" />
 					</div>
 				</div>
 
@@ -179,7 +179,7 @@
 						<div class="d-flex flex-column formFields mt-4">
 							<label for="">DUE DATE <span class="star">*</span></label> <input
 								type="date" name="dueDate" id="dueDate" required="required"
-								readonly="readonly" placeholder="Enter Vehicle No"
+								readonly="readonly" placeholder="ENTER DUE DATE"
 								style="text-transform: uppercase;" />
 						</div>
 					</div> -->
@@ -195,7 +195,7 @@
 
 					<div class="col-lg-3">
 						<div class="d-flex flex-column formFields mt-4">
-							<label for="">FDs COMPLETED <span class="star">*</span></label>
+							<label for="">FD COMPLETED <span class="star">*</span></label>
 							<input type="text" name="noOfInstPaid" id="noOfInstPaid"
 								readonly="readonly" required="required"
 								placeholder="ENTER INSTALLMENT COMPLETED" />

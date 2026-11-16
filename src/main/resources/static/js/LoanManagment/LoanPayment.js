@@ -116,7 +116,7 @@ $(document).ready(function() {
 					}
 				},
 				error: function(xhr) {
-					alert("ERROR FETCHING DATA: " + xhr.responseText);
+					alert("ERROR FETCHING DATA: " + (xhr.responseText ? xhr.responseText.toUpperCase() : ""));
 				}
 			});
 		}
@@ -247,7 +247,7 @@ $('#paymentBtn').click(function(e) {
 		},
 		error: function(xhr) {
 			const errorMsg = xhr.responseJSON?.message || xhr.responseJSON?.data?.error || "UNKNOWN ERROR OCCURRED";
-			alert("❌ DISBURSEMENT FAILED: " + errorMsg);
+			alert("❌ DISBURSEMENT FAILED: " + String(errorMsg).toUpperCase());
 		}
 	});
 });

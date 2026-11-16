@@ -1,4 +1,3 @@
-
 <div class="pagetitle">
 	<h1>ACCOUNT MANAGEMENT</h1>
 	<nav>
@@ -166,7 +165,7 @@
 
 		<div class="col-lg-3">
 			<div class="d-flex flex-column formFields mb-4">
-				<label for="">BRANCH NAME <input type="text"
+				<label for="">BRANCH NAME</label> <input type="text"
 					name="branchAddresslabel" id="branchAddresslabel"
 					required="required" placeholder="ENTER BRANCH NAME" />
 			</div>
@@ -245,7 +244,7 @@
 		<div class="card recent-sales">
 
 			<div class="card-body table-responsive">
-				<h5 class="card-title">Search result</h5>
+				<h5 class="card-title">SEARCH RESULT</h5>
 
 				<table class="table table-borderless datatable overflow-scroll">
 					<thead class="table-light">
@@ -283,3 +282,4 @@
 	</div>
 </div>
 
+<script src="${pageContext.request.contextPath}/js/account-management/mandateDepositToBank.js"></script>

@@ -34,6 +34,12 @@ public interface FinancialConsultantRepo extends JpaRepository<addFinancialConsu
 
 	List<addFinancialConsultant> findByTeamMemberCodeIn(List<String> teamCodes);
 
+	List<addFinancialConsultant> findByReferralCode(String referralCode);
+
+	List<addFinancialConsultant> findByFinancialCodeOrReferralCode(String financialCode, String referralCode);
+
+	List<addFinancialConsultant> findByFinancialNameContainingIgnoreCaseOrFinancialCodeContainingIgnoreCase(String financialName, String financialCode);
+
 	/*
 	 * @Transactional List<addFinancialConsultant> fetchAllFinancialCode(String
 	 * financialCode);

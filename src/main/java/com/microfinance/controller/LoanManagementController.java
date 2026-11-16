@@ -56,10 +56,6 @@ public class LoanManagementController {
 		}
 	}
 
-	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("/Uploads/**").addResourceLocations("file:///" + uploadDirectory);
-	}
-
 	// fetch all data loan scheme catalog
 	@GetMapping("/fetchLoanSchemeCatalog")
 	public ResponseEntity<ApiResponse<List<LoanSchemCatalog>>> getSchemeCatalog() {

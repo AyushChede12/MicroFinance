@@ -194,10 +194,7 @@ function fetchBySelectedCustomer() {
 		) {
 
 			alert(
-				"FAILED TO FETCH DATA: " +
-				textStatus +
-				", " +
-				errorThrown
+				("FAILED TO FETCH DATA: " + (textStatus || "") + ", " + (errorThrown || "")).toUpperCase()
 			);
 		}
 	});
@@ -1458,8 +1455,7 @@ $("#saveBtn").click(function(e) {
 				success: function(response) {
 
 					alert(
-						"✅ " +
-						response.message
+						"✅ " + String(response.message || "INVESTMENT SAVED SUCCESSFULLY.").toUpperCase()
 					);
 
 					location.reload();
@@ -1468,11 +1464,7 @@ $("#saveBtn").click(function(e) {
 				error: function(xhr) {
 
 					alert(
-						"❌ ERROR: " +
-						(
-							xhr.responseJSON?.message ||
-							"SOMETHING WENT WRONG."
-						)
+						"❌ ERROR: " + String(xhr.responseJSON?.message || "SOMETHING WENT WRONG.").toUpperCase()
 					);
 
 					location.reload();

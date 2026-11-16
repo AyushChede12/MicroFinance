@@ -284,7 +284,7 @@ td {
 			<div class="row" style="margin-left: 80%;">
 				<div class="col-12 text-center">
 					<button type="button" id="saveBtn" class="btnStyle bg-warning ">SAVE</button>
-					<button id="updateBtn" class="btnStyle bg-warning style="display:none;">UPDATE</button>
+					<button id="updateBtn" class="btnStyle bg-warning" style="display:none;">UPDATE</button>
 
 				</div>
 			</div>
@@ -300,16 +300,16 @@ td {
 							<table class="table table-bordered">
 								<thead class="table-light">
 									<tr>
-										<th style="white-space: nowrap;">Sr. No</th>
-										<th style="white-space: nowrap;">Plan Code</th>
-										<th style="white-space: nowrap;">Plan Name</th>
-										<th style="white-space: nowrap;">Minimum Deposit</th>
-										<th style="white-space: nowrap;">Rate of Interest</th>
-										<th style="white-space: nowrap;">Installment Type</th>
-										<th style="white-space: nowrap;">Term (Duration)</th>
+										<th style="white-space: nowrap;">SR. NO</th>
+										<th style="white-space: nowrap;">PLAN CODE</th>
+										<th style="white-space: nowrap;">PLAN NAME</th>
+										<th style="white-space: nowrap;">MINIMUM DEPOSIT</th>
+										<th style="white-space: nowrap;">RATE OF INTEREST</th>
+										<th style="white-space: nowrap;">INSTALLMENT TYPE</th>
+										<th style="white-space: nowrap;">TERM (DURATION)</th>
 										<!-- 										<th style="white-space: nowrap;">Maturity Amount</th> -->
-										<th style="white-space: nowrap;">Status (Active/Inactive)</th>
-										<th style="white-space: nowrap;">Action</th>
+										<th style="white-space: nowrap;">STATUS (ACTIVE/INACTIVE)</th>
+										<th style="white-space: nowrap;">ACTION</th>
 									</tr>
 								</thead>
 								<tbody id="depositTableBody">
@@ -526,7 +526,7 @@ td {
 			<div class="row" style="margin-left: 80%;">
 				<div class="col-12 text-center">
 					<button id="ReccuringsaveBtn" class="btnStyle bg-warning ">SAVE</button>
-					<button id="ReccuringupdateBtn" class="btnStyle bg-warning style="display:none;">UPDATE</button>
+					<button id="ReccuringupdateBtn" class="btnStyle bg-warning" style="display:none;">UPDATE</button>
 
 				</div>
 			</div>
@@ -542,16 +542,16 @@ td {
 							<table class="table table-bordered">
 								<thead class="table-light">
 									<tr>
-										<th style="white-space: nowrap;">Sr. No</th>
-										<th style="white-space: nowrap;">Plan Code</th>
-										<th style="white-space: nowrap;">Plan Name</th>
-										<th style="white-space: nowrap;">Minimum Deposit</th>
-										<th style="white-space: nowrap;">Rate of Interest</th>
-										<th style="white-space: nowrap;">Installment Type</th>
-										<th style="white-space: nowrap;">Term (Duration)</th>
+										<th style="white-space: nowrap;">SR. NO</th>
+										<th style="white-space: nowrap;">PLAN CODE</th>
+										<th style="white-space: nowrap;">PLAN NAME</th>
+										<th style="white-space: nowrap;">MINIMUM DEPOSIT</th>
+										<th style="white-space: nowrap;">RATE OF INTEREST</th>
+										<th style="white-space: nowrap;">INSTALLMENT TYPE</th>
+										<th style="white-space: nowrap;">TERM (DURATION)</th>
 										<!-- 	<th style="white-space: nowrap;">Maturity Amount</th> -->
-										<th style="white-space: nowrap;">Status (Active/Inactive)</th>
-										<th style="white-space: nowrap;">Action</th>
+										<th style="white-space: nowrap;">STATUS (ACTIVE/INACTIVE)</th>
+										<th style="white-space: nowrap;">ACTION</th>
 									</tr>
 								</thead>
 								<tbody id="recurringTableBody">
@@ -701,13 +701,13 @@ td {
 					</div>
 				</div>
 
-				<!-- New field: Interest Per Interval -->
+				<!-- New field: INTEREST PER INTERVAL -->
 				<!-- <div class="col-lg-3">
 							<div class="d-flex flex-column formFields">
-								<label for="">Interest Per Interval <span class="star">*</span></label>
+								<label for="">INTEREST PER INTERVAL <span class="star">*</span></label>
 								<input type="text" name="interestPerIntervalFD"
 									id="interestPerIntervalFD" readonly="readonly"
-									required="required" placeholder="Interest Per Interval" />
+									required="required" placeholder="INTEREST PER INTERVAL" />
 							</div>
 						</div> -->
 
@@ -780,7 +780,7 @@ td {
 		<div class="row" style="margin-left: 80%;">
 			<div class="col-12 text-center">
 				<button type="button" id="FixedsaveBtn" class="btnStyle bg-warning ">SAVE</button>
-				<button id="FixedupdateBtn" class="btnStyle bg-warning style="display:none;">UPDATE</button>
+				<button id="FixedupdateBtn" class="btnStyle bg-warning" style="display:none;">UPDATE</button>
 			</div>
 		</div>
 
@@ -795,16 +795,16 @@ td {
 						<table class="table table-bordered">
 							<thead class="table-light">
 								<tr>
-									<th style="white-space: nowrap;">Sr. No</th>
-									<th style="white-space: nowrap;">Plan Code</th>
-									<th style="white-space: nowrap;">Plan Name</th>
-									<th style="white-space: nowrap;">Minimum Deposit</th>
-									<th style="white-space: nowrap;">Rate of Interest</th>
-									<th style="white-space: nowrap;">Installment Type</th>
-									<th style="white-space: nowrap;">Term (Duration)</th>
+									<th style="white-space: nowrap;">SR. NO</th>
+									<th style="white-space: nowrap;">PLAN CODE</th>
+									<th style="white-space: nowrap;">PLAN NAME</th>
+									<th style="white-space: nowrap;">MINIMUM DEPOSIT</th>
+									<th style="white-space: nowrap;">RATE OF INTEREST</th>
+									<th style="white-space: nowrap;">INSTALLMENT TYPE</th>
+									<th style="white-space: nowrap;">TERM (DURATION)</th>
 									<!-- <th style="white-space: nowrap;">Maturity Amount</th> -->
-									<th style="white-space: nowrap;">Status (Active/Inactive)</th>
-									<th style="white-space: nowrap;">Action</th>
+									<th style="white-space: nowrap;">STATUS (ACTIVE/INACTIVE)</th>
+									<th style="white-space: nowrap;">ACTION</th>
 								</tr>
 							</thead>
 							<tbody id="fixedTableBody">
@@ -1000,7 +1000,7 @@ td {
 		<div class="row" style="margin-left: 80%;">
 			<div class="col-12 text-center">
 				<button id="missaveBtn" class="btnStyle bg-warning ">SAVE</button>
-				<button id="misdupdateBtn" class="btnStyle bg-warning style="display:none;">UPDATE</button>
+				<button id="misdupdateBtn" class="btnStyle bg-warning" style="display:none;">UPDATE</button>
 			</div>
 		</div>
 
@@ -1015,16 +1015,16 @@ td {
 						<table class="table table-bordered">
 							<thead class="table-light">
 								<tr>
-									<th style="white-space: nowrap;">Sr. No</th>
-									<th style="white-space: nowrap;">Plan Code</th>
-									<th style="white-space: nowrap;">Plan Name</th>
-									<th style="white-space: nowrap;">Minimum Deposit</th>
-									<th style="white-space: nowrap;">Rate of Interest</th>
-									<th style="white-space: nowrap;">Installment Type</th>
-									<th style="white-space: nowrap;">Term (Duration)</th>
+									<th style="white-space: nowrap;">SR. NO</th>
+									<th style="white-space: nowrap;">PLAN CODE</th>
+									<th style="white-space: nowrap;">PLAN NAME</th>
+									<th style="white-space: nowrap;">MINIMUM DEPOSIT</th>
+									<th style="white-space: nowrap;">RATE OF INTEREST</th>
+									<th style="white-space: nowrap;">INSTALLMENT TYPE</th>
+									<th style="white-space: nowrap;">TERM (DURATION)</th>
 									<!-- <th style="white-space: nowrap;">Maturity Amount</th> -->
-									<th style="white-space: nowrap;">Status (Active/Inactive)</th>
-									<th style="white-space: nowrap;">Action</th>
+									<th style="white-space: nowrap;">STATUS (ACTIVE/INACTIVE)</th>
+									<th style="white-space: nowrap;">ACTION</th>
 								</tr>
 							</thead>
 							<tbody id="misdepositeTableBody">

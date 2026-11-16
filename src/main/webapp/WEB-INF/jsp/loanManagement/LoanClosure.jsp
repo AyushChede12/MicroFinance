@@ -134,7 +134,7 @@
 					<div class="d-flex flex-column formFields mb-4">
 						<label for="loanName">INTEREST TYPE</label> <input type="text"
 							name="interestType" id="interestType" required="required"
-							placeholder="Enter Interest Type"
+							placeholder="ENTER INTEREST TYPE"
 							style="text-transform: uppercase;" />
 					</div>
 				</div>
@@ -143,7 +143,7 @@
 					<div class="d-flex flex-column formFields mb-4">
 						<label for="loanName">EMI PAYMENT</label> <input type="text"
 							name="emiPayment" id="emiPayment" required="required"
-							placeholder="Enter EMI PAYMENT" style="text-transform: uppercase;" />
+							placeholder="ENTER EMI PAYMENT" style="text-transform: uppercase;" />
 					</div>
 				</div>
 

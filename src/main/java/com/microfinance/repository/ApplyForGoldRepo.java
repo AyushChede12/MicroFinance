@@ -21,7 +21,6 @@ public interface ApplyForGoldRepo extends JpaRepository<ApplyForGold, Long> {
 	List<ApplyForGold> findByGoldID(@Param("goldID") String goldID);
 
 	ApplyForGold findSingleByGoldID(String goldID);
-	// List<addCustomer> findByMemberCode(String memberCode);
 
 	List<ApplyForGold> findByApprovalStatusTrue();
 
@@ -32,5 +31,8 @@ public interface ApplyForGoldRepo extends JpaRepository<ApplyForGold, Long> {
 	long countByFinancialConsultantIdInAndLoanDateContaining(List<String> financialConsultantCode, String yearMonth);
 
 	List<ApplyForGold> findByFinancialConsultantIdIn(List<String> financialCodes);
+
+	@Query("SELECT DISTINCT a.goldID FROM ApplyForGold a WHERE a.goldID IS NOT NULL AND a.goldID != '' ORDER BY a.goldID ASC")
+	List<String> findAllDistinctGoldIds();
 
 }

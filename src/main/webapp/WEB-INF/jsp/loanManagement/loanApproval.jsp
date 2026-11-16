@@ -68,7 +68,7 @@
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields">
 						<label for="">AGE </label> <input type="text" name="age" id="age"
-							readonly="readonly" required="required" placeholder="Enter Age" />
+							readonly="readonly" required="required" placeholder="ENTER AGE" />
 					</div>
 				</div>
 
@@ -447,7 +447,7 @@
 				<div class="col-lg-3">
 
 					<div class="d-flex flex-column formFields mb-4">
-						<label for="loanName">Date Of Approval </label> <input type="date"
+						<label for="loanName">DATE OF APPROVAL </label> <input type="date"
 							name="approvalDate" id="approvalDate" required="required"
 							style="text-transform: uppercase;" />
 					</div>
@@ -457,7 +457,7 @@
 
 				<div class="col-lg-3">
 					<div class="d-flex flex-column formFields mb-4">
-						<label for="loanName">Approval Status</label> <input type="text"
+						<label for="loanName">APPROVAL STATUS</label> <input type="text"
 							id="approvalStatus" name="approvalStatus" class="form-control"
 							readonly
 							style="font-size: 12px; font-weight: bold; text-transform: uppercase;" />
@@ -468,8 +468,8 @@
 				<div class="col-12 text-center">
 					<button id="approveBtn" class="btnStyle" name="approveBtn"
 						style="background-color: #FFA500;">Approve It</button>
-					<!-- <button id="saveBtn" class="btnStyle" style="background-color: #FFA500;">Update</button>
-                            <button id="saveBtn" class="btnStyle bg-primary">Print</button> -->
+					<!-- <button id="saveBtn" class="btnStyle" style="background-color: #FFA500;">UPDATE</button>
+                            <button id="saveBtn" class="btnStyle bg-primary">PRINT</button> -->
 				</div>
 
 			</div>

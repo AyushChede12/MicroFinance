@@ -1,264 +1,218 @@
 let allRecurringData = [];
+let currentFilteredData = [];
 
 $(document).ready(function() {
+	loadBranchDropdown();
+	loadApprovedPolicies();
 
-	// ================= TODAY DATE =================
-	function getToday() {
-		let today = new Date();
-		today.setHours(0, 0, 0, 0);
-		return today;
-	}
-
-	// ================= DUE STATUS =================
-	function getDueStatus(dateStr) {
-
-		if (!dateStr) {
-			return { text: "-", color: "black", days: "-" };
-		}
-
-		let today = getToday();
-		let dueDate = new Date(dateStr);
-		dueDate.setHours(0, 0, 0, 0);
-
-		let diffTime = dueDate - today;
-		let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-		if (diffDays < 0) {
-			return { text: "OVERDUE", color: "red", days: Math.abs(diffDays) };
-		} else if (diffDays === 0) {
-			return { text: "DUE TODAY", color: "orange", days: "0" };
-		} else {
-			return { text: "UPCOMING", color: "green", days: diffDays };
-		}
-	}
-
-	// ================= FETCH DATA =================
-	$.ajax({
-		url: "api/datacorrection/fetchAllApprovedPolicyRenewal",
-		type: "GET",
-		success: function(response) {
-
-			if (response && response.data && Array.isArray(response.data)) {
-
-				allRecurringData = response.data;
-
-				let branches = new Set();
-
-				allRecurringData.forEach(p => {
-					if (p.branchname) {
-						branches.add(p.branchname);
-					}
-				});
-
-				branches.forEach(branch => {
-					$("#branchName").append(`<option value="${branch}">${branch}</option>`);
-				});
-
-				renderTable(allRecurringData);
-			}
-		},
-		error: function() {
-			alert("DATA LOAD FAILED");
-		}
-	});
-
-	// ================= FIND FILTER =================
 	$("#findBtn").click(function(e) {
-
 		e.preventDefault();
-
-		let branch = $("#branchName").val();
-		let fromDate = $("#fromDate").val();
-		let toDate = $("#toDate").val();
-
-		let filtered = allRecurringData.filter(policy => {
-
-			let renewalDate = new Date(policy.renewalDate);
-
-			return (
-				(!branch || policy.branchname === branch) &&
-				(!fromDate || renewalDate >= new Date(fromDate)) &&
-				(!toDate || renewalDate <= new Date(toDate))
-			);
-		});
-
-		renderTable(filtered);
+		filterData();
 	});
 
-	// ================= RENDER TABLE =================
-	function renderTable(data) {
+	$("#resetBtn").click(function(e) {
+		e.preventDefault();
+		$("#branchName").val("");
+		$("#fromDate").val("");
+		$("#toDate").val("");
+		currentFilteredData = allRecurringData;
+		renderTable(allRecurringData);
+	});
 
-		let tbody = $(".datatable tbody");
-		tbody.empty();
+	// Print Full Report Table
+	$("#printFullReportBtn").click(function(e) {
+		e.preventDefault();
+		let branch = $("#branchName").val() || "ALL BRANCHES";
+		let subTitle = "BRANCH: " + branch.toUpperCase();
+		if ($("#fromDate").val() && $("#toDate").val()) {
+			subTitle += " | PERIOD: " + $("#fromDate").val() + " TO " + $("#toDate").val();
+		}
+		ReportPrintUtil.printTable('.datatable', 'RECURRING INSTALLMENT DUE REPORT', subTitle);
+	});
 
-		if (!data.length) {
-			tbody.append("<tr><td colspan='9'>NO DATA FOUND</td></tr>");
+	// Single Print Table Button Handler
+	$(document).off("click", ".printRecurringBtn").on("click", ".printRecurringBtn", function(e) {
+		e.preventDefault();
+		let idx = $(this).data("index");
+		let policy = currentFilteredData[idx] || allRecurringData[idx];
+		if (!policy) {
+			alert("POLICY RECORD NOT FOUND");
 			return;
 		}
 
-		data.forEach(function(policy, index) {
+		let dueDate = policy.renewalDate || policy.policyEndDate || policy.lastPaymentDate || "-";
+		let status = getDueStatus(dueDate);
 
-			let status = getDueStatus(policy.renewalDate);
+		let html = `
+			<table class="table table-bordered text-uppercase" style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+				<thead class="table-dark">
+					<tr>
+						<th colspan="4" style="padding: 10px; font-size: 14px; text-align: center;">
+							RECURRING INSTALLMENT DUE NOTICE
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th style="width: 25%;">POLICY CODE</th>
+						<td style="width: 25%; font-weight: bold;">${(policy.policyCode || "-").toUpperCase()}</td>
+						<th style="width: 25%;">CUSTOMER NAME</th>
+						<td style="width: 25%; font-weight: bold;">${(policy.clientName || policy.customerName || "-").toUpperCase()}</td>
+					</tr>
+					<tr>
+						<th>BRANCH</th>
+						<td>${(policy.branchname || policy.branchName || "-").toUpperCase()}</td>
+						<th>POLICY AMOUNT</th>
+						<td style="font-weight: bold;">₹${parseFloat(policy.policyAmount || 0).toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+					</tr>
+					<tr>
+						<th>LAST PAYMENT DATE</th>
+						<td>${policy.lastPaymentDate || "-"}</td>
+						<th>RECURRING DUE DATE</th>
+						<td style="font-weight: bold; color: #d9534f;">${dueDate}</td>
+					</tr>
+					<tr>
+						<th>DUE STATUS</th>
+						<td style="color:${status.color}; font-weight: bold;">${status.text}</td>
+						<th>OVERDUE DAYS</th>
+						<td>${status.days} DAYS</td>
+					</tr>
+					<tr>
+						<th>PLAN / SCHEME</th>
+						<td>${(policy.schemeType || policy.planName || "RECURRING DEPOSIT").toUpperCase()}</td>
+						<th>ADVISOR CODE</th>
+						<td>${(policy.advisorCode || policy.collectorCode || "DIRECT").toUpperCase()}</td>
+					</tr>
+				</tbody>
+			</table>
+		`;
 
-			let row = `
-            <tr>
-                <td>${index + 1}</td>
-                <td>${policy.policyCode || ""}</td>
-                <td>${policy.clientName || ""}</td>
-                <td>${policy.policyAmount || ""}</td>
-                <td>${policy.lastPaymentDate || ""}</td>
-                <td>${policy.renewalDate || ""}</td>
-                <td>${status.days}</td>
-                <td style="color:${status.color};font-weight:bold;">
-                    ${status.text}
-                </td>
-                <td>
-                    <button class="iconbutton printPopupBtn" 
-                        data-id="${policy.id}" 
-                        data-bs-toggle="modal" 
-                        data-bs-target="#printModal">
-                        <i class="bi bi-printer" style="color:green;"></i>
-                    </button>
-                </td>
-            </tr>
-            `;
+		ReportPrintUtil.printHtml("RECURRING INSTALLMENT DEMAND NOTICE", html);
+	});
+});
 
-			tbody.append(row);
-		});
-
-		// ================= PRINT POPUP DATA (TABLE FORMAT) =================
-		$(".printPopupBtn").click(function() {
-
-			let id = $(this).data("id");
-			let policy = allRecurringData.find(p => p.id === id);
-			if (!policy) return;
-
-			let status = getDueStatus(policy.renewalDate);
-
-			let html = `
-
-            <div style="font-family:Arial;padding:20px;">
-
-                <!-- Header -->
-                <div style="text-align:center;">
-                    <h3 style="margin:0;">CO OPERATIVE SOCIETY LTD NAGPUR</h3>
-                    <p style="margin:2px;">PLOT NO 497 NEW NANDANWAN</p>
-                    <p style="margin:2px;">MAHARASHTRA - 440024</p>
-                    <p style="margin:2px;font-size:14px;">
-                        CIN : ASJ#567 | EMAIL : example@gmail.com | HELPLINE : 9566200223
-                    </p>
-                </div>
-
-                <hr>
-
-                <h4 style="text-align:center;margin-bottom:20px;">
-                    RECURRING INSTALLMENT DUE REPORT
-                </h4>
-
-                <!-- TABLE -->
-                <table style="width:100%;border-collapse:collapse;">
-
-                    <tr style="background:#0d6efd;color:#fff;">
-                        <th colspan="4" style="padding:8px;border:1px solid #000;">
-                            POLICY DETAILS
-                        </th>
-                    </tr>
-
-                    <tr>
-                        <th style="border:1px solid #000;padding:8px;">POLICY CODE</th>
-                        <td style="border:1px solid #000;padding:8px;">${policy.policyCode}</td>
-
-                        <th style="border:1px solid #000;padding:8px;">CUSTOMER NAME</th>
-                        <td style="border:1px solid #000;padding:8px;">${policy.clientName}</td>
-                    </tr>
-
-                    <tr>
-                        <th style="border:1px solid #000;padding:8px;">BRANCH</th>
-                        <td style="border:1px solid #000;padding:8px;">${policy.branchname}</td>
-
-                        <th style="border:1px solid #000;padding:8px;">POLICY AMOUNT</th>
-                        <td style="border:1px solid #000;padding:8px;">₹${policy.policyAmount}</td>
-                    </tr>
-
-                    <tr>
-                        <th style="border:1px solid #000;padding:8px;">LAST PAYMENT DATE</th>
-                        <td style="border:1px solid #000;padding:8px;">${policy.lastPaymentDate}</td>
-
-                        <th style="border:1px solid #000;padding:8px;">DUE DATE</th>
-                        <td style="border:1px solid #000;padding:8px;">${policy.renewalDate}</td>
-                    </tr>
-
-                    <tr>
-                        <th style="border:1px solid #000;padding:8px;">STATUS</th>
-                        <td style="border:1px solid #000;padding:8px;color:${status.color};font-weight:bold;">
-                            ${status.text}
-                        </td>
-
-                        <th style="border:1px solid #000;padding:8px;">DAYS</th>
-                        <td style="border:1px solid #000;padding:8px;">
-                            ${status.days}
-                        </td>
-                    </tr>
-
-                </table>
-
-                <br><br>
-
-                <!-- Footer -->
-                <div style="display:flex;justify-content:space-between;">
-                    <span>GENERATED ON : ${new Date().toLocaleDateString()}</span>
-                    <span>AUTHORIZED SIGNATURE</span>
-                </div>
-
-            </div>
-            `;
-
-			$("#modalDataContainer").html(html);
-		});
+// ================= DUE STATUS =================
+function getDueStatus(dateStr) {
+	if (!dateStr || dateStr === "-") {
+		return { text: "NO DATE", color: "#6c757d", days: 0 };
 	}
 
-	// ================= PRINT BUTTON =================
-	$("#printBtn").click(function() {
+	let today = new Date();
+	today.setHours(0, 0, 0, 0);
 
-		let printContent = document.getElementById("modalDataContainer").innerHTML;
+	let due = new Date(dateStr);
+	due.setHours(0, 0, 0, 0);
 
-		let newWindow = window.open('', '', 'width=900,height=700');
+	if (isNaN(due.getTime())) {
+		return { text: "VALID", color: "#28a745", days: 0 };
+	}
 
-		newWindow.document.write(`
-            <html>
-            <head>
-                <title>PRINT</title>
-            </head>
-            <body>
-                ${printContent}
-            </body>
-            </html>
-        `);
+	let diffTime = due.getTime() - today.getTime();
+	let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-		newWindow.document.close();
-		newWindow.print();
+	if (diffDays < 0) {
+		return { text: "OVERDUE", color: "#dc3545", days: Math.abs(diffDays) };
+	} else if (diffDays === 0) {
+		return { text: "DUE TODAY", color: "#ffc107", days: 0 };
+	} else {
+		return { text: "UPCOMING", color: "#28a745", days: diffDays };
+	}
+}
+
+// ================= BRANCH =================
+function loadBranchDropdown() {
+	$.ajax({
+		url: "api/preference/getAllBranchModule",
+		type: "GET",
+		success: function(response) {
+			let branches = response.data || response || [];
+			let options = "<option value=''>ALL BRANCHES</option>";
+			branches.forEach(b => {
+				let bName = (b.branchName || "").toUpperCase();
+				if (bName) options += `<option value="${bName}">${bName}</option>`;
+			});
+			$("#branchName").html(options);
+		}
+	});
+}
+
+// ================= LOAD POLICIES =================
+function loadApprovedPolicies() {
+	$.ajax({
+		url: "api/Policymangment/getApprovedPolicies",
+		type: "GET",
+		success: function(response) {
+			if (response && Array.isArray(response.data)) {
+				allRecurringData = response.data;
+				currentFilteredData = allRecurringData;
+				renderTable(allRecurringData);
+			} else {
+				$(".datatable tbody").html("<tr><td colspan='9' class='text-center text-muted'>NO RECURRING DUE POLICIES FOUND</td></tr>");
+			}
+		},
+		error: function() {
+			$(".datatable tbody").html("<tr><td colspan='9' class='text-center text-danger'>FAILED TO LOAD RECURRING DATA</td></tr>");
+		}
+	});
+}
+
+// ================= FILTER =================
+function filterData() {
+	let branch = $("#branchName").val();
+	let fromDate = $("#fromDate").val();
+	let toDate = $("#toDate").val();
+
+	let filtered = allRecurringData.filter(item => {
+		let matchBranch = true;
+		let matchDate = true;
+
+		if (branch) {
+			let b = (item.branchname || item.branchName || "").toUpperCase();
+			matchBranch = (b === branch.toUpperCase());
+		}
+
+		let due = item.renewalDate ? new Date(item.renewalDate) : (item.policyEndDate ? new Date(item.policyEndDate) : null);
+		if (fromDate && due) matchDate = matchDate && (due >= new Date(fromDate));
+		if (toDate && due) matchDate = matchDate && (due <= new Date(toDate));
+
+		return matchBranch && matchDate;
 	});
 
-	// ================= DOWNLOAD PDF =================
-	$("#downloadBtn").click(function() {
+	currentFilteredData = filtered;
+	renderTable(filtered);
+}
 
-		let printContent = document.getElementById("modalDataContainer").innerHTML;
+// ================= RENDER TABLE =================
+function renderTable(data) {
+	let tbody = $(".datatable tbody");
+	tbody.empty();
 
-		let newWindow = window.open('', '', 'width=900,height=700');
+	if (!data || data.length === 0) {
+		tbody.html("<tr><td colspan='9' class='text-center text-muted'>NO RECURRING DUE POLICIES FOUND MATCHING CRITERIA</td></tr>");
+		return;
+	}
 
-		newWindow.document.write(`
-            <html>
-            <head>
-                <title>PDF</title>
-            </head>
-            <body>
-                ${printContent}
-            </body>
-            </html>
-        `);
+	data.forEach((policy, index) => {
+		let dueDate = policy.renewalDate || policy.policyEndDate || policy.lastPaymentDate || "-";
+		let status = getDueStatus(dueDate);
 
-		newWindow.document.close();
-		newWindow.print();
+		let row = `
+			<tr style="font-family: 'Poppins', sans-serif;">
+				<td class="text-center font-monospace">${index + 1}</td>
+				<td><strong>${(policy.policyCode || "-").toUpperCase()}</strong></td>
+				<td>${(policy.clientName || policy.customerName || "-").toUpperCase()}</td>
+				<td class="fw-bold">₹${parseFloat(policy.policyAmount || 0).toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+				<td>${policy.lastPaymentDate || "-"}</td>
+				<td>${dueDate}</td>
+				<td>${status.days} DAYS</td>
+				<td style="color:${status.color};font-weight:bold;">${status.text}</td>
+				<td class="text-center no-print">
+					<button class="btn btn-sm btn-outline-primary printRecurringBtn" data-index="${index}" title="PRINT NOTICE">
+						<i class="bi bi-printer"></i> PRINT
+					</button>
+				</td>
+			</tr>
+		`;
+		tbody.append(row);
 	});
-
-});
+}

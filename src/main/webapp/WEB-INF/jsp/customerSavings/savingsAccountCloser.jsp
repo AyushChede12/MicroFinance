@@ -138,7 +138,9 @@
 							required="required" class="form-control selectField"
 							style="height: 30px;">
 							<option value="">SELECT</option>
-							<option value="Blue">CASH</option>
+							<option value="Cash">CASH</option>
+							<option value="Cheque">CHEQUE</option>
+							<option value="Online">ONLINE / BANK TRANSFER</option>
 						</select>
 					</div>
 				</div>
