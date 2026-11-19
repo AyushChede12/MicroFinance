@@ -794,7 +794,14 @@ $(document).ready(function () {
 
 			error: function (xhr) {
 				console.error("CUSTOMER SAVE ERROR:", xhr);
-				const errMessage = (xhr.responseJSON?.message || xhr.responseText || "SOMETHING WENT WRONG WHILE SAVING CUSTOMER").toUpperCase();
+				let rawMsg = xhr.responseJSON?.message;
+				if (!rawMsg && xhr.responseText) {
+					const text = xhr.responseText.trim();
+					if (!text.startsWith("<") && !text.includes("<!DOCTYPE")) {
+						rawMsg = text;
+					}
+				}
+				const errMessage = (rawMsg || ("SERVER ERROR (" + xhr.status + "): UNABLE TO SAVE CUSTOMER. PLEASE TRY AGAIN.")).toUpperCase();
 				Swal.fire({
 					icon: "error",
 					title: "REGISTRATION FAILED",

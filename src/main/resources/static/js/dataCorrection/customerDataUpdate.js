@@ -935,9 +935,8 @@ $(document).ready(function() {
 			},
 
 			error: function(xhr) {
-
-				alert("ERROR WHILE SAVING DATA: " + xhr.responseText);
-
+				const msg = (xhr.responseJSON?.message || (!xhr.responseText?.trim().startsWith("<") ? xhr.responseText : null) || ("ERROR WHILE SAVING DATA (" + xhr.status + ")")).toUpperCase();
+				alert(msg);
 			}
 
 		});
