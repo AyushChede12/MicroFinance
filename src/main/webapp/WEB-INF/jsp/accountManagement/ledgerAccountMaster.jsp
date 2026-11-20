@@ -241,9 +241,11 @@ input[type="text"] {
 </div>
 
 <script
-	src="${pageContext.request.contextPath}/js/account-management/ledgeraccountmaster.js"></script>
+	src="${pageContext.request.contextPath}/js/account-management/ledgerAccountMaster.js?v=<%= System.currentTimeMillis() %>"></script>
 <script>
 	$(document).ready(function() {
-		BranchNameDropdown();
+		if (typeof BranchNameDropdown === "function") {
+			BranchNameDropdown();
+		}
 	});
 </script>
