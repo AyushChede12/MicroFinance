@@ -4,7 +4,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import org.springframework.web.multipart.MultipartFile;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CustomerDto {
 
 	@Id
@@ -50,10 +53,15 @@ public class CustomerDto {
 	private String accountType;
 	private String accountStatus;
 
+	@JsonIgnore
 	private MultipartFile customerPhoto;
+	@JsonIgnore
 	private MultipartFile customerSignature;
+	@JsonIgnore
 	private MultipartFile customerDriving;
+	@JsonIgnore
 	private MultipartFile customerVoter;
+	@JsonIgnore
 	private MultipartFile newlyAddedImage;
 
 	private String firstName;
@@ -73,7 +81,9 @@ public class CustomerDto {
 	private String nomineeMobileNo;
 	private String nomineeDOB;
 
+	@JsonIgnore
 	private MultipartFile nomineSignature;
+	@JsonIgnore
 	private MultipartFile nomineAadhar;
 
 	// Fees Details
