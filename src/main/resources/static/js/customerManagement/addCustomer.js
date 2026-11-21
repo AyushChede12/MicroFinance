@@ -258,309 +258,79 @@ $(document).ready(function () {
 
 		if (!isValid) return false;
 
-		// ----------- FORM DATA -----------
+		// ----------- CUSTOMER DATA OBJECT -----------
+		const firstName = ($('#firstName').val() || '').trim().toUpperCase();
+		const middleName = ($('#middleName').val() || '').trim().toUpperCase();
+		const lastName = ($('#lastName').val() || '').trim().toUpperCase();
+		const customerName = [firstName, middleName, lastName].filter(Boolean).join(" ");
 
+		const customerDataObj = {
+			memberCode: $('#memberCode').val() || '',
+			authenticateFor: $('#authenticateFor').val() || '',
+			signupDate: $('#signupDate').val() || '',
+			major: $('#major').val() || '',
+			firstName: firstName,
+			middleName: middleName,
+			lastName: lastName,
+			customerName: customerName,
+			dob: $('#dob').val() || '',
+			minor: $('#minor').val() || '',
+			guardianName: ($('#guardianName').val() || '').toUpperCase(),
+			guardianAccountNo: ($('#guardianAccNo').val() || '').toUpperCase(),
+			relationToApplicant: ($('#relationToApplicant').val() || '').toUpperCase(),
+			customerGender: ($('#customerGender').val() || '').toUpperCase(),
+			customerAge: $('#customerAge').val() || '',
+			relationshipStatus: ($('#relationshipStatus').val() || '').toUpperCase(),
+			customerAddress: ($('#customerAddress').val() || '').toUpperCase(),
+			category: ($('#category').val() || '').toUpperCase(),
+			caste: ($('#caste').val() || '').toUpperCase(),
+			state: ($('#state').val() || '').toUpperCase(),
+			district: ($('#district').val() || '').toUpperCase(),
+			pinCode: $('#pinCode').val() || '',
+			branchName: ($('#branchName').val() || '').toUpperCase(),
+			aadharNo: $('#aadharNo').val() || '',
+			panNo: ($('#panNo').val() || '').toUpperCase(),
+			voterNo: ($('#voterNo').val() || '').toUpperCase(),
+			drivingLicenceNo: ($('#drivingLicenceNo').val() || '').toUpperCase(),
+			contactNo: $('#contactNo').val() || '',
+			emailId: ($('#emailId').val() || '').toUpperCase(),
+			profession: ($('#profession').val() || '').toUpperCase(),
+			academicBackground: ($('#academicBackground').val() || '').toUpperCase(),
+			referralCode: ($('#referralCode').val() || '').toUpperCase(),
+			referralName: ($('#referralName').val() || '').toUpperCase(),
+			shareAmount: $('#shareAmount').val() || '',
+			noOfShare: $('#noOfShare').val() || '',
+			shareValue: $('#shareValue').val() || '',
+			lightBill: ($('#lightBill').val() || '').toUpperCase(),
+			taxBill: ($('#taxBill').val() || '').toUpperCase(),
+			accountType: $('#accountType').val() || '',
+			nomineeName: ($('#nomineeName').val() || '').toUpperCase(),
+			nomineeRelationToApplicant: ($('#nomineeRelationToApplicant').val() || '').toUpperCase(),
+			nomineeAge: $('#nomineeAge').val() || '',
+			nomineeAddress: ($('#nomineeAddress').val() || '').toUpperCase(),
+			nomineePanNo: ($('#nomineePanNo').val() || '').toUpperCase(),
+			nomineeKycNo: ($('#nomineeKycNo').val() || '').toUpperCase(),
+			nomineeKycType: ($('#nomineeKycType').val() || '').toUpperCase(),
+			nomineeMobileNo: $('#nomineeMobileNo').val() || '',
+			nomineeDOB: $('#nomineeDOB').val() || '',
+			memberFees: $('#memberFees').val() || '',
+			buildingFund: $('#buildingFund').val() || '',
+			adminCharge: $('#adminCharge').val() || '',
+			documentCharge: $('#documentCharge').val() || '',
+			entryFee: $('#entryFee').val() || '',
+			paymentBy: ($('#paymentBy').val() || '').toUpperCase(),
+			remarks: ($('#remarks').val() || '').toUpperCase(),
+			otherCharge: $('#otherCharge').val() || '',
+			memberStatus: $('#toggle-member-status').is(":checked") ? 1 : 0,
+			mobileBanking: $('#toggle-banking-status').is(":checked") ? 1 : 0,
+			memberBanking: $('#toggle-banking-status').is(":checked") ? 1 : 0,
+			netBanking: $('#toggle-netbanking-status').is(":checked") ? 1 : 0,
+			smsSend: $('#toggle-sms-status').is(":checked") ? 1 : 0
+		};
+
+		// ----------- FORM DATA (TOTAL PARTS <= 8, NEVER EXCEEDS TOMCAT 50 LIMIT) -----------
 		var formData = new FormData();
-
-		// Customer Basic
-
-		formData.append(
-			"memberCode",
-			$('#memberCode').val()
-		);
-
-		formData.append(
-			"authenticateFor",
-			$('#authenticateFor').val()
-		);
-
-		formData.append(
-			"signupDate",
-			$('#signupDate').val()
-		);
-
-		formData.append(
-			"major",
-			$('#major').val()
-		);
-
-		formData.append(
-			"firstName",
-			$('#firstName').val()
-		);
-
-		formData.append(
-			"middleName",
-			$('#middleName').val()
-		);
-
-		formData.append(
-			"lastName",
-			$('#lastName').val()
-		);
-
-		formData.append(
-			"customerName",
-			$('#firstName').val() + " " +
-			$('#middleName').val() + " " +
-			$('#lastName').val()
-		);
-
-		formData.append(
-			"dob",
-			$('#dob').val()
-		);
-
-		formData.append(
-			"minor",
-			$('#minor').val()
-		);
-
-		formData.append(
-			"guardianName",
-			$('#guardianName').val()
-		);
-
-		formData.append(
-			"guardianAccountNo",
-			$('#guardianAccNo').val()
-		);
-
-		formData.append(
-			"relationToApplicant",
-			$('#relationToApplicant').val()
-		);
-
-		formData.append(
-			"customerGender",
-			$('#customerGender').val()
-		);
-
-		formData.append(
-			"customerAge",
-			$('#customerAge').val()
-		);
-
-		formData.append(
-			"relationshipStatus",
-			$('#relationshipStatus').val()
-		);
-
-		formData.append(
-			"customerAddress",
-			$('#customerAddress').val()
-		);
-
-		formData.append(
-			"category",
-			$('#category').val()
-		);
-
-		formData.append(
-			"caste",
-			$('#caste').val()
-		);
-
-		formData.append(
-			"state",
-			$('#state').val()
-		);
-
-		formData.append(
-			"district",
-			$('#district').val()
-		);
-
-		formData.append(
-			"pinCode",
-			$('#pinCode').val()
-		);
-
-		formData.append(
-			"branchName",
-			$('#branchName').val()
-		);
-
-		formData.append(
-			"aadharNo",
-			$('#aadharNo').val()
-		);
-
-		formData.append(
-			"panNo",
-			$('#panNo').val()
-		);
-
-		formData.append(
-			"voterNo",
-			$('#voterNo').val()
-		);
-
-		formData.append(
-			"drivingLicenceNo",
-			$('#drivingLicenceNo').val()
-		);
-
-		formData.append(
-			"contactNo",
-			$('#contactNo').val()
-		);
-
-		formData.append(
-			"emailId",
-			$('#emailId').val()
-		);
-
-		formData.append(
-			"profession",
-			$('#profession').val()
-		);
-
-		formData.append(
-			"academicBackground",
-			$('#academicBackground').val()
-		);
-
-		// Referral
-
-		formData.append("referralCode", $('#referralCode').val());
-		formData.append("referralName", $('#referralName').val());
-
-		// Share
-
-		formData.append("shareAmount", $('#shareAmount').val());
-		formData.append("noOfShare", $('#noOfShare').val());
-		formData.append("shareValue", $('#shareValue').val());
-		formData.append("lightBill", $('#lightBill').val());
-		formData.append("taxBill", $('#taxBill').val());
-		formData.append("accountType", $('#accountType').val());
-
-		// Nominee
-
-		formData.append(
-			"nomineeName",
-			$('#nomineeName').val()
-		);
-
-		formData.append(
-			"nomineeRelationToApplicant",
-			$('#nomineeRelationToApplicant').val()
-		);
-
-		formData.append(
-			"nomineeAge",
-			$('#nomineeAge').val()
-		);
-
-		formData.append(
-			"nomineeAddress",
-			$('#nomineeAddress').val()
-		);
-
-		formData.append(
-			"nomineePanNo",
-			$('#nomineePanNo').val()
-		);
-
-		formData.append(
-			"nomineeKycNo",
-			$('#nomineeKycNo').val()
-		);
-
-		formData.append(
-			"nomineeKycType",
-			$('#nomineeKycType').val()
-		);
-
-		formData.append(
-			"nomineeMobileNo",
-			$('#nomineeMobileNo').val()
-		);
-
-		formData.append(
-			"nomineeDOB",
-			$('#nomineeDOB').val()
-		);
-
-		//Charges
-		formData.append(
-			"memberFees",
-			$('#memberFees').val()
-		);
-
-		formData.append(
-			"buildingFund",
-			$('#buildingFund').val()
-		);
-
-		formData.append(
-			"adminCharge",
-			$('#adminCharge').val()
-		);
-
-		formData.append(
-			"documentCharge",
-			$('#documentCharge').val()
-		);
-
-		formData.append(
-			"entryFee",
-			$('#entryFee').val()
-		);
-
-		formData.append(
-			"paymentBy",
-			$('#paymentBy').val()
-		);
-
-		formData.append(
-			"remarks",
-			$('#remarks').val()
-		);
-
-		formData.append(
-			"otherCharge",
-			$('#otherCharge').val()
-		);
-
-		// Fees
-
-		//		formData.append("memberFees", $('#memberFees').val());
-		//		formData.append("buildingFund", $('#buildingFund').val());
-		//		formData.append("adminCharge", $('#adminCharge').val());
-		//		formData.append("documentCharge", $('#documentCharge').val());
-		//		formData.append("otherCharge", $('#otherCharge').val());
-		//		formData.append("entryFee", $('#entryFee').val());
-		//		formData.append("chequeNo", $('#chequeNo').val());
-		//		formData.append("chequeDate", $('#chequeDate').val());
-		//		formData.append("depositAcNo", $('#depositAccount').val());
-		//		formData.append("referenceNo", $('#referenceNo').val());
-		//		formData.append("remarks", $('#remarks').val());
-		//		formData.append("paymentBy", $('#paymentBy').val());
-		//		formData.append("fDate", $('#fDate').val());
-		//		formData.append("tDate", $('#tDate').val());
-
-		// Toggles
-
-		formData.append(
-			"memberStatus",
-			$('#toggle-member-status').is(":checked") ? "1" : "0"
-		);
-
-		formData.append(
-			"mobileBanking",
-			$('#toggle-banking-status').is(":checked") ? "1" : "0"
-		);
-
-		formData.append(
-			"netBanking",
-			$('#toggle-netbanking-status').is(":checked") ? "1" : "0"
-		);
-
-		formData.append(
-			"smsSend",
-			$('#toggle-sms-status').is(":checked") ? "1" : "0"
-		);
+		formData.append("customerData", JSON.stringify(customerDataObj));
 
 		// Files
 
@@ -585,6 +355,11 @@ $(document).ready(function () {
 		if (newlyAddedImage)
 			formData.append("newlyAddedImage", newlyAddedImage);
 
+		// Disable button to prevent double submission
+		const $saveBtn = $('#saveBtn');
+		const originalBtnText = $saveBtn.html();
+		$saveBtn.prop('disabled', true).text('SAVING...');
+
 		// -------- AJAX --------
 
 		$.ajax({
@@ -595,206 +370,103 @@ $(document).ready(function () {
 			contentType: false,
 
 			success: function (response) {
-				if (response.data) {
-					const customerId = response.data.id;
+				if (response && (response.data || response.status === "CREATED" || response.status === "OK")) {
+					const customerData = response.data || {};
+					const customerId = customerData.id;
+					const memberCodeVal = (customerData.memberCode || $('#memberCode').val() || '').toUpperCase();
 
-					const memberCodeVal = (response.data && response.data.memberCode) ? response.data.memberCode : ($('#memberCode').val() || '');
-
-					Swal.fire({
-						icon: "success",
-						title: "REGISTRATION SUCCESSFUL",
-						html:
-							"CUSTOMER REGISTRATION COMPLETED SUCCESSFULLY!<br><br>" +
-							"<b>MEMBER CODE: " + memberCodeVal + "</b><br><br>" +
-							"THANK YOU FOR REGISTERING WITH US.",
-						confirmButtonText: "OK"
-					});
-
-					// =====================================================
-					// ACCOUNT TRANSACTION
-					// =====================================================
-
-					/*
-					 * Read Payment Mode
-					 */
-					const paymentBy =
-						($('#paymentBy').val() || '')
-							.toString()
-							.trim()
-							.toUpperCase();
-
-					/*
-					 * Read Customer Fees
-					 */
-					const memberFees =
-						parseFloat($('#memberFees').val()) || 0;
-
-					const buildingFund =
-						parseFloat($('#buildingFund').val()) || 0;
-
-					const adminCharge =
-						parseFloat($('#adminCharge').val()) || 0;
-
-					const documentCharge =
-						parseFloat($('#documentCharge').val()) || 0;
-
-					const entryFee =
-						parseFloat($('#entryFee').val()) || 0;
-
-					/*
-					 * Calculate Total Customer Registration Fees
-					 */
-					const totalFee =
-						memberFees +
-						buildingFund +
-						adminCharge +
-						documentCharge +
-						entryFee;
-
-					var firstName = $('#firstName').val();
-					var middleName = $('#middleName').val();
-					var lastName = $('#lastName').val();
-
-					const customerName = [
-						firstName,
-						middleName,
-						lastName
-					].filter(Boolean).join(" ");
-
-					var transactionType = "";
-
-					if ((paymentBy || "").toUpperCase() === "CASH") {
-						transactionType = "CUSTOMER_FEES_CASH";
-					} else {
-						transactionType = "TRANSFER";
-					}
-
-					const accountTransactionData = {
-						branchName:
-							$('#branchName').val(),
-
-						paymentBy:
-							paymentBy,
-
-						accountCode:
-							accountCode,
-
-						customerName:
-							customerName,
-
-						accountNumber:
-							($('#memberCode').val() || (response.data && response.data.memberCode) || String(customerId)),
-
-						transactionDate:
-							$('#signupDate').val(),
-
-						narration:
-							"CUSTOMER REGISTRATION FEES - " +
-							(
-								$('#memberCode').val() ||
-								customerId
-							),
-
-						credit:
-							totalFee,
-
-						debit:
-							0,
-
-						transactionType:
-							transactionType,
-
-						referenceNo:
-							$('#memberCode').val(),
-
-						status:
-							"SUCCESS",
-
-						loanId:
-							null,
-
-						policyId:
-							null,
-
-						createdBy:
-							"ADMIN"
+					const finishRegistration = function () {
+						uploadExtraImages(customerId, function (hasFailed) {
+							$saveBtn.prop('disabled', false).html(originalBtnText);
+							let extraMsg = hasFailed ? "<br><span style='color:orange;'>NOTE: SOME EXTRA IMAGES FAILED TO UPLOAD.</span>" : "";
+							Swal.fire({
+								icon: "success",
+								title: "REGISTRATION SUCCESSFUL",
+								html:
+									"CUSTOMER REGISTRATION COMPLETED SUCCESSFULLY!<br><br>" +
+									"<b>MEMBER CODE: " + memberCodeVal + "</b>" +
+									extraMsg +
+									"<br><br>THANK YOU FOR REGISTERING WITH US.",
+								confirmButtonText: "OK"
+							}).then(function () {
+								window.location.reload();
+							});
+						});
 					};
 
-					// -------------------------------------------------
-					// SAVE ACCOUNT TRANSACTION
-					// -------------------------------------------------
+					// =====================================================
+					// ACCOUNT TRANSACTION (CASH/FEES)
+					// =====================================================
+					const paymentBy = ($('#paymentBy').val() || '').toString().trim().toUpperCase();
+					const memberFees = parseFloat($('#memberFees').val()) || 0;
+					const buildingFund = parseFloat($('#buildingFund').val()) || 0;
+					const adminCharge = parseFloat($('#adminCharge').val()) || 0;
+					const documentCharge = parseFloat($('#documentCharge').val()) || 0;
+					const entryFee = parseFloat($('#entryFee').val()) || 0;
+					const otherCharge = parseFloat($('#otherCharge').val()) || 0;
+					const totalFee = memberFees + buildingFund + adminCharge + documentCharge + entryFee + otherCharge;
 
-					$.ajax({
-						type: 'POST',
-						url: resolveApiUrl('accountManagement/saveAccountTransaction'),
-						contentType: 'application/json',
-						data: JSON.stringify(accountTransactionData),
-						dataType: 'json',
-						success: function (transactionResponse) {
+					if (totalFee > 0 && paymentBy) {
+						const firstName = $('#firstName').val() || '';
+						const middleName = $('#middleName').val() || '';
+						const lastName = $('#lastName').val() || '';
+						const customerName = [firstName, middleName, lastName].filter(Boolean).join(" ");
+						const transactionType = (paymentBy === "CASH") ? "CUSTOMER_FEES_CASH" : "TRANSFER";
 
-							console.log(
-								"AccountTransaction saved successfully:",
-								transactionResponse
-							);
+						const accountTransactionData = {
+							branchName: $('#branchName').val() || '',
+							paymentBy: paymentBy,
+							accountCode: accountCode || '107',
+							customerName: customerName,
+							accountNumber: (memberCodeVal || String(customerId)),
+							transactionDate: $('#signupDate').val() || new Date().toISOString().split('T')[0],
+							narration: "CUSTOMER REGISTRATION FEES - " + (memberCodeVal || customerId),
+							credit: totalFee,
+							debit: 0,
+							transactionType: transactionType,
+							referenceNo: memberCodeVal || '',
+							status: "SUCCESS",
+							loanId: null,
+							policyId: null,
+							createdBy: "ADMIN"
+						};
 
-							/*
-							 * Existing Customer flow
-							 * remains exactly same.
-							 */
-							uploadExtraImages(
-								customerId,
-								saveMsg
-							);
-						},
-
-						error: function (xhr) {
-							console.error(
-								"AccountTransaction Error:",
-								xhr
-							);
-
-							/*
-							 * Customer is already saved.
-							 * Do not save customer again.
-							 *
-							 * Continue existing flow.
-							 */
-							alert(
-								"CUSTOMER SAVED SUCCESSFULLY, BUT CASH TRANSACTION COULD NOT BE SAVED."
-							);
-
-							uploadExtraImages(
-								customerId,
-								saveMsg
-							);
-						}
-					});
+						$.ajax({
+							type: 'POST',
+							url: resolveApiUrl('accountManagement/saveAccountTransaction'),
+							contentType: 'application/json',
+							data: JSON.stringify(accountTransactionData),
+							dataType: 'json',
+							complete: function () {
+								finishRegistration();
+							}
+						});
+					} else {
+						finishRegistration();
+					}
 
 				} else {
-					/*
-					 * No AccountTransaction for:
-					 *
-					 * CHEQUE
-					 * NEFT
-					 * ONLINE
-					 * UPI
-					 *
-					 * OR
-					 *
-					 * Total Fee = 0
-					 *
-					 * Continue existing flow.
-					 */
-					uploadExtraImages(
-						customerId,
-						saveMsg
-					);
+					$saveBtn.prop('disabled', false).html(originalBtnText);
+					Swal.fire({
+						icon: "error",
+						title: "REGISTRATION FAILED",
+						text: (response?.message || "UNABLE TO SAVE CUSTOMER").toUpperCase(),
+						confirmButtonText: "OK"
+					});
 				}
 			},
 
 			error: function (xhr) {
+				$saveBtn.prop('disabled', false).html(originalBtnText);
 				console.error("CUSTOMER SAVE ERROR:", xhr);
-				const errMessage = (xhr.responseJSON?.message || xhr.responseText || "SOMETHING WENT WRONG WHILE SAVING CUSTOMER").toUpperCase();
+				let rawMsg = xhr.responseJSON?.message;
+				if (!rawMsg && xhr.responseText) {
+					const text = xhr.responseText.trim();
+					if (!text.startsWith("<") && !text.includes("<!DOCTYPE")) {
+						rawMsg = text;
+					}
+				}
+				const errMessage = (rawMsg || ("SERVER ERROR (" + xhr.status + "): UNABLE TO SAVE CUSTOMER. PLEASE TRY AGAIN.")).toUpperCase();
 				Swal.fire({
 					icon: "error",
 					title: "REGISTRATION FAILED",
@@ -935,13 +607,12 @@ $(document).ready(function () {
 		alert("PLEASE CLICK THE SAVE BUTTON AT THE BOTTOM OF THE PAGE TO SAVE THE CUSTOMER DETAILS AND AUTOMATICALLY UPLOAD ALL ADDED IMAGES.");
 	});
 
-	function uploadExtraImages(customerId, saveMsg) {
+	function uploadExtraImages(customerId, callback) {
 		let uploadFields = $(".uploadField");
 		let uploadCount = uploadFields.length;
 
 		if (uploadCount === 0) {
-			alert((saveMsg || "CUSTOMER SAVED SUCCESSFULLY!").toUpperCase());
-			location.reload();
+			if (callback) callback(false);
 			return;
 		}
 
@@ -951,18 +622,13 @@ $(document).ready(function () {
 		uploadFields.each(function () {
 			const fieldName = $(this).find("label:first").text().replace("*", "").trim();
 			const input = $(this).find("input[type=file]")[0];
-			const file = input.files[0];
+			const file = input ? input.files[0] : null;
 
 			if (!file) {
 				completed++;
 
 				if (completed === uploadCount) {
-					alert(
-						hasFailed
-							? "SOME EXTRA IMAGES FAILED TO UPLOAD."
-							: (saveMsg || "CUSTOMER AND ALL IMAGES SAVED SUCCESSFULLY!").toUpperCase()
-					);
-					location.reload();
+					if (callback) callback(hasFailed);
 				}
 
 				return;
@@ -983,12 +649,7 @@ $(document).ready(function () {
 					completed++;
 
 					if (completed === uploadCount) {
-						alert(
-							hasFailed
-								? "SOME EXTRA IMAGES FAILED TO UPLOAD."
-								: (saveMsg || "CUSTOMER AND ALL IMAGES SAVED SUCCESSFULLY!").toUpperCase()
-						);
-						location.reload();
+						if (callback) callback(hasFailed);
 					}
 				},
 
@@ -997,8 +658,7 @@ $(document).ready(function () {
 					completed++;
 
 					if (completed === uploadCount) {
-						alert("SOME EXTRA IMAGES FAILED TO UPLOAD.");
-						location.reload();
+						if (callback) callback(hasFailed);
 					}
 				}
 			});

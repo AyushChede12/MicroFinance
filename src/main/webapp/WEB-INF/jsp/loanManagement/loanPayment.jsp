@@ -509,5 +509,5 @@
 		</div>
 	</form>
 	<script
-		src="${pageContext.request.contextPath}/js/LoanManagment/loanPayment.js?v=<%= System.currentTimeMillis() %>"></script>
+		src="${pageContext.request.contextPath}/js/LoanManagment/LoanPayment.js?v=<%= System.currentTimeMillis() %>"></script>
 </content>

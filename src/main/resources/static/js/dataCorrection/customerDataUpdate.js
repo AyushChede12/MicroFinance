@@ -688,147 +688,76 @@ $(document).ready(function() {
 
 
 
-		customerData.append("id", id);
-
-		customerData.append("memberCode", customerCode);
-
-		customerData.append("signupDate", $('#signupDate').val());
-
-		customerData.append("authenticateFor", $('#authenticateFor').val());
-
-		customerData.append("major", $('#major').val());
-
-		customerData.append("customerName", customerName);
-
-		customerData.append("firstName", firstName);
-
-		customerData.append("middleName", middleName);
-
-		customerData.append("lastName", lastName);
-
-		customerData.append("customerGender", ($('#customerGender').val() || "").toUpperCase());
-
-		customerData.append("guardianName", ($('#guardianName').val() || "").toUpperCase());
-
-		customerData.append("guardianAccountNo", ($('#guardianAccNo').val() || "").toUpperCase());
-
-		customerData.append("relationToApplicant", ($('#relationToApplicant').val() || "").toUpperCase());
-
-		customerData.append("dob", $('#dob').val());
-
-		customerData.append("customerAge", $('#customerAge').val());
-
-		customerData.append("relationshipStatus", ($('#relationshipStatus').val() || "").toUpperCase());
-
-		customerData.append("customerAddress", ($('#customerAddress').val() || "").toUpperCase());
-
-		customerData.append("category", ($('#category').val() || "").toUpperCase());
-
-		customerData.append("caste", ($('#caste').val() || "").toUpperCase());
-
-		customerData.append("state", ($('#state').val() || "").toUpperCase());
-
-		customerData.append("district", ($('#district').val() || "").toUpperCase());
-
-		customerData.append("aadharNo", $('#aadharNo').val());
-
-		customerData.append("pinCode", $('#pinCode').val());
-
-		customerData.append("branchName", ($('#branchName').val() || "").toUpperCase());
-
-		customerData.append("panNo", ($('#panNo').val() || "").toUpperCase());
-
-		customerData.append("voterNo", ($('#voterNo').val() || "").toUpperCase());
-
-		customerData.append("drivingLicenceNo", ($('#drivingLicenceNo').val() || "").toUpperCase());
-
-		customerData.append("referralCode", ($('#referralCode').val() || "").toUpperCase());
-
-		customerData.append("referralName", ($('#referralName').val() || "").toUpperCase());
-
-		customerData.append("contactNo", $('#contactNo').val());
-
-		customerData.append("emailId", ($('#emailId').val() || "").toUpperCase());
-
-		customerData.append("profession", ($('#profession').val() || "").toUpperCase());
-
-		customerData.append("academicBackground", ($('#academicBackground').val() || "").toUpperCase());
-
-		customerData.append("shareValue", $('#shareValue').val());
-
-		customerData.append("noOfShare", $('#noOfShare').val());
-
-		customerData.append("shareAmount", $('#shareAmount').val());
-
-		customerData.append("lightBill", ($('#lightBill').val() || "").toUpperCase());
-
-		customerData.append("taxBill", ($('#taxBill').val() || "").toUpperCase());
-
-		customerData.append("minor", ($('#minor').val() || "").toUpperCase());
-
-		customerData.append("accountType", $('#accountType').val());
-
-
-
-		// Nominee
-
-		customerData.append("nomineeName", ($('#nomineeName').val() || "").toUpperCase());
-
-		customerData.append("nomineeRelationToApplicant", ($('#nomineeRelationToApplicant').val() || "").toUpperCase());
-
-		customerData.append("nomineeAddress", ($('#nomineeAddress').val() || "").toUpperCase());
-
-		customerData.append("nomineeKycNo", ($('#nomineeKycNo').val() || "").toUpperCase());
-
-		customerData.append("nomineeMobileNo", $('#nomineeMobileNo').val());
-
-		customerData.append("nomineeAge", $('#nomineeAge').val());
-
-		customerData.append("nomineePanNo", ($('#nomineePanNo').val() || "").toUpperCase());
-
-		customerData.append("nomineeKycType", ($('#nomineeKycType').val() || "").toUpperCase());
-
-		customerData.append("nomineeDOB", $('#nomineeDOB').val());
-
-
-
-		// Fees Details
-
-		customerData.append("memberFees", $('#memberFees').val());
-
-		customerData.append("buildingFund", $('#buildingFund').val());
-
-		customerData.append("adminCharge", $('#adminCharge').val());
-
-		customerData.append("documentCharge", $('#documentCharge').val());
-
-		customerData.append("entryFee", $('#entryFee').val());
-
-		customerData.append("otherCharge", $('#otherCharge').val());
-
-		customerData.append("paymentBy", $('#paymentBy').val());
-
-		customerData.append("chequeNo", ($('#chequeNo').val() || "").toUpperCase());
-
-		customerData.append("chequeDate", $('#chequeDate').val());
-
-		customerData.append("depositAcNo", ($('#depositAccount').val() || "").toUpperCase());
-
-		customerData.append("referenceNo", ($('#referenceNo').val() || "").toUpperCase());
-
-		customerData.append("remarks", ($('#remarks').val() || "").toUpperCase());
-
-
-
-		// Toggles
-
-		customerData.append("memberStatus", $('#toggle-member-status').is(':checked') ? 1 : 0);
-
-		customerData.append("memberBanking", $('#toggle-mobile-banking').is(':checked') ? 1 : 0);
-
-		customerData.append("netBanking", $('#toggle-net-banking').is(':checked') ? 1 : 0);
-
-		customerData.append("smsSend", $('#toggle-sms-send').is(':checked') ? 1 : 0);
+		const customerDataObj = {
+			id: (id && String(id).trim()) ? parseInt(String(id).trim(), 10) : null,
+			memberCode: customerCode,
+			signupDate: $('#signupDate').val() || '',
+			authenticateFor: $('#authenticateFor').val() || '',
+			major: $('#major').val() || '',
+			customerName: customerName,
+			firstName: firstName,
+			middleName: middleName,
+			lastName: lastName,
+			customerGender: ($('#customerGender').val() || "").toUpperCase(),
+			guardianName: ($('#guardianName').val() || "").toUpperCase(),
+			guardianAccountNo: ($('#guardianAccNo').val() || "").toUpperCase(),
+			relationToApplicant: ($('#relationToApplicant').val() || "").toUpperCase(),
+			dob: $('#dob').val() || '',
+			customerAge: $('#customerAge').val() || '',
+			relationshipStatus: ($('#relationshipStatus').val() || "").toUpperCase(),
+			customerAddress: ($('#customerAddress').val() || "").toUpperCase(),
+			category: ($('#category').val() || "").toUpperCase(),
+			caste: ($('#caste').val() || "").toUpperCase(),
+			state: ($('#state').val() || "").toUpperCase(),
+			district: ($('#district').val() || "").toUpperCase(),
+			aadharNo: $('#aadharNo').val() || '',
+			pinCode: $('#pinCode').val() || '',
+			branchName: ($('#branchName').val() || "").toUpperCase(),
+			panNo: ($('#panNo').val() || "").toUpperCase(),
+			voterNo: ($('#voterNo').val() || "").toUpperCase(),
+			drivingLicenceNo: ($('#drivingLicenceNo').val() || "").toUpperCase(),
+			referralCode: ($('#referralCode').val() || "").toUpperCase(),
+			referralName: ($('#referralName').val() || "").toUpperCase(),
+			contactNo: $('#contactNo').val() || '',
+			emailId: ($('#emailId').val() || "").toUpperCase(),
+			profession: ($('#profession').val() || "").toUpperCase(),
+			academicBackground: ($('#academicBackground').val() || "").toUpperCase(),
+			shareValue: $('#shareValue').val() || '',
+			noOfShare: $('#noOfShare').val() || '',
+			shareAmount: $('#shareAmount').val() || '',
+			lightBill: ($('#lightBill').val() || "").toUpperCase(),
+			taxBill: ($('#taxBill').val() || "").toUpperCase(),
+			minor: ($('#minor').val() || "").toUpperCase(),
+			accountType: $('#accountType').val() || '',
+			nomineeName: ($('#nomineeName').val() || "").toUpperCase(),
+			nomineeRelationToApplicant: ($('#nomineeRelationToApplicant').val() || "").toUpperCase(),
+			nomineeAddress: ($('#nomineeAddress').val() || "").toUpperCase(),
+			nomineeKycNo: ($('#nomineeKycNo').val() || "").toUpperCase(),
+			nomineeMobileNo: $('#nomineeMobileNo').val() || '',
+			nomineeAge: $('#nomineeAge').val() || '',
+			nomineePanNo: ($('#nomineePanNo').val() || "").toUpperCase(),
+			nomineeKycType: ($('#nomineeKycType').val() || "").toUpperCase(),
+			nomineeDOB: $('#nomineeDOB').val() || '',
+			memberFees: $('#memberFees').val() || '',
+			buildingFund: $('#buildingFund').val() || '',
+			adminCharge: $('#adminCharge').val() || '',
+			documentCharge: $('#documentCharge').val() || '',
+			entryFee: $('#entryFee').val() || '',
+			otherCharge: $('#otherCharge').val() || '',
+			paymentBy: ($('#paymentBy').val() || '').toUpperCase(),
+			chequeNo: ($('#chequeNo').val() || "").toUpperCase(),
+			chequeDate: $('#chequeDate').val() || '',
+			depositAcNo: ($('#depositAccount').val() || "").toUpperCase(),
+			referenceNo: ($('#referenceNo').val() || "").toUpperCase(),
+			remarks: ($('#remarks').val() || "").toUpperCase(),
+			memberStatus: $('#toggle-member-status').is(':checked') ? 1 : 0,
+			mobileBanking: $('#toggle-mobile-banking').is(':checked') ? 1 : 0,
+			memberBanking: $('#toggle-mobile-banking').is(':checked') ? 1 : 0,
+			netBanking: $('#toggle-net-banking').is(':checked') ? 1 : 0,
+			smsSend: $('#toggle-sms-send').is(':checked') ? 1 : 0
+		};
+
+		customerData.append("customerData", JSON.stringify(customerDataObj));
 
 
 
@@ -920,7 +849,7 @@ $(document).ready(function() {
 
 			success: function(response) {
 
-				if (response.status === "OK") {
+				if (response && (response.status === "OK" || response.status === "CREATED" || response.data)) {
 
 					alert("CUSTOMER DATA UPDATED SUCCESSFULLY");
 
@@ -928,16 +857,15 @@ $(document).ready(function() {
 
 				} else {
 
-					alert("SOMETHING WENT WRONG: " + response.message);
+					alert("SOMETHING WENT WRONG: " + (response ? response.message : ""));
 
 				}
 
 			},
 
 			error: function(xhr) {
-
-				alert("ERROR WHILE SAVING DATA: " + xhr.responseText);
-
+				const msg = (xhr.responseJSON?.message || (!xhr.responseText?.trim().startsWith("<") ? xhr.responseText : null) || ("ERROR WHILE SAVING DATA (" + xhr.status + ")")).toUpperCase();
+				alert(msg);
 			}
 
 		});

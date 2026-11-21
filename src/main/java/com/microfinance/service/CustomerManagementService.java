@@ -130,6 +130,7 @@ public class CustomerManagementService {
 
 // Additional
 		addcustomer.setMobileBanking(clientMasterDto.getMobileBanking());
+		addcustomer.setMemberBanking(clientMasterDto.getMemberBanking());
 		addcustomer.setSmsSend(clientMasterDto.getSmsSend());
 		addcustomer.setMemberStatus(clientMasterDto.getMemberStatus());
 		addcustomer.setNetBanking(clientMasterDto.getNetBanking());

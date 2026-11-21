@@ -226,11 +226,11 @@ public class AccountManagementService {
 		// ACCOUNT CODE + BRANCH CHECK
 		// =========================
 
-		boolean codeExists = ledgerAccountRepository.existsByAccountCodeIgnoreCaseAndBranchName(
-
-				dto.getAccountCode().trim(),
-
-				dto.getBranchName().trim());
+		boolean codeExists = (dto.getAccountId() != null)
+				? ledgerAccountRepository.existsByAccountCodeIgnoreCaseAndBranchNameAndAccountIdNot(
+						dto.getAccountCode().trim(), dto.getBranchName().trim(), dto.getAccountId())
+				: ledgerAccountRepository.existsByAccountCodeIgnoreCaseAndBranchName(
+						dto.getAccountCode().trim(), dto.getBranchName().trim());
 
 		if (codeExists) {
 
@@ -243,11 +243,11 @@ public class AccountManagementService {
 		// ACCOUNT TITLE + BRANCH CHECK
 		// =========================
 
-		boolean titleExists = ledgerAccountRepository.existsByAccountTitleIgnoreCaseAndBranchNameTrimmed(
-
-				dto.getAccountTitle().trim(),
-
-				dto.getBranchName().trim());
+		boolean titleExists = (dto.getAccountId() != null)
+				? ledgerAccountRepository.existsByAccountTitleIgnoreCaseAndBranchNameTrimmedAndAccountIdNot(
+						dto.getAccountTitle().trim(), dto.getBranchName().trim(), dto.getAccountId())
+				: ledgerAccountRepository.existsByAccountTitleIgnoreCaseAndBranchNameTrimmed(
+						dto.getAccountTitle().trim(), dto.getBranchName().trim());
 
 		if (titleExists) {
 
@@ -305,7 +305,16 @@ public class AccountManagementService {
 		// CURRENT BALANCE SET
 		// =========================
 
-		dto.setCurrentBalance(dto.getOpeningBalance());
+		if (dto.getAccountId() == null) {
+			dto.setCurrentBalance(dto.getOpeningBalance());
+		} else if (dto.getCurrentBalance() == null) {
+			LedgerAccountMaster existing = ledgerAccountRepository.findById(dto.getAccountId()).orElse(null);
+			if (existing != null && existing.getCurrentBalance() != null) {
+				dto.setCurrentBalance(existing.getCurrentBalance());
+			} else {
+				dto.setCurrentBalance(dto.getOpeningBalance());
+			}
+		}
 
 		// =========================
 		// STATUS DEFAULT

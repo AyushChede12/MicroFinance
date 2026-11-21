@@ -22,6 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.microfinance.dto.ApiResponse;
 import com.microfinance.dto.CustomerDto;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microfinance.model.addCustomer;
 import com.microfinance.model.addCustomerKYC;
 import com.microfinance.model.states;
@@ -42,7 +44,9 @@ public class CustomerManagementController {
 	CustomerRepo customerRepo;
 
 	@PostMapping("/saveOrUpdateCustomer")
-	public ResponseEntity<ApiResponse<addCustomer>> saveOrUpdateCustomer(@ModelAttribute CustomerDto clientMasterDto,
+	public ResponseEntity<ApiResponse<addCustomer>> saveOrUpdateCustomer(
+			@RequestParam(value = "customerData", required = false) String customerDataJson,
+			@ModelAttribute CustomerDto clientMasterDto,
 			@RequestParam(value = "customerPhoto", required = false) MultipartFile customerPhoto,
 			@RequestParam(value = "customerSignature", required = false) MultipartFile customerSignature,
 			@RequestParam(value = "customerDriving", required = false) MultipartFile customerDriving,
@@ -54,8 +58,15 @@ public class CustomerManagementController {
 	{
 
 		try {
+			CustomerDto dtoToUse = clientMasterDto;
+			if (customerDataJson != null && !customerDataJson.trim().isEmpty()) {
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+				mapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
+				dtoToUse = mapper.readValue(customerDataJson, CustomerDto.class);
+			}
 
-			ApiResponse<addCustomer> response = customerService.saveOrUpdateCustomer(clientMasterDto, customerPhoto,
+			ApiResponse<addCustomer> response = customerService.saveOrUpdateCustomer(dtoToUse, customerPhoto,
 					customerSignature, customerDriving, customerVoter, nomineAadhar, nomineSignature, newlyAddedImage);
 			return new ResponseEntity<>(response, response.getStatus());
 

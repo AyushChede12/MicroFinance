@@ -4,7 +4,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import org.springframework.web.multipart.MultipartFile;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CustomerDto {
 
 	@Id
@@ -50,10 +53,15 @@ public class CustomerDto {
 	private String accountType;
 	private String accountStatus;
 
+	@JsonIgnore
 	private MultipartFile customerPhoto;
+	@JsonIgnore
 	private MultipartFile customerSignature;
+	@JsonIgnore
 	private MultipartFile customerDriving;
+	@JsonIgnore
 	private MultipartFile customerVoter;
+	@JsonIgnore
 	private MultipartFile newlyAddedImage;
 
 	private String firstName;
@@ -73,7 +81,9 @@ public class CustomerDto {
 	private String nomineeMobileNo;
 	private String nomineeDOB;
 
+	@JsonIgnore
 	private MultipartFile nomineSignature;
+	@JsonIgnore
 	private MultipartFile nomineAadhar;
 
 	// Fees Details
@@ -88,10 +98,11 @@ public class CustomerDto {
 	private String depositAcNo;
 	private String referenceNo;
 
-	private int memberStatus;
-	private int mobileBanking;
-	private int netBanking;
-	private int smsSend;
+	private Integer memberStatus = 0;
+	private Integer mobileBanking = 0;
+	private Integer netBanking = 0;
+	private Integer smsSend = 0;
+	private Integer memberBanking = 0;
 
 	private String remarks;
 	private String paymentBy;
@@ -109,6 +120,18 @@ public class CustomerDto {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public void setId(String id) {
+		if (id != null && !id.trim().isEmpty()) {
+			try {
+				this.id = Long.parseLong(id.trim());
+			} catch (Exception ignored) {
+				this.id = null;
+			}
+		} else {
+			this.id = null;
+		}
 	}
 
 	public String getMemberCode() {
@@ -473,11 +496,15 @@ public class CustomerDto {
 	}
 
 	public Integer getAccountFreeze() {
-		return accountFreeze;
+		return accountFreeze != null ? accountFreeze : 0;
 	}
 
 	public void setAccountFreeze(Integer accountFreeze) {
-		this.accountFreeze = accountFreeze;
+		this.accountFreeze = accountFreeze != null ? accountFreeze : 0;
+	}
+
+	public void setAccountFreeze(String accountFreeze) {
+		this.accountFreeze = parseSafeInteger(accountFreeze);
 	}
 
 	public String getNomineeName() {
@@ -648,36 +675,85 @@ public class CustomerDto {
 		this.referenceNo = referenceNo;
 	}
 
-	public int getMemberStatus() {
-		return memberStatus;
+	private static Integer parseSafeInteger(String val) {
+		if (val == null || val.trim().isEmpty() || "null".equalsIgnoreCase(val.trim())) {
+			return 0;
+		}
+		String clean = val.trim();
+		if ("true".equalsIgnoreCase(clean) || "on".equalsIgnoreCase(clean)) {
+			return 1;
+		}
+		if ("false".equalsIgnoreCase(clean) || "off".equalsIgnoreCase(clean)) {
+			return 0;
+		}
+		try {
+			return Integer.parseInt(clean);
+		} catch (Exception e) {
+			return 0;
+		}
 	}
 
-	public void setMemberStatus(int memberStatus) {
-		this.memberStatus = memberStatus;
+	public Integer getMemberStatus() {
+		return memberStatus != null ? memberStatus : 0;
 	}
 
-	public int getMobileBanking() {
-		return mobileBanking;
+	public void setMemberStatus(Integer memberStatus) {
+		this.memberStatus = memberStatus != null ? memberStatus : 0;
 	}
 
-	public void setMobileBanking(int mobileBanking) {
-		this.mobileBanking = mobileBanking;
+	public void setMemberStatus(String memberStatus) {
+		this.memberStatus = parseSafeInteger(memberStatus);
 	}
 
-	public int getNetBanking() {
-		return netBanking;
+	public Integer getMobileBanking() {
+		return mobileBanking != null ? mobileBanking : 0;
 	}
 
-	public void setNetBanking(int netBanking) {
-		this.netBanking = netBanking;
+	public void setMobileBanking(Integer mobileBanking) {
+		this.mobileBanking = mobileBanking != null ? mobileBanking : 0;
 	}
 
-	public int getSmsSend() {
-		return smsSend;
+	public void setMobileBanking(String mobileBanking) {
+		this.mobileBanking = parseSafeInteger(mobileBanking);
 	}
 
-	public void setSmsSend(int smsSend) {
-		this.smsSend = smsSend;
+	public Integer getNetBanking() {
+		return netBanking != null ? netBanking : 0;
+	}
+
+	public void setNetBanking(Integer netBanking) {
+		this.netBanking = netBanking != null ? netBanking : 0;
+	}
+
+	public void setNetBanking(String netBanking) {
+		this.netBanking = parseSafeInteger(netBanking);
+	}
+
+	public Integer getSmsSend() {
+		return smsSend != null ? smsSend : 0;
+	}
+
+	public void setSmsSend(Integer smsSend) {
+		this.smsSend = smsSend != null ? smsSend : 0;
+	}
+
+	public void setSmsSend(String smsSend) {
+		this.smsSend = parseSafeInteger(smsSend);
+	}
+
+	public Integer getMemberBanking() {
+		return memberBanking != null ? memberBanking : (mobileBanking != null ? mobileBanking : 0);
+	}
+
+	public void setMemberBanking(Integer memberBanking) {
+		this.memberBanking = memberBanking != null ? memberBanking : 0;
+		if (this.mobileBanking == null || this.mobileBanking == 0) {
+			this.mobileBanking = this.memberBanking;
+		}
+	}
+
+	public void setMemberBanking(String memberBanking) {
+		setMemberBanking(parseSafeInteger(memberBanking));
 	}
 
 	public String getRemarks() {
@@ -720,12 +796,20 @@ public class CustomerDto {
 		isVerified = verified;
 	}
 
+	public void setVerified(String verified) {
+		this.isVerified = "true".equalsIgnoreCase(verified) || "1".equals(verified) || "on".equalsIgnoreCase(verified);
+	}
+
 	public boolean isApproved() {
 		return isApproved;
 	}
 
 	public void setApproved(boolean approved) {
 		isApproved = approved;
+	}
+
+	public void setApproved(String approved) {
+		this.isApproved = "true".equalsIgnoreCase(approved) || "1".equals(approved) || "on".equalsIgnoreCase(approved);
 	}
 
 }
