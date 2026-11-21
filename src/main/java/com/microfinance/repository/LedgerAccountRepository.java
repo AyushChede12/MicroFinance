@@ -20,11 +20,24 @@ public interface LedgerAccountRepository extends JpaRepository<LedgerAccountMast
 	boolean existsByAccountTitleIgnoreCaseAndBranchNameTrimmed(@Param("title") String accountTitle,
 			@Param("branch") String branchName);
 
+	// Check unique account title per branch excluding current accountId (for update)
+	@Query("SELECT COUNT(l) > 0 FROM LedgerAccountMaster l "
+			+ "WHERE LOWER(REPLACE(l.accountTitle, ' ', '')) = LOWER(REPLACE(:title, ' ', '')) "
+			+ "AND LOWER(l.branchName) = LOWER(:branch) AND l.accountId != :accountId")
+	boolean existsByAccountTitleIgnoreCaseAndBranchNameTrimmedAndAccountIdNot(@Param("title") String accountTitle,
+			@Param("branch") String branchName, @Param("accountId") Long accountId);
+
 	// Check unique account code per branch
 	@Query("SELECT COUNT(l) > 0 FROM LedgerAccountMaster l "
 			+ "WHERE LOWER(l.accountCode) = LOWER(:code) AND LOWER(l.branchName) = LOWER(:branch)")
 	boolean existsByAccountCodeIgnoreCaseAndBranchName(@Param("code") String accountCode,
 			@Param("branch") String branchName);
+
+	// Check unique account code per branch excluding current accountId (for update)
+	@Query("SELECT COUNT(l) > 0 FROM LedgerAccountMaster l "
+			+ "WHERE LOWER(l.accountCode) = LOWER(:code) AND LOWER(l.branchName) = LOWER(:branch) AND l.accountId != :accountId")
+	boolean existsByAccountCodeIgnoreCaseAndBranchNameAndAccountIdNot(@Param("code") String accountCode,
+			@Param("branch") String branchName, @Param("accountId") Long accountId);
 
 	List<LedgerAccountMaster> findByBranchName(String branchName);
 

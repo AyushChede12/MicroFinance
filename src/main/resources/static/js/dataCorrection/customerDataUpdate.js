@@ -689,7 +689,7 @@ $(document).ready(function() {
 
 
 		const customerDataObj = {
-			id: id,
+			id: (id && String(id).trim()) ? parseInt(String(id).trim(), 10) : null,
 			memberCode: customerCode,
 			signupDate: $('#signupDate').val() || '',
 			authenticateFor: $('#authenticateFor').val() || '',
@@ -849,7 +849,7 @@ $(document).ready(function() {
 
 			success: function(response) {
 
-				if (response.status === "OK") {
+				if (response && (response.status === "OK" || response.status === "CREATED" || response.data)) {
 
 					alert("CUSTOMER DATA UPDATED SUCCESSFULLY");
 
@@ -857,7 +857,7 @@ $(document).ready(function() {
 
 				} else {
 
-					alert("SOMETHING WENT WRONG: " + response.message);
+					alert("SOMETHING WENT WRONG: " + (response ? response.message : ""));
 
 				}
 

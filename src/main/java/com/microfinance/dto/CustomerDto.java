@@ -122,6 +122,18 @@ public class CustomerDto {
 		this.id = id;
 	}
 
+	public void setId(String id) {
+		if (id != null && !id.trim().isEmpty()) {
+			try {
+				this.id = Long.parseLong(id.trim());
+			} catch (Exception ignored) {
+				this.id = null;
+			}
+		} else {
+			this.id = null;
+		}
+	}
+
 	public String getMemberCode() {
 		return memberCode;
 	}

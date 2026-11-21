@@ -60,9 +60,12 @@ public class AccountManagementController {
 	 */
 	@PostMapping("/create")
 	public ResponseEntity<ApiResponse<LedgerAccountDto>> createLedger(@Valid @RequestBody LedgerAccountDto dto) {
+		boolean isUpdate = (dto.getAccountId() != null);
 		LedgerAccountDto created = accountManagementService.createLedger(dto);
-		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(ApiResponse.success(HttpStatus.CREATED, "LEDGER CREATED SUCCESSFULLY", created));
+		String message = isUpdate ? "LEDGER UPDATED SUCCESSFULLY" : "LEDGER CREATED SUCCESSFULLY";
+		HttpStatus status = isUpdate ? HttpStatus.OK : HttpStatus.CREATED;
+		return ResponseEntity.status(status)
+				.body(ApiResponse.success(status, message, created));
 	}
 
 	/**

@@ -62,6 +62,7 @@ public class CustomerManagementController {
 			if (customerDataJson != null && !customerDataJson.trim().isEmpty()) {
 				ObjectMapper mapper = new ObjectMapper();
 				mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+				mapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
 				dtoToUse = mapper.readValue(customerDataJson, CustomerDto.class);
 			}
 

@@ -17,6 +17,7 @@ $(document).ready(function () {
 		$("#accountId").val("");
 		$("#currentBalance").val("0.00");
 		$("#openingBalanceType").val("DR");
+		$("#saveBtn").text("SAVE");
 	});
 
 	// Auto set Dr/Cr when group changes
@@ -141,6 +142,7 @@ function saveLedger() {
 				clearErrorMessages();
 				$("#accountId").val("");
 				$("#currentBalance").val("0.00");
+				$("#saveBtn").text("SAVE");
 				loadLedgerData();
 			} else {
 				alert("UNEXPECTED RESPONSE: " + (response.message || "").toUpperCase());
@@ -308,6 +310,7 @@ function viewLedger(id) {
 			$('#currentBalance').val(ledger.currentBalance != null ? Number(ledger.currentBalance).toFixed(2) : '0.00');
 			$('#status').val(ledger.status);
 			$('#branchName').val(ledger.branchName);
+			$('#saveBtn').text("UPDATE");
 
 			window.scrollTo({ top: 0, behavior: 'smooth' });
 		},
