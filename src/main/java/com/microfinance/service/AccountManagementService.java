@@ -181,6 +181,10 @@ public class AccountManagementService {
 	@Transactional
 	public LedgerAccountDto createLedger(LedgerAccountDto dto) {
 
+		if (dto.getAccountId() != null && dto.getAccountId() <= 0) {
+			dto.setAccountId(null);
+		}
+
 		// =========================
 		// BASIC VALIDATION
 		// =========================
@@ -441,7 +445,11 @@ public class AccountManagementService {
 
 	private LedgerAccountMaster mapToEntity(LedgerAccountDto dto) {
 		LedgerAccountMaster entity = new LedgerAccountMaster();
-		entity.setAccountId(dto.getAccountId());
+		if (dto.getAccountId() != null && dto.getAccountId() > 0) {
+			entity.setAccountId(dto.getAccountId());
+		} else {
+			entity.setAccountId(null);
+		}
 		entity.setAccountCode(dto.getAccountCode());
 		entity.setAccountTitle(dto.getAccountTitle());
 		entity.setGroupName(dto.getGroupName());
