@@ -1,27 +1,27 @@
-$(document).ready(function() {
+$(document).ready(function () {
 	loadBankList("");
 	BranchNameDropdown();
 
 	toggleTransferFields($('#transferMode').val());
 
-	$('#transferMode').on('change', function() {
+	$('#transferMode').on('change', function () {
 		toggleTransferFields(this.value);
 	});
 
 
-	$("#formid").submit(function(e) {
+	$("#formid").submit(function (e) {
 		e.preventDefault();
 		saveOutgoingPayment();
 	});
 
-	$('#searchBtn').click(function(e) {
+	$('#searchBtn').click(function (e) {
 		e.preventDefault();
 		searchOutgoingPayments();
 	});
 
 
 
-	$("#entryBranchName").on("change", function() {
+	$("#entryBranchName").on("change", function () {
 		const selectedBranch = $(this).val();
 		loadBankList(selectedBranch);
 		LedgerDropdown(selectedBranch);
@@ -114,7 +114,7 @@ function saveOutgoingPayment() {
 		url: "accountManagement/createOutgoingPayment",
 		contentType: "application/json",
 		data: JSON.stringify(paymentData),
-		success: function(response) {
+		success: function (response) {
 			if (response?.status === "CREATED") {
 				alert((response.message || "OUTGOING PAYMENT SAVED SUCCESSFULLY!").toUpperCase());
 				$("#formid")[0].reset();
@@ -125,7 +125,7 @@ function saveOutgoingPayment() {
 				alert("UNEXPECTED RESPONSE: " + (response.message || "").toUpperCase());
 			}
 		},
-		error: function(xhr) {
+		error: function (xhr) {
 			let errorMsg = "ERROR SAVING OUTGOING PAYMENT.";
 			try {
 				const res = JSON.parse(xhr.responseText);
@@ -143,7 +143,7 @@ function loadOutgoingPaymentData() {
 		type: "GET",
 		url: "accountManagement/allOutgoingPayment",
 		contentType: "application/json",
-		success: function(response) {
+		success: function (response) {
 			const tbody = $("#tableBody");
 			tbody.empty();
 
@@ -181,7 +181,7 @@ function loadOutgoingPaymentData() {
 				tbody.append(row);
 			});
 		},
-		error: function() {
+		error: function () {
 			alert("FAILED TO LOAD OUTGOING PAYMENTS.");
 		}
 	});
@@ -192,11 +192,11 @@ function viewOutgoingPayment(id) {
 		type: "GET",
 		url: `accountManagement/outgoingPayment/${id}`,
 		contentType: "application/json",
-		success: function(response) {
+		success: function (response) {
 			const data = response.data;
 
 			// Branch preselect
-			$("#entryBranchName option").each(function() {
+			$("#entryBranchName option").each(function () {
 				if ($(this).val()?.trim().toLowerCase() === data.branchName?.trim().toLowerCase()) {
 					$(this).prop("selected", true);
 					return false;
@@ -218,7 +218,7 @@ function viewOutgoingPayment(id) {
 
 			LedgerDropdown(data.branchName, data.creditLedger, data.debitLedger);
 		},
-		error: function() {
+		error: function () {
 			alert("FAILED TO LOAD OUTGOING PAYMENT DATA");
 		}
 	});
@@ -238,7 +238,7 @@ function searchOutgoingPayments() {
 		type: "GET",
 		url: "accountManagement/search",
 		data: { branchName, startDate, endDate },
-		success: function(response) {
+		success: function (response) {
 			const tbody = $("#tableBody");
 			tbody.empty();
 
@@ -254,13 +254,13 @@ function searchOutgoingPayments() {
                    <tr>
                        <td>${payment.id || ''}</td>
                        <td>${(payment.branchName).toUpperCase() || ''}</td>
+					   <td>${(payment.voucherID).toUpperCase() || ''}</td>
                        <td>${(payment.dateOfEntry).toUpperCase() || ''}</td>
-                       <td>${(payment.transferMode).toUpperCase() || ''}</td>
-                       <td>${(payment.creditLedger).toUpperCase() || ''}</td>
-                       <td>${(payment.debitLedger).toUpperCase() || ''}</td>
+					   <td>${(payment.creditLedger).toUpperCase() || ''}</td>
+                       <td>${(payment.debitLedger).toUpperCase() || ''}</t
+                       <td>${(payment.transferMode).toUpperCase() || ''}</td>       
                        <td>${(payment.transactionAmount).toUpperCase() || ''}</td>
                        <td>${(payment.remarks).toUpperCase() || ''}</td>
-                       <td>${(payment.voucherID).toUpperCase() || ''}</td>
                        <td>
                            <button class="iconbutton" onclick="viewOutgoingPayment(${payment.id})" title="VIEW">
                                <i class="fa-solid fa-eye text-primary"></i>
@@ -276,7 +276,7 @@ function searchOutgoingPayments() {
 				tbody.append(row);
 			});
 		},
-		error: function() {
+		error: function () {
 			alert("SEARCH FAILED");
 		}
 	});
@@ -292,7 +292,7 @@ function LedgerDropdown(branchName, selectedCr = "", selectedDr = "") {
 		type: "GET",
 		url: `accountManagement/ledgerByBranch/${branchName}`,
 		contentType: "application/json",
-		success: function(data) {
+		success: function (data) {
 			if (data.status == "OK") {
 				const ledgers = data.data || [];
 
@@ -326,7 +326,7 @@ function LedgerDropdown(branchName, selectedCr = "", selectedDr = "") {
 			}
 
 		},
-		error: function() {
+		error: function () {
 			alert("FAILED TO LOAD LEDGER ACCOUNTS FOR SELECTED BRANCH");
 		}
 	});
@@ -337,7 +337,7 @@ function BranchNameDropdown() {
 		type: "GET",
 		contentType: "application/json",
 		url: 'api/preference/getAllBranchModule',
-		success: function(response) {
+		success: function (response) {
 			let options = "<option value=''>--SELECT BRANCH NAME--</option>";
 			if (response && Array.isArray(response.data)) {
 				response.data.forEach(branch => {
@@ -347,7 +347,7 @@ function BranchNameDropdown() {
 			$("#searchBranchName").html(options);
 			$("#entryBranchName").html(options);
 		},
-		error: function() {
+		error: function () {
 			alert("FAILED TO LOAD BRANCH NAMES.");
 		}
 	});
@@ -359,7 +359,7 @@ function deleteOutgoingPayment(id) {
 			url: "accountManagement/deleteOutgoingPaymentById",
 			type: "POST",
 			data: { id: id },
-			success: function(response) {
+			success: function (response) {
 				if (response.status == "OK") {
 					alert((response.message || "").toUpperCase());
 					location.reload();
@@ -367,7 +367,7 @@ function deleteOutgoingPayment(id) {
 					alert("DELETE FAILED: " + (response.message || "").toUpperCase());
 				}
 			},
-			error: function(xhr, status, error) {
+			error: function (xhr, status, error) {
 				alert("FAILED TO DELETE PAYMENT.");
 				console.error("Error:", error);
 			}
@@ -384,7 +384,7 @@ function loadBankList(branchName) {
 	$.ajax({
 		type: "GET",
 		url: url,
-		success: function(response) {
+		success: function (response) {
 			let options = "";
 			if (response && response.status === "OK" && Array.isArray(response.data)) {
 				response.data.forEach(bank => {
@@ -394,7 +394,7 @@ function loadBankList(branchName) {
 			}
 			$("#bankList").html(options);
 		},
-		error: function(xhr) {
+		error: function (xhr) {
 			console.warn("FAILED TO LOAD BANKS FOR BRANCH:", xhr);
 		}
 	});
