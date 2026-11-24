@@ -8,6 +8,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
+import org.springframework.web.filter.ForwardedHeaderFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -18,17 +20,41 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Extracts X-Forwarded-Proto, X-Forwarded-Host, X-Forwarded-Port
+     * so Spring Boot transparently recognizes HTTPS when behind Nginx/Cloudflare reverse proxies.
+     */
+    @Bean
+    public ForwardedHeaderFilter forwardedHeaderFilter() {
+        return new ForwardedHeaderFilter();
+    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            // 1. Enable CORS & Disable CSRF so existing AJAX operations execute seamlessly in Live Mode
+            // 1. Enable CORS & Disable CSRF so existing AJAX operations execute seamlessly across Localhost & Live Mode
             .cors().and()
             .csrf().disable()
 
-            // 2. Allow X-Frame-Options sameOrigin so document printing, modals, and previews operate smoothly
+            // 2. Comprehensive Security Headers for HTTPS & Safe Browsing
             .headers()
+                // Prevent clickjacking while supporting same-origin frames, modals, and report printing
                 .frameOptions().sameOrigin()
-                .and()
+                // Enforce HTTPS Strict Transport Security (HSTS) - 1 year duration
+                .httpStrictTransportSecurity()
+                    .includeSubDomains(true)
+                    .maxAgeInSeconds(31536000)
+                    .and()
+                // Prevent MIME-sniffing
+                .contentTypeOptions()
+                    .and()
+                // Enable browser XSS protection filter
+                .xssProtection()
+                    .and()
+                // Referrer-Policy header
+                .referrerPolicy(ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN)
+                    .and()
+            .and()
 
             // 3. Session Management - Maintain session states across local and live environments
             .sessionManagement()
@@ -66,4 +92,3 @@ public class SecurityConfig {
         return http.build();
     }
 }
-
