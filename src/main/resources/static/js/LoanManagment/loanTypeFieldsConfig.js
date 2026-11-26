@@ -43,3 +43,32 @@ const loanTypeFieldsConfig = {
 		{ name: "lienConfirmed", label: "LIEN MARKING CONFIRMED", type: "checkbox", required: true }
 	]
 };
+
+// Case-insensitive alias mappings
+loanTypeFieldsConfig["Personal Loan"] = loanTypeFieldsConfig["PERSONAL LOAN"];
+loanTypeFieldsConfig["Business Loan"] = loanTypeFieldsConfig["BUSINESS LOAN"];
+loanTypeFieldsConfig["TW Loan"] = loanTypeFieldsConfig["TW LOAN"];
+loanTypeFieldsConfig["TW Refinance Loan"] = loanTypeFieldsConfig["TW REFINANCE LOAN"];
+loanTypeFieldsConfig["CDL Loan"] = loanTypeFieldsConfig["CDL LOAN"];
+loanTypeFieldsConfig["Loan Against FD/RD/DRD"] = loanTypeFieldsConfig["LOAN AGAINST FD/RD/DRD"];
+loanTypeFieldsConfig["Vehicle Loan"] = loanTypeFieldsConfig["TW LOAN"];
+loanTypeFieldsConfig["VEHICLE LOAN"] = loanTypeFieldsConfig["TW LOAN"];
+
+function getDynamicFieldsConfig(loanType) {
+	if (!loanType || typeof loanTypeFieldsConfig === 'undefined') return null;
+	if (loanTypeFieldsConfig[loanType]) return loanTypeFieldsConfig[loanType];
+	const upper = String(loanType).trim().toUpperCase();
+	if (loanTypeFieldsConfig[upper]) return loanTypeFieldsConfig[upper];
+	for (const key of Object.keys(loanTypeFieldsConfig)) {
+		if (key.trim().toUpperCase() === upper) {
+			return loanTypeFieldsConfig[key];
+		}
+	}
+	return null;
+}
+
+if (typeof window !== 'undefined') {
+	window.loanTypeFieldsConfig = loanTypeFieldsConfig;
+	window.getDynamicFieldsConfig = getDynamicFieldsConfig;
+}
+

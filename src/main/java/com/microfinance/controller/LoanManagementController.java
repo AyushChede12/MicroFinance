@@ -173,16 +173,19 @@ public class LoanManagementController {
 		try {
 			loanApplication.syncDynamicFields();
 			if (loanApplication.getLoanTypeSpecificDetails() != null
-					&& !loanApplication.getLoanTypeSpecificDetails().trim().isEmpty()) {
+					&& !loanApplication.getLoanTypeSpecificDetails().trim().isEmpty()
+					&& !"{}".equals(loanApplication.getLoanTypeSpecificDetails().trim())) {
 				try {
 					Map<String, Object> map = new com.fasterxml.jackson.databind.ObjectMapper().readValue(
 							loanApplication.getLoanTypeSpecificDetails(),
 							new com.fasterxml.jackson.core.type.TypeReference<Map<String, Object>>() {
 							});
-					String err = LoanApplyController.validateDynamicFields(loanApplication.getTypeOfLoan(), map);
-					if (err != null) {
-						return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-								.body(ApiResponse.error(HttpStatus.BAD_REQUEST, err));
+					if (map != null && !map.isEmpty()) {
+						String err = LoanApplyController.validateDynamicFields(loanApplication.getTypeOfLoan(), map);
+						if (err != null) {
+							return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+									.body(ApiResponse.error(HttpStatus.BAD_REQUEST, err));
+						}
 					}
 				} catch (Exception ignored) {
 				}

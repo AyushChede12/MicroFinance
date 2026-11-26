@@ -310,9 +310,14 @@ public class LoanManagementService implements org.springframework.beans.factory.
 
 	public boolean saveLoanApplicationData(LoanApplication loanApplication) {
 		try {
-			if (loanApplication.getLoanId() == null || loanApplication.getLoanId().trim().isEmpty()) {
+			if (loanApplication.getId() == null || loanApplication.getId() <= 0) {
 				long nextId = loanApplicationRepo.getMaxId() + 1;
-				loanApplication.setLoanId("LA" + String.format("%05d", nextId));
+				loanApplication.setId(nextId);
+				if (loanApplication.getLoanId() == null || loanApplication.getLoanId().trim().isEmpty()) {
+					loanApplication.setLoanId("LA" + String.format("%05d", nextId));
+				}
+			} else if (loanApplication.getLoanId() == null || loanApplication.getLoanId().trim().isEmpty()) {
+				loanApplication.setLoanId("LA" + String.format("%05d", loanApplication.getId()));
 			}
 			loanApplication.syncDynamicFields();
 			checkLoanModeRangeOverride(loanApplication);
@@ -423,9 +428,14 @@ public class LoanManagementService implements org.springframework.beans.factory.
 	}
 
 	public LoanApplication saveLoanApplication(LoanApplication loanApplication) {
-		if (loanApplication.getLoanId() == null || loanApplication.getLoanId().trim().isEmpty()) {
+		if (loanApplication.getId() == null || loanApplication.getId() <= 0) {
 			long nextId = loanApplicationRepo.getMaxId() + 1;
-			loanApplication.setLoanId("LA" + String.format("%05d", nextId));
+			loanApplication.setId(nextId);
+			if (loanApplication.getLoanId() == null || loanApplication.getLoanId().trim().isEmpty()) {
+				loanApplication.setLoanId("LA" + String.format("%05d", nextId));
+			}
+		} else if (loanApplication.getLoanId() == null || loanApplication.getLoanId().trim().isEmpty()) {
+			loanApplication.setLoanId("LA" + String.format("%05d", loanApplication.getId()));
 		}
 		loanApplication.syncDynamicFields();
 		checkLoanModeRangeOverride(loanApplication);

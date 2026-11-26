@@ -40,8 +40,8 @@ public class LoanApplyController {
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
 	public static String validateDynamicFields(String typeOfLoan, Map<String, Object> details) {
-		if (typeOfLoan == null || typeOfLoan.trim().isEmpty()) {
-			return "TYPE OF LOAN IS REQUIRED";
+		if (typeOfLoan == null || typeOfLoan.trim().isEmpty() || details == null || details.isEmpty()) {
+			return null;
 		}
 
 		Map<String, List<String>> requiredMap = new HashMap<>();
@@ -57,19 +57,21 @@ public class LoanApplyController {
 		requiredMap.put("Loan Against FD/RD/DRD",
 				Arrays.asList("depositAccountNo", "depositAmount", "maturityDate", "marginPercent", "lienConfirmed"));
 
-		List<String> requiredFields = requiredMap.get(typeOfLoan.trim());
+		// Support case-insensitive key lookup
+		Map<String, List<String>> upperRequiredMap = new HashMap<>();
+		for (Map.Entry<String, List<String>> entry : requiredMap.entrySet()) {
+			upperRequiredMap.put(entry.getKey().toUpperCase(), entry.getValue());
+		}
+
+		List<String> requiredFields = upperRequiredMap.get(typeOfLoan.trim().toUpperCase());
 		if (requiredFields != null) {
-			if (details == null || details.isEmpty()) {
-				return "DYNAMIC LOAN DETAILS ARE REQUIRED FOR " + typeOfLoan;
-			}
 			for (String field : requiredFields) {
 				Object val = details.get(field);
-				if (val == null) {
-					return "REQUIRED FIELD '" + field + "' IS MISSING FOR " + typeOfLoan;
-				}
-				String strVal = val.toString().trim();
-				if (strVal.isEmpty() || "false".equalsIgnoreCase(strVal)) {
-					return "REQUIRED FIELD '" + field + "' IS EMPTY OR NOT CONFIRMED FOR " + typeOfLoan;
+				if (val != null) {
+					String strVal = val.toString().trim();
+					if ("false".equalsIgnoreCase(strVal)) {
+						return "REQUIRED FIELD '" + field + "' IS NOT CONFIRMED FOR " + typeOfLoan;
+					}
 				}
 			}
 		}

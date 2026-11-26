@@ -35,6 +35,9 @@ public class UserInitializer implements CommandLineRunner {
     @Autowired
     private StateDistrictRepo stateDistrictRepo;
 
+    @Autowired
+    private javax.sql.DataSource dataSource;
+
     @Override
     public void run(String... args) throws Exception {
         System.out.println("=== DATA INITIALIZER RUNNING ===");
@@ -224,6 +227,16 @@ public class UserInitializer implements CommandLineRunner {
             }
         } catch (Exception e) {
             System.err.println("Error seeding districts: " + e.getMessage());
+        }
+
+        // ========== 6. Schema check for loan tables ==========
+        try (java.sql.Connection conn = dataSource.getConnection();
+             java.sql.Statement stmt = conn.createStatement()) {
+            try {
+                stmt.execute("ALTER TABLE loan_deduction_details MODIFY id BIGINT NOT NULL AUTO_INCREMENT");
+            } catch (Exception ignored) {
+            }
+        } catch (Exception ignored) {
         }
 
         System.out.println("=== DATA INITIALIZER COMPLETED ===");

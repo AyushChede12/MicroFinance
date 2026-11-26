@@ -25,11 +25,13 @@ import java.util.Map;
 	@Index(name = "idx_la_member", columnList = "memberId")
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class LoanApplication {
+public class LoanApplication implements org.springframework.data.domain.Persistable<Long> {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
+
+	@Transient
+	private boolean isNew = true;
 	
 	private String loanId;
     private String loanDate;
@@ -165,11 +167,31 @@ public class LoanApplication {
     
     
     
-	public long getId() {
+	@Override
+	public Long getId() {
 		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
 	}
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	@Override
+	@com.fasterxml.jackson.annotation.JsonIgnore
+	public boolean isNew() {
+		return isNew || id == null || id == 0L;
+	}
+
+	public void setNew(boolean isNew) {
+		this.isNew = isNew;
+	}
+
+	@javax.persistence.PostLoad
+	@javax.persistence.PostPersist
+	void markNotNew() {
+		this.isNew = false;
 	}
 	public String getLoanId() {
 		return loanId;

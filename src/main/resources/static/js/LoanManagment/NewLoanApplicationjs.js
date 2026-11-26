@@ -322,12 +322,13 @@ function renderDynamicFields(selectedType) {
 	if (!container) return;
 	container.innerHTML = '';
 
-	if (!selectedType || typeof loanTypeFieldsConfig === 'undefined' || !loanTypeFieldsConfig[selectedType]) {
+	const fields = (typeof getDynamicFieldsConfig === 'function')
+		? getDynamicFieldsConfig(selectedType)
+		: ((typeof loanTypeFieldsConfig !== 'undefined' && selectedType) ? (loanTypeFieldsConfig[selectedType] || loanTypeFieldsConfig[selectedType.toUpperCase()]) : null);
+
+	if (!fields || !fields.length) {
 		return;
 	}
-
-	const fields = loanTypeFieldsConfig[selectedType];
-	if (!fields || !fields.length) return;
 
 	// Section Title
 	const headerCol = document.createElement('div');
@@ -854,7 +855,9 @@ function saveLoanApplication() {
 
 	// Collect dynamic loan type specific details
 	const selectedLoanType = $('#typeOfLoan').val();
-	const dynamicConfig = (typeof loanTypeFieldsConfig !== 'undefined') ? loanTypeFieldsConfig[selectedLoanType] : null;
+	const dynamicConfig = (typeof getDynamicFieldsConfig === 'function')
+		? getDynamicFieldsConfig(selectedLoanType)
+		: ((typeof loanTypeFieldsConfig !== 'undefined' && selectedLoanType) ? (loanTypeFieldsConfig[selectedLoanType] || loanTypeFieldsConfig[selectedLoanType.toUpperCase()]) : null);
 	const loanTypeSpecificDetails = {};
 
 	if (dynamicConfig && dynamicConfig.length) {
@@ -872,8 +875,10 @@ function saveLoanApplication() {
 				}
 			} else if (field.type === 'file') {
 				const fileName = el.files && el.files.length > 0 ? el.files[0].name : '';
-				loanTypeSpecificDetails[field.name] = fileName;
-				loanApplication[field.name] = fileName;
+				if (fileName) {
+					loanTypeSpecificDetails[field.name] = fileName;
+					loanApplication[field.name] = fileName;
+				}
 				if (field.required && !fileName) {
 					alert(`PLEASE UPLOAD "${String(field.label).toUpperCase()}"!`);
 					el.focus();
@@ -881,8 +886,10 @@ function saveLoanApplication() {
 				}
 			} else {
 				const val = (el.value || '').trim();
-				loanTypeSpecificDetails[field.name] = val;
-				loanApplication[field.name] = val;
+				if (val) {
+					loanTypeSpecificDetails[field.name] = val;
+					loanApplication[field.name] = val;
+				}
 				if (field.required && !val) {
 					alert(`PLEASE ENTER "${String(field.label).toUpperCase()}"!`);
 					el.focus();
@@ -892,7 +899,11 @@ function saveLoanApplication() {
 		}
 	}
 
-	loanApplication.loanTypeSpecificDetails = JSON.stringify(loanTypeSpecificDetails);
+	if (Object.keys(loanTypeSpecificDetails).length > 0) {
+		loanApplication.loanTypeSpecificDetails = JSON.stringify(loanTypeSpecificDetails);
+	} else {
+		loanApplication.loanTypeSpecificDetails = null;
+	}
 
 	// Validate deductions before submission
 	const loanAmountVal = parseFloat(loanApplication.loanAmount) || 0;
