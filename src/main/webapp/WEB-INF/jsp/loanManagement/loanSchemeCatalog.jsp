@@ -277,35 +277,31 @@
 				<button type="button" id="saveBtn" class="btnStyle bg-success">SAVE</button>
 				<button type="button" id="updateBtn" class="btnStyle"
 					style="background-color: #FFA500;">UPDATE</button>
-
+				<button type="button" id="clearBtn" class="btnStyle bg-secondary">CLEAR</button>
 			</div>
 		</div>
 	</form>
 
 	<div class="row mt-5">
 		<div class="col-12">
-			<div class="c
-			card recent-sales">
+			<div class="card recent-sales">
 
 				<div class="card-body table-responsive">
 					<h5 class="card-title">
 						LOAN SCHEME CATALOG <span>| TABLE VIEW</span>
 					</h5>
 
-					<table class="table table-borderless datatable overflow-scroll"
-						onclick="loadLoanTable()" id="loanTableWrapper">
+					<table class="table table-borderless datatable overflow-scroll" id="loanTableWrapper">
 						<thead class="table-light">
 							<tr style="font-family: 'Poppins', sans-serif;">
 								<th scope="col">ID</th>
 								<th>LOAN PLAN NAME</th>
-
 								<th>TYPE OF LOAN</th>
 								<th>AGE</th>
 								<th>LOAN TERM</th>
 								<th>EMI TYPE</th>
 								<th>EDIT</th>
 								<th>DELETE</th>
-								<td>
 							</tr>
 						</thead>
 						<tbody id="loanTableBody">

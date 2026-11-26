@@ -897,6 +897,13 @@ public class PageController {
 	// Loan Management
 	@GetMapping("/loanSchemeCatalog")
 	public String getLoanSchemeCatalog(Model model) {
+		try {
+			long maxId = loanMangmentSchemeRepo.getMaxId();
+			String loanSchemeCode = "LSC" + String.format("%04d", maxId + 1);
+			model.addAttribute("loanSchemeCode", loanSchemeCode);
+		} catch (Exception ignored) {
+			model.addAttribute("loanSchemeCode", "LSC0001");
+		}
 		model.addAttribute("contentPage", "loanManagement/loanSchemeCatalog.jsp");
 		return "main";
 	}

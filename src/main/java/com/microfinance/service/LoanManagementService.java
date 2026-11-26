@@ -121,6 +121,12 @@ public class LoanManagementService implements org.springframework.beans.factory.
 
 	// Service fo saving and updating the loan scheme data
 	public LoanSchemCatalog saveLoanManagmentData(LoanSchemCatalog loan) {
+		if (loan.getId() != null && loan.getId() <= 0) {
+			loan.setId(null);
+		}
+		if (loan.getLoanSchemeCode() == null || loan.getLoanSchemeCode().trim().isEmpty()) {
+			loan.setLoanSchemeCode("LSC" + String.format("%04d", loanRepository.getMaxId() + 1));
+		}
 		if (loan.getId() != null && loanRepository.existsById(loan.getId())) {
 			// Perform update
 			LoanSchemCatalog existingLoan = loanRepository.findById(loan.getId()).get();
@@ -156,6 +162,10 @@ public class LoanManagementService implements org.springframework.beans.factory.
 			// Save new record
 			return loanRepository.save(loan);
 		}
+	}
+
+	public long getMaxSchemeId() {
+		return loanRepository.getMaxId();
 	}
 
 	// Fetch data On Table

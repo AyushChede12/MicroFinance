@@ -3,50 +3,45 @@ $(document).ready(function() {
 	$("#updateBtn").hide();
 
 	// ==============================
-	// ✅ SAVE BUTTON
+	// SAVE BUTTON
 	// ==============================
 	$("#saveBtn").on("click", function(e) {
 		e.preventDefault();
-
-		// ✅ Convert text fields to uppercase
 		convertTextToUppercase();
-
-		// ✅ Validation
 		if (!validateLoanSchemeForm()) {
 			return;
 		}
-
-		// ✅ Submit form
 		submitLoanForm("save");
 	});
 
-
 	// ==============================
-	// ✅ UPDATE BUTTON
+	// UPDATE BUTTON
 	// ==============================
 	$("#updateBtn").on("click", function(e) {
 		e.preventDefault();
-
-		// ✅ Convert text fields to uppercase
 		convertTextToUppercase();
-
-		// ✅ Validation
 		if (!validateLoanSchemeForm()) {
 			return;
 		}
-
-		// ✅ Submit form
 		submitLoanForm("update");
 	});
 
+	// ==============================
+	// CLEAR BUTTON
+	// ==============================
+	$("#clearBtn").on("click", function(e) {
+		e.preventDefault();
+		clearLoanForm();
+		$("#saveBtn").show();
+		$("#updateBtn").hide();
+	});
 
-	// ✅ Load Table at start
+	// Load Table at startup
 	loadLoanTable();
 });
 
-
 // ============================================
-// ✅ COMMON FUNCTION TO CONVERT TEXT TO UPPERCASE
+// CONVERT TEXT TO UPPERCASE
 // ============================================
 function convertTextToUppercase() {
 	$("input[type=text], textarea").each(function() {
@@ -56,44 +51,39 @@ function convertTextToUppercase() {
 	});
 }
 
-
 // ============================================
-// ✅ VALIDATION FUNCTION (Same file me add karo)
+// VALIDATION FUNCTION
 // ============================================
 function validateLoanSchemeForm() {
 
-	// ✅ Clear all previous errors
+	// Clear all previous error messages
 	$("#chkloanplanname, #chkloantype, #chkage, #chkinteresttype, #chkloanterm, #chkloanamount, #chkloanmode, #chkroi, #chksecuritytype, #chkemitype, #chkprocessingfee, #chklegalcharges, #chkgst, #chkinsurancefee, #chkvaluationfee, #chklateallowanceday, #chkmonthlypenalty")
 		.text("");
 
-	let loanPlaneName = $("#loanPlaneName").val().trim();
-	let typeLoan = $("#typeLoan").val().trim();
-	let age = $("#age").val().trim();
-	let typeIntrest = $("#typeIntrest").val().trim();
-	let loanTerm = $("#loanTerm").val().trim();
-	let loanAmount = $("#loanAmount").val().trim();
-	let loanMode = $("#loanMode").val().trim();
-	let rateIntrestType = $("#rateIntrestType").val().trim();
-	let typesecurity = $("#typesecurity").val().trim();
-	let emiType = $("#emiType").val().trim();
+	let loanPlaneName = ($("#loanPlaneName").val() || "").trim();
+	let typeLoan = ($("#typeLoan").val() || "").trim();
+	let age = ($("#age").val() || "").trim();
+	let typeIntrest = ($("#typeIntrest").val() || "").trim();
+	let loanTerm = ($("#loanTerm").val() || "").trim();
+	let loanAmount = ($("#loanAmount").val() || "").trim();
+	let loanMode = ($("#loanMode").val() || "").trim();
+	let rateIntrestType = ($("#rateIntrestType").val() || "").trim();
+	let typesecurity = ($("#typesecurity").val() || "").trim();
+	let emiType = ($("#emiType").val() || "").trim();
 
-	let feeProcessing = $("#feeProcessing").val().trim();
-	let chargesLegal = $("#chargesLegal").val().trim();
-	let gst = $("#gst").val().trim();
-	let feeInsurence = $("#feeInsurence").val().trim();
-	let feeValuation = $("#feeValuation").val().trim();
+	let feeProcessing = ($("#feeProcessing").val() || "").trim();
+	let chargesLegal = ($("#chargesLegal").val() || "").trim();
+	let gst = ($("#gst").val() || "").trim();
+	let feeInsurence = ($("#feeInsurence").val() || "").trim();
+	let feeValuation = ($("#feeValuation").val() || "").trim();
 
-	let lateAllowanceday = $("#lateAllowanceday").val().trim();
-	let modePanalty = $("#modePanalty").val().trim();
-	let pennaltyMonthly = $("#pennaltyMonthly").val().trim();
+	let lateAllowanceday = ($("#lateAllowanceday").val() || "").trim();
+	let modePanalty = ($("#modePanalty").val() || "").trim();
+	let pennaltyMonthly = ($("#pennaltyMonthly").val() || "").trim();
 
-	// ✅ Patterns
+	// Numeric Patterns
 	let numberPattern = /^[0-9]+(\.[0-9]{1,2})?$/;
 	let intPattern = /^[0-9]+$/;
-
-	// ==========================
-	// ✅ Required Validations
-	// ==========================
 
 	// 1) Loan Plan Name
 	if (loanPlaneName === "") {
@@ -115,11 +105,7 @@ function validateLoanSchemeForm() {
 		$("#age").focus();
 		return false;
 	} else if (!intPattern.test(age)) {
-		$("#chkage").text("* AGE MUST BE A NUMBER");
-		$("#age").focus();
-		return false;
-	} else if (parseInt(age) < 18 || parseInt(age) > 70) {
-		$("#chkage").text("* AGE MUST BE BETWEEN 18 TO 70");
+		$("#chkage").text("* AGE MUST BE A VALID NUMBER");
 		$("#age").focus();
 		return false;
 	}
@@ -137,11 +123,7 @@ function validateLoanSchemeForm() {
 		$("#loanTerm").focus();
 		return false;
 	} else if (!intPattern.test(loanTerm)) {
-		$("#chkloanterm").text("* LOAN TERM MUST BE A NUMBER");
-		$("#loanTerm").focus();
-		return false;
-	} else if (parseInt(loanTerm) <= 0) {
-		$("#chkloanterm").text("* LOAN TERM MUST BE GREATER THAN 0");
+		$("#chkloanterm").text("* LOAN TERM MUST BE A VALID NUMBER");
 		$("#loanTerm").focus();
 		return false;
 	}
@@ -155,10 +137,6 @@ function validateLoanSchemeForm() {
 		$("#chkloanamount").text("* ENTER VALID LOAN AMOUNT");
 		$("#loanAmount").focus();
 		return false;
-	} else if (parseFloat(loanAmount) < 100000) {
-		$("#chkloanamount").text("* AMOUNT MUST BE >= 100000");
-		$("#loanAmount").focus();
-		return false;
 	}
 
 	// 7) Loan Mode
@@ -168,17 +146,13 @@ function validateLoanSchemeForm() {
 		return false;
 	}
 
-	// 8) Rate of Interest Type
+	// 8) Rate Interest Type (ROI % P.A.)
 	if (rateIntrestType === "") {
 		$("#chkroi").text("* RATE OF INTEREST IS REQUIRED");
 		$("#rateIntrestType").focus();
 		return false;
 	} else if (!numberPattern.test(rateIntrestType)) {
-		$("#chkroi").text("* ENTER VALID ROI");
-		$("#rateIntrestType").focus();
-		return false;
-	} else if (parseFloat(rateIntrestType) <= 0 || parseFloat(rateIntrestType) > 60) {
-		$("#chkroi").text("* ROI MUST BE BETWEEN 1 TO 60");
+		$("#chkroi").text("* ENTER VALID RATE OF INTEREST (%)");
 		$("#rateIntrestType").focus();
 		return false;
 	}
@@ -197,11 +171,7 @@ function validateLoanSchemeForm() {
 		return false;
 	}
 
-	// ==========================
-	// ✅ Payment Deductions (Required in HTML)
-	// ==========================
-
-	// Processing Fee
+	// 11) Deductions
 	if (feeProcessing === "") {
 		$("#chkprocessingfee").text("* PROCESSING FEE IS REQUIRED");
 		$("#feeProcessing").focus();
@@ -212,7 +182,6 @@ function validateLoanSchemeForm() {
 		return false;
 	}
 
-	// Legal Charges
 	if (chargesLegal === "") {
 		$("#chklegalcharges").text("* LEGAL CHARGES IS REQUIRED");
 		$("#chargesLegal").focus();
@@ -223,7 +192,6 @@ function validateLoanSchemeForm() {
 		return false;
 	}
 
-	// GST
 	if (gst === "") {
 		$("#chkgst").text("* GST IS REQUIRED");
 		$("#gst").focus();
@@ -234,7 +202,6 @@ function validateLoanSchemeForm() {
 		return false;
 	}
 
-	// Insurance Fee
 	if (feeInsurence === "") {
 		$("#chkinsurancefee").text("* INSURANCE FEE IS REQUIRED");
 		$("#feeInsurence").focus();
@@ -245,7 +212,6 @@ function validateLoanSchemeForm() {
 		return false;
 	}
 
-	// Valuation Fee
 	if (feeValuation === "") {
 		$("#chkvaluationfee").text("* VALUATION FEE IS REQUIRED");
 		$("#feeValuation").focus();
@@ -256,29 +222,23 @@ function validateLoanSchemeForm() {
 		return false;
 	}
 
-	// ==========================
-	// ✅ Late Fine Details (Required)
-	// ==========================
-
-	// Late Allowance Day
+	// 12) Late Fine Details
 	if (lateAllowanceday === "") {
 		$("#chklateallowanceday").text("* LATE ALLOWANCE DAY IS REQUIRED");
 		$("#lateAllowanceday").focus();
 		return false;
-	} else if (!intPattern.test(lateAllowanceday) || parseInt(lateAllowanceday) < 0) {
+	} else if (!intPattern.test(lateAllowanceday) || parseInt(lateAllowanceday, 10) < 0) {
 		$("#chklateallowanceday").text("* ENTER VALID LATE ALLOWANCE DAYS");
 		$("#lateAllowanceday").focus();
 		return false;
 	}
 
-	// Penalty Mode (no small id given in html for this select)
 	if (modePanalty === "" || modePanalty === "SELECT PENALTY TYPE") {
 		alert("PLEASE SELECT PENALTY MODE");
 		$("#modePanalty").focus();
 		return false;
 	}
 
-	// Monthly Penalty
 	if (pennaltyMonthly === "") {
 		$("#chkmonthlypenalty").text("* MONTHLY PENALTY IS REQUIRED");
 		$("#pennaltyMonthly").focus();
@@ -292,44 +252,43 @@ function validateLoanSchemeForm() {
 	return true;
 }
 
-
-
 // ============================================
-// ✅ COMMON AJAX FUNCTION FOR SAVE / UPDATE
+// COMMON AJAX FUNCTION FOR SAVE / UPDATE
 // ============================================
 function submitLoanForm(type) {
 
-	let id = $("#loanId").val();
+	let idVal = $("#loanId").val();
+	let id = (idVal && !isNaN(idVal) && parseInt(idVal, 10) > 0) ? parseInt(idVal, 10) : null;
 
 	const loanData = {
 		id: type === "update" ? id : null,
 
-		loanSchemeCode: $("#loanSchemeCode").val(),
-		loanPlaneName: $("#loanPlaneName").val(),
+		loanSchemeCode: ($("#loanSchemeCode").val() || "").trim() || null,
+		loanPlaneName: ($("#loanPlaneName").val() || "").trim().toUpperCase(),
 		typeLoan: $("#typeLoan").val(),
-		age: $("#age").val(),
-		loanTerm: $("#loanTerm").val(),
+		age: ($("#age").val() || "").trim(),
+		loanTerm: ($("#loanTerm").val() || "").trim(),
 		emiType: $("#emiType").val(),
-		loanAmount: $("#loanAmount").val(),
+		loanAmount: ($("#loanAmount").val() || "").trim(),
 		loanMode: $("#loanMode").val(),
-		rateIntrestType: $("#rateIntrestType").val(),
+		rateIntrestType: ($("#rateIntrestType").val() || "").trim(),
 		typeIntrest: $("#typeIntrest").val(),
 		typesecurity: $("#typesecurity").val(),
 
 		// Deductions
-		feeProcessing: $("#feeProcessing").val(),
-		chargesLegal: $("#chargesLegal").val(),
-		gst: $("#gst").val(),
-		feeInsurence: $("#feeInsurence").val(),
-		feeValuation: $("#feeValuation").val(),
+		feeProcessing: ($("#feeProcessing").val() || "").trim(),
+		chargesLegal: ($("#chargesLegal").val() || "").trim(),
+		gst: ($("#gst").val() || "").trim(),
+		feeInsurence: ($("#feeInsurence").val() || "").trim(),
+		feeValuation: ($("#feeValuation").val() || "").trim(),
 
 		// Late Penalty
-		lateAllowanceday: $("#lateAllowanceday").val(),
+		lateAllowanceday: ($("#lateAllowanceday").val() || "").trim(),
 		modePanalty: $("#modePanalty").val(),
-		pennaltyMonthly: $("#pennaltyMonthly").val(),
+		pennaltyMonthly: ($("#pennaltyMonthly").val() || "").trim(),
 
-		// ✅ Toggle value
-		planStatus: $("#planStatus").is(":checked") ? 1 : 0
+		// Toggle value
+		planStatus: $("#planStatus").is(":checked") ? "1" : "0"
 	};
 
 	$.ajax({
@@ -339,45 +298,36 @@ function submitLoanForm(type) {
 		dataType: "json",
 		data: JSON.stringify(loanData),
 		success: function(response) {
-
-			if (response.status === "OK") {
-
+			if (response.status === "OK" || response.status === "CREATED") {
 				if (type === "save") {
-					alert("DATA SAVED SUCCESSFULLY ");
+					alert("DATA SAVED SUCCESSFULLY");
 				} else {
-					alert("DATA UPDATED SUCCESSFULLY ");
+					alert("DATA UPDATED SUCCESSFULLY");
 				}
 
-				// ✅ Reset buttons
 				$("#saveBtn").show();
-				$("#saveBtn").click(function() {
-					if (validateLoanSchemeForm()) {
-						// ✅ call your save ajax function here
-						saveLoanScheme();
-					}
-				});
-
 				$("#updateBtn").hide();
 
-				// ✅ Clear form
 				clearLoanForm();
-
-				// ✅ Reload table
 				loadLoanTable();
-
 			} else {
-				alert("FAILED: " + String(response.message).toUpperCase());
+				alert("FAILED: " + (response.message ? String(response.message).toUpperCase() : "FAILED TO SAVE LOAN SCHEME"));
 			}
 		},
 		error: function(xhr) {
-			alert("ERROR OCCURRED: " + (xhr.responseText ? xhr.responseText.toUpperCase() : ""));
+			let errorMsg = "ERROR OCCURRED WHILE SAVING LOAN SCHEME";
+			try {
+				if (xhr.responseJSON && xhr.responseJSON.message) {
+					errorMsg = xhr.responseJSON.message;
+				}
+			} catch (e) {}
+			alert(String(errorMsg).toUpperCase());
 		}
 	});
 }
 
-
 // ============================================
-// ✅ CLEAR FORM FUNCTION
+// CLEAR FORM FUNCTION
 // ============================================
 function clearLoanForm() {
 	$("#loanId").val("");
@@ -404,12 +354,18 @@ function clearLoanForm() {
 	$("#pennaltyMonthly").val("");
 
 	$("#planStatus").prop("checked", false);
-	updateToggleColor(document.getElementById('planStatus'));
+	const planStatusEl = document.getElementById('planStatus');
+	if (planStatusEl) {
+		updateToggleColor(planStatusEl);
+	}
+
+	$("#chkloanplanname, #chkloantype, #chkage, #chkinteresttype, #chkloanterm, #chkloanamount, #chkloanmode, #chkroi, #chksecuritytype, #chkemitype, #chkprocessingfee, #chklegalcharges, #chkgst, #chkinsurancefee, #chkvaluationfee, #chklateallowanceday, #chkmonthlypenalty")
+		.text("");
 }
 
-
 // ============================================
-// ✅ LOAD TABLE DATA
+// LOAD TABLE DATA
+// ============================================
 function loadLoanTable() {
 	$.ajax({
 		url: "api/loanmanegment/allDataFetchLoanSchemCatelog",
@@ -418,54 +374,55 @@ function loadLoanTable() {
 		success: function(response) {
 			let rows = "";
 
-			if (response.status === "OK" && Array.isArray(response.data)) {
-				response.data.forEach(function(loan) {
+			if ((response.status === "OK" || response.status === "FOUND") && Array.isArray(response.data)) {
+				if (response.data.length === 0) {
+					rows = "<tr><td colspan='8' class='text-center'>NO DATA FOUND</td></tr>";
+				} else {
+					response.data.forEach(function(loan) {
+						const id = loan.id || "-";
+						const loanPlaneName = (loan.loanPlaneName || "-").toString().toUpperCase();
+						const typeLoan = (loan.typeLoan || "-").toString().toUpperCase();
+						const age = (loan.age || "-").toString().toUpperCase();
+						const loanTerm = (loan.loanTerm || "-").toString().toUpperCase();
+						const emiType = (loan.emiType || "-").toString().toUpperCase();
 
-					// ✅ convert into UPPERCASE safely
-					const loanPlaneName = (loan.loanPlaneName || "-").toString().toUpperCase();
-					const typeLoan = (loan.typeLoan || "-").toString().toUpperCase();
-					const age = (loan.age || "-").toString().toUpperCase();
-					const loanTerm = (loan.loanTerm || "-").toString().toUpperCase();
-					const emiType = (loan.emiType || "-").toString().toUpperCase();
-
-					rows += `
-                        <tr>
-                            <td>${loan.id}</td>
-                            <td>${loanPlaneName}</td>
-                            <td>${typeLoan}</td>
-                            <td>${age}</td>
-                            <td>${loanTerm}</td>
-                            <td>${emiType}</td>
-                            <td>
-                                <button class="btn btn-sm btn-warning" onclick="editLoanById(${loan.id})">
-                                    <i class="fa fa-edit"></i>
-                                </button>
-                            </td>
-                            <td>
-                                <button class="btn btn-sm btn-danger" onclick="deleteLoan(${loan.id})">
-                                    <i class="fa fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-				});
+						rows += `
+	                        <tr>
+	                            <td>${id}</td>
+	                            <td>${loanPlaneName}</td>
+	                            <td>${typeLoan}</td>
+	                            <td>${age}</td>
+	                            <td>${loanTerm}</td>
+	                            <td>${emiType}</td>
+	                            <td>
+	                                <button type="button" class="btn btn-sm btn-warning" onclick="editLoanById(${loan.id})" title="EDIT">
+	                                    <i class="fa fa-edit"></i>
+	                                </button>
+	                            </td>
+	                            <td>
+	                                <button type="button" class="btn btn-sm btn-danger" onclick="deleteLoan(${loan.id})" title="DELETE">
+	                                    <i class="fa fa-trash"></i>
+	                                </button>
+	                            </td>
+	                        </tr>
+	                    `;
+					});
+				}
 			} else {
-				rows = "<tr><td colspan='8'>NO DATA FOUND</td></tr>";
+				rows = "<tr><td colspan='8' class='text-center'>NO DATA FOUND</td></tr>";
 			}
 
 			$("#loanTableBody").html(rows);
 		},
 		error: function(xhr) {
 			console.error("Error loading table:", xhr.statusText);
-			$("#loanTableBody").html("<tr><td colspan='8'>ERROR LOADING DATA</td></tr>");
+			$("#loanTableBody").html("<tr><td colspan='8' class='text-center text-danger'>ERROR LOADING DATA</td></tr>");
 		}
 	});
 }
 
-
-
 // ============================================
-// ✅ EDIT LOAN BY ID
+// EDIT LOAN BY ID
 // ============================================
 function editLoanById(id) {
 
@@ -477,42 +434,48 @@ function editLoanById(id) {
 		type: "GET",
 		data: { id: id },
 		success: function(response) {
-			$('html, body').animate({
-				scrollTop: $("#formid").offset().top
-			}, 300);
-			if (response.status === "OK") {
+			if ($("#formid").length) {
+				$('html, body').animate({
+					scrollTop: $("#formid").offset().top - 80
+				}, 300);
+			}
 
+			if ((response.status === "OK" || response.status === "FOUND") && response.data) {
 				const loan = response.data;
 
 				$('#loanId').val(loan.id);
-				$('#loanSchemeCode').val(loan.loanSchemeCode);
-				$('#loanPlaneName').val(loan.loanPlaneName);
-				$('#typeLoan').val(loan.typeLoan);
-				$('#age').val(loan.age);
-				$('#loanTerm').val(loan.loanTerm);
-				$('#emiType').val(loan.emiType);
-				$('#loanAmount').val(loan.loanAmount);
-				$('#loanMode').val(loan.loanMode);
-				$('#rateIntrestType').val(loan.rateIntrestType);
-				$('#typeIntrest').val(loan.typeIntrest);
-				$('#typesecurity').val(loan.typesecurity);
+				$('#loanSchemeCode').val(loan.loanSchemeCode || '');
+				$('#loanPlaneName').val(loan.loanPlaneName || '');
+				$('#typeLoan').val(loan.typeLoan || '');
+				$('#age').val(loan.age || '');
+				$('#loanTerm').val(loan.loanTerm || '');
+				$('#emiType').val(loan.emiType || '');
+				$('#loanAmount').val(loan.loanAmount || '');
+				$('#loanMode').val(loan.loanMode || '');
+				$('#rateIntrestType').val(loan.rateIntrestType || '');
+				$('#typeIntrest').val(loan.typeIntrest || '');
+				$('#typesecurity').val(loan.typesecurity || '');
 
-				$('#feeProcessing').val(loan.feeProcessing);
-				$('#chargesLegal').val(loan.chargesLegal);
-				$('#gst').val(loan.gst);
-				$('#feeInsurence').val(loan.feeInsurence);
-				$('#feeValuation').val(loan.feeValuation);
+				$('#feeProcessing').val(loan.feeProcessing || '');
+				$('#chargesLegal').val(loan.chargesLegal || '');
+				$('#gst').val(loan.gst || '');
+				$('#feeInsurence').val(loan.feeInsurence || '');
+				$('#feeValuation').val(loan.feeValuation || '');
 
-				$('#lateAllowanceday').val(loan.lateAllowanceday);
-				$('#modePanalty').val(loan.modePanalty);
-				$('#pennaltyMonthly').val(loan.pennaltyMonthly);
+				$('#lateAllowanceday').val(loan.lateAllowanceday || '');
+				$('#modePanalty').val(loan.modePanalty || '');
+				$('#pennaltyMonthly').val(loan.pennaltyMonthly || '');
 
-				// ✅ Toggle
-				$('#planStatus').prop('checked', parseInt(loan.planStatus) === 1);
-				updateToggleColor(document.getElementById('planStatus'));
+				// Toggle
+				const isChecked = String(loan.planStatus) === "1" || loan.planStatus === 1;
+				$('#planStatus').prop('checked', isChecked);
+				const planStatusEl = document.getElementById('planStatus');
+				if (planStatusEl) {
+					updateToggleColor(planStatusEl);
+				}
 
 			} else {
-				alert("LOAN NOT FOUND: " + String(response.message).toUpperCase());
+				alert("LOAN SCHEME NOT FOUND: " + (response.message ? String(response.message).toUpperCase() : ""));
 			}
 		},
 		error: function(xhr) {
@@ -521,61 +484,62 @@ function editLoanById(id) {
 	});
 }
 
-
 // ============================================
-// ✅ TOGGLE COLOR UPDATE
+// TOGGLE COLOR UPDATE
 // ============================================
 function updateToggleColor(input) {
+	if (!input) return;
 	const label = input.nextElementSibling;
-	if (input.checked) {
-		label.style.backgroundColor = "#4caf50";
-		label.style.borderColor = "#4caf50";
-	} else {
-		label.style.backgroundColor = "#ccc";
-		label.style.borderColor = "#ccc";
+	if (label) {
+		if (input.checked) {
+			label.style.backgroundColor = "#4caf50";
+			label.style.borderColor = "#4caf50";
+		} else {
+			label.style.backgroundColor = "#ccc";
+			label.style.borderColor = "#ccc";
+		}
 	}
 }
 
-
 // ============================================
-// ✅ DELETE FUNCTION
+// DELETE LOAN SCHEME
 // ============================================
 function deleteLoan(id) {
-	if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS LOAN?")) {
-
+	if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS LOAN SCHEME?")) {
 		$.ajax({
 			url: "api/loanmanegment/deleteLoanById",
 			type: "POST",
 			data: { id: id },
 			success: function(response) {
-
-				if (response.status === "OK") {
-					alert("LOAN DELETED SUCCESSFULLY ✅");
+				if (response.status === "OK" || response.status === "FOUND") {
+					alert("LOAN SCHEME DELETED SUCCESSFULLY");
 					loadLoanTable();
 				} else {
-					alert("FAILED: " + String(response.message).toUpperCase());
+					alert("FAILED TO DELETE LOAN SCHEME: " + (response.message ? String(response.message).toUpperCase() : ""));
 				}
 			},
 			error: function(xhr) {
-				alert("ERROR WHILE DELETING LOAN ❌");
-				console.log("Status:", xhr.status);
-				console.log("Response:", xhr.responseText);
+				alert("ERROR WHILE DELETING LOAN SCHEME");
 			}
 		});
 	}
 }
 
-
-// ============================================
-// ✅ Your old function (kept, optional)
-// ============================================
 function validateLoanAmount() {
 	const loanAmount = document.getElementById("loanAmount").value;
 	const error = document.getElementById("loanAmountError");
 
 	if (loanAmount !== "" && Number(loanAmount) < 100000) {
-		error.style.display = "block";
+		if (error) error.style.display = "block";
 	} else {
-		error.style.display = "none";
+		if (error) error.style.display = "none";
 	}
 }
+
+// Expose functions globally for HTML onclick bindings
+window.editLoanById = editLoanById;
+window.deleteLoan = deleteLoan;
+window.loadLoanTable = loadLoanTable;
+window.clearLoanForm = clearLoanForm;
+window.validateLoanAmount = validateLoanAmount;
+window.updateToggleColor = updateToggleColor;

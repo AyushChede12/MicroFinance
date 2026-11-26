@@ -67,6 +67,81 @@ public class LoanManagementController {
 		return ResponseEntity.ok(response);
 	}
 
+	// Fetch all data for Loan Scheme Catalog Table View
+	@GetMapping({ "/allDataFetchLoanSchemCatelog", "/allDataFetchLoanSchemeCatalog" })
+	public ResponseEntity<ApiResponse<List<LoanSchemCatalog>>> allDataFetchLoanSchemCatelog() {
+		try {
+			List<LoanSchemCatalog> list = loanServices.allDataFetchLoanSchemCatelog();
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "LOAN SCHEMES FETCHED SUCCESSFULLY", list));
+		} catch (Exception ex) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage()));
+		}
+	}
+
+	// Save or Update Loan Scheme Catalog
+	@PostMapping({ "/saveLoanManagment", "/saveLoanManagement", "/saveloanmanagment", "/saveloanmanagement" })
+	public ResponseEntity<ApiResponse<LoanSchemCatalog>> saveLoanManagment(
+			@RequestBody LoanSchemCatalog loanSchemeCatalog) {
+		try {
+			if (loanSchemeCatalog.getId() != null && loanSchemeCatalog.getId() <= 0) {
+				loanSchemeCatalog.setId(null);
+			}
+			if (loanSchemeCatalog.getLoanSchemeCode() == null || loanSchemeCatalog.getLoanSchemeCode().trim().isEmpty()) {
+				long nextId = loanServices.getMaxSchemeId() + 1;
+				loanSchemeCatalog.setLoanSchemeCode("LSC" + String.format("%04d", nextId));
+			}
+			LoanSchemCatalog saved = loanServices.saveLoanManagmentData(loanSchemeCatalog);
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "LOAN SCHEME SAVED SUCCESSFULLY", saved));
+		} catch (Exception ex) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage()));
+		}
+	}
+
+	// Fetch single Loan Scheme Catalog for Editing
+	@GetMapping({ "/getLoanByIdEdite", "/getLoanByIdEdit" })
+	public ResponseEntity<ApiResponse<LoanSchemCatalog>> getLoanByIdEdite(@RequestParam Long id) {
+		try {
+			LoanSchemCatalog loan = loanServices.getLoanById(id);
+			if (loan == null) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND)
+						.body(ApiResponse.error(HttpStatus.NOT_FOUND, "LOAN SCHEME NOT FOUND"));
+			}
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "LOAN SCHEME FETCHED SUCCESSFULLY", loan));
+		} catch (Exception ex) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage()));
+		}
+	}
+
+	// Delete Loan Scheme Catalog by ID
+	@PostMapping({ "/deleteLoanById", "/deleteLoanSchemeById" })
+	public ResponseEntity<ApiResponse<String>> deleteLoanById(
+			@RequestParam(name = "id", required = false) Long id,
+			@RequestBody(required = false) Map<String, Object> body) {
+		try {
+			Long targetId = id;
+			if (targetId == null && body != null && body.containsKey("id")) {
+				targetId = Long.valueOf(body.get("id").toString());
+			}
+			if (targetId == null) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+						.body(ApiResponse.error(HttpStatus.BAD_REQUEST, "ID PARAMETER IS REQUIRED"));
+			}
+			boolean deleted = loanServices.deleteLoanLoanById(targetId);
+			if (deleted) {
+				return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, "LOAN SCHEME DELETED SUCCESSFULLY", null));
+			} else {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND)
+						.body(ApiResponse.error(HttpStatus.NOT_FOUND, "LOAN SCHEME NOT FOUND"));
+			}
+		} catch (Exception ex) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage()));
+		}
+	}
+
 	@GetMapping("/allfetchdataLoanPlanName")
 	public ResponseEntity<ApiResponse<List<LoanSchemCatalog>>> getLoanPlanName(@RequestParam String loanPlanName) {
 		List<LoanSchemCatalog> loanschemCodeList = loanServices.getLoanPlanName(loanPlanName);
