@@ -498,6 +498,54 @@ public class LoanManagementService implements org.springframework.beans.factory.
 
 	// ── Penalty Calculation ──────────────────────────────────────────────────
 
+	private String normalizeLoanMode(String mode) {
+		if (mode == null) return "monthly";
+		return mode.trim().toLowerCase().replace("-", "").replace(" ", "").replace("_", "");
+	}
+
+	private int getPeriodDaysForMode(String mode) {
+		String norm = normalizeLoanMode(mode);
+		switch (norm) {
+		case "daily":
+			return 1;
+		case "weekly":
+			return 7;
+		case "fortnightly":
+			return 14;
+		case "quarterly":
+			return 91;
+		case "halfyearly":
+			return 182;
+		case "yearly":
+		case "annually":
+			return 365;
+		default:
+			return 30; // Monthly
+		}
+	}
+
+	private double getPeriodDivisorForFrequency(String frequency) {
+		String norm = normalizeLoanMode(frequency);
+		switch (norm) {
+		case "daily":
+			return 365.0;
+		case "weekly":
+			return 52.0;
+		case "fortnightly":
+			return 26.0;
+		case "quarterly":
+			return 4.0;
+		case "halfyearly":
+			return 2.0;
+		case "yearly":
+		case "annually":
+			return 1.0;
+		case "monthly":
+		default:
+			return 12.0; // Monthly
+		}
+	}
+
 	/**
 	 * Calculates penalty for a late EMI payment based on the installment's own due
 	 * date.
@@ -536,24 +584,7 @@ public class LoanManagementService implements org.springframework.beans.factory.
 			}
 
 			// --- Period per installment in days ---
-			int periodDays;
-			switch (loanMode == null ? "" : loanMode) {
-			case "Daily":
-				periodDays = 1;
-				break;
-			case "Weekly":
-				periodDays = 7;
-				break;
-			case "Fortnightly":
-				periodDays = 14;
-				break;
-			case "Quarterly":
-				periodDays = 91;
-				break;
-			default:
-				periodDays = 30;
-				break; // Monthly
-			}
+			int periodDays = getPeriodDaysForMode(loanMode);
 
 			// --- EMI due date = disbursement date + installmentNo × period ---
 			java.time.LocalDate disbDate = java.time.LocalDate.parse(loanDate.trim());
@@ -660,24 +691,7 @@ public class LoanManagementService implements org.springframework.beans.factory.
 			}
 
 			// Period per installment
-			int periodDays;
-			switch (loanApp.getLoanMode() == null ? "" : loanApp.getLoanMode()) {
-			case "Daily":
-				periodDays = 1;
-				break;
-			case "Weekly":
-				periodDays = 7;
-				break;
-			case "Fortnightly":
-				periodDays = 14;
-				break;
-			case "Quarterly":
-				periodDays = 91;
-				break;
-			default:
-				periodDays = 30;
-				break;
-			}
+			int periodDays = getPeriodDaysForMode(loanApp.getLoanMode());
 
 			// EMI due date and deadline
 			try {
@@ -936,15 +950,35 @@ public class LoanManagementService implements org.springframework.beans.factory.
 
 		// ✅ Continue existing loan payment / disbursement tracking logic
 		String loanDate = loanApp.getLoanDate();
-		double policyAmount = Double.parseDouble(loanApp.getLoanAmount()); // Principal
-		double roi = Double.parseDouble(loanApp.getRateOfInterest()); // Annual ROI
-		double term = Double.parseDouble(loanApp.getLoanTerm());
-		String frequency = loanApp.getLoanMode();
+		double policyAmount = 0.0;
+		try {
+			if (loanApp.getLoanAmount() != null)
+				policyAmount = Double.parseDouble(loanApp.getLoanAmount().trim());
+		} catch (Exception ignored) {
+		}
+
+		double roi = 0.0;
+		try {
+			if (loanApp.getRateOfInterest() != null)
+				roi = Double.parseDouble(loanApp.getRateOfInterest().trim());
+		} catch (Exception ignored) {
+		}
+
+		double term = 0.0;
+		try {
+			if (loanApp.getLoanTerm() != null)
+				term = Double.parseDouble(loanApp.getLoanTerm().trim());
+		} catch (Exception ignored) {
+		}
+
+		String frequency = loanApp.getLoanMode() != null ? loanApp.getLoanMode()
+				: (request.getLoanMode() != null ? request.getLoanMode() : "Monthly");
 		String interestType = loanApp.getInterestType(); // "Flat" or "Reducing"
 
 		double emiAmount = 0.0;
 		try {
-			emiAmount = Double.parseDouble(loanApp.getEmiPayment());
+			if (loanApp.getEmiPayment() != null)
+				emiAmount = Double.parseDouble(loanApp.getEmiPayment().trim());
 		} catch (Exception e) {
 			emiAmount = 0.0;
 		}
@@ -958,26 +992,7 @@ public class LoanManagementService implements org.springframework.beans.factory.
 			numberOfInstallments = 1;
 		}
 
-		double periodDivisor;
-		switch (frequency) {
-		case "Daily":
-			periodDivisor = 365;
-			break;
-		case "Weekly":
-			periodDivisor = 52;
-			break;
-		case "Fortnightly":
-			periodDivisor = 26;
-			break;
-		case "Monthly":
-			periodDivisor = 12;
-			break;
-		case "Quarterly":
-			periodDivisor = 4;
-			break;
-		default:
-			throw new IllegalArgumentException("INVALID FREQUENCY: " + frequency);
-		}
+		double periodDivisor = getPeriodDivisorForFrequency(frequency);
 
 		List<LoanPayment> allPayments = loanPaymentRepo.findByLoanId(loanId);
 
@@ -1081,24 +1096,7 @@ public class LoanManagementService implements org.springframework.beans.factory.
 
 				// Store the EMI due date
 				try {
-					int periodDays;
-					switch (loanApp.getLoanMode() == null ? "" : loanApp.getLoanMode()) {
-					case "Daily":
-						periodDays = 1;
-						break;
-					case "Weekly":
-						periodDays = 7;
-						break;
-					case "Fortnightly":
-						periodDays = 14;
-						break;
-					case "Quarterly":
-						periodDays = 91;
-						break;
-					default:
-						periodDays = 30;
-						break;
-					}
+					int periodDays = getPeriodDaysForMode(loanApp.getLoanMode());
 					java.time.LocalDate emiDue = java.time.LocalDate.parse(loanDate.trim())
 							.plusDays((long) currentInstNo * periodDays);
 					payment.setDueDate(emiDue.toString());
@@ -1586,17 +1584,7 @@ public class LoanManagementService implements org.springframework.beans.factory.
 		dto.setPaidInstallments(paidCount);
 		dto.setLastPaymentDate(lastPaymentDateStr);
 
-		double periodDivisor = 12.0;
-		if ("Daily".equalsIgnoreCase(mode))
-			periodDivisor = 365.0;
-		else if ("Weekly".equalsIgnoreCase(mode))
-			periodDivisor = 52.0;
-		else if ("Fortnightly".equalsIgnoreCase(mode))
-			periodDivisor = 26.0;
-		else if ("Quarterly".equalsIgnoreCase(mode))
-			periodDivisor = 4.0;
-		else
-			periodDivisor = 12.0;
+		double periodDivisor = getPeriodDivisorForFrequency(mode);
 
 		double totalPrincipalPaid = 0.0;
 		double outstandingPrincipal = principal;
