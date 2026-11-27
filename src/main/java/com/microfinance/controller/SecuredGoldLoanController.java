@@ -341,13 +341,16 @@ public class SecuredGoldLoanController {
 			String message = isClosed ? "EMI PAID SUCCESSFULLY. GOLD LOAN IS NOW CLOSED."
 					: "EMI PAID SUCCESSFULLY. REMAINING BALANCE UPDATED.";
 
-			return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, message, data));
+			return ResponseEntity.ok(ApiResponse.success(HttpStatus.OK, message, data));
 
 		} catch (RuntimeException e) {
 			Map<String, Object> data = new HashMap<>();
-			data.put("error", e.getMessage());
-			return ResponseEntity.badRequest()
-					.body(new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), data));
+			data.put("error", e.getMessage() != null ? e.getMessage().toUpperCase() : "FAILED TO PROCESS GOLD LOAN EMI");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(ApiResponse.error(HttpStatus.BAD_REQUEST, e.getMessage() != null ? e.getMessage().toUpperCase() : "FAILED TO PROCESS EMI"));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "ERROR: " + (e.getMessage() != null ? e.getMessage().toUpperCase() : "SERVER ERROR")));
 		}
 	}
 

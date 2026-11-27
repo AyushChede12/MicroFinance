@@ -492,6 +492,25 @@ function setupPaymentAction() {
 			return;
 		}
 
+		const loanAmt = parseFloat($("#loanAmount").val()) || 0;
+		if (loanAmt <= 0) {
+			alert("PLEASE ENTER A VALID LOAN AMOUNT GREATER THAN 0.");
+			$("#loanAmount").focus();
+			return;
+		}
+
+		const proc = parseFloat($("#processingFee").val()) || 0;
+		const leg = parseFloat($("#legalCharges").val()) || 0;
+		const gst = parseFloat($("#gstPercentage").val()) || 0;
+		const val = parseFloat($("#valuationFee").val()) || 0;
+		const ins = parseFloat($("#insuranceFee").val()) || 0;
+		const totalDed = proc + leg + gst + val + ins;
+
+		if (loanAmt <= totalDed) {
+			alert("LOAN AMOUNT (₹" + loanAmt.toFixed(2) + ") MUST BE GREATER THAN TOTAL DEDUCTIONS (₹" + totalDed.toFixed(2) + ").");
+			return;
+		}
+
 		const groupLoanData = {
 			groupID: selectedGroup,
 			groupCode: selectedGroup,
@@ -503,14 +522,14 @@ function setupPaymentAction() {
 			term: $("#term").val(),
 			rateOfInterest: $("#rateOfInterest").val(),
 			interestType: ($("#interestType").val() || '').toUpperCase(),
-			loanAmount: parseFloat($("#loanAmount").val()) || 0,
+			loanAmount: loanAmt,
 			loanEmi: parseFloat($("#loanEmi").val()) || 0,
 			planCode: $("#planCode").val(),
-			processingFee: parseFloat($("#processingFee").val()) || 0,
-			legalCharges: parseFloat($("#legalCharges").val()) || 0,
-			gstPercentage: parseFloat($("#gstPercentage").val()) || 0,
-			insuranceFee: parseFloat($("#insuranceFee").val()) || 0,
-			valuationFee: parseFloat($("#valuationFee").val()) || 0,
+			processingFee: proc,
+			legalCharges: leg,
+			gstPercentage: gst,
+			insuranceFee: ins,
+			valuationFee: val,
 			financialConsultantId: $("#financialConsultantId").val(),
 			financialConsultantName: ($("#financialConsultantName").val() || '').toUpperCase(),
 			paymentDate: $("#paymentDate").val() || new Date().toISOString().split('T')[0],
@@ -543,7 +562,14 @@ function setupPaymentAction() {
 				}
 			},
 			error: function(xhr, status, error) {
-				alert("FAILED TO PROCESS LOAN PAYMENT: " + (xhr.responseText ? xhr.responseText.toUpperCase() : "SERVER ERROR"));
+				let msg = "SERVER ERROR";
+				try {
+					const res = JSON.parse(xhr.responseText);
+					msg = res.message || (res.data && res.data.error) || xhr.responseText;
+				} catch (e) {
+					msg = xhr.responseText || "SERVER ERROR";
+				}
+				alert("FAILED TO PROCESS LOAN PAYMENT: " + msg.toUpperCase());
 				console.error("ERROR:", xhr.responseText);
 			}
 		});

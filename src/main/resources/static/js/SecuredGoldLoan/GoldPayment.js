@@ -187,7 +187,7 @@ $(document).ready(function() {
 			itemQty: $("#itemQty").val(),
 			itemWt: $("#itemWt").val(),
 			grossWt: $("#grossWt").val(),
-			stoneWt: $("#stoneWeight").val(),
+			stoneWt: $("#stoneWt").val() || $("#stoneWeight").val() || "",
 			netWt: $("#netWt").val(),
 			marketValuation: $("#marketValuation").val(),
 			eligibleLoan: $("#eligibleLoan").val(),
@@ -221,16 +221,17 @@ $(document).ready(function() {
 			valuationFees: $("#valuationFees").val(),
 			overdueInterestCharge: $("#overdueInterestCharge").val(),
 			collectionCharge: $("#collectionCharge").val(),
-			financialCode: $("#financialCode").val(),
-			financialName: $("#financialName").val(),
+			financialCode: $("#financialConsultantId").val() || $("#financialCode").val() || "",
+			financialName: $("#financialConsultantName").val() || $("#financialName").val() || "",
 
 			// ---------- Payment Details ----------
-			paymentDate: $("#paymentDate").val(),
-			paymentStatus: $("#paymentStatus").val(),
-			modeOfPayment: $("#modeOfPayment").val(),
-			chargeDeductCash: $("#chargeDeductCash").val(),
-			remarks: $("#remarks").val(),
-			amountDue: $("#amountDue").val(),
+			paymentAmount: $("#paymentAmount").val() || $("#emiPayment").val() || "0",
+			paymentDate: $("#paymentDate").val() || new Date().toISOString().split('T')[0],
+			paymentStatus: $("#paymentStatus").val() || "PAID",
+			modeOfPayment: $("#modeofPayment").val() || $("#modeOfPayment").val() || "CASH",
+			chargeDeductCash: $("#chargeDeductCash").val() || "0",
+			remarks: $("#remarks").val() || "LOAN EMI PAYMENT",
+			amountDue: $("#amountDue").val() || "0",
 			chequeNo: $("#chequeNo").val(),
 			chequeDate: $("#chequeDate").val(),
 			depositAccount: $("#depositAccount").val(),
@@ -238,9 +239,28 @@ $(document).ready(function() {
 		};
 
 		// ---- VALIDATION ----
-		if (requestData.goldID === "" || requestData.customerCode === "" || requestData.emiPayment === "") {
-			alert("PLEASE FILL REQUIRED FIELDS!");
+		if (!requestData.goldID || requestData.goldID.trim() === "") {
+			alert("PLEASE SELECT A GOLD ID FIRST!");
+			$("#findByGoldLoanId").focus();
 			return;
+		}
+
+		if (!requestData.customerCode || requestData.customerCode.trim() === "") {
+			alert("CUSTOMER CODE IS MISSING FOR THIS GOLD LOAN!");
+			return;
+		}
+
+		let emiVal = parseFloat(requestData.emiPayment) || 0;
+		if (emiVal <= 0) {
+			emiVal = parseFloat(requestData.paymentAmount) || 0;
+			if (emiVal > 0) {
+				requestData.emiPayment = String(emiVal);
+				$("#emiPayment").val(emiVal);
+			} else {
+				alert("PLEASE ENTER A VALID EMI PAYMENT AMOUNT!");
+				$("#paymentAmount").focus();
+				return;
+			}
 		}
 
 		$.ajax({
@@ -249,15 +269,22 @@ $(document).ready(function() {
 			contentType: "application/json",
 			data: JSON.stringify(requestData),
 			success: function(response) {
-				if (response.status === "OK") {
-					alert(response.message);   // ✔ Normal alert
+				if (response.status === "OK" || response.status === "SUCCESS") {
+					alert(response.message ? response.message.toUpperCase() : "PAYMENT PROCESSED SUCCESSFULLY!");
+					location.reload();
 				} else {
-					alert("WARNING: " + response.message);  // ✔ Warning message
+					alert("WARNING: " + (response.message ? response.message.toUpperCase() : "FAILED TO PROCESS PAYMENT"));
 				}
 			},
-
-			error: function() {
-				alert("WARNING: " + response.message);  // ✔ Error message
+			error: function(xhr, status, error) {
+				let msg = "FAILED TO PROCESS GOLD LOAN PAYMENT";
+				try {
+					const res = JSON.parse(xhr.responseText);
+					msg = res.message || (res.data && res.data.error) || msg;
+				} catch(e) {
+					msg = xhr.responseText || msg;
+				}
+				alert("ERROR: " + msg.toUpperCase());
 			}
 		});
 	});
@@ -267,69 +294,43 @@ $(document).ready(function() {
 function fetchEMIValues() {
 
 	var goldID = $("#findByGoldLoanId").val();
+	if (!goldID) return;
 
 	var loanAmount = Number($("#loanAmount").val()) || 0;
 	var rateOfInterest = Number($("#rateOfInterest").val()) || 0;
-	//var loanTerm = Number($("#loanTerm").val()) || 0;
 
 	let monthlyInterest = (loanAmount * rateOfInterest) / (100 * 12);
-	//let monthlyInterest = totalInterest / loanTerm;
 
 	$.ajax({
 		url: "api/securedGoldLoan/getEMIInstallmentDataByGoldID",
 		type: "GET",
 		data: { goldID: goldID },
-
 		success: function(response) {
-
 			console.log(response);
 
-			// EMIInstallment table मध्ये data असेल
 			if (response && response.data && response.data.length > 0) {
-
 				var lastEmi = response.data[response.data.length - 1];
 				var pendingPrincipal = lastEmi.pendingPrincipal || 0;
 
 				$("#pendingPrincipal").val(pendingPrincipal);
-
-				// installment आहे
 				$("#paymentAmount").val(pendingPrincipal);
-
+				if (!$("#emiPayment").val()) {
+					$("#emiPayment").val(pendingPrincipal);
+				}
 			} else {
-
-				// EMIInstallment table मध्ये data नाही
 				var paymentAmount = loanAmount + monthlyInterest;
-
-				$("#paymentAmount").val(paymentAmount);
-
-
+				$("#paymentAmount").val(paymentAmount.toFixed(2));
+				if (!$("#emiPayment").val()) {
+					$("#emiPayment").val(paymentAmount.toFixed(2));
+				}
 			}
-
 		},
-
 		error: function() {
-			alert("ERROR");
-
-			/*// API error आला तरी run होईल
 			var paymentAmount = loanAmount + monthlyInterest;
-
-			$("#paymentAmount").val(paymentAmount);*/
-
-		},
-
-		/*complete: function() {
-			alert("3")
-			// काहीच response नसेल तरी run
-			if (!$("#paymentAmount").val()) {
-
-				var paymentAmount = loanAmount + monthlyInterest;
-
-				$("#paymentAmount").val(paymentAmount);
-
+			$("#paymentAmount").val(paymentAmount.toFixed(2));
+			if (!$("#emiPayment").val()) {
+				$("#emiPayment").val(paymentAmount.toFixed(2));
 			}
-
-		}*/
-
+		}
 	});
-
 }

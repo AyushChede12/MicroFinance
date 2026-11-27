@@ -654,9 +654,11 @@
 					<label for="referenceCode">MODE OF PAYMENT <span id="star">*</span></label>
 					<select id="modeofPayment" name="modeofPayment" required="required"
 						class="form-control selectField" style="height: 30px;">
-						<option value="">ENTER MODE OF PAYMENT</option>
+						<option value="Cash" selected>CASH</option>
+						<option value="Cheque">CHEQUE</option>
 						<option value="Online">ONLINE</option>
 						<option value="NEFT">NEFT</option>
+						<option value="Savings">SAVINGS ACCOUNT</option>
 					</select>
 				</div>
 			</div>

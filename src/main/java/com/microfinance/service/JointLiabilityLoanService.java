@@ -297,6 +297,48 @@ public class JointLiabilityLoanService {
 			}
 		}
 
+		for (ApplyForGroupLoan loan : loans) {
+			// Ensure totalAmount / loan amount is populated
+			if (loan.getTotalAmount() == null || loan.getTotalAmount().trim().isEmpty() || "0".equals(loan.getTotalAmount().trim())) {
+				if (loan.getMinLoanAmt() != null && !loan.getMinLoanAmt().trim().isEmpty() && !"0".equals(loan.getMinLoanAmt().trim())) {
+					loan.setTotalAmount(loan.getMinLoanAmt().trim());
+				} else if (loan.getMaximumLoanAmount() != null && !loan.getMaximumLoanAmount().trim().isEmpty()) {
+					loan.setTotalAmount(loan.getMaximumLoanAmount().trim());
+				}
+			}
+
+			// If still empty, populate from plan
+			if ((loan.getTotalAmount() == null || loan.getTotalAmount().trim().isEmpty()) && loan.getPlanCode() != null) {
+				List<CreateLendingGroup> plans = createLendingGroupRepo.findByPlanCode(loan.getPlanCode());
+				if (plans != null && !plans.isEmpty()) {
+					CreateLendingGroup plan = plans.get(0);
+					if (plan.getMinLoanAmt() != null && !plan.getMinLoanAmt().trim().isEmpty()) {
+						loan.setTotalAmount(plan.getMinLoanAmt().trim());
+						if (loan.getMinLoanAmt() == null || loan.getMinLoanAmt().trim().isEmpty()) {
+							loan.setMinLoanAmt(plan.getMinLoanAmt().trim());
+						}
+					} else if (plan.getMaximumLoanAmount() != null && !plan.getMaximumLoanAmount().trim().isEmpty()) {
+						loan.setTotalAmount(plan.getMaximumLoanAmount().trim());
+					}
+					if (loan.getProcessingFee() == null || loan.getProcessingFee().trim().isEmpty()) {
+						loan.setProcessingFee(plan.getProcessingFeePercent());
+					}
+					if (loan.getLegalCharges() == null || loan.getLegalCharges().trim().isEmpty()) {
+						loan.setLegalCharges(plan.getLegalChargesPercent());
+					}
+					if (loan.getGstPercentage() == null || loan.getGstPercentage().trim().isEmpty()) {
+						loan.setGstPercentage(plan.getGstPercent());
+					}
+					if (loan.getInsuranceFee() == null || loan.getInsuranceFee().trim().isEmpty()) {
+						loan.setInsuranceFee(plan.getInsuranceFeePercent());
+					}
+					if (loan.getValuationFee() == null || loan.getValuationFee().trim().isEmpty()) {
+						loan.setValuationFee(plan.getValuationFeePercent());
+					}
+				}
+			}
+		}
+
 		return loans;
 	}
 
@@ -320,7 +362,11 @@ public class JointLiabilityLoanService {
 	public List<String> getApprovedGroupLoanIds() {
 		List<ApplyForGroupLoan> approvedActiveLoans = applyForGroupLoanRepo
 				.findByApprovalStatusTrueAndGroupLoanStatus("ACTIVE");
-		return approvedActiveLoans.stream().map(ApplyForGroupLoan::getGroupCode).distinct().collect(Collectors.toList());
+		return approvedActiveLoans.stream()
+				.map(ApplyForGroupLoan::getGroupCode)
+				.filter(c -> c != null && !c.trim().isEmpty())
+				.distinct()
+				.collect(Collectors.toList());
 	}
 
 	public List<String> getAllGroupCodes() {
@@ -335,6 +381,32 @@ public class JointLiabilityLoanService {
 			}
 
 			double loanAmount = parseDoubleSafe(groupLoan.getLoanAmount());
+
+			// Fallback: If loanAmount was not supplied or 0, attempt lookup from ApplyForGroupLoan / Plan
+			if (loanAmount <= 0) {
+				List<ApplyForGroupLoan> appLoans = applyForGroupLoanRepo.findByGroupCode(groupLoan.getGroupID());
+				if (appLoans != null && !appLoans.isEmpty()) {
+					ApplyForGroupLoan al = appLoans.get(0);
+					loanAmount = parseDoubleSafe(al.getTotalAmount());
+					if (loanAmount <= 0) loanAmount = parseDoubleSafe(al.getMinLoanAmt());
+					if (loanAmount <= 0) loanAmount = parseDoubleSafe(al.getMaximumLoanAmount());
+					if (loanAmount <= 0 && al.getPlanCode() != null) {
+						List<CreateLendingGroup> plans = createLendingGroupRepo.findByPlanCode(al.getPlanCode());
+						if (plans != null && !plans.isEmpty()) {
+							loanAmount = parseDoubleSafe(plans.get(0).getMinLoanAmt());
+							if (loanAmount <= 0) loanAmount = parseDoubleSafe(plans.get(0).getMaximumLoanAmount());
+						}
+					}
+				}
+				if (loanAmount > 0) {
+					groupLoan.setLoanAmount(String.valueOf(loanAmount));
+				}
+			}
+
+			if (loanAmount <= 0) {
+				throw new IllegalArgumentException("LOAN AMOUNT IS MISSING OR MUST BE GREATER THAN 0");
+			}
+
 			double legalFee = parseDoubleSafe(groupLoan.getLegalCharges());
 			double processingFee = parseDoubleSafe(groupLoan.getProcessingFee());
 			double gst = parseDoubleSafe(groupLoan.getGstPercentage());
@@ -346,7 +418,7 @@ public class JointLiabilityLoanService {
 			groupLoan.setSanctionedAmount(String.valueOf(netAmount));
 
 			if (netAmount <= 0) {
-				throw new IllegalArgumentException("NET AMOUNT IS NOT SUFFICIENT TO DISTRIBUTE");
+				throw new IllegalArgumentException("NET AMOUNT (" + netAmount + ") IS NOT SUFFICIENT TO DISTRIBUTE. TOTAL DEDUCTIONS (" + totalDeduction + ") EXCEED OR EQUAL LOAN AMOUNT (" + loanAmount + ")");
 			}
 
 			List<GroupDirectory> groups = groupDirectoryRepo.findByGroupID(groupLoan.getGroupID());
@@ -435,9 +507,11 @@ public class JointLiabilityLoanService {
 			groupLoanpaymentrepo.save(groupLoan);
 			return true;
 
+		} catch (IllegalArgumentException e) {
+			throw e;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return false;
+			throw new RuntimeException("FAILED TO PROCESS GROUP LOAN PAYMENT: " + e.getMessage(), e);
 		}
 	}
 

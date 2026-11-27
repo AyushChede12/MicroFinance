@@ -340,12 +340,15 @@ public class JointLiabilityLoanController {
 						.body(ApiResponse.success(HttpStatus.CREATED, "LOAN PAYMENT SAVED SUCCESSFULLY", groupLoan));
 			} else {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(HttpStatus.BAD_REQUEST,
-						"FAILED TO SAVE LOAN PAYMENT (SERVICE RETURNED FALSE)"));
+						"FAILED TO SAVE LOAN PAYMENT"));
 			}
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(ApiResponse.error(HttpStatus.BAD_REQUEST, e.getMessage().toUpperCase()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "ERROR: " + e.getMessage()));
+					.body(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "ERROR: " + e.getMessage().toUpperCase()));
 		}
 	}
 
